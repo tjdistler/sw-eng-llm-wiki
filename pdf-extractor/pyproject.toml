@@ -1,0 +1,11 @@
+[project]
+name = "pdf-extractor"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.13"
+dependencies = [
+    "pymupdf>=1.27",
+]
+
+[project.scripts]
+extract = "extract:main"

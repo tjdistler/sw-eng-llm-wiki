@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# Obsidian
+.obsidian/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# PDF source files (too large for git)
+raw/**/*.pdf
+
+# Claude Code
+.claude/*
+!.claude/skills/

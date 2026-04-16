@@ -1,0 +1,41 @@
+# Feature Toggle
+
+**Summary**: A configuration-driven switch that selects between alternative code paths at runtime. In a microservice migration, toggles let you flip between old and new implementations without redeploying — making rollback fast and explicit. Pair with [[branch-by-abstraction]] and [[strangler-fig-pattern]] to control cutover.
+
+**Sources**: `raw/monolith-to-microservices/chapter-03-splitting-the-monolith.md`
+
+**Last updated**: 2026-04-16
+
+---
+
+## What it is
+
+A feature toggle (or feature flag) is configuration that decides which code path runs. In a migration context, the toggle picks between the in-monolith implementation and the new microservice implementation of the same functionality (source: chapter-03-splitting-the-monolith.md). Pete Hodgson's [feature toggles article](https://martinfowler.com/articles/feature-toggles.html) is Newman's recommended deeper reference.
+
+## Why use them in migration
+
+Toggles support the central discipline of incremental migration: each step should be reversible (source: chapter-03-splitting-the-monolith.md). Specifically:
+
+- **Fast rollback** if the new implementation misbehaves — flip a config value, no redeploy.
+- **Explicit configuration state** — the desired routing is visible in one place rather than implicit in code.
+- **Decouple deployment from release** — deploy the new code with toggle off, validate in production, then toggle on (see [[deployment-vs-release]]).
+- **Coordinate with other migration patterns** — branch by abstraction's switch step is a natural toggle home; strangler fig redirection rules can be expressed as toggles in the proxy.
+
+## Toggle hygiene
+
+Newman's standing warning: **clean up dead toggles** (source: chapter-03-splitting-the-monolith.md). The classic pathology of feature flags is leaving them in place after the migration completes — flag combinatorics quickly become a maintenance problem and a source of bugs.
+
+When the migration is done:
+
+1. Remove the old code path.
+2. Remove the toggle.
+3. Optionally remove the abstraction the toggle switched on, if it was created purely for migration.
+
+## Related pages
+
+- [[branch-by-abstraction]]
+- [[strangler-fig-pattern]]
+- [[parallel-run-pattern]]
+- [[deployment-vs-release]]
+- [[progressive-delivery]]
+- [[incremental-migration]]

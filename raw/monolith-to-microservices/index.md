@@ -1,0 +1,866 @@
+# Index
+
+- A
+- **abstractions** — [[chapter-03-splitting-the-monolith#proxy-options]]
+- (see also branch by abstraction pattern)
+- **ACID transactions** — [[chapter-04-decomposing-the-database#so-which-should-i-split-first]]
+- B
+- batch delta copier implementation, change-data
+- **capture pattern** — [[chapter-03-splitting-the-monolith#how-it-works]]
+- batch jobs
+- **bulk synchronize data** — [[chapter-04-decomposing-the-database#pattern-database-view]]
+- replacing with change data capture system,
+- **lacking atomicity** — [[chapter-04-decomposing-the-database#pattern-split-table]]
+- **sagas and atomicity** — [[chapter-04-decomposing-the-database#data-consistency]]
+- **aggregate exposing monolith pattern** — [[chapter-03-splitting-the-monolith#implementing-change-data-capture]], [[chapter-05-growing-pains#when-might-this-problem-occur]]
+- **as a pathway to more services** — [[chapter-03-splitting-the-monolith#implementing-change-data-capture]]
+- **where to use it** — [[chapter-03-splitting-the-monolith#implementing-change-data-capture]], [[chapter-03-splitting-the-monolith#summary]]
+- **aggregates** — [[chapter-01-just-enough-microservices#the-single-process-monolith]]
+- **behavior, changing while migrating functionality** — [[chapter-03-splitting-the-monolith#how-it-works]]
+- **Bezos, Jeff** — [[chapter-02-planning-a-migration#scale-cost-effectively-for-load]]
+- **Biz Ops tool (Financial Times)** — [[chapter-05-growing-pains#monitoring-and-troubleshooting]]
+- **Bland, Mike** — [[chapter-02-planning-a-migration#understanding-the-goal]]
+- **bounded contexts** — [[chapter-01-just-enough-microservices#third-party-black-box-systems]]
+- **database per bounded context pattern** — [[chapter-04-decomposing-the-database#step-2-synchronize-on-write-read-from-old-schema]]
+- mapping with aggregates to microservices,
+- **in bounded contexts** — [[chapter-01-just-enough-microservices#third-party-black-box-systems]]
+- **mapping with bounded contexts to microservices** — [[chapter-01-just-enough-microservices#third-party-black-box-systems]]
+- **alternatives to using microservices** — [[chapter-01-just-enough-microservices#coupling]]
+- **analysis paralysis** — [[chapter-01-just-enough-microservices#on-coupling-and-cohesion]]
+- **Apache server, edge-side includes with** — [[chapter-03-splitting-the-monolith#example-http-reverse-proxy]]
+- **API, exposing on monolithic database** — [[chapter-04-decomposing-the-database#pattern-tracer-write]]
+- **asynchronous operations, using to avoid temporal coupling** — [[chapter-01-just-enough-microservices#own-their-own-data]]
+- **atomicity** — [[chapter-04-decomposing-the-database#so-which-should-i-split-first]]
+- relationships between, in example Music
+- **Corp domain model** — [[chapter-02-planning-a-migration#improve-robustness]]
+- **repository per bounded context pattern** — [[chapter-04-decomposing-the-database#step-1-bulk-synchronize-data]]
+- **BPM (business process modeling) tools** — [[chapter-04-decomposing-the-database#example-shared-static-data]]
+- **branch by abstraction pattern** — [[chapter-03-splitting-the-monolith#proxy-options]], [[chapter-03-splitting-the-monolith#changing-protocols]], [[chapter-03-splitting-the-monolith#example-ftp]], [[chapter-03-splitting-the-monolith#example-message-interception]], [[chapter-05-growing-pains#when-might-this-problem-occur]]
+- **lacking atomicity in transactions** — [[chapter-04-decomposing-the-database#pattern-split-table]]
+- **sagas and** — [[chapter-04-decomposing-the-database#data-consistency]]
+- Atomicity, Consistency, Isolation, and Durability (see ACID transactions)
+- **automated release remediation** — [[chapter-05-growing-pains#when-might-this-problem-occur]]
+- **automated tests, limiting scope of** — [[chapter-05-growing-pains#breaking-changes]]
+- **autonomy of teams, improving** — [[chapter-02-planning-a-migration#trade-offs]]
+- **with adoption of microservices** — [[chapter-01-just-enough-microservices#coupling]]
+- **without adopting microservices** — [[chapter-01-just-enough-microservices#coupling]]
+- **AWS Lambda** — [[chapter-03-splitting-the-monolith#as-a-fallback-mechanism]], [[chapter-04-decomposing-the-database#split-the-code-first]]
+- **Azure cloud functions** — [[chapter-04-decomposing-the-database#summary]]
+- **cleanup, removing old implementation** — [[chapter-03-splitting-the-monolith#example-ftp]]
+- **creating an abstraction** — [[chapter-03-splitting-the-monolith#proxy-options]]
+- **creating new service calling implementation** — [[chapter-03-splitting-the-monolith#proxy-options]]
+- **fallback to previous implementation** — [[chapter-03-splitting-the-monolith#example-message-interception]]
+- **how it works** — [[chapter-03-splitting-the-monolith#proxy-options]]
+- **switching implementation** — [[chapter-03-splitting-the-monolith#changing-protocols]]
+- **using the new abstraction** — [[chapter-03-splitting-the-monolith#proxy-options]]
+- **where to use it** — [[chapter-03-splitting-the-monolith#example-message-interception]]
+- **Brandolini, Alberto** — [[chapter-02-planning-a-migration#embrace-new-technology]]
+- **breaking changes** — [[chapter-04-decomposing-the-database#sagas]], [[chapter-04-decomposing-the-database#saga-failure-modes]]
+- **how the problem shows itself** — [[chapter-04-decomposing-the-database#sagas]]
+- **potential solutions** — [[chapter-04-decomposing-the-database#saga-failure-modes]]
+- eliminating accidental breaking changes,
+- **giving consumers time to migrate** — [[chapter-04-decomposing-the-database#saga-failure-modes]]
+- thinking twice before making breaking
+- **changes** — [[chapter-04-decomposing-the-database#saga-failure-modes]]
+- **when the problem might occur** — [[chapter-04-decomposing-the-database#sagas]]
+- **Brooks, Frederick P.** — [[chapter-01-just-enough-microservices#coupling]]
+- **Building Microservices (Newman)** — [[chapter-03-splitting-the-monolith#example-issuing-loyalty-cards]], [[chapter-04-decomposing-the-database#still-acid-but-lacking-atomicity]]
+- **commit phase (two-phase commits)** — [[chapter-04-decomposing-the-database#pattern-move-foreign-key-relationship-to-code]]
+- **communicating the change vision in organizations** — [[chapter-02-planning-a-migration#understanding-the-goal]]
+- **compensating transactions** — [[chapter-04-decomposing-the-database#example-shared-static-data]]
+- **competing consumer pattern** — [[chapter-01-just-enough-microservices#coupling]]
+- **component-driven UIs** — [[chapter-03-splitting-the-monolith#proxy-options]]
+- **consistency (ACID transactions)** — [[chapter-04-decomposing-the-database#so-which-should-i-split-first]]
+- **Constantine's law** — [[preface#acknowledgments]]
+- **consumer-driven contracts (CDCs)** — [[chapter-05-growing-pains#breaking-changes]]
+- **content-based router, using to intercept messaging calls** — [[chapter-03-splitting-the-monolith#migration-patterns]]
+- **continuous delivery (CD)** — [[chapter-01-just-enough-microservices#what-problems-do-they-create]]
+- **Continuous Delivery (Humble and Farley)** — [[chapter-01-just-enough-microservices#what-problems-do-they-create]]
+- **contracts** — [[chapter-04-decomposing-the-database#sagas]]
+- **“burning platform”** — [[chapter-01-just-enough-microservices#coupling]]
+- business domains
+- **domain-driven design** — [[chapter-01-just-enough-microservices#and-ownership]]
+- **microservices modeled around**
+- **business process modeling (BPM) tools** — [[chapter-04-decomposing-the-database#example-shared-static-data]]
+- **consumer-driven** — [[chapter-05-growing-pains#breaking-changes]]
+- one microservice exposing two contracts,
+- C
+- caching
+- **client-side caches, firing updates for** — [[chapter-04-decomposing-the-database#split-the-code-first]]
+- **using to avoid temporal coupling** — [[chapter-01-just-enough-microservices#own-their-own-data]]
+- **canary releases, parallel run pattern and** — [[chapter-03-splitting-the-monolith#example-widget-composition]]
+- **cargo cult mentality** — [[chapter-01-just-enough-microservices#on-coupling-and-cohesion]]
+- **change data capture systems** — [[chapter-03-splitting-the-monolith#example-loyalty-program]]
+- **change data ownership pattern** — [[chapter-03-splitting-the-monolith#summary]], [[chapter-05-growing-pains#when-might-this-problem-occur]]
+- **change-data capture pattern** — [[chapter-03-splitting-the-monolith#example-micro-frontends]], [[chapter-03-splitting-the-monolith#pattern-branch-by-abstraction]], [[chapter-03-splitting-the-monolith#how-it-works]], [[chapter-05-growing-pains#when-might-this-problem-occur]]
+- **Conway's law**
+- **copying code from the monolith** — [[chapter-02-planning-a-migration#a-combined-model]]
+- **core competency, teams structured around** — [[chapter-02-planning-a-migration#trade-offs]]
+- **correlation IDs (CIDs)** — [[chapter-04-decomposing-the-database#acid-transactions]], [[chapter-04-decomposing-the-database#implementing-sagas]]
+- costs
+- **avoiding the sunk cost fallacy** — [[chapter-02-planning-a-migration#domain-driven-design]]
+- **cost-effective scaling for load** — [[chapter-01-just-enough-microservices#coupling]]
+- **of change** — [[chapter-02-planning-a-migration#scale-cost-effectively-for-load]], [[chapter-02-planning-a-migration#improve-robustness]]
+- **example, issuing loyalty cards** — [[chapter-03-splitting-the-monolith#example-micro-frontends]]
+- **implementing** — [[chapter-03-splitting-the-monolith#pattern-branch-by-abstraction]]
+- **batch delta copier** — [[chapter-03-splitting-the-monolith#how-it-works]]
+- **database triggers** — [[chapter-03-splitting-the-monolith#how-it-works]]
+- **transaction log pollers** — [[chapter-03-splitting-the-monolith#how-it-works]]
+- **where to use it** — [[chapter-03-splitting-the-monolith#how-it-works]]
+- changes, breaking (see breaking changes)
+- **choreographed sagas** — [[chapter-04-decomposing-the-database#example-shared-static-data]]
+- deciding between orchestrated style and,
+- **mixing with orchestrated style** — [[chapter-04-decomposing-the-database#acid-transactions]]
+- **cloud** — [[chapter-02-planning-a-migration#understanding-the-goal]]
+- **easier places to experiment** — [[chapter-02-planning-a-migration#improve-robustness]]
+- **reversible and irreversible decisions** — [[chapter-02-planning-a-migration#scale-cost-effectively-for-load]]
+- coupling
+- **about** — [[preface#acknowledgments]]
+- **and cohesion, balancing** — [[preface#acknowledgments]]
+- **deployment** — [[chapter-01-just-enough-microservices#what-problems-do-they-create]]
+- **domain** — [[chapter-01-just-enough-microservices#user-interfaces]]
+- **implementation** — [[chapter-01-just-enough-microservices#what-are-microservices]]
+- **temporal** — [[chapter-01-just-enough-microservices#own-their-own-data]]
+- **credentials, separate, for database access** — [[chapter-03-splitting-the-monolith#where-to-use-it]]
+- **credit derivative pricing, comparing using parallel run** — [[chapter-03-splitting-the-monolith#example-message-interception]]
+- culture (organizational)
+- **anchoring new approaches in the culture** — [[chapter-02-planning-a-migration#improve-team-autonomy]]
+- and adaptability to change or process
+- **improvements** — [[chapter-02-planning-a-migration#domain-driven-design]]
+- **customer-installed software** — [[chapter-01-just-enough-microservices#coupling]]
+- **Azure cloud functions** — [[chapter-04-decomposing-the-database#summary]]
+- **databases from cloud providers** — [[chapter-03-splitting-the-monolith#as-a-fallback-mechanism]]
+- **Function-as-a-Service platforms** — [[chapter-04-decomposing-the-database#split-the-code-first]]
+- **public, handling deployments of microservice architecture** — [[chapter-05-growing-pains#more-services-more-pain]]
+- **scaling for load on** — [[chapter-01-just-enough-microservices#coupling]]
+- **co-existing microservice versions** — [[chapter-04-decomposing-the-database#saga-failure-modes]]
+- **code ownership, microservices at scale** — [[chapter-04-decomposing-the-database#two-phase-commits]], [[chapter-04-decomposing-the-database#sagas]]
+- **code reuse** — [[chapter-01-just-enough-microservices#coupling]]
+- D
+- **dark launching, parallel run pattern and** — [[chapter-03-splitting-the-monolith#example-widget-composition]]
+- **data consistency** — [[chapter-03-splitting-the-monolith#example-message-interception]]
+- **within monoliths** — [[preface#acknowledgments]]
+- **cohesion** — [[preface#acknowledgments]]
+- **eventual consistency** — [[chapter-04-decomposing-the-database#implementing-a-mapping-engine]], [[chapter-04-decomposing-the-database#pattern-aggregate-exposing-monolith]]
+- **in ACID transactions** — [[chapter-04-decomposing-the-database#so-which-should-i-split-first]]
+- **defined** — [[preface#acknowledgments]]
+- **colander architecture** — [[chapter-04-decomposing-the-database#sagas]]
+- synchronize data in application pattern,
+- in move foreign key relationship to code
+- **pattern** — [[chapter-04-decomposing-the-database#physical-versus-logical-database-separation]]
+- **check before deletion** — [[chapter-04-decomposing-the-database#physical-versus-logical-database-separation]]
+- **deciding how to handle deletion** — [[chapter-04-decomposing-the-database#splitting-the-database-first-or-the-code]]
+- **handling deletion gracefully** — [[chapter-04-decomposing-the-database#physical-versus-logical-database-separation]]
+- **not allowing deletion** — [[chapter-04-decomposing-the-database#splitting-the-database-first-or-the-code]]
+- **tolerating inconsistency between two systems** — [[chapter-04-decomposing-the-database#pattern-change-data-ownership]]
+- **data synchronization** — [[chapter-04-decomposing-the-database#pattern-the-shared-database]], [[chapter-04-decomposing-the-database#but-it-cant-be-done]], [[chapter-04-decomposing-the-database#pattern-database-view]], [[chapter-04-decomposing-the-database#the-database-as-a-public-contract]], [[chapter-04-decomposing-the-database#views-to-present]], [[chapter-04-decomposing-the-database#ownership]], [[chapter-04-decomposing-the-database#pattern-database-wrapping-service]]
+- **in tracer write pattern** — [[chapter-04-decomposing-the-database#pattern-database-as-a-service-interface]]
+- **Square orders example** — [[chapter-04-decomposing-the-database#pattern-aggregate-exposing-monolith]]
+- synchronize data in application pattern,
+- 145-149
+- Database as a Service interface pattern,
+- 145-149
+- **tracer write pattern** — [[chapter-04-decomposing-the-database#pattern-database-wrapping-service]], [[chapter-04-decomposing-the-database#where-to-use-it]], [[chapter-04-decomposing-the-database#pattern-database-as-a-service-interface]], [[chapter-04-decomposing-the-database#implementing-a-mapping-engine]], [[chapter-04-decomposing-the-database#transferring-ownership]], [[chapter-04-decomposing-the-database#pattern-aggregate-exposing-monolith]], [[chapter-04-decomposing-the-database#pattern-change-data-ownership]]
+- **transactions** — [[chapter-04-decomposing-the-database#so-which-should-i-split-first]], [[chapter-04-decomposing-the-database#pattern-split-table]], [[chapter-04-decomposing-the-database#pattern-move-foreign-key-relationship-to-code]], [[chapter-04-decomposing-the-database#moving-the-join]], [[chapter-04-decomposing-the-database#data-consistency]]
+- **transferring data ownership** — [[chapter-03-splitting-the-monolith#example-issuing-loyalty-cards]], [[chapter-03-splitting-the-monolith#implementing-change-data-capture]], [[chapter-03-splitting-the-monolith#summary]], [[chapter-04-decomposing-the-database#pattern-the-shared-database]]
+- **dedicated reporting database** — [[chapter-04-decomposing-the-database#implementing-sagas]]
+- **in modular monoliths** — [[preface#conventions-used-in-this-book]]
+- **no sharing by microservices**
+- **schemas** — [[chapter-03-splitting-the-monolith#how-it-works]]
+- **sharing, in implementation coupling** — [[chapter-01-just-enough-microservices#modeled-around-a-business-domain]]
+- **decisions, reversible and irreversible** — [[chapter-02-planning-a-migration#scale-cost-effectively-for-load]], [[chapter-05-growing-pains#potential-solutions]]
+- decomposition
+- **being open to new approaches** — [[chapter-02-planning-a-migration#domain-driven-design]]
+- **bounded contexts as potential unit of** — [[chapter-02-planning-a-migration#scale-the-number-of-developers]]
+- combined model for prioritizing service
+- **decomposition** — [[chapter-02-planning-a-migration#startups]], [[chapter-02-planning-a-migration#customer-installed-and-managed-software]]
+- database (see databases; monolithic applications)
+- **deciding how far to go** — [[chapter-02-planning-a-migration#scale-the-number-of-developers]]
+- **decorating collaborator pattern** — [[chapter-03-splitting-the-monolith#example-widget-composition]], [[chapter-03-splitting-the-monolith#example-micro-frontends]], [[chapter-05-growing-pains#when-might-this-problem-occur]]
+- **135-137** — [[chapter-05-growing-pains#when-might-this-problem-occur]]
+- **comparison to database views** — [[chapter-03-splitting-the-monolith#example-issuing-loyalty-cards]]
+- **implementing a mapping engine** — [[chapter-03-splitting-the-monolith#example-loyalty-program]]
+- **where to use it** — [[chapter-03-splitting-the-monolith#example-issuing-loyalty-cards]]
+- **database per bounded context pattern** — [[chapter-04-decomposing-the-database#step-2-synchronize-on-write-read-from-old-schema]]
+- database triggers implementation, change-data
+- **capture pattern** — [[chapter-03-splitting-the-monolith#how-it-works]]
+- **database view pattern** — [[chapter-03-splitting-the-monolith#as-a-fallback-mechanism]], [[chapter-03-splitting-the-monolith#where-to-use-it]], [[chapter-03-splitting-the-monolith#example-comparing-credit-derivative-pricing]], [[chapter-03-splitting-the-monolith#example-homegate-listings]], [[chapter-05-growing-pains#when-might-this-problem-occur]]
+- **example, loyalty program** — [[chapter-03-splitting-the-monolith#example-widget-composition]]
+- **where to use it** — [[chapter-03-splitting-the-monolith#example-micro-frontends]]
+- **dedicated reference data schema pattern** — [[chapter-04-decomposing-the-database#split-the-database-first]]
+- **comparison to Database as a Service interface pattern** — [[chapter-03-splitting-the-monolith#example-issuing-loyalty-cards]]
+- **database as public contract** — [[chapter-03-splitting-the-monolith#where-to-use-it]]
+- **limitations** — [[chapter-03-splitting-the-monolith#example-comparing-credit-derivative-pricing]]
+- **ownership issues** — [[chapter-03-splitting-the-monolith#example-comparing-credit-derivative-pricing]]
+- **views to present** — [[chapter-03-splitting-the-monolith#example-comparing-credit-derivative-pricing]]
+- **where to use it** — [[chapter-03-splitting-the-monolith#example-homegate-listings]]
+- **database wrapping service pattern** — [[chapter-03-splitting-the-monolith#example-homegate-listings]], [[chapter-03-splitting-the-monolith#using-spies]], [[chapter-03-splitting-the-monolith#github-scientist]], [[chapter-03-splitting-the-monolith#pattern-decorating-collaborator]]
+- **delivery contention** — [[foreword#foreword]], [[preface#acknowledgments]], [[chapter-03-splitting-the-monolith#example-http-reverse-proxy]], [[chapter-04-decomposing-the-database#transferring-ownership]]
+- delivery-related responsibilities, mapping to
+- **existing teams** — [[chapter-02-planning-a-migration#creating-the-guiding-coalition]]
+- deployments
+- **deployment coupling** — [[chapter-01-just-enough-microservices#what-problems-do-they-create]]
+- examining durations of pre-deployment
+- **processes** — [[chapter-01-just-enough-microservices#coupling]]
+- independent deployability of microservices,
+- **using to reduce dependence on central database** — [[chapter-03-splitting-the-monolith#using-spies]]
+- **where to use it** — [[chapter-03-splitting-the-monolith#github-scientist]]
+- databases
+- **decomposing** — [[chapter-03-splitting-the-monolith#how-it-works]], [[chapter-03-splitting-the-monolith#as-a-fallback-mechanism]], [[chapter-03-splitting-the-monolith#where-to-use-it]], [[chapter-03-splitting-the-monolith#example-comparing-credit-derivative-pricing]], [[chapter-03-splitting-the-monolith#example-homegate-listings]], [[chapter-03-splitting-the-monolith#using-spies]], [[chapter-03-splitting-the-monolith#github-scientist]], [[chapter-03-splitting-the-monolith#pattern-decorating-collaborator]], [[chapter-03-splitting-the-monolith#example-loyalty-program]], [[chapter-03-splitting-the-monolith#example-issuing-loyalty-cards]], [[chapter-03-splitting-the-monolith#implementing-change-data-capture]], [[chapter-03-splitting-the-monolith#summary]], [[chapter-04-decomposing-the-database#pattern-the-shared-database]], [[chapter-04-decomposing-the-database#but-it-cant-be-done]], [[chapter-04-decomposing-the-database#pattern-database-view]], [[chapter-04-decomposing-the-database#the-database-as-a-public-contract]], [[chapter-04-decomposing-the-database#views-to-present]], [[chapter-04-decomposing-the-database#ownership]], [[chapter-04-decomposing-the-database#pattern-database-wrapping-service]], [[chapter-04-decomposing-the-database#where-to-use-it]], [[chapter-04-decomposing-the-database#pattern-database-as-a-service-interface]], [[chapter-04-decomposing-the-database#implementing-a-mapping-engine]], [[chapter-04-decomposing-the-database#transferring-ownership]], [[chapter-04-decomposing-the-database#pattern-aggregate-exposing-monolith]], [[chapter-04-decomposing-the-database#pattern-change-data-ownership]], [[chapter-04-decomposing-the-database#data-synchronization]], [[chapter-04-decomposing-the-database#step-1-bulk-synchronize-data]], [[chapter-04-decomposing-the-database#step-2-synchronize-on-write-read-from-old-schema]], [[chapter-04-decomposing-the-database#step-3-synchronize-on-write-read-from-new-schema]], [[chapter-04-decomposing-the-database#pattern-tracer-write]], [[chapter-04-decomposing-the-database#example-orders-at-square]], [[chapter-04-decomposing-the-database#physical-versus-logical-database-separation]], [[chapter-04-decomposing-the-database#splitting-the-database-first-or-the-code]], [[chapter-04-decomposing-the-database#split-the-database-first]], [[chapter-04-decomposing-the-database#split-the-code-first]], [[chapter-04-decomposing-the-database#so-which-should-i-split-first]], [[chapter-04-decomposing-the-database#pattern-split-table]], [[chapter-04-decomposing-the-database#pattern-move-foreign-key-relationship-to-code]], [[chapter-04-decomposing-the-database#moving-the-join]], [[chapter-04-decomposing-the-database#data-consistency]], [[chapter-04-decomposing-the-database#example-shared-static-data]], [[chapter-04-decomposing-the-database#acid-transactions]], [[chapter-04-decomposing-the-database#still-acid-but-lacking-atomicity]]
+- **2** — [[chapter-04-decomposing-the-database#sagas]], [[chapter-04-decomposing-the-database#saga-failure-modes]]
+- **of monoliths** — [[preface#what-you-will-learn]]
+- **releases versus** — [[chapter-02-planning-a-migration#its-not-one-size-fits-all]]
+- simultaneous, of multiple microservices,
+- **data synchronization** — [[chapter-04-decomposing-the-database#pattern-the-shared-database]], [[chapter-04-decomposing-the-database#but-it-cant-be-done]], [[chapter-04-decomposing-the-database#pattern-database-view]]
+- Database as a Service interface pattern,
+- developers
+- local developer experience problem,
+- 222-224
+- **scaling number of** — [[chapter-01-just-enough-microservices#coupling]]
+- **DevOps** — [[chapter-02-planning-a-migration#trade-offs]]
+- **not meaning NoOps** — [[chapter-02-planning-a-migration#creating-the-guiding-coalition]]
+- DevOps Handbook, The (Kim, Humble, and
+- **Debois)** — [[chapter-02-planning-a-migration#creating-the-guiding-coalition]]
+- **distributed monoliths** — [[preface#oreilly-online-learning]]
+- **distributed systems** — [[preface#oreilly-online-learning]]
+- **evolution to microservices**
+- 135-137
+- **database view pattern** — [[chapter-03-splitting-the-monolith#as-a-fallback-mechanism]], [[chapter-03-splitting-the-monolith#where-to-use-it]], [[chapter-03-splitting-the-monolith#example-comparing-credit-derivative-pricing]], [[chapter-03-splitting-the-monolith#example-homegate-listings]]
+- **inability to split the database** — [[chapter-03-splitting-the-monolith#how-it-works]]
+- move foreign key relationship to code
+- **pattern** — [[chapter-04-decomposing-the-database#example-orders-at-square]], [[chapter-04-decomposing-the-database#physical-versus-logical-database-separation]], [[chapter-04-decomposing-the-database#splitting-the-database-first-or-the-code]], [[chapter-04-decomposing-the-database#split-the-database-first]], [[chapter-04-decomposing-the-database#split-the-code-first]], [[chapter-04-decomposing-the-database#so-which-should-i-split-first]]
+- **sagas** — [[chapter-04-decomposing-the-database#data-consistency]], [[chapter-04-decomposing-the-database#example-shared-static-data]], [[chapter-04-decomposing-the-database#acid-transactions]], [[chapter-04-decomposing-the-database#still-acid-but-lacking-atomicity]]
+- **schema separation examples** — [[chapter-04-decomposing-the-database#example-orders-at-square]]
+- **shared database pattern** — [[chapter-03-splitting-the-monolith#how-it-works]], [[chapter-03-splitting-the-monolith#as-a-fallback-mechanism]]
+- **split table pattern** — [[chapter-04-decomposing-the-database#example-orders-at-square]]
+- splitting apart the database, which to
+- **split first** — [[chapter-04-decomposing-the-database#data-synchronization]], [[chapter-04-decomposing-the-database#step-1-bulk-synchronize-data]], [[chapter-04-decomposing-the-database#step-2-synchronize-on-write-read-from-old-schema]], [[chapter-04-decomposing-the-database#step-3-synchronize-on-write-read-from-new-schema]], [[chapter-04-decomposing-the-database#where-to-use-it]], [[chapter-04-decomposing-the-database#pattern-tracer-write]]
+- Distributed Systems Observability (Sridharan),
+- Enterprise Integration Patterns (Hohpe and
+- **Woolf)** — [[chapter-01-just-enough-microservices#coupling]], [[chapter-03-splitting-the-monolith#how-it-works]], [[chapter-04-decomposing-the-database#still-acid-but-lacking-atomicity]]
+- **Erlang** — [[chapter-01-just-enough-microservices#what-problems-do-they-create]]
+- **event storming** — [[chapter-02-planning-a-migration#embrace-new-technology]]
+- **events** — [[chapter-03-splitting-the-monolith#changing-behavior-while-migrating-functionality]], [[chapter-03-splitting-the-monolith#pattern-branch-by-abstraction]], [[chapter-03-splitting-the-monolith#pattern-decorating-collaborator]]
+- distributed transactions
+- **avoiding use of** — [[chapter-04-decomposing-the-database#data-consistency]]
+- **problems with** — [[chapter-04-decomposing-the-database#still-acid-but-lacking-atomicity]]
+- **sagas versus** — [[chapter-04-decomposing-the-database#still-acid-but-lacking-atomicity]]
+- **domain-driven design (DDD)** — [[chapter-01-just-enough-microservices#and-ownership]], [[chapter-02-planning-a-migration#improve-robustness]], [[chapter-02-planning-a-migration#scale-the-number-of-developers]], [[chapter-02-planning-a-migration#embrace-new-technology]], [[chapter-02-planning-a-migration#when-might-microservices-be-a-bad-idea]], [[chapter-02-planning-a-migration#startups]]
+- listening for and using to update external
+- **database** — [[chapter-03-splitting-the-monolith#example-loyalty-program]]
+- **subscribing to** — [[chapter-04-decomposing-the-database#splitting-the-database-first-or-the-code]]
+- two sources of truth subscribing to same
+- **events** — [[chapter-04-decomposing-the-database#pattern-aggregate-exposing-monolith]]
+- **using to reduce domain coupling** — [[chapter-01-just-enough-microservices#and-ownership]]
+- **eventual consistency** — [[chapter-04-decomposing-the-database#implementing-a-mapping-engine]], [[chapter-04-decomposing-the-database#pattern-aggregate-exposing-monolith]]
+- F
+- **feature toggles** — [[chapter-02-planning-a-migration#changing-skills]]
+- using to switch between implementations,
+- **Financial Times, Biz Ops tool** — [[chapter-05-growing-pains#monitoring-and-troubleshooting]]
+- **FlywayDB** — [[chapter-04-decomposing-the-database#step-1-bulk-synchronize-data]]
+- foreign key relationship, moving to code,
+- **aggregates** — [[chapter-01-just-enough-microservices#the-single-process-monolith]]
+- **bounded contexts** — [[chapter-01-just-enough-microservices#third-party-black-box-systems]]
+- deciding how far to go in decomposing
+- **existing system** — [[chapter-02-planning-a-migration#scale-the-number-of-developers]]
+- **event storming** — [[chapter-02-planning-a-migration#embrace-new-technology]]
+- example high-level domain model for Music
+- **Corp** — [[chapter-02-planning-a-migration#improve-robustness]]
+- mapping aggregates and bounded contexts
+- **to microservices** — [[chapter-01-just-enough-microservices#third-party-black-box-systems]]
+- **resources for further reading** — [[chapter-01-just-enough-microservices#advantages-of-monoliths]]
+- **using domain model for prioritization** — [[chapter-02-planning-a-migration#embrace-new-technology]]
+- **Domain-Driven Design (Evans)** — [[chapter-01-just-enough-microservices#and-ownership]]
+- **Domain-Driven Design Distilled (Vernon)** — [[chapter-01-just-enough-microservices#advantages-of-monoliths]]
+- **domains** — [[chapter-01-just-enough-microservices#and-ownership]]
+- 173-187
+- **Fowler, Martin** — [[chapter-02-planning-a-migration#shifting-structures]], [[chapter-03-splitting-the-monolith#pattern-decorating-collaborator]], [[chapter-04-decomposing-the-database#two-phase-commits]]
+- FTP example, strangler fig migration pattern,
+- (see also business domains; domain-driven
+- design)
+- **domain coupling in microservices** — [[chapter-01-just-enough-microservices#user-interfaces]]
+- unclear, getting service boundaries wrong,
+- **Function as a Service (FaaS)** — [[chapter-05-growing-pains#more-services-more-pain]]
+- **duplicate static reference data pattern** — [[chapter-04-decomposing-the-database#split-the-database-first]]
+- **durability (ACID transactions)** — [[chapter-04-decomposing-the-database#pattern-split-table]]
+- G
+- **GitHub** — [[chapter-04-decomposing-the-database#implementing-sagas]]
+- **Scientist library** — [[chapter-03-splitting-the-monolith#example-widget-composition]]
+- global vs. local optimization of microservices,
+- 229-231
+- **Google, rolling out test automation at** — [[chapter-02-planning-a-migration#understanding-the-goal]]
+- **Greenspun’s 10th rule** — [[chapter-01-just-enough-microservices#user-interfaces]]
+- **Guardian, The (newspaper)** — [[chapter-03-splitting-the-monolith#where-to-use-it]], [[chapter-03-splitting-the-monolith#example-http-reverse-proxy]]
+- E
+- **edge-side includes (ESI)** — [[chapter-03-splitting-the-monolith#example-http-reverse-proxy]]
+- **empowering employees** — [[chapter-02-planning-a-migration#understanding-the-goal]]
+- **encapsulation** — [[chapter-01-just-enough-microservices#what-are-microservices]]
+- **end-to-end testing, problem with microservices** — [[chapter-05-growing-pains#how-can-this-problem-show-itself]], [[chapter-05-growing-pains#breaking-changes]], [[chapter-05-growing-pains#when-might-this-problem-occur]]
+- **how the problem might occur** — [[chapter-05-growing-pains#how-can-this-problem-show-itself]]
+- **how the problem shows itself** — [[chapter-05-growing-pains#how-can-this-problem-show-itself]]
+- **potential solutions** — [[chapter-05-growing-pains#breaking-changes]], [[chapter-05-growing-pains#when-might-this-problem-occur]]
+- H
+- **Hammant, Paul** — [[chapter-03-splitting-the-monolith#how-it-works]]
+- **Hashicorp Vault** — [[chapter-03-splitting-the-monolith#where-to-use-it]]
+- **Helland, Pat** — [[chapter-04-decomposing-the-database#still-acid-but-lacking-atomicity]]
+- Homegate real estate listings example, using
+- **parallel run** — [[chapter-03-splitting-the-monolith#pattern-ui-composition]]
+- **horizontal scaling of existing monoliths** — [[chapter-01-just-enough-microservices#coupling]]
+- HTTP reverse proxy example, strangler fig
+- **migration pattern** — [[chapter-02-planning-a-migration#making-a-change]], [[chapter-02-planning-a-migration#changing-skills]], [[chapter-02-planning-a-migration#having-regular-checkpoints]], [[chapter-02-planning-a-migration#qualitative-measures]], [[chapter-02-planning-a-migration#being-open-to-new-approaches]], [[chapter-02-planning-a-migration#summary]], [[chapter-03-splitting-the-monolith#chapter-3-splitting-the-monolith]], [[chapter-03-splitting-the-monolith#cut-copy-or-reimplement]]
+- **changing protocols** — [[chapter-02-planning-a-migration#being-open-to-new-approaches]]
+- **automated release remediation and progressive delivery** — [[chapter-05-growing-pains#when-might-this-problem-occur]]
+- **consumer-driven contracts** — [[chapter-05-growing-pains#breaking-changes]]
+- continually refining quality feedback
+- **cycles** — [[chapter-05-growing-pains#when-might-this-problem-occur]]
+- **limiting scope of automated tests** — [[chapter-05-growing-pains#breaking-changes]]
+- endpoints
+- dedicated database exposed as endpoint,
+- **service meshes** — [[chapter-03-splitting-the-monolith#chapter-3-splitting-the-monolith]]
+- **data** — [[chapter-02-planning-a-migration#changing-skills]]
+- **inserting the proxy** — [[chapter-02-planning-a-migration#making-a-change]]
+- 135-137
+- service directly exposing database as defined
+- **endpoint** — [[chapter-03-splitting-the-monolith#how-it-works]]
+- **migrating functionality** — [[chapter-02-planning-a-migration#making-a-change]]
+- **proxy options** — [[chapter-02-planning-a-migration#changing-skills]]
+- **incremental rollout** — [[chapter-02-planning-a-migration#having-regular-checkpoints]]
+- **redirecting calls** — [[chapter-02-planning-a-migration#changing-skills]]
+- loyalty cards, issuing (example), change-data
+- **capture pattern** — [[chapter-03-splitting-the-monolith#example-micro-frontends]]
+- **loyalty program example, decorating collaborator pattern** — [[chapter-03-splitting-the-monolith#example-widget-composition]]
+- I
+- **implementation coupling** — [[chapter-01-just-enough-microservices#what-are-microservices]]
+- **incremental migration, importance of** — [[chapter-02-planning-a-migration#improve-team-autonomy]]
+- **incremental rewrites of monolithic code** — [[chapter-02-planning-a-migration#a-combined-model]]
+- **independently deployable (microservices)**
+- **information hiding** — [[chapter-01-just-enough-microservices#what-are-microservices]]
+- **irreversible decisions** — [[chapter-02-planning-a-migration#scale-cost-effectively-for-load]], [[chapter-05-growing-pains#potential-solutions]]
+- **isolation (ACID transactions)** — [[chapter-04-decomposing-the-database#pattern-split-table]]
+- **IT/business divide** — [[foreword#foreword]]
+- J
+- **Jaeger** — [[chapter-04-decomposing-the-database#implementing-sagas]]
+- joins, replacing database join operation with
+- **service calls** — [[chapter-04-decomposing-the-database#physical-versus-logical-database-separation]]
+- **JSON** — [[chapter-04-decomposing-the-database#saga-failure-modes]]
+- M
+- mapping engines
+- implementing for internal and external
+- **databases** — [[chapter-03-splitting-the-monolith#example-loyalty-program]]
+- mapping changes in internal database to
+- **external database** — [[chapter-03-splitting-the-monolith#pattern-decorating-collaborator]]
+- **materialized views** — [[chapter-03-splitting-the-monolith#example-comparing-credit-derivative-pricing]]
+- message interception example, strangler fig
+- **migration pattern** — [[chapter-03-splitting-the-monolith#refactoring-the-monolith]]
+- **content-based routing** — [[chapter-03-splitting-the-monolith#migration-patterns]]
+- **selective consumption of messages** — [[chapter-03-splitting-the-monolith#how-it-works]]
+- micro frontends example, UI composition
+- **migration pattern** — [[chapter-03-splitting-the-monolith#proxy-options]]
+- microservices
+- **about**
+- **advantages of**
+- **aggregates and** — [[chapter-01-just-enough-microservices#the-single-process-monolith]]
+- **database sharing** — [[chapter-03-splitting-the-monolith#how-it-works]]
+- **deciding whether to adopt** — [[chapter-01-just-enough-microservices#on-coupling-and-cohesion]]
+- K
+- Kotter’s 8 step process for organizational
+- **change** — [[chapter-01-just-enough-microservices#aggregate]]
+- Kubernetes
+- using too early in microservices adoption,
+- **using with microservices** — [[chapter-05-growing-pains#more-services-more-pain]]
+- L
+- **Leading Change (Kotter)** — [[chapter-01-just-enough-microservices#aggregate]]
+- library, reference data, shared between services,
+- **failing to understand why** — [[chapter-01-just-enough-microservices#coupling]]
+- **key questions to ask** — [[chapter-01-just-enough-microservices#coupling]]
+- **reasons to choose and alternatives** — [[chapter-01-just-enough-microservices#coupling]]
+- **history of the term**
+- **independent deployability**
+- **key takeaway points** — [[chapter-05-growing-pains#potential-solutions]]
+- mapping aggregates and bounded contexts
+- **to** — [[chapter-01-just-enough-microservices#third-party-black-box-systems]]
+- **modeled around a business domain**
+- **modeled around databases**
+- **ownership within the organization** — [[foreword#foreword]]
+- **problems created by**
+- **situations not appropriate for use** — [[chapter-01-just-enough-microservices#coupling]], [[chapter-01-just-enough-microservices#just-enough-domain-driven-design]]
+- **“Life Beyond Distributed Transactions” (Helland)** — [[chapter-04-decomposing-the-database#still-acid-but-lacking-atomicity]]
+- **local developer experience** — [[chapter-04-decomposing-the-database#summary]]
+- **how the problem shows itself** — [[chapter-04-decomposing-the-database#summary]]
+- **potential solutions to the problem** — [[chapter-04-decomposing-the-database#summary]]
+- **when the problem might occur** — [[chapter-04-decomposing-the-database#summary]]
+- local vs. global optimization of microservices,
+- **customer-installed and managed software** — [[chapter-01-just-enough-microservices#coupling]]
+- **not having a good reason to use them** — [[chapter-01-just-enough-microservices#just-enough-domain-driven-design]]
+- **startups** — [[chapter-01-just-enough-microservices#coupling]]
+- **unclear domain** — [[chapter-01-just-enough-microservices#coupling]]
+- **size of**
+- **technologies**
+- **user interfaces**
+- **using shared libraries** — [[chapter-04-decomposing-the-database#split-the-code-first]]
+- **microservices, problems with** — [[chapter-04-decomposing-the-database#two-phase-commits]], [[chapter-04-decomposing-the-database#sagas]], [[chapter-04-decomposing-the-database#saga-failure-modes]], [[chapter-04-decomposing-the-database#implementing-sagas]], [[chapter-04-decomposing-the-database#summary]], [[chapter-05-growing-pains#more-services-more-pain]], [[chapter-05-growing-pains#how-can-this-problem-show-itself]], [[chapter-05-growing-pains#breaking-changes]], [[chapter-05-growing-pains#when-might-this-problem-occur]], [[chapter-05-growing-pains#potential-solutions]], [[chapter-05-growing-pains#reporting]], [[chapter-05-growing-pains#monitoring-and-troubleshooting]]
+- **breaking changes** — [[chapter-04-decomposing-the-database#sagas]], [[chapter-04-decomposing-the-database#saga-failure-modes]]
+- **how the problem shows itself** — [[chapter-04-decomposing-the-database#sagas]]
+- 229-231
+- **local/remote developer workflows (hybrid)** — [[chapter-04-decomposing-the-database#summary]]
+- **lock-step releases** — [[chapter-04-decomposing-the-database#sagas]]
+- **log aggregation in microservices** — [[chapter-04-decomposing-the-database#implementing-sagas]]
+- **logical versus physical database separation** — [[chapter-04-decomposing-the-database#pattern-change-data-ownership]]
+- **long lived transactions** — [[chapter-04-decomposing-the-database#data-consistency]]
+- **loose coupling of services**
+- **potential solutions** — [[chapter-04-decomposing-the-database#saga-failure-modes]]
+- **when the problem might occur** — [[chapter-04-decomposing-the-database#sagas]]
+- **end-to-end testing** — [[chapter-05-growing-pains#how-can-this-problem-show-itself]], [[chapter-05-growing-pains#breaking-changes]], [[chapter-05-growing-pains#when-might-this-problem-occur]]
+- **how the problem might occur** — [[chapter-05-growing-pains#how-can-this-problem-show-itself]]
+- **how the problem shows itself** — [[chapter-05-growing-pains#how-can-this-problem-show-itself]]
+- **potential solutions** — [[chapter-05-growing-pains#breaking-changes]], [[chapter-05-growing-pains#when-might-this-problem-occur]]
+- **global versus local optimization** — [[chapter-05-growing-pains#potential-solutions]]
+- **creating an abstraction** — [[chapter-03-splitting-the-monolith#proxy-options]]
+- **creating new service calling implementation** — [[chapter-03-splitting-the-monolith#proxy-options]]
+- **fallback to previous implementation** — [[chapter-03-splitting-the-monolith#example-message-interception]]
+- **how it works** — [[chapter-03-splitting-the-monolith#proxy-options]]
+- **switching implementation** — [[chapter-03-splitting-the-monolith#changing-protocols]]
+- **using the abstraction** — [[chapter-03-splitting-the-monolith#proxy-options]]
+- **where to use it** — [[chapter-03-splitting-the-monolith#example-message-interception]]
+- **change-data capture** — [[chapter-03-splitting-the-monolith#example-micro-frontends]], [[chapter-03-splitting-the-monolith#pattern-branch-by-abstraction]], [[chapter-03-splitting-the-monolith#how-it-works]]
+- **how the problem shows itself** — [[chapter-05-growing-pains#potential-solutions]]
+- **potential solutions** — [[chapter-05-growing-pains#potential-solutions]]
+- **when the problem might occur** — [[chapter-05-growing-pains#potential-solutions]]
+- **local developer experience** — [[chapter-04-decomposing-the-database#summary]]
+- **monitoring and troubleshooting** — [[chapter-04-decomposing-the-database#implementing-sagas]], [[chapter-04-decomposing-the-database#summary]]
+- **batch delta copier implementation** — [[chapter-03-splitting-the-monolith#how-it-works]]
+- **database triggers implementation** — [[chapter-03-splitting-the-monolith#how-it-works]]
+- **example, issuing loyalty cards** — [[chapter-03-splitting-the-monolith#example-micro-frontends]]
+- transaction log pollers implementation,
+- **where to use it** — [[chapter-03-splitting-the-monolith#how-it-works]]
+- **decorating collaborator** — [[chapter-03-splitting-the-monolith#example-widget-composition]], [[chapter-03-splitting-the-monolith#example-micro-frontends]]
+- **how the problems show up** — [[chapter-04-decomposing-the-database#implementing-sagas]]
+- **potential solutions** — [[chapter-04-decomposing-the-database#implementing-sagas]], [[chapter-04-decomposing-the-database#summary]]
+- **when the problems might occur** — [[chapter-04-decomposing-the-database#implementing-sagas]]
+- **more services, more pain** — [[chapter-04-decomposing-the-database#two-phase-commits]]
+- **orphaned services** — [[chapter-05-growing-pains#potential-solutions]], [[chapter-05-growing-pains#monitoring-and-troubleshooting]]
+- **ownership at scale** — [[chapter-04-decomposing-the-database#two-phase-commits]], [[chapter-04-decomposing-the-database#sagas]]
+- **example, loyalty program** — [[chapter-03-splitting-the-monolith#example-widget-composition]]
+- **where to use it** — [[chapter-03-splitting-the-monolith#example-micro-frontends]]
+- **parallel run** — [[chapter-03-splitting-the-monolith#example-message-interception]], [[chapter-03-splitting-the-monolith#changing-behavior-while-migrating-functionality]], [[chapter-03-splitting-the-monolith#pattern-ui-composition]], [[chapter-03-splitting-the-monolith#example-widget-composition]]
+- **how the problem shows itself** — [[chapter-04-decomposing-the-database#two-phase-commits]]
+- **possible solutions** — [[chapter-04-decomposing-the-database#sagas]]
+- **when the problem might occur** — [[chapter-04-decomposing-the-database#sagas]]
+- **reporting** — [[chapter-04-decomposing-the-database#saga-failure-modes]], [[chapter-04-decomposing-the-database#implementing-sagas]]
+- **potential solutions** — [[chapter-04-decomposing-the-database#implementing-sagas]]
+- **when the problem might occur** — [[chapter-04-decomposing-the-database#implementing-sagas]]
+- **robustness and resiliency** — [[chapter-05-growing-pains#reporting]], [[chapter-05-growing-pains#potential-solutions]]
+- **running too many things** — [[chapter-05-growing-pains#more-services-more-pain]]
+- migration
+- **changing behavior while migrating functionality** — [[chapter-03-splitting-the-monolith#how-it-works]]
+- **planning** — [[chapter-01-just-enough-microservices#on-coupling-and-cohesion]], [[chapter-01-just-enough-microservices#coupling]], [[chapter-01-just-enough-microservices#just-enough-domain-driven-design]], [[chapter-01-just-enough-microservices#aggregate]], [[chapter-01-just-enough-microservices#mapping-aggregates-and-bounded-contexts-to-microservices]], [[chapter-01-just-enough-microservices#summary]], [[chapter-02-planning-a-migration#understanding-the-goal]], [[chapter-02-planning-a-migration#improve-team-autonomy]], [[chapter-02-planning-a-migration#scale-cost-effectively-for-load]], [[chapter-02-planning-a-migration#improve-robustness]], [[chapter-02-planning-a-migration#scale-the-number-of-developers]], [[chapter-02-planning-a-migration#embrace-new-technology]], [[chapter-02-planning-a-migration#when-might-microservices-be-a-bad-idea]], [[chapter-02-planning-a-migration#startups]], [[chapter-02-planning-a-migration#customer-installed-and-managed-software]], [[chapter-02-planning-a-migration#trade-offs]], [[chapter-02-planning-a-migration#changing-organizations]], [[chapter-02-planning-a-migration#creating-the-guiding-coalition]], [[chapter-02-planning-a-migration#developing-a-vision-and-strategy]], [[chapter-02-planning-a-migration#communicating-the-change-vision]], [[chapter-02-planning-a-migration#generating-short-term-wins]], [[chapter-02-planning-a-migration#anchoring-new-approaches-in-the-culture]], [[chapter-02-planning-a-migration#its-production-that-counts]], [[chapter-02-planning-a-migration#reversible-and-irreversible-decisions]], [[chapter-02-planning-a-migration#domain-driven-design]], [[chapter-02-planning-a-migration#how-far-do-you-have-to-go]]
+- comparison with dark launching and
+- **canary releasing** — [[chapter-03-splitting-the-monolith#example-widget-composition]]
+- example, comparing credit derivative
+- **pricing** — [[chapter-03-splitting-the-monolith#example-message-interception]]
+- **example, Homegate listings** — [[chapter-03-splitting-the-monolith#pattern-ui-composition]]
+- **verification techniques** — [[chapter-03-splitting-the-monolith#example-widget-composition]]
+- **verifying using Scientist library** — [[chapter-03-splitting-the-monolith#example-widget-composition]]
+- **verifying using Spies** — [[chapter-03-splitting-the-monolith#example-widget-composition]]
+- **where to use it** — [[chapter-03-splitting-the-monolith#example-widget-composition]]
+- **reference index of** — [[chapter-05-growing-pains#when-might-this-problem-occur]]
+- **strangler fig application** — [[chapter-02-planning-a-migration#shifting-structures]], [[chapter-02-planning-a-migration#its-not-one-size-fits-all]], [[chapter-02-planning-a-migration#making-a-change]], [[chapter-02-planning-a-migration#changing-skills]], [[chapter-02-planning-a-migration#having-regular-checkpoints]], [[chapter-02-planning-a-migration#qualitative-measures]], [[chapter-02-planning-a-migration#being-open-to-new-approaches]], [[chapter-02-planning-a-migration#summary]], [[chapter-03-splitting-the-monolith#chapter-3-splitting-the-monolith]], [[chapter-03-splitting-the-monolith#cut-copy-or-reimplement]], [[chapter-03-splitting-the-monolith#refactoring-the-monolith]], [[chapter-03-splitting-the-monolith#migration-patterns]], [[chapter-03-splitting-the-monolith#how-it-works]]
+- **example, FTP** — [[chapter-03-splitting-the-monolith#cut-copy-or-reimplement]]
+- **example, message interception** — [[chapter-03-splitting-the-monolith#refactoring-the-monolith]]
+- **example, reverse HTTP proxy** — [[chapter-02-planning-a-migration#making-a-change]], [[chapter-02-planning-a-migration#changing-skills]], [[chapter-02-planning-a-migration#having-regular-checkpoints]], [[chapter-02-planning-a-migration#qualitative-measures]], [[chapter-02-planning-a-migration#being-open-to-new-approaches]], [[chapter-02-planning-a-migration#summary]], [[chapter-03-splitting-the-monolith#chapter-3-splitting-the-monolith]], [[chapter-03-splitting-the-monolith#cut-copy-or-reimplement]]
+- **how it works** — [[chapter-02-planning-a-migration#shifting-structures]]
+- **other examples of use** — [[chapter-03-splitting-the-monolith#how-it-works]]
+- using with protocols other than HTTP,
+- **changing organizations** — [[chapter-01-just-enough-microservices#aggregate]], [[chapter-01-just-enough-microservices#mapping-aggregates-and-bounded-contexts-to-microservices]], [[chapter-01-just-enough-microservices#summary]], [[chapter-02-planning-a-migration#understanding-the-goal]], [[chapter-02-planning-a-migration#improve-team-autonomy]]
+- combined model for prioritizing service
+- **decomposition** — [[chapter-02-planning-a-migration#startups]], [[chapter-02-planning-a-migration#customer-installed-and-managed-software]]
+- **cost of change** — [[chapter-02-planning-a-migration#scale-cost-effectively-for-load]], [[chapter-02-planning-a-migration#improve-robustness]]
+- **deciding where to start** — [[chapter-02-planning-a-migration#improve-robustness]]
+- **domain-driven design** — [[chapter-02-planning-a-migration#improve-robustness]], [[chapter-02-planning-a-migration#scale-the-number-of-developers]], [[chapter-02-planning-a-migration#embrace-new-technology]], [[chapter-02-planning-a-migration#when-might-microservices-be-a-bad-idea]], [[chapter-02-planning-a-migration#startups]]
+- finding out if transition is working,
+- **where to use it** — [[chapter-02-planning-a-migration#its-not-one-size-fits-all]]
+- **UI composition** — [[chapter-03-splitting-the-monolith#where-to-use-it]], [[chapter-03-splitting-the-monolith#example-http-reverse-proxy]], [[chapter-03-splitting-the-monolith#proxy-options]]
+- **and mobile applications** — [[chapter-03-splitting-the-monolith#example-http-reverse-proxy]]
+- **example, micro frontends** — [[chapter-03-splitting-the-monolith#proxy-options]]
+- **example, widget composition** — [[chapter-03-splitting-the-monolith#where-to-use-it]]
+- **page composition** — [[chapter-03-splitting-the-monolith#where-to-use-it]]
+- **where to use it** — [[chapter-03-splitting-the-monolith#proxy-options]]
+- **modular monoliths** — [[preface#what-you-will-learn]], [[chapter-02-planning-a-migration#a-combined-model]]
+- 71-73
+- **importance of incremental migration** — [[chapter-02-planning-a-migration#improve-team-autonomy]]
+- reasons to adopt microservices and
+- **alternatives** — [[chapter-01-just-enough-microservices#coupling]]
+- **reorganizing teams** — [[chapter-02-planning-a-migration#trade-offs]], [[chapter-02-planning-a-migration#changing-organizations]], [[chapter-02-planning-a-migration#creating-the-guiding-coalition]], [[chapter-02-planning-a-migration#developing-a-vision-and-strategy]], [[chapter-02-planning-a-migration#communicating-the-change-vision]], [[chapter-02-planning-a-migration#generating-short-term-wins]], [[chapter-02-planning-a-migration#anchoring-new-approaches-in-the-culture]], [[chapter-02-planning-a-migration#its-production-that-counts]]
+- **selling the idea and making it happen** — [[chapter-01-just-enough-microservices#aggregate]]
+- **trade-offs** — [[chapter-01-just-enough-microservices#just-enough-domain-driven-design]], [[chapter-01-just-enough-microservices#aggregate]]
+- **understanding the goal** — [[chapter-01-just-enough-microservices#on-coupling-and-cohesion]], [[chapter-01-just-enough-microservices#coupling]]
+- **migration patterns** — [[chapter-02-planning-a-migration#a-combined-model]], [[chapter-02-planning-a-migration#shifting-structures]], [[chapter-02-planning-a-migration#its-not-one-size-fits-all]], [[chapter-02-planning-a-migration#making-a-change]], [[chapter-02-planning-a-migration#changing-skills]], [[chapter-02-planning-a-migration#having-regular-checkpoints]], [[chapter-02-planning-a-migration#qualitative-measures]], [[chapter-02-planning-a-migration#being-open-to-new-approaches]], [[chapter-02-planning-a-migration#summary]], [[chapter-03-splitting-the-monolith#chapter-3-splitting-the-monolith]], [[chapter-03-splitting-the-monolith#cut-copy-or-reimplement]], [[chapter-03-splitting-the-monolith#refactoring-the-monolith]], [[chapter-03-splitting-the-monolith#migration-patterns]], [[chapter-03-splitting-the-monolith#how-it-works]], [[chapter-03-splitting-the-monolith#where-to-use-it]], [[chapter-03-splitting-the-monolith#example-http-reverse-proxy]], [[chapter-03-splitting-the-monolith#proxy-options]], [[chapter-03-splitting-the-monolith#changing-protocols]], [[chapter-03-splitting-the-monolith#example-ftp]], [[chapter-03-splitting-the-monolith#example-message-interception]], [[chapter-03-splitting-the-monolith#changing-behavior-while-migrating-functionality]], [[chapter-03-splitting-the-monolith#pattern-ui-composition]], [[chapter-03-splitting-the-monolith#example-widget-composition]], [[chapter-03-splitting-the-monolith#example-micro-frontends]], [[chapter-03-splitting-the-monolith#pattern-branch-by-abstraction]]
+- **branch by abstraction** — [[chapter-03-splitting-the-monolith#proxy-options]], [[chapter-03-splitting-the-monolith#changing-protocols]], [[chapter-03-splitting-the-monolith#example-ftp]], [[chapter-03-splitting-the-monolith#example-message-interception]]
+- cleanup, removing old implementation,
+- Content Orchestration Service of The
+- **Guardian** — [[chapter-03-splitting-the-monolith#example-http-reverse-proxy]]
+- monitoring and troubleshooting, problems
+- **with microservices** — [[chapter-04-decomposing-the-database#implementing-sagas]], [[chapter-04-decomposing-the-database#summary]]
+- move foreign key relationship to code pattern,
+- **how the problems show themselves** — [[chapter-04-decomposing-the-database#implementing-sagas]]
+- **potential solutions** — [[chapter-04-decomposing-the-database#implementing-sagas]], [[chapter-04-decomposing-the-database#summary]]
+- **173-187** — [[chapter-05-growing-pains#when-might-this-problem-occur]]
+- **data consistency** — [[chapter-04-decomposing-the-database#physical-versus-logical-database-separation]], [[chapter-04-decomposing-the-database#splitting-the-database-first-or-the-code]], [[chapter-04-decomposing-the-database#split-the-database-first]]
+- **example, shared static data** — [[chapter-04-decomposing-the-database#split-the-database-first]], [[chapter-04-decomposing-the-database#split-the-code-first]], [[chapter-04-decomposing-the-database#so-which-should-i-split-first]]
+- dedicated reference data schema pattern,
+- duplicate static reference data pattern,
+- **log aggregation** — [[chapter-04-decomposing-the-database#implementing-sagas]]
+- **testing in production** — [[chapter-04-decomposing-the-database#implementing-sagas]]
+- **tracing** — [[chapter-04-decomposing-the-database#implementing-sagas]]
+- **working toward observability** — [[chapter-04-decomposing-the-database#summary]]
+- **when the problems might occur** — [[chapter-04-decomposing-the-database#implementing-sagas]]
+- **monolith as data access layer pattern** — [[chapter-04-decomposing-the-database#pattern-tracer-write]], [[chapter-05-growing-pains#when-might-this-problem-occur]]
+- **monolithic applications** — [[preface#what-you-will-learn]]
+- **advantages of** — [[preface#acknowledgments]]
+- **challenges of** — [[preface#acknowledgments]]
+- **decomposing the database** — [[chapter-03-splitting-the-monolith#how-it-works]], [[chapter-03-splitting-the-monolith#as-a-fallback-mechanism]], [[chapter-03-splitting-the-monolith#where-to-use-it]], [[chapter-03-splitting-the-monolith#example-comparing-credit-derivative-pricing]], [[chapter-03-splitting-the-monolith#example-homegate-listings]], [[chapter-03-splitting-the-monolith#using-spies]], [[chapter-03-splitting-the-monolith#github-scientist]], [[chapter-03-splitting-the-monolith#pattern-decorating-collaborator]], [[chapter-03-splitting-the-monolith#example-loyalty-program]], [[chapter-03-splitting-the-monolith#example-issuing-loyalty-cards]], [[chapter-03-splitting-the-monolith#implementing-change-data-capture]], [[chapter-03-splitting-the-monolith#summary]], [[chapter-04-decomposing-the-database#pattern-the-shared-database]], [[chapter-04-decomposing-the-database#but-it-cant-be-done]], [[chapter-04-decomposing-the-database#pattern-database-view]], [[chapter-04-decomposing-the-database#the-database-as-a-public-contract]], [[chapter-04-decomposing-the-database#views-to-present]], [[chapter-04-decomposing-the-database#ownership]], [[chapter-04-decomposing-the-database#pattern-database-wrapping-service]], [[chapter-04-decomposing-the-database#where-to-use-it]], [[chapter-04-decomposing-the-database#pattern-database-as-a-service-interface]], [[chapter-04-decomposing-the-database#implementing-a-mapping-engine]], [[chapter-04-decomposing-the-database#transferring-ownership]], [[chapter-04-decomposing-the-database#pattern-aggregate-exposing-monolith]], [[chapter-04-decomposing-the-database#pattern-change-data-ownership]], [[chapter-04-decomposing-the-database#data-synchronization]], [[chapter-04-decomposing-the-database#step-1-bulk-synchronize-data]], [[chapter-04-decomposing-the-database#step-2-synchronize-on-write-read-from-old-schema]], [[chapter-04-decomposing-the-database#step-3-synchronize-on-write-read-from-new-schema]], [[chapter-04-decomposing-the-database#pattern-tracer-write]], [[chapter-04-decomposing-the-database#example-orders-at-square]], [[chapter-04-decomposing-the-database#physical-versus-logical-database-separation]], [[chapter-04-decomposing-the-database#splitting-the-database-first-or-the-code]], [[chapter-04-decomposing-the-database#split-the-database-first]], [[chapter-04-decomposing-the-database#split-the-code-first]], [[chapter-04-decomposing-the-database#so-which-should-i-split-first]], [[chapter-04-decomposing-the-database#pattern-split-table]], [[chapter-04-decomposing-the-database#pattern-move-foreign-key-relationship-to-code]], [[chapter-04-decomposing-the-database#moving-the-join]], [[chapter-04-decomposing-the-database#data-consistency]], [[chapter-04-decomposing-the-database#example-shared-static-data]], [[chapter-04-decomposing-the-database#acid-transactions]], [[chapter-04-decomposing-the-database#still-acid-but-lacking-atomicity]]
+- **data synchronization** — [[chapter-04-decomposing-the-database#pattern-the-shared-database]], [[chapter-04-decomposing-the-database#but-it-cant-be-done]], [[chapter-04-decomposing-the-database#pattern-database-view]]
+- Database as a Service interface pattern,
+- **static reference data library pattern** — [[chapter-04-decomposing-the-database#split-the-code-first]]
+- **static reference data service pattern** — [[chapter-04-decomposing-the-database#split-the-code-first]]
+- **what to do, author's option** — [[chapter-04-decomposing-the-database#split-the-code-first]]
+- **moving the join** — [[chapter-04-decomposing-the-database#physical-versus-logical-database-separation]]
+- **where to use it** — [[chapter-04-decomposing-the-database#split-the-database-first]]
+- **multi-schema storage pattern** — [[chapter-04-decomposing-the-database#data-synchronization]], [[chapter-05-growing-pains#when-might-this-problem-occur]]
+- 135-137
+- **database view pattern** — [[chapter-03-splitting-the-monolith#as-a-fallback-mechanism]], [[chapter-03-splitting-the-monolith#where-to-use-it]], [[chapter-03-splitting-the-monolith#example-comparing-credit-derivative-pricing]], [[chapter-03-splitting-the-monolith#example-homegate-listings]]
+- database wrapping service pattern,
+- N
+- **N-version programming** — [[chapter-03-splitting-the-monolith#pattern-ui-composition]]
+- networks
+- **latencies and failures**
+- **microservices communicating via**
+- **NGINX proxy** — [[chapter-02-planning-a-migration#changing-skills]]
+- **NoSQL databases** — [[chapter-04-decomposing-the-database#example-orders-at-square]]
+- 132-135
+- **sagas** — [[chapter-04-decomposing-the-database#data-consistency]]
+- **split table pattern** — [[chapter-04-decomposing-the-database#example-orders-at-square]]
+- splitting apart the database, which to
+- **split first** — [[chapter-04-decomposing-the-database#data-synchronization]], [[chapter-04-decomposing-the-database#step-1-bulk-synchronize-data]], [[chapter-04-decomposing-the-database#step-2-synchronize-on-write-read-from-old-schema]], [[chapter-04-decomposing-the-database#step-3-synchronize-on-write-read-from-new-schema]], [[chapter-04-decomposing-the-database#where-to-use-it]], [[chapter-04-decomposing-the-database#pattern-tracer-write]]
+- synchronize data in application pattern,
+- 145-149
+- **tracer write pattern** — [[chapter-04-decomposing-the-database#pattern-database-wrapping-service]], [[chapter-04-decomposing-the-database#where-to-use-it]], [[chapter-04-decomposing-the-database#pattern-database-as-a-service-interface]], [[chapter-04-decomposing-the-database#implementing-a-mapping-engine]], [[chapter-04-decomposing-the-database#transferring-ownership]], [[chapter-04-decomposing-the-database#pattern-aggregate-exposing-monolith]], [[chapter-04-decomposing-the-database#pattern-change-data-ownership]]
+- **transactions** — [[chapter-04-decomposing-the-database#so-which-should-i-split-first]], [[chapter-04-decomposing-the-database#pattern-split-table]], [[chapter-04-decomposing-the-database#pattern-move-foreign-key-relationship-to-code]], [[chapter-04-decomposing-the-database#moving-the-join]], [[chapter-04-decomposing-the-database#data-consistency]]
+- **transferring data ownership** — [[chapter-03-splitting-the-monolith#example-issuing-loyalty-cards]], [[chapter-03-splitting-the-monolith#implementing-change-data-capture]], [[chapter-03-splitting-the-monolith#summary]], [[chapter-04-decomposing-the-database#pattern-the-shared-database]]
+- **distributed** — [[preface#oreilly-online-learning]]
+- **horizontal scaling, cost effective** — [[chapter-01-just-enough-microservices#coupling]]
+- **monitoring and troubleshooting** — [[chapter-04-decomposing-the-database#implementing-sagas]]
+- **single process** — [[preface#what-you-will-learn]]
+- O
+- **observability** — [[chapter-04-decomposing-the-database#summary]]
+- operations
+- **DevOps not meaning NoOps** — [[chapter-02-planning-a-migration#creating-the-guiding-coalition]]
+- embedding operations team members in
+- **delivery teams** — [[chapter-02-planning-a-migration#changing-organizations]]
+- **operations team provisioning test environment, eliminating** — [[chapter-02-planning-a-migration#communicating-the-change-vision]]
+- optimization of microservices, global vs. local,
+- **modular monoliths** — [[preface#what-you-will-learn]]
+- **splitting** — [[chapter-02-planning-a-migration#using-a-domain-model-for-prioritization]], [[chapter-02-planning-a-migration#a-combined-model]], [[chapter-02-planning-a-migration#shifting-structures]], [[chapter-02-planning-a-migration#its-not-one-size-fits-all]], [[chapter-02-planning-a-migration#making-a-change]], [[chapter-02-planning-a-migration#changing-skills]], [[chapter-02-planning-a-migration#having-regular-checkpoints]], [[chapter-02-planning-a-migration#qualitative-measures]], [[chapter-02-planning-a-migration#being-open-to-new-approaches]], [[chapter-02-planning-a-migration#summary]], [[chapter-03-splitting-the-monolith#chapter-3-splitting-the-monolith]], [[chapter-03-splitting-the-monolith#cut-copy-or-reimplement]], [[chapter-03-splitting-the-monolith#refactoring-the-monolith]], [[chapter-03-splitting-the-monolith#migration-patterns]], [[chapter-03-splitting-the-monolith#how-it-works]], [[chapter-03-splitting-the-monolith#where-to-use-it]], [[chapter-03-splitting-the-monolith#example-http-reverse-proxy]], [[chapter-03-splitting-the-monolith#proxy-options]], [[chapter-03-splitting-the-monolith#changing-protocols]], [[chapter-03-splitting-the-monolith#example-ftp]], [[chapter-03-splitting-the-monolith#example-message-interception]], [[chapter-03-splitting-the-monolith#changing-behavior-while-migrating-functionality]], [[chapter-03-splitting-the-monolith#pattern-ui-composition]], [[chapter-03-splitting-the-monolith#example-widget-composition]], [[chapter-03-splitting-the-monolith#example-micro-frontends]], [[chapter-03-splitting-the-monolith#pattern-branch-by-abstraction]]
+- branch by abstraction migration pattern,
+- 104-113
+- change-data capture migration pattern,
+- 229-231
+- **how the problem shows itself** — [[chapter-05-growing-pains#potential-solutions]]
+- **potential solutions** — [[chapter-05-growing-pains#potential-solutions]]
+- **when the problem might occur** — [[chapter-05-growing-pains#potential-solutions]]
+- **orchestrated sagas** — [[chapter-04-decomposing-the-database#example-shared-static-data]]
+- deciding between choreographed style and,
+- **mixing with choreographed style** — [[chapter-04-decomposing-the-database#acid-transactions]]
+- organizations
+- **changing** — [[chapter-01-just-enough-microservices#aggregate]], [[chapter-01-just-enough-microservices#mapping-aggregates-and-bounded-contexts-to-microservices]], [[chapter-01-just-enough-microservices#summary]], [[chapter-02-planning-a-migration#understanding-the-goal]], [[chapter-02-planning-a-migration#improve-team-autonomy]]
+- 120-124
+- **changing behavior while migrating functionality** — [[chapter-03-splitting-the-monolith#how-it-works]]
+- **deciding whether to change the monolith** — [[chapter-02-planning-a-migration#using-a-domain-model-for-prioritization]], [[chapter-02-planning-a-migration#a-combined-model]]
+- **decorating collaborator pattern** — [[chapter-03-splitting-the-monolith#example-widget-composition]], [[chapter-03-splitting-the-monolith#example-micro-frontends]]
+- **migration patterns** — [[chapter-02-planning-a-migration#a-combined-model]]
+- **strangler fig migration pattern** — [[chapter-02-planning-a-migration#shifting-structures]], [[chapter-02-planning-a-migration#its-not-one-size-fits-all]], [[chapter-02-planning-a-migration#making-a-change]], [[chapter-02-planning-a-migration#changing-skills]], [[chapter-02-planning-a-migration#having-regular-checkpoints]], [[chapter-02-planning-a-migration#qualitative-measures]], [[chapter-02-planning-a-migration#being-open-to-new-approaches]], [[chapter-02-planning-a-migration#summary]], [[chapter-03-splitting-the-monolith#chapter-3-splitting-the-monolith]], [[chapter-03-splitting-the-monolith#cut-copy-or-reimplement]], [[chapter-03-splitting-the-monolith#refactoring-the-monolith]], [[chapter-03-splitting-the-monolith#migration-patterns]], [[chapter-03-splitting-the-monolith#how-it-works]]
+- UI composition migration pattern,
+- 98-104
+- **third-party black box systems** — [[preface#oreilly-online-learning]]
+- **Morris, Kief** — [[chapter-04-decomposing-the-database#split-the-code-first]]
+- **anchoring new approaches in the culture** — [[chapter-02-planning-a-migration#improve-team-autonomy]]
+- **communicating the change vision** — [[chapter-02-planning-a-migration#understanding-the-goal]]
+- consolidating gains and producing more
+- **change** — [[chapter-02-planning-a-migration#improve-team-autonomy]]
+- **creating guiding coalition** — [[chapter-01-just-enough-microservices#mapping-aggregates-and-bounded-contexts-to-microservices]]
+- **developing a vision and strategy** — [[chapter-01-just-enough-microservices#summary]]
+- **getting microservice transition into production** — [[chapter-02-planning-a-migration#improve-team-autonomy]]
+- **testing in** — [[chapter-04-decomposing-the-database#implementing-sagas]]
+- **programming languages** — [[chapter-01-just-enough-microservices#and-ownership]], [[chapter-05-growing-pains#monitoring-and-troubleshooting]]
+- empower employees for broad-based
+- **action** — [[chapter-02-planning-a-migration#understanding-the-goal]]
+- **establishing sense of urgency** — [[chapter-01-just-enough-microservices#mapping-aggregates-and-bounded-contexts-to-microservices]]
+- **generating short-term wins** — [[chapter-02-planning-a-migration#understanding-the-goal]]
+- **orphaned services** — [[chapter-05-growing-pains#potential-solutions]], [[chapter-05-growing-pains#monitoring-and-troubleshooting]]
+- **choice of, microservices and**
+- **size of microservices and**
+- **progressive delivery** — [[chapter-03-splitting-the-monolith#example-widget-composition]], [[chapter-05-growing-pains#when-might-this-problem-occur]]
+- protocols
+- changing in HTTP reverse proxy strangler
+- **fig migration** — [[chapter-02-planning-a-migration#being-open-to-new-approaches]], [[chapter-02-planning-a-migration#summary]], [[chapter-03-splitting-the-monolith#chapter-3-splitting-the-monolith]], [[chapter-03-splitting-the-monolith#cut-copy-or-reimplement]]
+- **service meshes** — [[chapter-03-splitting-the-monolith#chapter-3-splitting-the-monolith]]
+- multiple, service exposing capabilities over,
+- **how the problem shows itself** — [[chapter-05-growing-pains#potential-solutions]]
+- **potential solutions to the problem** — [[chapter-05-growing-pains#monitoring-and-troubleshooting]]
+- **when the problem might occur** — [[chapter-05-growing-pains#monitoring-and-troubleshooting]]
+- **“outside-in” thinking in defining service interfaces** — [[chapter-01-just-enough-microservices#modeled-around-a-business-domain]]
+- ownership
+- **collective ownership of services** — [[chapter-05-growing-pains#potential-solutions]]
+- **confused lines with monoliths** — [[preface#acknowledgments]]
+- **database and database views** — [[chapter-03-splitting-the-monolith#example-comparing-credit-derivative-pricing]]
+- microservice code ownership at scale,
+- **other than HTTP, using strangler fig migration pattern** — [[chapter-03-splitting-the-monolith#how-it-works]]
+- Q
+- **qualitative measures of success** — [[chapter-02-planning-a-migration#reversible-and-irreversible-decisions]]
+- quality feedback cycles, continually refining,
+- 209-210
+- **of data, transferring when splitting the database** — [[chapter-03-splitting-the-monolith#example-issuing-loyalty-cards]], [[chapter-03-splitting-the-monolith#implementing-change-data-capture]], [[chapter-03-splitting-the-monolith#summary]], [[chapter-04-decomposing-the-database#pattern-the-shared-database]]
+- **orphaned microservices and** — [[chapter-05-growing-pains#potential-solutions]], [[chapter-05-growing-pains#monitoring-and-troubleshooting]]
+- teams more fully owning whole life cycle of
+- **software** — [[chapter-02-planning-a-migration#changing-organizations]]
+- R
+- Refactoring Databases (Ambler and Sadalage),
+- P
+- page composition example, UI composition
+- **pattern** — [[chapter-03-splitting-the-monolith#where-to-use-it]]
+- **pain points for microservices** — [[chapter-04-decomposing-the-database#two-phase-commits]]
+- (see also microservices, problems with)
+- **parallel run pattern** — [[chapter-02-planning-a-migration#changing-skills]], [[chapter-03-splitting-the-monolith#example-message-interception]], [[chapter-03-splitting-the-monolith#changing-behavior-while-migrating-functionality]], [[chapter-03-splitting-the-monolith#pattern-ui-composition]], [[chapter-03-splitting-the-monolith#example-widget-composition]], [[chapter-05-growing-pains#when-might-this-problem-occur]]
+- **dark launching and canary releasing, comparison to** — [[chapter-03-splitting-the-monolith#example-widget-composition]]
+- **example, comparing credit derivative pricing** — [[chapter-03-splitting-the-monolith#example-message-interception]]
+- **example, Homegate listings** — [[chapter-03-splitting-the-monolith#pattern-ui-composition]]
+- **verification techniques** — [[chapter-03-splitting-the-monolith#example-widget-composition]]
+- verifying using Scientist library on GitHub,
+- **refactoring the monolith** — [[chapter-02-planning-a-migration#a-combined-model]]
+- **registries for microservices** — [[chapter-05-growing-pains#monitoring-and-troubleshooting]]
+- **relational databases** — [[chapter-04-decomposing-the-database#example-orders-at-square]]
+- **Release It! (Nygard)** — [[chapter-05-growing-pains#potential-solutions]]
+- **release-on-demand techniques** — [[chapter-01-just-enough-microservices#what-problems-do-they-create]]
+- releases
+- **automated release remediation** — [[chapter-05-growing-pains#when-might-this-problem-occur]]
+- **deployment versus** — [[chapter-02-planning-a-migration#its-not-one-size-fits-all]]
+- **smaller, reducing risks with** — [[chapter-01-just-enough-microservices#what-problems-do-they-create]]
+- reporting
+- **problems with microservices** — [[chapter-04-decomposing-the-database#saga-failure-modes]], [[chapter-04-decomposing-the-database#implementing-sagas]]
+- **potential solutions** — [[chapter-04-decomposing-the-database#implementing-sagas]]
+- **when the problem might occur** — [[chapter-04-decomposing-the-database#implementing-sagas]]
+- **reporting database pattern** — [[chapter-03-splitting-the-monolith#pattern-decorating-collaborator]]
+- **repository per bounded context pattern** — [[chapter-04-decomposing-the-database#step-1-bulk-synchronize-data]]
+- resilience
+- resilience and robustness in microservices,
+- **verifying using Spies** — [[chapter-03-splitting-the-monolith#example-widget-composition]]
+- **where to use it** — [[chapter-03-splitting-the-monolith#example-widget-composition]]
+- **Parnas, David** — [[chapter-01-just-enough-microservices#what-are-microservices]]
+- **patterns, index of** — [[chapter-05-growing-pains#when-might-this-problem-occur]]
+- **physical versus logical database separation** — [[chapter-04-decomposing-the-database#pattern-change-data-ownership]]
+- prioritization
+- combined model for prioritizing service
+- **decomposition** — [[chapter-02-planning-a-migration#startups]], [[chapter-02-planning-a-migration#customer-installed-and-managed-software]]
+- **trade-offs in process of adopting microservices** — [[chapter-01-just-enough-microservices#just-enough-domain-driven-design]]
+- **using domain model for** — [[chapter-02-planning-a-migration#embrace-new-technology]]
+- production
+- 232-233
+- **versus robustness** — [[chapter-01-just-enough-microservices#coupling]]
+- return on investment (ROI) of moving to
+- **microservices** — [[chapter-01-just-enough-microservices#coupling]]
+- reuse of code (see code reuse)
+- **reversible decisions** — [[chapter-02-planning-a-migration#scale-cost-effectively-for-load]], [[chapter-05-growing-pains#potential-solutions]]
+- **rewrites, incremental, of monolithic code** — [[chapter-02-planning-a-migration#a-combined-model]]
+- robustness
+- **improving with use of microservices** — [[chapter-01-just-enough-microservices#coupling]]
+- **improving without using microservices** — [[chapter-01-just-enough-microservices#coupling]]
+- **resilience versus** — [[chapter-01-just-enough-microservices#coupling]]
+- **robustness and resiliency, problem with microservices** — [[chapter-05-growing-pains#reporting]], [[chapter-05-growing-pains#potential-solutions]]
+- rollbacks
+- **in sagas** — [[chapter-04-decomposing-the-database#example-shared-static-data]]
+- **reordering steps to reduce** — [[chapter-04-decomposing-the-database#example-shared-static-data]]
+- **in two-phase commits** — [[chapter-04-decomposing-the-database#pattern-move-foreign-key-relationship-to-code]]
+- routing, content-based, in message interception
+- **strangler fig migration** — [[chapter-03-splitting-the-monolith#migration-patterns]]
+- running too many things in microservices,
+- **explicit schemas for microservices** — [[chapter-04-decomposing-the-database#saga-failure-modes]]
+- monolith and microservice trying to keep
+- **same two schemas in sync** — [[chapter-04-decomposing-the-database#ownership]]
+- using database views to allow underlying
+- **schema to change** — [[chapter-03-splitting-the-monolith#example-comparing-credit-derivative-pricing]]
+- **SchemaSpy** — [[chapter-04-decomposing-the-database#step-2-synchronize-on-write-read-from-old-schema]]
+- **Scientist library** — [[chapter-03-splitting-the-monolith#example-widget-composition]]
+- **semantic breakages** — [[chapter-04-decomposing-the-database#saga-failure-modes]]
+- **service meshes** — [[chapter-03-splitting-the-monolith#chapter-3-splitting-the-monolith]]
+- **shared database** — [[chapter-03-splitting-the-monolith#how-it-works]], [[chapter-03-splitting-the-monolith#as-a-fallback-mechanism]], [[chapter-05-growing-pains#potential-solutions]]
+- shared static data example, move foreign key
+- **relationship to code pattern** — [[chapter-04-decomposing-the-database#split-the-database-first]], [[chapter-04-decomposing-the-database#split-the-code-first]], [[chapter-04-decomposing-the-database#so-which-should-i-split-first]]
+- **dedicated reference data schema** — [[chapter-04-decomposing-the-database#split-the-database-first]]
+- **duplicate static reference data pattern** — [[chapter-04-decomposing-the-database#split-the-database-first]]
+- **static reference data library** — [[chapter-04-decomposing-the-database#split-the-code-first]]
+- **static reference data service pattern** — [[chapter-04-decomposing-the-database#split-the-code-first]]
+- **what to do, author's opinion** — [[chapter-04-decomposing-the-database#split-the-code-first]]
+- **siloing of teams** — [[chapter-02-planning-a-migration#trade-offs]]
+- **single process monoliths** — [[preface#what-you-will-learn]]
+- 224-225
+- **how the problem shows itself** — [[chapter-05-growing-pains#more-services-more-pain]]
+- **potential solutions to the problem** — [[chapter-05-growing-pains#more-services-more-pain]]
+- **when the problem might occur** — [[chapter-05-growing-pains#more-services-more-pain]]
+- **runtimes, allowing hot deployment of new versions of modules** — [[chapter-01-just-enough-microservices#what-problems-do-they-create]]
+- **modular** — [[preface#what-you-will-learn]]
+- skills
+- assessing and improving for team members,
+- S
+- **sagas** — [[chapter-04-decomposing-the-database#data-consistency]], [[chapter-04-decomposing-the-database#example-shared-static-data]], [[chapter-04-decomposing-the-database#acid-transactions]], [[chapter-04-decomposing-the-database#still-acid-but-lacking-atomicity]]
+- **versus distributed transactions** — [[chapter-04-decomposing-the-database#still-acid-but-lacking-atomicity]]
+- **failure modes** — [[chapter-04-decomposing-the-database#example-shared-static-data]]
+- mixing fail backward and fail forward,
+- **reordering steps to reduce rollbacks** — [[chapter-04-decomposing-the-database#example-shared-static-data]]
+- **rollbacks** — [[chapter-04-decomposing-the-database#example-shared-static-data]]
+- **implementing** — [[chapter-04-decomposing-the-database#example-shared-static-data]]
+- keeping developers happy by mastering new
+- **skills** — [[chapter-01-just-enough-microservices#coupling]]
+- **Spies, using to verify parallel run** — [[chapter-03-splitting-the-monolith#example-widget-composition]]
+- **split table pattern** — [[chapter-04-decomposing-the-database#example-orders-at-square]], [[chapter-05-growing-pains#potential-solutions]]
+- **Spotify model for teams** — [[chapter-01-just-enough-microservices#coupling]], [[chapter-02-planning-a-migration#changing-organizations]]
+- **Spotify UI, componentized** — [[chapter-03-splitting-the-monolith#proxy-options]]
+- Square orders example, tracer write pattern,
+- 154-158
+- **startups, microservices and** — [[chapter-01-just-enough-microservices#coupling]]
+- **State of DevOps Report (2017)** — [[chapter-03-splitting-the-monolith#proxy-options]]
+- **static reference data library pattern** — [[chapter-04-decomposing-the-database#split-the-code-first]], [[chapter-05-growing-pains#potential-solutions]]
+- **static reference data service pattern** — [[chapter-04-decomposing-the-database#split-the-code-first]], [[chapter-05-growing-pains#potential-solutions]]
+- **strangler fig application pattern** — [[chapter-01-just-enough-microservices#coupling]], [[chapter-02-planning-a-migration#shifting-structures]], [[chapter-02-planning-a-migration#its-not-one-size-fits-all]], [[chapter-02-planning-a-migration#making-a-change]], [[chapter-02-planning-a-migration#changing-skills]], [[chapter-02-planning-a-migration#having-regular-checkpoints]], [[chapter-02-planning-a-migration#qualitative-measures]], [[chapter-02-planning-a-migration#being-open-to-new-approaches]], [[chapter-02-planning-a-migration#summary]], [[chapter-03-splitting-the-monolith#chapter-3-splitting-the-monolith]], [[chapter-03-splitting-the-monolith#cut-copy-or-reimplement]], [[chapter-03-splitting-the-monolith#refactoring-the-monolith]], [[chapter-03-splitting-the-monolith#migration-patterns]], [[chapter-03-splitting-the-monolith#how-it-works]], [[chapter-03-splitting-the-monolith#example-message-interception]]
+- **example, FTP** — [[chapter-03-splitting-the-monolith#cut-copy-or-reimplement]]
+- **example, message interception** — [[chapter-03-splitting-the-monolith#refactoring-the-monolith]]
+- **choreographed sagas** — [[chapter-04-decomposing-the-database#example-shared-static-data]]
+- deciding between choreographed and
+- **orchestrated** — [[chapter-04-decomposing-the-database#acid-transactions]]
+- mixing choreographed and orchestrated
+- **styles** — [[chapter-04-decomposing-the-database#acid-transactions]]
+- **orchestrated sagas** — [[chapter-04-decomposing-the-database#example-shared-static-data]]
+- scaling
+- **cost-effective scaling for load with microservices** — [[chapter-01-just-enough-microservices#coupling]]
+- cost-effective scaling for load without using
+- **microservices** — [[chapter-01-just-enough-microservices#coupling]]
+- Scaling Agile @ Spotify (Kniberg and Ivarsson),
+- **content-based routing** — [[chapter-03-splitting-the-monolith#migration-patterns]]
+- **selective consumption of messages** — [[chapter-03-splitting-the-monolith#how-it-works]]
+- **example, reverse HTTP proxy** — [[chapter-02-planning-a-migration#making-a-change]], [[chapter-02-planning-a-migration#changing-skills]], [[chapter-02-planning-a-migration#having-regular-checkpoints]], [[chapter-02-planning-a-migration#qualitative-measures]], [[chapter-02-planning-a-migration#being-open-to-new-approaches]], [[chapter-02-planning-a-migration#summary]], [[chapter-03-splitting-the-monolith#chapter-3-splitting-the-monolith]], [[chapter-03-splitting-the-monolith#cut-copy-or-reimplement]]
+- **schema-less interchange formats** — [[chapter-04-decomposing-the-database#saga-failure-modes]]
+- schemas
+- **database view projecting subset of underlying schema** — [[chapter-03-splitting-the-monolith#example-comparing-credit-derivative-pricing]]
+- **databases and** — [[chapter-03-splitting-the-monolith#how-it-works]]
+- dedicated shared schema for reference data,
+- **changing protocols** — [[chapter-02-planning-a-migration#being-open-to-new-approaches]], [[chapter-02-planning-a-migration#summary]], [[chapter-03-splitting-the-monolith#chapter-3-splitting-the-monolith]], [[chapter-03-splitting-the-monolith#cut-copy-or-reimplement]]
+- **data** — [[chapter-02-planning-a-migration#changing-skills]]
+- **inserting the proxy** — [[chapter-02-planning-a-migration#making-a-change]]
+- **migrating the functionality** — [[chapter-02-planning-a-migration#making-a-change]]
+- **proxy options** — [[chapter-02-planning-a-migration#changing-skills]], [[chapter-02-planning-a-migration#having-regular-checkpoints]]
+- **redirecting calls** — [[chapter-02-planning-a-migration#changing-skills]]
+- **how it works** — [[chapter-02-planning-a-migration#shifting-structures]]
+- embracing new technology without using
+- **microservices** — [[chapter-01-just-enough-microservices#coupling]]
+- **Telepresence** — [[chapter-04-decomposing-the-database#summary]]
+- **temporal coupling** — [[chapter-01-just-enough-microservices#own-their-own-data]]
+- testing
+- end-to-end testing of microservices,
+- **other examples of use** — [[chapter-03-splitting-the-monolith#how-it-works]]
+- **using with protocols other than HTTP** — [[chapter-03-splitting-the-monolith#how-it-works]]
+- **where to use it** — [[chapter-02-planning-a-migration#its-not-one-size-fits-all]]
+- strategies, developing for organizational
+- **change** — [[chapter-01-just-enough-microservices#summary]]
+- **structural breakages** — [[chapter-04-decomposing-the-database#saga-failure-modes]]
+- Structured Design (Constantine and Yourdon),
+- **sunk cost fallacy** — [[chapter-01-just-enough-microservices#coupling]]
+- 226-228
+- **in production** — [[chapter-04-decomposing-the-database#implementing-sagas]]
+- integration of test teams into other teams,
+- **arising from being overly committed to specific strategy** — [[chapter-01-just-enough-microservices#summary]]
+- **avoiding** — [[chapter-02-planning-a-migration#domain-driven-design]]
+- synchronize data in application pattern,
+- **145-149** — [[chapter-05-growing-pains#potential-solutions]]
+- **bulk synchronize data** — [[chapter-04-decomposing-the-database#pattern-database-view]]
+- **synchronize on write, read from new database** — [[chapter-04-decomposing-the-database#views-to-present]]
+- **synchronize on write, read from old database** — [[chapter-04-decomposing-the-database#the-database-as-a-public-contract]]
+- **where to use this pattern** — [[chapter-04-decomposing-the-database#ownership]]
+- **synchronous calls** — [[chapter-01-just-enough-microservices#own-their-own-data]]
+- **third-party monoliths** — [[preface#oreilly-online-learning]]
+- time to market, improving
+- **using microservices** — [[chapter-01-just-enough-microservices#coupling]]
+- **without adopting microservices** — [[chapter-01-just-enough-microservices#coupling]]
+- **Timpson, John** — [[chapter-01-just-enough-microservices#coupling]]
+- tools
+- **BPM (business process modeling)** — [[chapter-04-decomposing-the-database#example-shared-static-data]]
+- **distributed tracing systems** — [[chapter-04-decomposing-the-database#implementing-sagas]]
+- **for changing databases** — [[chapter-04-decomposing-the-database#step-1-bulk-synchronize-data]]
+- **log aggregation systems** — [[chapter-04-decomposing-the-database#implementing-sagas]]
+- **tracer write pattern** — [[chapter-04-decomposing-the-database#pattern-database-wrapping-service]], [[chapter-04-decomposing-the-database#where-to-use-it]], [[chapter-04-decomposing-the-database#pattern-database-as-a-service-interface]], [[chapter-04-decomposing-the-database#implementing-a-mapping-engine]], [[chapter-04-decomposing-the-database#transferring-ownership]], [[chapter-04-decomposing-the-database#pattern-aggregate-exposing-monolith]], [[chapter-04-decomposing-the-database#pattern-change-data-ownership]], [[chapter-05-growing-pains#potential-solutions]]
+- **data synchronization** — [[chapter-04-decomposing-the-database#pattern-database-as-a-service-interface]]
+- **example, orders at Square** — [[chapter-04-decomposing-the-database#transferring-ownership]], [[chapter-04-decomposing-the-database#pattern-aggregate-exposing-monolith]], [[chapter-04-decomposing-the-database#pattern-change-data-ownership]]
+- **creating new Fulfillments service** — [[chapter-04-decomposing-the-database#transferring-ownership]]
+- **migrating consumers** — [[chapter-04-decomposing-the-database#pattern-aggregate-exposing-monolith]]
+- **synchronizing the data** — [[chapter-04-decomposing-the-database#pattern-aggregate-exposing-monolith]]
+- **retiring old source of truth** — [[chapter-04-decomposing-the-database#pattern-database-as-a-service-interface]]
+- **where to use it** — [[chapter-04-decomposing-the-database#pattern-change-data-ownership]]
+- **tracing sequences of calls between microservices** — [[chapter-04-decomposing-the-database#implementing-sagas]]
+- transaction log pollers implementation,
+- **change-data capture pattern** — [[chapter-03-splitting-the-monolith#how-it-works]]
+- **transactions** — [[chapter-04-decomposing-the-database#so-which-should-i-split-first]], [[chapter-04-decomposing-the-database#pattern-split-table]], [[chapter-04-decomposing-the-database#pattern-move-foreign-key-relationship-to-code]], [[chapter-04-decomposing-the-database#moving-the-join]], [[chapter-04-decomposing-the-database#data-consistency]]
+- T
+- **Team Topologies (Pais and Skelton)** — [[chapter-02-planning-a-migration#creating-the-guiding-coalition]]
+- teams
+- **code ownership and** — [[chapter-04-decomposing-the-database#sagas]]
+- **improving autonomy with microservices** — [[chapter-01-just-enough-microservices#coupling]]
+- improving autonomy without adopting
+- **microservices** — [[chapter-01-just-enough-microservices#coupling]]
+- **local developer experience problem** — [[chapter-04-decomposing-the-database#summary]]
+- organization of, three-tiered architecture
+- **reflecting**
+- qualitative measures of transition success,
+- (see also sagas)
+- **ACID** — [[chapter-04-decomposing-the-database#so-which-should-i-split-first]]
+- reorganizing for transition to microservices,
+- **lacking atomicity** — [[chapter-04-decomposing-the-database#pattern-split-table]]
+- **avoiding use of distributed transactions** — [[chapter-04-decomposing-the-database#data-consistency]]
+- **compensating** — [[chapter-04-decomposing-the-database#example-shared-static-data]]
+- **two-phase commits** — [[chapter-04-decomposing-the-database#pattern-move-foreign-key-relationship-to-code]]
+- **“The 2017 State of DevOps Report”** — [[chapter-03-splitting-the-monolith#proxy-options]]
+- **two-phase commits (2PCs)** — [[chapter-04-decomposing-the-database#pattern-move-foreign-key-relationship-to-code]]
+- U
+- **UI composition pattern** — [[chapter-03-splitting-the-monolith#where-to-use-it]], [[chapter-03-splitting-the-monolith#example-http-reverse-proxy]], [[chapter-03-splitting-the-monolith#proxy-options]], [[chapter-05-growing-pains#potential-solutions]]
+- 62-70
+- **changing skills** — [[chapter-02-planning-a-migration#generating-short-term-wins]]
+- **deciding where to start** — [[chapter-02-planning-a-migration#creating-the-guiding-coalition]]
+- **no one-size-fits-all** — [[chapter-02-planning-a-migration#trade-offs]]
+- **shifting structures** — [[chapter-02-planning-a-migration#trade-offs]]
+- **scaling number of developers** — [[chapter-01-just-enough-microservices#coupling]]
+- technical-oriented services, switch to modeling
+- **around business functionality** — [[chapter-02-planning-a-migration#trade-offs]]
+- technology
+- **changing to better handle load** — [[chapter-01-just-enough-microservices#coupling]]
+- deciding when to change technology when
+- **using microservices**
+- **embracing new technology using microservices** — [[chapter-01-just-enough-microservices#coupling]]
+- **example, micro frontends** — [[chapter-03-splitting-the-monolith#proxy-options]]
+- **example, page composition** — [[chapter-03-splitting-the-monolith#where-to-use-it]]
+- **example, widget composition** — [[chapter-03-splitting-the-monolith#where-to-use-it]]
+- **using with mobile applications** — [[chapter-03-splitting-the-monolith#example-http-reverse-proxy]]
+- **where to use it** — [[chapter-03-splitting-the-monolith#proxy-options]]
+- user interfaces (UIs)
+- **leaving monolithic, problems with**
+- **Music Corp example**
+- **treating microservice interfaces as** — [[chapter-01-just-enough-microservices#own-their-own-data]]
+- W
+- widget composition example, UI composition
+- **migration pattern** — [[chapter-03-splitting-the-monolith#where-to-use-it]]
+- **Woods, David** — [[chapter-01-just-enough-microservices#coupling]]
+- **Working Effectively with Legacy Code (Feathers)** — [[chapter-02-planning-a-migration#a-combined-model]]
+- Y
+- **Yourdon, Edward** — [[preface#acknowledgments]]
+- V
+- **Vault, Hashicorp** — [[chapter-03-splitting-the-monolith#where-to-use-it]]
+- **verify branch by abstraction pattern** — [[chapter-03-splitting-the-monolith#example-message-interception]]
+- **vertical scaling** — [[chapter-01-just-enough-microservices#coupling]]
+- **vision** — [[chapter-01-just-enough-microservices#summary]]
+- **communicating the change vision** — [[chapter-02-planning-a-migration#understanding-the-goal]]
