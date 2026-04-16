@@ -36,7 +36,7 @@ These require significant effort, expertise, and investment.
 
 ## Google's TrueTime API
 
-Used in Google's [[spanner]] database. TrueTime does not return a single timestamp but a **confidence interval**: `[earliest, latest]`. The actual current time is guaranteed to be somewhere within that interval. The width depends on how long since the last sync with a more accurate source. (source: designing-data-intensive-applications, chapter 8)
+Used in Google's Spanner database. TrueTime does not return a single timestamp but a **confidence interval**: `[earliest, latest]`. The actual current time is guaranteed to be somewhere within that interval. The width depends on how long since the last sync with a more accurate source. (source: designing-data-intensive-applications, chapter 8)
 
 Google deploys GPS receivers or atomic clocks in each datacenter, keeping uncertainty to about 7ms. Spanner uses this for distributed [[snapshot-isolation]]: it waits for the confidence interval to elapse before committing read-write transactions, ensuring that transaction timestamps reflect causality. (source: designing-data-intensive-applications, chapter 8)
 

@@ -54,9 +54,9 @@ Optimistic approaches perform better when contention is low and there is spare c
 These two terms are easily confused but refer to different guarantees (source: designing-data-intensive-applications, chapter 9):
 
 - **Serializability** is an isolation property of [[transactions]]. It applies to multi-object operations and guarantees they behave as if executed serially. The serial order can differ from the actual execution order.
-- **[[Linearizability]]** is a recency guarantee on individual objects (registers). It does not group operations into transactions and does not prevent [[write-skew]] on its own.
+- **[[linearizability|Linearizability]]** is a recency guarantee on individual objects (registers). It does not group operations into transactions and does not prevent [[write-skew]] on its own.
 
-A database providing both is said to have **strict serializability** (strong one-copy serializability). Implementations based on [[two-phase-locking]] or [[actual-serial-execution]] are typically linearizable. [[Serializable-snapshot-isolation]] is NOT linearizable, because it reads from a consistent snapshot that excludes recent writes. (source: designing-data-intensive-applications, chapter 9)
+A database providing both is said to have **strict serializability** (strong one-copy serializability). Implementations based on [[two-phase-locking]] or [[actual-serial-execution]] are typically linearizable. [[serializable-snapshot-isolation|Serializable snapshot isolation]] is NOT linearizable, because it reads from a consistent snapshot that excludes recent writes. (source: designing-data-intensive-applications, chapter 9)
 
 ## Related pages
 

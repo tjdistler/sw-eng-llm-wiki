@@ -12,7 +12,7 @@
 
 Informally, consensus means getting several nodes to agree on something. This arises in many critical situations (source: designing-data-intensive-applications, chapter 9):
 
-- **Leader election**: all nodes must agree which node is the leader to avoid [[split-brain]] in [[leader-based-replication]].
+- **Leader election**: all nodes must agree which node is the leader to avoid split-brain in [[leader-based-replication]].
 - **Atomic commit**: in a [[distributed-transactions|distributed transaction]], all nodes must agree whether to commit or abort.
 - **Uniqueness constraints**: when concurrent requests try to claim the same resource, the system must decide a winner.
 - **Lock acquisition**: only one client should hold a distributed lock at a time.
@@ -70,7 +70,7 @@ A deep result: the following problems are all equivalent -- a solution to any on
 
 ## Single-leader replication and consensus
 
-[[Leader-based-replication]] effectively implements total order broadcast (the replication log). But choosing and maintaining the leader requires consensus. If the leader is manually chosen by operators, the system does not satisfy the termination property (human intervention required). Automatic [[failover]] brings the system closer to fault-tolerant consensus, but correctly implementing leader election without split brain requires a consensus algorithm. (source: designing-data-intensive-applications, chapter 9)
+[[leader-based-replication|Leader-based replication]] effectively implements total order broadcast (the replication log). But choosing and maintaining the leader requires consensus. If the leader is manually chosen by operators, the system does not satisfy the termination property (human intervention required). Automatic [[failover]] brings the system closer to fault-tolerant consensus, but correctly implementing leader election without split brain requires a consensus algorithm. (source: designing-data-intensive-applications, chapter 9)
 
 ## Limitations
 

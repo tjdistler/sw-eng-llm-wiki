@@ -71,7 +71,7 @@ This principle applies to leadership, locking, and uniqueness guarantees. See [[
 
 ## Quorums in consensus algorithms
 
-[[Consensus]] algorithms also rely on quorums, but differently: they require a majority vote for both leader election and proposal acceptance, and the two quorums must overlap. Unlike read/write quorums in leaderless systems, consensus quorums provide genuine safety guarantees because they are combined with epoch numbering and recovery protocols. (source: designing-data-intensive-applications, chapter 9)
+[[consensus|Consensus]] algorithms also rely on quorums, but differently: they require a majority vote for both leader election and proposal acceptance, and the two quorums must overlap. Unlike read/write quorums in leaderless systems, consensus quorums provide genuine safety guarantees because they are combined with epoch numbering and recovery protocols. (source: designing-data-intensive-applications, chapter 9)
 
 ## Related pages
 

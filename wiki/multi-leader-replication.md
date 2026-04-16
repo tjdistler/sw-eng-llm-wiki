@@ -10,7 +10,7 @@
 
 ## The basic idea
 
-[[Leader-based-replication]] has one bottleneck: there is a single leader, and all writes must reach it. Multi-leader replication allows any of several nodes to accept writes, with each leader replicating its changes to all other leaders and followers.
+[[leader-based-replication|Leader-based replication]] has one bottleneck: there is a single leader, and all writes must reach it. Multi-leader replication allows any of several nodes to accept writes, with each leader replicating its changes to all other leaders and followers.
 
 Within a datacenter, multi-leader rarely makes sense — the added complexity outweighs the benefits. The payoff comes at larger scales.
 

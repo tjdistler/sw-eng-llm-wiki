@@ -28,7 +28,7 @@ This is analogous to version histories in Git: commits usually form a sequence, 
 
 ## Relationship to linearizability
 
-[[Linearizability]] implies causal consistency: any linearizable system automatically preserves causality. But the converse is not true -- causal consistency is strictly weaker. (source: designing-data-intensive-applications, chapter 9)
+[[linearizability|Linearizability]] implies causal consistency: any linearizable system automatically preserves causality. But the converse is not true -- causal consistency is strictly weaker. (source: designing-data-intensive-applications, chapter 9)
 
 The critical advantage of causal consistency: it is the **strongest possible consistency model that does not slow down due to network delays and remains available in the face of network failures**. The [[cap-theorem]] does not apply to causal consistency. Many systems that appear to require linearizability actually only need causal consistency, which can be implemented more efficiently. (source: designing-data-intensive-applications, chapter 9)
 

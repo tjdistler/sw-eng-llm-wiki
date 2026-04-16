@@ -31,7 +31,7 @@ The three dominant general-purpose models each suit a different class of problem
 | [[document-model]] | Self-contained tree-structured documents | Locality, schema flexibility |
 | [[graph-data-models]] | Highly interconnected data | Vertices, edges, traversal |
 
-These models are not mutually exclusive — [[polyglot-persistence]] describes using several together in one system.
+These models are not mutually exclusive — polyglot persistence describes using several together in one system.
 
 ## Convergence
 
@@ -46,4 +46,3 @@ Relational and document databases are converging. PostgreSQL, MySQL, and DB2 now
 - [[object-relational-mismatch]]
 - [[schema-on-read-vs-write]]
 - [[declarative-vs-imperative-queries]]
-- [[polyglot-persistence]]

@@ -71,13 +71,13 @@ Problems with LWW and clocks:
 - LWW cannot distinguish sequential writes from truly concurrent ones without additional causality tracking (e.g., [[version-vectors]])
 - Two nodes can generate writes with the same timestamp, requiring arbitrary tiebreakers that may also violate causality
 
-**[[logical-clocks]]** (incrementing counters) are a safer alternative for ordering events. They measure relative ordering rather than wall-clock time. (source: designing-data-intensive-applications, chapter 8)
+**Logical clocks** (incrementing counters) are a safer alternative for ordering events. They measure relative ordering rather than wall-clock time. (source: designing-data-intensive-applications, chapter 8)
 
 ## Clock confidence intervals
 
 A clock reading is not a point in time but a **range** within a confidence interval. If the uncertainty is +/- 100ms, microsecond digits in the timestamp are meaningless. Most systems do not expose this uncertainty. (source: designing-data-intensive-applications, chapter 8)
 
-**Google's TrueTime API** (used in [[spanner]]) is an exception: it returns `[earliest, latest]` bounds. Spanner uses this for snapshot isolation across datacenters by deliberately waiting for the confidence interval to elapse before committing, ensuring transaction timestamps reflect causality. Google deploys GPS receivers or atomic clocks in each datacenter to keep uncertainty to ~7ms. (source: designing-data-intensive-applications, chapter 8)
+**Google's TrueTime API** (used in Spanner) is an exception: it returns `[earliest, latest]` bounds. Spanner uses this for snapshot isolation across datacenters by deliberately waiting for the confidence interval to elapse before committing, ensuring transaction timestamps reflect causality. Google deploys GPS receivers or atomic clocks in each datacenter to keep uncertainty to ~7ms. (source: designing-data-intensive-applications, chapter 8)
 
 ## Related pages
 

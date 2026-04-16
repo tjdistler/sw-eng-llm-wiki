@@ -24,7 +24,7 @@ Both directions matter because in practice, old and new versions of code always 
 
 ## Why Both Are Needed: Rolling Upgrades
 
-[[rolling-upgrades]] are the primary driver. In a server-side application, a new version is deployed to a few nodes at a time — some nodes run old code, some run new code, and they exchange data and share databases throughout the transition. This means:
+Rolling upgrades are the primary driver. In a server-side application, a new version is deployed to a few nodes at a time — some nodes run old code, some run new code, and they exchange data and share databases throughout the transition. This means:
 
 - A new node may write a record that an old node reads.
 - An old node may write a record that a new node reads.

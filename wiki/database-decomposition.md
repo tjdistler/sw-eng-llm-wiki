@@ -23,7 +23,7 @@ Newman names only two situations where direct sharing of a database is acceptabl
 
 ## Schemas vs databases
 
-Newman uses "database" to mean *a logically isolated schema*. A single database engine can host many schemas; physical and logical separation are independent decisions. See [[physical-vs-logical-database-separation]] (covered in [[split-the-database-first]]). (source: chapter-04-decomposing-the-database.md)
+Newman uses "database" to mean *a logically isolated schema*. A single database engine can host many schemas; physical and logical separation are independent decisions. See physical-vs-logical database separation (covered in [[split-the-database-first]]). (source: chapter-04-decomposing-the-database.md)
 
 ## The pattern catalogue
 

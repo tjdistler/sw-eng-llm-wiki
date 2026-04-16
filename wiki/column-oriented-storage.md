@@ -12,7 +12,7 @@
 
 In row-oriented storage, all columns of a row are stored contiguously. To answer an analytic query that reads 3 columns from a 100-column fact table, the database must load every row's full 100-column block into memory, then discard 97 columns — wasting almost all disk I/O.
 
-[[Data-warehousing|Data warehouse]] queries typically access 4–5 columns from tables with hundreds. Row-oriented storage is the wrong layout.
+[[data-warehousing|Data warehouse]] queries typically access 4–5 columns from tables with hundreds. Row-oriented storage is the wrong layout.
 
 ## Column storage
 

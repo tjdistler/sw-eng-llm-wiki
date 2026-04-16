@@ -10,7 +10,7 @@
 
 ## Origin and definition
 
-Consistent hashing was defined by Karger et al. for evenly distributing load across a system of caches such as a content delivery network (CDN). The key idea is to use randomly chosen partition boundaries so that adding or removing a node only redistributes a small fraction of keys, without requiring central coordination or [[distributed-consensus|distributed consensus]].
+Consistent hashing was defined by Karger et al. for evenly distributing load across a system of caches such as a content delivery network (CDN). The key idea is to use randomly chosen partition boundaries so that adding or removing a node only redistributes a small fraction of keys, without requiring central coordination or [[consensus|distributed consensus]].
 
 The word "consistent" here has nothing to do with replica consistency (see [[eventual-consistency]]) or ACID consistency. It refers specifically to the property that most keys stay mapped to the same partition when the number of nodes changes.
 
