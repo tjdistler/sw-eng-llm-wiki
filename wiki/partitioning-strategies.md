@@ -25,7 +25,7 @@ Each partition owns a contiguous range of keys (minimum to maximum), like volume
 - Ranges are not necessarily evenly spaced — they must be sized to match actual data distribution. For example, in an encyclopedia, volume 1 might contain words starting with A and B, while volume 12 contains T, U, V, X, Y, and Z. Simply assigning one volume per two letters would produce very uneven volumes (source: chapter-06-partitioning.md). Boundaries are chosen manually or automatically.
 - Certain access patterns cause [[hot-spots]]. If the partition key is a timestamp and writes are always "now", every write goes to the current day's partition. Prefixing the key with sensor name distributes the load, but requires separate range queries per sensor.
 
-Boundaries adapt to data: this is typically handled via [[rebalancing-partitions#Dynamic partitioning|dynamic partition splitting]].
+Boundaries adapt to data: this is typically handled via [[rebalancing-partitions#Strategy 2: Dynamic partitioning|dynamic partition splitting]].
 
 ## Hash partitioning
 

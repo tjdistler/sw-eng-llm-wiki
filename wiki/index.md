@@ -80,7 +80,7 @@
 | [[choosing-architecture-style]] | Chapter 18's selection process: six inputs (domain, characteristics, data, org, process, domain-architecture isomorphism), three decisions (monolith-vs-distributed via quantum analysis, data placement, sync-by-default comms), three deliverables (topology + ADRs + fitness functions); shifting architecture fashion with the six forces; Silicon Sandwiches and Going, Going, Gone worked to resolution |
 | [[architecture-style-comparison]] | Cross-cutting scorecard hub across all eight Part II styles; structural-shape table (partitioning, quantum, class); full scorecard on 15 characteristics; four scorecard shapes (cheap-low-ceiling, pragmatic middle, five-star-operational-costly, historical cautionary tale); what the scorecard does not capture |
 
-The ninth Part II style — [[microservices]] — is catalogued in *Microservices fundamentals* below, where the canonical page already lived when Chapter 17 was ingested. Richards & Ford's style-level contribution (star-rating, duplication-over-coupling philosophy, SOA-negation placement, operational-reuse-via-sidecars framing) is added as a major section on that page.
+The ninth Part II style — microservices — is catalogued in *Microservices fundamentals* below, where the canonical page already lived when Chapter 17 was ingested. Richards & Ford's style-level contribution (star-rating, duplication-over-coupling philosophy, SOA-negation placement, operational-reuse-via-sidecars framing) is added as a major section on that page.
 
 ## Single-node container patterns
 

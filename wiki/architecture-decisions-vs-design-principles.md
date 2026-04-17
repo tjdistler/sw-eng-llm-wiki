@@ -4,8 +4,7 @@
 
 **Sources**: `raw/fundamentals-of-software-architecture/chapter-01-introduction.md`, `raw/fundamentals-of-software-architecture/chapter-19-architecture-decisions.md`
 
-**Last updated**: 2026-04-16 (Chapter 19 ingested)
-
+**Last updated**: 2026-04-16
 ---
 
 ## Architecture decisions

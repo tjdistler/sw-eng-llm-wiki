@@ -4,8 +4,7 @@
 
 **Sources**: `raw/monolith-to-microservices/chapter-03-splitting-the-monolith.md`, `raw/designing-distributed-systems/chapter-02-the-sidecar-pattern.md`, `raw/designing-distributed-systems/chapter-03-ambassadors.md`, `raw/designing-distributed-systems/chapter-04-adapters.md`, `raw/designing-distributed-systems/chapter-05-replicated-load-balanced-services.md`, `raw/fundamentals-of-software-architecture/chapter-17-microservices-architecture.md`
 
-**Last updated**: 2026-04-16 (Ch 17 added — service mesh as structural feature of microservices, not bolt-on)
-
+**Last updated**: 2026-04-16
 ---
 
 ## The problem it solves

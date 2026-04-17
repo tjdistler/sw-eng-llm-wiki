@@ -4,8 +4,7 @@
 
 **Sources**: `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`, `raw/monolith-to-microservices/chapter-02-planning-a-migration.md`, `raw/fundamentals-of-software-architecture/chapter-07-scope-of-architecture-characteristics.md`
 
-**Last updated**: 2026-04-16 (Chapter 7 ingested)
-
+**Last updated**: 2026-04-16
 ---
 
 ## The concept

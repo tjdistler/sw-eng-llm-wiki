@@ -4,8 +4,7 @@
 
 **Sources**: `raw/monolith-to-microservices/chapter-02-planning-a-migration.md`, `raw/fundamentals-of-software-architecture/chapter-08-component-based-thinking.md`, `raw/fundamentals-of-software-architecture/chapter-20-analyzing-architecture-risk.md`
 
-**Last updated**: 2026-04-16 (added risk-storming structural parallel)
-
+**Last updated**: 2026-04-16
 ---
 
 ## How it works

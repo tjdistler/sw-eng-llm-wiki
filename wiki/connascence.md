@@ -4,8 +4,7 @@
 
 **Sources**: `raw/fundamentals-of-software-architecture/chapter-03-modularity.md`, `raw/fundamentals-of-software-architecture/chapter-07-scope-of-architecture-characteristics.md`
 
-**Last updated**: 2026-04-16 (Chapter 7 ingested)
-
+**Last updated**: 2026-04-16
 ---
 
 ## Definition

@@ -87,12 +87,11 @@ Good answers should be filed back into the wiki so they compound over time.
 
 When the user asks you to lint or audit the wiki:
 
-- Check for contradictions between pages
-- Find orphan pages (no inbound links from other pages)
-- Identify concepts mentioned in pages that lack their own page
-- Flag claims that may be outdated based on newer sources
-- Check that all pages follow the page format above
-- Report findings as a numbered list with suggested fixes
+1. Run the linter: `cd wiki-linter && uv run python lint.py ../wiki`
+2. Surface its report to the user.
+3. Stop. If there are errors or warnings, offer to fix them but **WAIT FOR PERMISSION FIRST**.
+
+See `wiki-linter/REQUIREMENTS.md` for what the linter does and does not check.
 
 ## Rules
 

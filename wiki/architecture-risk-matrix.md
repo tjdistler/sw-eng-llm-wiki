@@ -4,8 +4,7 @@
 
 **Sources**: `raw/fundamentals-of-software-architecture/chapter-20-analyzing-architecture-risk.md`
 
-**Last updated**: 2026-04-16 (Chapter 20 ingested)
-
+**Last updated**: 2026-04-16
 ---
 
 ## The problem it solves

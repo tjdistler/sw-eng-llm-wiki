@@ -4,8 +4,7 @@
 
 **Sources**: `raw/designing-distributed-systems/chapter-02-the-sidecar-pattern.md`, `raw/designing-distributed-systems/chapter-03-ambassadors.md`, `raw/designing-distributed-systems/chapter-04-adapters.md`, `raw/designing-distributed-systems/chapter-05-replicated-load-balanced-services.md`, `raw/fundamentals-of-software-architecture/chapter-17-microservices-architecture.md`
 
-**Last updated**: 2026-04-16 (Ch 17 added — sidecars as the microservices-style answer to operational reuse)
-
+**Last updated**: 2026-04-16
 ---
 
 ## The shape of the pattern

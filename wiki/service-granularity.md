@@ -22,7 +22,7 @@ Symptoms:
 
 - **Communication tangle** — every user request requires a dozen service-to-service calls.
 - **Fan-out latency** — request latency becomes the sum of a long call chain (the 10-hop × 100-ms = 1-second example on [[fallacies-of-distributed-computing]]).
-- **Shared-data gravity** — services constantly ask each other for data they already had in a previous service; stamp coupling emerges (see the [[fallacies-of-distributed-computing#the-bandwidth-math|bandwidth-math worked example]] on the fallacies page).
+- **Shared-data gravity** — services constantly ask each other for data they already had in a previous service; stamp coupling emerges (see the [[fallacies-of-distributed-computing#3. Bandwidth is infinite|bandwidth-math worked example]] on the fallacies page).
 - **Transaction pressure** — workflows that were one database transaction now cross many services, driving architects toward [[saga|sagas]] or, worse, attempted distributed transactions.
 - **Operational overhead** — N services means N deployments, N dashboards, N oncall rotations, N sets of cross-cutting concerns to maintain (even with sidecars).
 

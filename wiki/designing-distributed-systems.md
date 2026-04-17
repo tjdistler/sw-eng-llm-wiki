@@ -4,8 +4,7 @@
 
 **Sources**: `raw/designing-distributed-systems/`
 
-**Last updated**: 2026-04-16 (Chapter 12 ingested — book complete)
-
+**Last updated**: 2026-04-16
 ---
 
 ## About the book

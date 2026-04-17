@@ -4,8 +4,7 @@
 
 **Sources**: `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`, `raw/monolith-to-microservices/chapter-02-planning-a-migration.md`, `raw/monolith-to-microservices/chapter-05-growing-pains.md`, `raw/fundamentals-of-software-architecture/chapter-07-scope-of-architecture-characteristics.md`, `raw/fundamentals-of-software-architecture/chapter-09-foundations.md`, `raw/fundamentals-of-software-architecture/chapter-17-microservices-architecture.md`
 
-**Last updated**: 2026-04-16 (Chapter 17 ingested — Richards & Ford's style-level framing, star-rating, granularity, and operational reuse)
-
+**Last updated**: 2026-04-16
 ---
 
 ## Definition

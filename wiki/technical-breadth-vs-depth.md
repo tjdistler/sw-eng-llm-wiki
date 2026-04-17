@@ -4,8 +4,7 @@
 
 **Sources**: `raw/fundamentals-of-software-architecture/chapter-02-architectural-thinking.md`, `raw/fundamentals-of-software-architecture/chapter-24-developing-a-career-path.md`
 
-**Last updated**: 2026-04-16 (Chapter 24 cross-references added)
-
+**Last updated**: 2026-04-16
 ---
 
 ## The knowledge pyramid

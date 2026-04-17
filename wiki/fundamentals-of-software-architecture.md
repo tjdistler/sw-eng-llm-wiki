@@ -4,8 +4,7 @@
 
 **Sources**: `raw/fundamentals-of-software-architecture/`
 
-**Last updated**: 2026-04-16 (Chapter 24 ingested — book complete)
-
+**Last updated**: 2026-04-16
 ---
 
 ## About the book

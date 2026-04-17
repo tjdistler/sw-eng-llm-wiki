@@ -4,8 +4,7 @@
 
 **Sources**: `raw/fundamentals-of-software-architecture/chapter-03-modularity.md`, `raw/fundamentals-of-software-architecture/chapter-06-measuring-and-governing-architecture-characteristics.md`
 
-**Last updated**: 2026-04-16 (Chapter 6 cross-links added)
-
+**Last updated**: 2026-04-16
 ---
 
 ## Afferent and efferent coupling

@@ -4,8 +4,7 @@
 
 **Sources**: `raw/fundamentals-of-software-architecture/chapter-01-introduction.md`, `raw/fundamentals-of-software-architecture/chapter-04-architecture-characteristics-defined.md`, `raw/fundamentals-of-software-architecture/chapter-05-identifying-architectural-characteristics.md`, `raw/fundamentals-of-software-architecture/chapter-06-measuring-and-governing-architecture-characteristics.md`, `raw/fundamentals-of-software-architecture/chapter-07-scope-of-architecture-characteristics.md`
 
-**Last updated**: 2026-04-16 (Chapter 7 ingested)
-
+**Last updated**: 2026-04-16
 ---
 
 ## Definition (Chapter 4)

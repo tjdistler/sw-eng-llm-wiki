@@ -4,8 +4,7 @@
 
 **Sources**: `raw/monolith-to-microservices/chapter-02-planning-a-migration.md`, `raw/monolith-to-microservices/chapter-05-growing-pains.md`, `raw/fundamentals-of-software-architecture/chapter-22-making-teams-effective.md`
 
-**Last updated**: 2026-04-16 (Richards & Ford Chapter 22 cross-reference added)
-
+**Last updated**: 2026-04-16
 ---
 
 ## Why autonomy

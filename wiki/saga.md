@@ -4,8 +4,7 @@
 
 **Sources**: `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/fundamentals-of-software-architecture/chapter-14-event-driven-architecture-style.md`, `raw/fundamentals-of-software-architecture/chapter-17-microservices-architecture.md`
 
-**Last updated**: 2026-04-16 (Richards & Ford Ch 17 added — "fix granularity, not transactions")
-
+**Last updated**: 2026-04-16
 ---
 
 ## What a saga is

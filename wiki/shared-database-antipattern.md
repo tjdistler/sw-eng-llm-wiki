@@ -4,8 +4,7 @@
 
 **Sources**: `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/fundamentals-of-software-architecture/chapter-13-service-based-architecture-style.md`
 
-**Last updated**: 2026-04-16 (Richards & Ford Ch 13 added — the shape-dependent exception)
-
+**Last updated**: 2026-04-16
 ---
 
 ## What's wrong with it

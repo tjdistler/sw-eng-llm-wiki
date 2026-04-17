@@ -4,7 +4,7 @@
 
 **Sources**: `raw/designing-data-intensive-applications/chapter-01-reliable-scalable-and-maintainable-applications.md`, `raw/fundamentals-of-software-architecture/chapter-01-introduction.md`, `raw/fundamentals-of-software-architecture/chapter-16-orchestration-driven-service-oriented-architecture.md`
 
-**Last updated**: 2026-04-16 (Chapter 16 canonical-example augmentation)
+**Last updated**: 2026-04-16
 
 ---
 

@@ -4,8 +4,7 @@
 
 **Sources**: `raw/fundamentals-of-software-architecture/chapter-01-introduction.md`, `raw/fundamentals-of-software-architecture/chapter-02-architectural-thinking.md`, `raw/fundamentals-of-software-architecture/chapter-23-negotiation-and-leadership-skills.md`, `raw/fundamentals-of-software-architecture/chapter-24-developing-a-career-path.md`
 
-**Last updated**: 2026-04-16 (Chapter 24 cross-references added)
-
+**Last updated**: 2026-04-16
 ---
 
 ## Why expectations, not a role definition

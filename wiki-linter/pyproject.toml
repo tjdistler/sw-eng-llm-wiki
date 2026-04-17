@@ -1,0 +1,9 @@
+[project]
+name = "wiki-linter"
+version = "0.1.0"
+description = "Deterministic linter for the sw-eng-llm-wiki knowledge base"
+requires-python = ">=3.13"
+dependencies = []
+
+[project.scripts]
+lint = "lint:main"
