@@ -2,7 +2,7 @@
 
 **Summary**: An event stream is a sequence of immutable, timestamped records (events) that are incrementally produced over time and consumed by one or more subscribers. Events are the fundamental unit of data in [[stream-processing]] systems.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/designing-distributed-systems/chapter-08-functions-and-event-driven-processing.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/designing-distributed-systems/chapter-08-functions-and-event-driven-processing.md`, `raw/fundamentals-of-software-architecture/chapter-14-event-driven-architecture-style.md`
 
 **Last updated**: 2026-04-16
 
@@ -65,6 +65,15 @@ Events are immutable records of things that happened. This property is powerful 
 
 For the relationship between mutable state and immutable event logs, see [[event-sourcing]].
 
+## Events vs commands in event-driven architecture
+
+Richards and Ford's [[event-driven-architecture]] (Chapter 14) load-bears a distinction that DDIA's and DDS's stream-processing treatments do not emphasise: the difference between an **event** and a **command** as message types (source: raw/fundamentals-of-software-architecture/chapter-14-event-driven-architecture-style.md).
+
+- **Event** — a past-tense fact. `order-created`, `payment-applied`, `email-sent`. An event **can be ignored** — any number of processors can subscribe, and none are required to.
+- **Command** — an imperative instruction. `place-order`, `send-email`, `apply-payment`. A command **must be processed** by its named target.
+
+The distinction underpins the two [[event-driven-architecture|event-driven architecture]] topologies: the [[broker-topology]] uses events on pub/sub topics (extensibility via architectural hooks anyone can subscribe to); the [[mediator-topology]] uses commands on point-to-point queues (a coordinator names exactly who must do what). The DDIA / DDS "event stream" concept maps directly onto the broker-topology notion of an event feed — both are immutable, timestamped, broadcast-to-whoever-listens records of things that happened.
+
 ## FaaS as an event consumer
 
 Burns's Chapter 8 treatment of [[functions-as-a-service|FaaS]] positions event-driven functions as natural consumers of event streams: small, stateless, asynchronous handlers that fire once per event and scale automatically with event rate (source: raw/designing-distributed-systems/chapter-08-functions-and-event-driven-processing.md). The broker-and-FaaS combination is common in practice — the broker provides buffering, fan-out, and replay; the FaaS provides compute that scales to zero when no events arrive. Burns's [[event-pipeline-pattern]] arranges multiple such functions into a directed graph; [[faas-decorator-pattern]] is the inbound request variant.
@@ -78,5 +87,8 @@ Burns's Chapter 8 treatment of [[functions-as-a-service|FaaS]] positions event-d
 - [[event-sourcing]]
 - [[encoding-formats]]
 - [[windowing]]
+- [[event-driven-architecture]]
+- [[broker-topology]]
+- [[mediator-topology]]
 - [[functions-as-a-service]]
 - [[event-pipeline-pattern]]

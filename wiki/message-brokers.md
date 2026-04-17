@@ -2,7 +2,7 @@
 
 **Summary**: Message brokers sit between services, storing messages temporarily and delivering them asynchronously. They decouple producers from consumers in time, space, and identity — providing reliability, buffering, and fan-out that direct [[rpc|RPC]] calls cannot. The actor model extends this pattern to concurrency within and across nodes.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`, `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/designing-distributed-systems/chapter-08-functions-and-event-driven-processing.md`, `raw/designing-distributed-systems/chapter-10-work-queue-systems.md`, `raw/designing-distributed-systems/chapter-11-event-driven-batch-processing.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`, `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/designing-distributed-systems/chapter-08-functions-and-event-driven-processing.md`, `raw/designing-distributed-systems/chapter-10-work-queue-systems.md`, `raw/designing-distributed-systems/chapter-11-event-driven-batch-processing.md`, `raw/fundamentals-of-software-architecture/chapter-14-event-driven-architecture-style.md`
 
 **Last updated**: 2026-04-16
 
@@ -106,6 +106,17 @@ This makes the work queue a useful bridge between broker-shaped ingress and cont
 
 Burns's [[event-driven-batch-pattern|Chapter 11 event-driven batch pattern]] uses a pub/sub broker as the **transport layer** that wires together multi-stage batch workflows (source: raw/designing-distributed-systems/chapter-11-event-driven-batch-processing.md). Each output stream of each workflow stage is a topic; linking containers ([[copier-pattern|copiers]], [[filter-pattern|filters]], [[splitter-pattern|splitters]], [[sharder-pattern|sharders]], [[merger-pattern|mergers]]) publish and subscribe to topics to build the workflow DAG. Burns treats Apache Kafka, Azure EventGrid, and Amazon SQS as interchangeable substrates at the pattern level. See [[publisher-subscriber-infrastructure]] for the Kafka-on-Kubernetes-via-Helm walkthrough and the topic-per-output-shard convention.
 
+## Brokers as the substrate of an architecture style
+
+Richards and Ford's [[event-driven-architecture]] (Chapter 14) treats the message broker as the **structural substrate of a whole architecture style**, not just an inter-service detail (source: raw/fundamentals-of-software-architecture/chapter-14-event-driven-architecture-style.md). Two topologies use the broker in materially different ways:
+
+- **[[broker-topology]]** — events are **past-tense facts** broadcast to **pub/sub topics**. No central coordinator. Extensibility is the killer feature: new processors plug into existing event feeds without upstream changes. Federated brokers (one cluster per domain) are the common deployment.
+- **[[mediator-topology]]** — a central mediator sends **commands** to **dedicated point-to-point queues**. Each queue has exactly one intended consumer. The broker is still the transport, but the vocabulary is imperative rather than declarative.
+
+Data-loss prevention in event-driven architecture relies on the standard broker features already described above — **persistent queues + synchronous send** (producer → broker), **client acknowledge mode** (broker → consumer), and **ACID + last participant support** (consumer → database). The Chapter 14 treatment names these as the baseline for any production event-driven system.
+
+The **request-reply** pattern in event-driven architecture is implemented over brokers using either a **correlation ID** in the message header (filter the reply queue by correlation ID) or a **temporary queue** per request. The correlation-ID variant is preferred at volume; the temporary-queue variant is simpler but stresses the broker's queue-creation path at scale (source: raw/fundamentals-of-software-architecture/chapter-14-event-driven-architecture-style.md).
+
 ## FaaS as a broker consumer
 
 Burns's Chapter 8 ([[functions-as-a-service]]) positions FaaS as a compute substrate for broker-driven event handlers: a function fires per message, runs a small stateless handler, and returns. This is a clean fit for the broker model because brokers already provide buffering and fan-out — the FaaS platform adds automatic scaling and scale-to-zero (source: raw/designing-distributed-systems/chapter-08-functions-and-event-driven-processing.md). Multiple FaaS handlers chained through a broker form Burns's [[event-pipeline-pattern]].
@@ -133,3 +144,7 @@ Burns's Chapter 8 ([[functions-as-a-service]]) positions FaaS as a compute subst
 - [[splitter-pattern]]
 - [[sharder-pattern]]
 - [[merger-pattern]]
+- [[event-driven-architecture]]
+- [[broker-topology]]
+- [[mediator-topology]]
+- [[correlation-ids]]

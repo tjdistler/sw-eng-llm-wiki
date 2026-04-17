@@ -1,9 +1,3 @@
----
-name: Designing Data-Intensive Applications
-description: Summary page for the book by Martin Kleppmann — concepts, organization, and ingestion status
-type: source-summary
----
-
 # Designing Data-Intensive Applications
 
 **Summary**: A comprehensive guide to the principles, tradeoffs, and practicalities of data systems — databases, queues, caches, stream processors, and batch processors — by Martin Kleppmann.

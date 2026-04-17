@@ -2,9 +2,9 @@
 
 **Summary**: A single-node pattern made up of two coscheduled containers — an application container that holds the core logic, and a sidecar container that augments or extends the application container, often without the application container's knowledge. The sidecar shares filesystem, network, and other namespaces with the application via a [[pod]]-style atomic container group.
 
-**Sources**: `raw/designing-distributed-systems/chapter-02-the-sidecar-pattern.md`, `raw/designing-distributed-systems/chapter-03-ambassadors.md`, `raw/designing-distributed-systems/chapter-04-adapters.md`, `raw/designing-distributed-systems/chapter-05-replicated-load-balanced-services.md`
+**Sources**: `raw/designing-distributed-systems/chapter-02-the-sidecar-pattern.md`, `raw/designing-distributed-systems/chapter-03-ambassadors.md`, `raw/designing-distributed-systems/chapter-04-adapters.md`, `raw/designing-distributed-systems/chapter-05-replicated-load-balanced-services.md`, `raw/fundamentals-of-software-architecture/chapter-17-microservices-architecture.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-16 (Ch 17 added — sidecars as the microservices-style answer to operational reuse)
 
 ---
 
@@ -101,6 +101,14 @@ The [[service-mesh]] pattern — per-service local proxies with a central contro
 ### Sidecars and microservices
 
 In a [[microservices]] architecture, the sidecar is the substrate for pushing cross-cutting concerns — TLS, metrics, tracing, config — out of each service and into reusable infrastructure. This enables service teams to keep their services small and focused while still meeting organization-wide operational requirements, supporting [[independent-deployability]].
+
+Chapter 17 of *Fundamentals of Software Architecture* elevates this from an implementation detail to a **defining structural feature of the microservices style**. Richards and Ford pose the question directly: microservices prefer duplication to coupling for domain concerns, so how does the style handle the operational concerns that genuinely do benefit from coupling (monitoring, logging, circuit breakers, service discovery)? Their answer is the sidecar pattern (source: chapter-17-microservices-architecture.md):
+
+- **Each service gets a common sidecar** containing the operational cross-cutting concerns. Owned by individual teams or, more commonly, a shared infrastructure team.
+- **Upgrading the monitoring tool across the fleet is a sidecar update**, not a fleet-wide code change across every microservice. One team upgrades one container definition; every service receives the new functionality on next deploy.
+- **Clean separation of concerns** — domain logic lives inside the bounded-context service with duplication accepted; operational logic lives inside the sidecar with reuse encouraged. This is the structural answer to the [[orchestration-driven-soa]] critique that conflated domain and operational reuse.
+
+Richards and Ford explicitly frame the fleet-wide deployment of sidecars connecting via a service plane as the [[service-mesh]] — which, in their catalog, is not a bolt-on but a native part of the microservices style.
 
 ## Requirements for a good sidecar
 

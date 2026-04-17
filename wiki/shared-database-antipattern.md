@@ -2,9 +2,9 @@
 
 **Summary**: Multiple services reading and writing the same logical schema directly. Newman calls this the most common form of [[coupling|implementation coupling]] in monolith-derived systems and the single biggest obstacle to [[independent-deployability]].
 
-**Sources**: `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`
+**Sources**: `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/fundamentals-of-software-architecture/chapter-13-service-based-architecture-style.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-16 (Richards & Ford Ch 13 added — the shape-dependent exception)
 
 ---
 
@@ -26,6 +26,17 @@ Newman names only two situations where direct sharing is appropriate in a micros
 2. **A database that is *deliberately* designed as a public endpoint** — managed and versioned like any other API. See [[database-as-a-service-interface]].
 
 Anything else is an anti-pattern, even if it is the *current* state of your system.
+
+## The shape-dependent exception: service-based architecture
+
+Richards and Ford's [[service-based-architecture]] treatment in *Fundamentals of Software Architecture* Chapter 13 is the counterpoint: in service-based architecture — **4 to 12 coarse-grained domain services behind a shared database** — the shared database is **a deliberate design choice, not an antipattern** (source: chapter-13-service-based-architecture-style.md). Two properties make the trade-off workable there:
+
+- **The service count is small and bounded** (averaging ~7). Schema-change coordination is manageable because the number of stakeholders is small.
+- **Federated shared entity libraries** (one library per logical DB domain — customer, order, invoicing, tracking) contain the blast radius of a schema change to only the services in that domain.
+
+Richards and Ford even frame ACID transactions across the shared database as one of the style's **strengths**: each business transaction usually lives inside a single coarse-grained domain service, so traditional commits and rollbacks work, and the style "preserves ACID transactions better than any other distributed architecture" (source: chapter-13-service-based-architecture-style.md).
+
+The two sources are not contradicting each other. **Newman is describing microservices discipline; Richards and Ford are describing a different architecture style with different priorities.** The shared database is an antipattern *for microservices* because it destroys [[independent-deployability]]; it is acceptable *for service-based architecture* because the style has deliberately traded independent deployability for ACID and simplicity. The general rule: the shared database antipattern is **shape-dependent** — it applies to architectures that assume per-service data ownership, not to architectures that assume the opposite.
 
 ## The credit derivative system anecdote
 
@@ -54,3 +65,5 @@ If you cannot split the database right now, the following stop things getting wo
 - [[database-wrapping-service]]
 - [[database-as-a-service-interface]]
 - [[shared-static-data]]
+- [[service-based-architecture]]
+- [[independent-deployability]]

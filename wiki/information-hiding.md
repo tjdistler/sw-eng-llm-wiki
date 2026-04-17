@@ -2,7 +2,7 @@
 
 **Summary**: David Parnas's 1971 principle that module boundaries should be stable and should hide the parts of the implementation expected to change. In microservices, information hiding is the engine of [[independent-deployability]]: by exposing as little as possible at a service boundary, you preserve freedom to change everything inside.
 
-**Sources**: `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`, `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/designing-distributed-systems/chapter-02-the-sidecar-pattern.md`, `raw/designing-distributed-systems/chapter-04-adapters.md`
+**Sources**: `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`, `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/designing-distributed-systems/chapter-02-the-sidecar-pattern.md`, `raw/designing-distributed-systems/chapter-04-adapters.md`, `raw/fundamentals-of-software-architecture/chapter-03-modularity.md`
 
 **Last updated**: 2026-04-16
 
@@ -21,6 +21,16 @@ The concept was first outlined by David Parnas in 1971, in "Information Distribu
 > "I adopt the approach of exposing as little as possible from a module (or microservice) boundary. Once something becomes part of a module interface, it's hard to walk that back. But if you hide it now, you can always decide to share it later." (source: chapter-01-just-enough-microservices.md)
 
 This is also why Chris Richardson's framing — that the goal of a microservice is "as small an interface as possible" — is the closest useful definition of microservice "size."
+
+## Page-Jones's three guidelines — information hiding in connascence vocabulary
+
+Meilir Page-Jones's [[connascence]] framework expresses the same principle in different words (source: chapter-03-modularity.md):
+
+1. Minimise overall connascence by breaking the system into encapsulated elements.
+2. Minimise any remaining connascence that crosses encapsulation boundaries.
+3. Maximise the connascence within encapsulation boundaries.
+
+Strong forms of coupling (dynamic, value-shared, algorithm-shared) should live *inside* a module. Only weak forms (name, type) should cross module boundaries. This is Parnas's "hide what changes" recast for object-oriented code: what crosses the boundary is what everyone must agree on; keep it small and refactorable. Jim Weirich's Rule of Locality — "as the distance between software elements increases, use weaker forms of connascence" — is the operational form of this principle.
 
 ## Information hiding vs encapsulation
 
@@ -60,6 +70,8 @@ The [[adapter-pattern]] extends the same idea to outward-facing interfaces (sour
 - [[independent-deployability]]
 - [[coupling]]
 - [[cohesion]]
+- [[connascence]]
+- [[modularity]]
 - [[bounded-context]]
 - [[backward-forward-compatibility]]
 - [[encoding-formats]]
@@ -70,3 +82,4 @@ The [[adapter-pattern]] extends the same idea to outward-facing interfaces (sour
 - [[sidecar-pattern]]
 - [[adapter-pattern]]
 - [[modular-reusable-containers]]
+- [[fundamentals-of-software-architecture]]

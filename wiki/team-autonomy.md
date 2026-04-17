@@ -2,9 +2,9 @@
 
 **Summary**: One of the strongest motivations for microservice adoption: giving small teams end-to-end ownership of their services so they can make decisions and ship without waiting for others. Newman cautions that microservices are not the only path to autonomy.
 
-**Sources**: `raw/monolith-to-microservices/chapter-02-planning-a-migration.md`, `raw/monolith-to-microservices/chapter-05-growing-pains.md`
+**Sources**: `raw/monolith-to-microservices/chapter-02-planning-a-migration.md`, `raw/monolith-to-microservices/chapter-05-growing-pains.md`, `raw/fundamentals-of-software-architecture/chapter-22-making-teams-effective.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-16 (Richards & Ford Chapter 22 cross-reference added)
 
 ---
 
@@ -42,6 +42,12 @@ The remedy isn't to take autonomy away; it's to build forums (cross-cutting tech
 
 Pushing autonomy into delivery teams usually means [[reorganizing-teams|reorganising]] away from technical-competency silos (Java team, DBA team, ops team) toward end-to-end product teams. This is itself a major organisational change — see [[kotters-change-model]] and [[reorganizing-teams]] for how to approach it.
 
+## The architect's side: elastic leadership
+
+Newman's framing is about what autonomy buys an *organisation*. Richards and Ford (Chapter 22) describe the other half: how an architect calibrates the box of constraints an autonomous team works inside. Autonomy is not binary — it's a dial the architect adjusts using five factors (team familiarity, team size, overall experience, project complexity, project duration), re-scored throughout the project life cycle (source: chapter-22-making-teams-effective.md). Too-tight and too-loose constraints both damage a team; the failure modes have names (**control freak** and **armchair architect**). See [[architect-control-spectrum]] for the full treatment and [[architect-providing-guidance]] for the design-principle techniques that replace prescription without becoming absence.
+
+Three dysfunctions emerge on the large-team end of the dial that autonomy alone doesn't fix — **process loss**, **pluralistic ignorance**, and **diffusion of responsibility** — all covered on [[architect-control-spectrum]]. Newman's autonomy case (Gore's 150-person cap, two-pizza teams) and Richards & Ford's warning signs converge on the same conclusion: small teams scale.
+
 ## Related pages
 
 - [[why-microservices]]
@@ -52,3 +58,6 @@ Pushing autonomy into delivery teams usually means [[reorganizing-teams|reorgani
 - [[modular-monolith]]
 - [[code-ownership-models]]
 - [[global-vs-local-optimization]]
+- [[architect-control-spectrum]]
+- [[architect-providing-guidance]]
+- [[architectural-checklists]]

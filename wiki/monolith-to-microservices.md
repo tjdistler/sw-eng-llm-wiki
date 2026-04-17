@@ -1,9 +1,3 @@
----
-name: Monolith to Microservices
-description: Summary page for the book by Sam Newman — concepts, organization, and ingestion status
-type: source-summary
----
-
 # Monolith to Microservices
 
 **Summary**: A practical, evolutionary guide to migrating from monolithic systems to microservice architectures by Sam Newman. Where *Building Microservices* defines the destination, this book is about the journey — patterns, decompositional moves, and the organizational and database changes that make the transition tractable.

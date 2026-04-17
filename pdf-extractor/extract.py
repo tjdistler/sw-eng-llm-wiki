@@ -58,9 +58,12 @@ def chapter_filename(num: int, title: str) -> str:
 # ---------------------------------------------------------------------------
 
 SKIP_TITLES = {"copyright", "table of contents", "colophon"}
-SPECIAL_L1 = {"preface", "foreword", "glossary", "index", "about the author"}
+SPECIAL_L1 = {"preface", "foreword", "glossary", "index", "about the author",
+              "self-assessment questions"}
 
-_CHAPTER_RE = re.compile(r"^chapter\s+\d+", re.IGNORECASE)
+# Require a period after the chapter number ("Chapter 1.") to avoid matching
+# self-assessment subsections that use a colon ("Chapter 1: Introduction").
+_CHAPTER_RE = re.compile(r"^chapter\s+\d+\.", re.IGNORECASE)
 _APPENDIX_RE = re.compile(r"^appendix\s+([a-z0-9]+)[.\s]+(.*)$", re.IGNORECASE)
 
 
@@ -72,6 +75,12 @@ def _appendix_filename(title: str) -> str | None:
     letter = m.group(1).lower()
     rest = slugify(m.group(2))
     return f"appendix-{letter}-{rest}" if rest else f"appendix-{letter}"
+
+
+def _match_special_l1(low: str) -> str | None:
+    """Return canonical SPECIAL_L1 term if title matches (e.g. 'Preface: Foo' → 'preface')."""
+    base = low.split(":", 1)[0].strip()
+    return base if base in SPECIAL_L1 else None
 
 
 def build_toc(doc: fitz.Document) -> list[Section]:
@@ -113,8 +122,8 @@ def build_toc(doc: fitz.Document) -> list[Section]:
                 candidates.append((appendix, start))
                 continue
 
-        if level == 1 and low in SPECIAL_L1:
-            candidates.append((slugify(low), start))
+        if level == 1 and (special := _match_special_l1(low)):
+            candidates.append((slugify(special), start))
 
     # Derive end pages: each section ends one page before the next starts
     sections: list[Section] = []
@@ -159,9 +168,9 @@ def build_page_index(doc: fitz.Document) -> dict[int, tuple[str, str]]:
         elif level in (1, 2) and (appendix := _appendix_filename(title)):
             current_chapter = appendix
             current_section = slugify(title)
-        elif level == 1 and low in SPECIAL_L1:
-            current_chapter = slugify(low)
-            current_section = slugify(low)
+        elif level == 1 and (special := _match_special_l1(low)):
+            current_chapter = slugify(special)
+            current_section = slugify(special)
         elif level >= 2:
             current_section = slugify(title)
 

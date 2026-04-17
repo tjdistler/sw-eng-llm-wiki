@@ -1,9 +1,3 @@
----
-name: Designing Distributed Systems
-description: Summary page for the book by Brendan Burns — concepts, organization, and ingestion status
-type: source-summary
----
-
 # Designing Distributed Systems
 
 **Summary**: Brendan Burns's pattern catalogue for building reliable distributed systems out of containers and container orchestrators. The book argues that just as the "Gang of Four" formalized object-oriented design patterns, containers and orchestrators (Kubernetes in particular) have made it possible to formalize reusable, language-agnostic patterns for distributed systems.

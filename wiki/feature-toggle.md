@@ -2,7 +2,7 @@
 
 **Summary**: A configuration-driven switch that selects between alternative code paths at runtime. In a microservice migration, toggles let you flip between old and new implementations without redeploying — making rollback fast and explicit. Pair with [[branch-by-abstraction]] and [[strangler-fig-pattern]] to control cutover.
 
-**Sources**: `raw/monolith-to-microservices/chapter-03-splitting-the-monolith.md`
+**Sources**: `raw/monolith-to-microservices/chapter-03-splitting-the-monolith.md`, `raw/fundamentals-of-software-architecture/chapter-01-introduction.md`
 
 **Last updated**: 2026-04-16
 
@@ -30,6 +30,10 @@ When the migration is done:
 1. Remove the old code path.
 2. Remove the toggle.
 3. Optionally remove the abstraction the toggle switched on, if it was created purely for migration.
+
+## Why Agile makes this pattern practical
+
+Richards and Ford name feature toggles — alongside the [[strangler-fig-pattern|strangler pattern]] — as a restructuring technique that Agile methodologies enable (source: chapter-01-introduction.md). The tight feedback loop of an iterative process is what lets a toggle be deployed, exercised in production, and flipped on with confidence. On planning-heavy processes without frequent integration, the rollback advantage of a toggle cannot be cashed in because cutovers happen too rarely for toggle infrastructure to be worth the investment.
 
 ## Related pages
 

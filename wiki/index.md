@@ -7,6 +7,80 @@
 | [[designing-data-intensive-applications]] | Book by Martin Kleppmann — concepts, organization, and ingestion status |
 | [[monolith-to-microservices]] | Book by Sam Newman — concepts, organization, and ingestion status |
 | [[designing-distributed-systems]] | Book by Brendan Burns — concepts, organization, and ingestion status |
+| [[fundamentals-of-software-architecture]] | Book by Mark Richards & Neal Ford — concepts, organization, and ingestion status |
+
+## Architecture fundamentals
+
+| Page | Description |
+|---|---|
+| [[software-architecture-definition]] | The four-part Richards-Ford definition: structure + characteristics + decisions + design principles |
+| [[laws-of-software-architecture]] | First Law: everything is a trade-off. Second Law: why beats how |
+| [[architect-expectations]] | The eight behavioural expectations placed on any architect regardless of title |
+| [[architecture-decisions-vs-design-principles]] | Hard-and-fast rules vs guidelines; variance and ARB governance; Chapter 19's architecturally-significant test and five factors |
+| [[architecture-decision-record]] | Nygard's ADR template (Title / Status / Context / Decision / Consequences) plus Compliance and Notes; RFC status; cost / cross-team / security approval triggers; wiki storage by scope; ADRs as documentation and as standards |
+| [[architecture-decision-anti-patterns]] | Three progressive decision anti-patterns — Covering Your Assets (no decision), Groundhog Day (no justification), Email-Driven Architecture (no single system of record); ADRs as the cure |
+| [[architecture-characteristics]] | The "-ilities" as a first-class dimension; three-criteria test; operational/structural/cross-cutting; least-worst-architecture principle |
+| [[identifying-architecture-characteristics]] | Three sources (domain concerns, requirements, implicit domain knowledge); the domain-to-ility translation; top-three consensus; drop-one sharpening; the Vasa over-specification case |
+| [[measuring-architecture-characteristics]] | Objective definition as the prerequisite to governance; the three measurement axes (operational, structural, process); performance budgets, K-weight budgets, coverage and pipeline metrics |
+| [[architectural-quantum]] | The independently-deployable unit with high functional cohesion and synchronous connascence; the scope at which architecture characteristics apply; monolith = 1, microservices = many; Going, Going, Gone kata |
+| [[cyclomatic-complexity]] | McCabe's 1976 structural metric; E − N + 2; thresholds (< 10, < 5 preferred); Crap4J; TDD's emergent effect; CC as a fitness function |
+| [[architecture-governance]] | Steering the project so declared characteristics hold; the XP → CI → DevOps → governance progression; Checklist Manifesto framing; fitness functions as the primary mechanism |
+| [[architecture-katas]] | Ted Neward's 45-minute team exercise for drilling characteristic identification; Silicon Sandwiches worked kata |
+| [[architecture-vitality]] | Continuous analysis; structural decay as its opposite |
+| [[evolutionary-architecture]] | Architecture designed to change gracefully; fitness-function-driven governance |
+| [[architecture-fitness-function]] | Objective automatable integrity assessment of an architecture characteristic; atomic/holistic/triggered/continual/static/dynamic axes; JDepend, ArchUnit, NetArchTest, Simian Army |
+| [[unknown-unknowns]] | Rumsfeld's framing; why all architecture becomes iterative |
+| [[architect-role-intersections]] | Architecture now intersects engineering practices, ops/DevOps, process, and data |
+| [[architectural-thinking]] | The architect's cognitive stance; four aspects (architecture-vs-design, breadth, trade-offs, business drivers) |
+| [[architecture-versus-design]] | Why the handoff model fails; bidirectional collaboration as the fix |
+| [[technical-breadth-vs-depth]] | The three-tier knowledge pyramid; breadth-over-depth for architects; the frozen caveman anti-pattern |
+| [[trade-off-analysis]] | Architecture is the stuff you can't Google; Hickey's warning; the auction-system worked example |
+| [[balancing-architecture-and-coding]] | The bottleneck trap; techniques for keeping the architect hands-on |
+
+## Risk analysis
+
+| Page | Description |
+|---|---|
+| [[architecture-risk-matrix]] | Richards & Ford's 3×3 impact × likelihood grid (ratings 1–9; bands 1–2 / 3–4 / 6–9); the risk-assessment report with row/column totals, audience filtering, and the plus/minus and arrow-with-target techniques for direction; fitness functions as the direction signal |
+| [[risk-storming]] | Collaborative risk-identification session — silent individual phase, then consensus, then mitigation; one dimension per session; the nurse-diagnostics three-session walkthrough; the structural parallel with event storming |
+
+## Communicating architecture
+
+| Page | Description |
+|---|---|
+| [[architecture-diagramming]] | The diagramming soft skill — representational consistency; the Irrational Artifact Attachment anti-pattern and the low-fidelity-first discipline; the three standards (UML; C4's Context/Container/Component/Class; ArchiMate); the six diagram guidelines with the solid-vs-dotted synchronous/asynchronous line convention |
+| [[architecture-presentation]] | The presenting soft skill — document-vs-presentation time control; transitions and animations; the Bullet-Riddled Corpse and Cookie-Cutter anti-patterns; the Incremental Build pattern; infodecks vs presentations; the two-channel (verbal/visual) model; Invisibility as deliberate emphasis |
+
+## Components and partitioning
+
+| Page | Description |
+|---|---|
+| [[components]] | Hub page: the physical packaging of modules; libraries/layers/services; the architect's unit of design; link out to Part II style chapters |
+| [[technical-vs-domain-partitioning]] | The top-level partitioning axis; CatalogCheckout change-smear; trade-offs; Inverse Conway Maneuver; industry drift toward domain |
+| [[component-identification-cycle]] | Five-step iterative loop; why step 4 (characteristics analysis) turns monolith designs into distributed ones |
+| [[entity-trap]] | Named anti-pattern: one *Manager per database entity; ORM in architectural clothing; Naked Objects / Rails as the legitimate alternative |
+
+## Architecture styles
+
+| Page | Description |
+|---|---|
+| [[monolithic-vs-distributed]] | The top-level split for every Part II style chapter; what distribution buys vs what it costs; relationship to partitioning and the quantum |
+| [[fallacies-of-distributed-computing]] | Deutsch's 1994 eight fallacies; architect-facing summary with DDIA cross-links; stamp coupling and the bandwidth worked example |
+| [[layered-architecture]] | The n-tier default; closed vs open layers and layers of isolation; the sinkhole anti-pattern with the 80-20 rule; characteristics scorecard (cost/simplicity max, operational ratings low) |
+| [[pipeline-architecture]] | Pipes-and-filters; four filter types (producer/transformer/tester/consumer); Unix shells, ETL, Apache Camel, MapReduce; technically partitioned and single-quantum; slightly better modularity/deployability/testability than layered at the same operational ceilings |
+| [[microkernel-architecture]] | Plug-in architecture; minimal core + independent plug-in components; plug-in registry and standard contracts; Eclipse/Jira/browsers/tax-prep/claims-processing; the only style that is both technically and domain partitioned; single quantum even in the remote-plug-in variant |
+| [[service-based-architecture]] | The pragmatic sweet spot: separately deployed UI + 4–12 coarse-grained domain services + shared monolithic database; ACID transactions preserved; no five-star ratings but many four-star ones; federated shared entity libraries contain schema-change blast radius; the cheapest and simplest distributed style |
+| [[event-driven-architecture]] | Distributed asynchronous style built around decoupled event processors; five stars on performance/scalability/elasticity/fault-tolerance; two canonical topologies (broker and mediator); often embedded inside other styles (event-driven microservices, event-driven space-based); the style-level home for the wiki's existing lower-level event machinery |
+| [[broker-topology]] | Event-driven architecture's peer-to-peer topology: no central mediator, pub/sub topics, past-tense-fact events, relay-race handoff; architectural extensibility as the killer feature; equivalent to Newman's choreographed saga |
+| [[mediator-topology]] | Event-driven architecture's coordinated topology: central mediator, point-to-point command queues, explicit workflow control, error handling with a home, recoverability; Apache Camel / Mule / BPEL / jBPM by complexity; equivalent to Newman's orchestrated saga |
+| [[space-based-architecture]] | Tuple-space-inspired distributed style that removes the database from the synchronous request path; processing units + replicated in-memory data grid + asynchronous data pumps; five stars on elasticity/scalability/performance, one star on simplicity/testability/cost; the ticketing/auction/booking burst workload style; hybrid cloud-plus-on-prem deployment as a distinctive option |
+| [[processing-unit]] | SBA's compute-and-cache unit: application code + in-memory replicated data grid (Hazelcast/Ignite/Coherence); dynamically scaled; named-cache member lists track scaling automatically; three startup paths (hot/cold/archive) |
+| [[data-pump]] | SBA's asynchronous one-way messaging conduit from processing units to the database; the eventual-consistency-by-construction mechanism that keeps the request path DB-free; per-cache vs per-domain granularity; reverse data pumps for cold-start cache hydration |
+| [[orchestration-driven-soa]] | Historical cautionary tale: the 2000s enterprise-SOA style with a four-layer service taxonomy (business / enterprise / application / infrastructure) stitched by a central ESB; the reuse-through-orchestration thesis that didn't deliver; one-star on deployability/testability/performance/simplicity/cost; single quantum despite being distributed; the architecture microservices are a direct backlash against |
+| [[choosing-architecture-style]] | Chapter 18's selection process: six inputs (domain, characteristics, data, org, process, domain-architecture isomorphism), three decisions (monolith-vs-distributed via quantum analysis, data placement, sync-by-default comms), three deliverables (topology + ADRs + fitness functions); shifting architecture fashion with the six forces; Silicon Sandwiches and Going, Going, Gone worked to resolution |
+| [[architecture-style-comparison]] | Cross-cutting scorecard hub across all eight Part II styles; structural-shape table (partitioning, quantum, class); full scorecard on 15 characteristics; four scorecard shapes (cheap-low-ceiling, pragmatic middle, five-star-operational-costly, historical cautionary tale); what the scorecard does not capture |
+
+The ninth Part II style — [[microservices]] — is catalogued in *Microservices fundamentals* below, where the canonical page already lived when Chapter 17 was ingested. Richards & Ford's style-level contribution (star-rating, duplication-over-coupling philosophy, SOA-negation placement, operational-reuse-via-sidecars framing) is added as a major section on that page.
 
 ## Single-node container patterns
 
@@ -85,10 +159,11 @@
 
 | Page | Description |
 |---|---|
-| [[microservices]] | Independently deployable services modeled around a business domain, owning their own data |
+| [[microservices]] | Independently deployable services modeled around a business domain, owning their own data; Richards & Ford's style-catalog framing with star-rating, duplication-over-coupling philosophy, and SOA-negation placement |
 | [[monolith]] | Single-process, modular, distributed, and third-party black-box variants; advantages and challenges |
 | [[modular-monolith]] | Single-deployable application with stable internal module boundaries; the cheaper alternative Newman invokes throughout |
 | [[independent-deployability]] | The central discipline: change and deploy one service without touching any other |
+| [[service-granularity]] | The hardest decision in microservices and the dividing axis across Part II styles; the three Chapter-17 guidelines (purpose, transactions, choreography); "fix granularity, not transactions" |
 | [[conways-law]] | Systems mirror the communication structure of the organizations that build them |
 
 ## Microservice migration
@@ -147,12 +222,18 @@
 
 | Page | Description |
 |---|---|
-| [[team-autonomy]] | Gore, Timpsons, two-pizza teams; how microservices amplify (and don't grant) autonomy |
+| [[team-autonomy]] | Gore, Timpsons, two-pizza teams; how microservices amplify (and don't grant) autonomy; Richards & Ford's elastic-leadership complement |
 | [[reorganizing-teams]] | Moving from competency silos to product teams; don't copy the Spotify model |
 | [[skills-self-assessment]] | Private 1-5 self-rating; anonymised aggregate informs team-level investment |
 | [[kotters-change-model]] | Eight-step process for organisational change applied to microservice adoption |
 | [[code-ownership-models]] | Strong, weak, collective; collective stops working past ~20 devs; strong "almost universal" past 100 |
 | [[global-vs-local-optimization]] | Local team decisions compose into global duplication; cross-cutting forums without centralising |
+| [[architect-control-spectrum]] | Richards & Ford's three architect personalities (control freak / armchair / effective) and the elastic-leadership five-factor dial; the three team warning signs (process loss, pluralistic ignorance, diffusion of responsibility) |
+| [[architectural-checklists]] | When to use checklists and when not to; the three canonical lists (code completion, unit/functional testing, software release); Gawande's *Checklist Manifesto*; the Hawthorne effect for governance |
+| [[architect-providing-guidance]] | Design-principle guidance as the alternative to prescription; the two-question library filter (overlap + technical *and* business justification); the Scala-enthusiast anecdote; the three-category layered-stack demarcation |
+| [[architect-negotiation]] | Richards & Ford's Chapter 23 negotiation techniques per counterparty: stakeholders (five-nines-to-seconds reframing, grammar, validate-before-redirect, divide-and-conquer, save-cost-for-last), peer architects (demonstration defeats discussion; calm leadership), developers (justification before demand; let them arrive at the solution; Ivory Tower anti-pattern) |
+| [[architect-leadership-skills]] | The 4 C's of architecture (communication, collaboration, clarity, conciseness) as the antidote to architect-introduced accidental complexity; pragmatic-yet-visionary balance; leading by example (not title) with collaborative grammar and people-skills techniques; meeting control as the integration mechanism |
+| [[architect-career-path]] | Chapter 24's career-long practice loop — the 20-minute rule (learn something daily, first thing in the morning before email); the personal developer radar (four quadrants x four rings adapted from ThoughtWorks, with Hold extended to cover habits to break); McAfee's weak-link argument for social media populating the Assess ring; architecture katas as deliberate practice; "always learn, always practice, and go do some architecture" |
 
 ## Microservices at scale
 
@@ -191,8 +272,11 @@
 
 | Page | Description |
 |---|---|
-| [[coupling]] | Four types relevant to microservices: implementation, temporal, deployment, domain |
-| [[cohesion]] | "The code that changes together, stays together"; business cohesion vs technology cohesion |
+| [[modularity]] | Richards & Ford's umbrella: logical grouping of related code; the implicit characteristic; the three measurement tools |
+| [[coupling]] | Four types from Newman (implementation, temporal, deployment, domain) plus the Structured Design afferent/efferent axes |
+| [[cohesion]] | "The code that changes together, stays together"; Constantine's seven-level scale; LCOM; business vs technology cohesion |
+| [[coupling-metrics]] | Afferent/efferent coupling; Martin's abstractness, instability, and distance from the main sequence |
+| [[connascence]] | Page-Jones's framework: five static types, four dynamic types, three properties (strength, locality, degree) |
 | [[information-hiding]] | Parnas's principle: stable interfaces hide what changes; the engine of independent deployability |
 
 ## Scalability concepts

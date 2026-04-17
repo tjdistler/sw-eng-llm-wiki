@@ -2,9 +2,9 @@
 
 **Summary**: An algorithm for coordinating a sequence of state changes across multiple services without holding distributed locks. The original 1987 paper by Hector Garcia-Molina and Kenneth Salem proposed sagas to handle long-lived transactions; modern microservice architectures use them as the standard alternative to [[two-phase-commit|2PC]] / [[distributed-transactions]].
 
-**Sources**: `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`
+**Sources**: `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/fundamentals-of-software-architecture/chapter-14-event-driven-architecture-style.md`, `raw/fundamentals-of-software-architecture/chapter-17-microservices-architecture.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-16 (Richards & Ford Ch 17 added — "fix granularity, not transactions")
 
 ---
 
@@ -91,6 +91,42 @@ Newman's heuristic (source: chapter-04-decomposing-the-database.md):
 
 His personal preference leans choreography, accepting the extra complexity of tracking saga state in exchange for the architectural decoupling.
 
+## The same axis at the architecture-style level — Richards & Ford's mediator/broker
+
+Richards and Ford's Chapter 14 on [[event-driven-architecture]] names the same orchestration/choreography distinction — but at a **different level of the architecture**. Where Newman treats orchestration and choreography as **saga implementation choices inside a microservices architecture**, Richards and Ford treat the same shapes as the **two canonical topologies of an entire event-driven architecture style**:
+
+| Newman (M2M Ch 4) | Richards & Ford (FoSA Ch 14) | What it is |
+|---|---|---|
+| **Orchestrated saga** | **[[mediator-topology|Mediator topology]]** | Central coordinator knows the workflow, issues commands to participants, owns error handling and recovery |
+| **Choreographed saga** | **[[broker-topology|Broker topology]]** | No central coordinator; participants react to events and emit their own; workflow is implicit in the event chain |
+
+The trade-off lists match closely:
+
+- Orchestration/mediator buys **explicit workflow, error handling with a home, recoverability, state visibility** at the cost of **centralisation, domain coupling in the coordinator, anaemic-participant risk, coordinator-as-bottleneck**.
+- Choreography/broker buys **loose coupling, extensibility, independent team ownership, higher throughput** at the cost of **implicit workflow, distributed saga state, weaker error handling, no recoverability**.
+
+Two differences in emphasis worth noting:
+
+1. **Scope.** A saga is a single business process. An event-driven architecture is a whole system. Newman's orchestrator coordinates one saga; Richards and Ford's mediator coordinates every flow of a whole domain. Federated mediators (one per domain) are the structural equivalent of Newman's "different orchestrators for different flows" mitigation for coordinator anaemia.
+2. **Event vs command vocabulary.** Richards and Ford load-bear the distinction: broker-topology messages are **past-tense facts** (events), mediator-topology messages are **imperative commands**. Newman's saga chapter does not make this split as explicitly, but the mechanics line up — choreographed sagas pub/sub events, orchestrated sagas send commands.
+
+Practical consequence: a [[microservices]] architecture that uses [[event-driven-architecture]] as its inter-service substrate is **choosing the broker topology** whether it frames it that way or not. Choreographed sagas running on that architecture are the natural saga pattern; orchestrated sagas sit awkwardly inside it and typically need their own mediator infrastructure. Conversely, a system built around a central workflow mediator has effectively chosen the mediator topology and will find choreographed sagas fighting the architecture.
+
+## Richards & Ford: "fix granularity, not transactions"
+
+Chapter 17 of *Fundamentals of Software Architecture* treats saga as the escape hatch, not the standard tool. Richards and Ford's advice is deliberately blunt: *"The best advice for architects who want to do transactions across services is: don't! Fix the granularity components instead."* And later: *"Don't do transactions in microservices — fix granularity instead!"* (source: chapter-17-microservices-architecture.md).
+
+The reasoning: building transactions across service boundaries violates the core decoupling principle of [[microservices|microservices architecture]] and creates the worst kind of dynamic [[connascence]] — connascence of value — across the boundary. When architects find they need a saga, the more common cause is that the [[service-granularity|granularity was wrong]]: entities that must cooperate in a transaction probably belonged in the same service to begin with.
+
+Chapter 17 does accept exceptions. When two services legitimately need different architecture characteristics but still must coordinate transactionally, the saga pattern is the recognised pattern, with the caveat: *"the best advice for architects is to use the saga pattern sparingly. A few transactions across services is sometimes necessary; if it's the dominant feature of the architecture, mistakes were made!"* (source: chapter-17-microservices-architecture.md).
+
+Chapter 17 also names the two concrete implementations of the compensating-transaction framework that sit under any orchestrated saga:
+
+1. **Pending-state coordination** — each mediator request leaves its target in a pending state until overall saga success is confirmed. Operationally simpler, but becomes complex when async requests must be juggled or new requests arrive that depend on pending state. Heavy network coordination traffic.
+2. **Explicit do-and-undo pairs** — each potentially transactional operation has a paired undo operation. Less coordination during the happy path, but the undo operations are usually significantly more complex than the do operations, more than doubling the design, implementation, and debugging work.
+
+Both match Newman's backward-vs-forward-recovery framing above; Richards and Ford's contribution is flagging the design-cost asymmetry of the undo-pair style — the undo is typically *much* harder than the do, and the complexity multiplier should be part of the saga-vs-re-draw-the-boundary decision.
+
 ## A note on BPM tools
 
 Business process modelling tools (e.g. older enterprise platforms) are often pitched for orchestrated sagas. Newman's experience: the central conceit — that nondevelopers will define business processes — almost never holds. Developers end up using GUI-based tools that are hard to version-control and test. (source: chapter-04-decomposing-the-database.md)
@@ -119,3 +155,9 @@ See [[distributed-transactions]] for the operational problems sagas avoid, and [
 - [[eventual-consistency]]
 - [[coupling]]
 - [[bounded-context]]
+- [[event-driven-architecture]]
+- [[broker-topology]]
+- [[mediator-topology]]
+- [[service-granularity]]
+- [[microservices]]
+- [[connascence]]

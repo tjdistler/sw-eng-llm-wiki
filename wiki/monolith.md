@@ -2,9 +2,9 @@
 
 **Summary**: A unit of deployment in which all functionality must be deployed together. Newman identifies three variants — the single-process monolith (and its modular subtype), the distributed monolith, and third-party black-box systems — and argues the monolith is a valid architectural choice, not a synonym for legacy.
 
-**Sources**: `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`, `raw/monolith-to-microservices/chapter-02-planning-a-migration.md`
+**Sources**: `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`, `raw/monolith-to-microservices/chapter-02-planning-a-migration.md`, `raw/fundamentals-of-software-architecture/chapter-07-scope-of-architecture-characteristics.md`, `raw/fundamentals-of-software-architecture/chapter-09-foundations.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-16 (Chapter 9 ingested)
 
 ---
 
@@ -64,6 +64,22 @@ Chapter 2 reinforces several scenarios where a monolith — typically a [[modula
 - **Customer-installed software.** Pushing operational complexity onto customers who don't have your skills or platform breaks the contract they bought into.
 - **Many of microservices' stated benefits** (autonomy, parallel development, even some scaling) can be achieved by a [[modular-monolith]] at a fraction of the cost. See [[why-microservices]].
 
+## A monolith is a quantum of one
+
+Richards and Ford (Chapter 7 of *Fundamentals of Software Architecture*) frame the monolith / microservices distinction in terms of the [[architectural-quantum]] — the unit at which [[architecture-characteristics]] are scoped. A single-process monolith backed by a single shared database satisfies the three-part quantum definition exactly once: there's one independently deployable artifact, its cohesion is whatever the architect made of it, and all its communication is in-process (synchronous by construction) (source: chapter-07-scope-of-architecture-characteristics.md).
+
+> Virtually all legacy systems deployed using a single database by definition form a quantum of one. (source: chapter-07-scope-of-architecture-characteristics.md)
+
+The practical consequence is that **characteristics in a monolith are system-wide** — you cannot give the Payment code a different availability SLA from the Catalog code because there's no quantum boundary between them. The Payment and Catalog code share the process, the database, and every -ility. This is not by itself a problem (it's often an advantage — one consistent operational profile is much simpler to reason about) but it constrains the kinds of architectures a monolith can represent. Heterogeneous characteristics (different availability, scalability, or security per domain) require multiple quanta, which means extracting services — the subject of Newman's [[incremental-migration]].
+
+The distributed-monolith anti-pattern looks the same under the quantum lens: multiple deployables that are synchronously and deeply coupled are *operationally* one quantum even though they're packaged as several. You pay the distribution tax without gaining the ability to scope characteristics independently — which is exactly Newman's complaint that the distributed monolith has all the downsides of both worlds.
+
+## Monolithic vs distributed as the top-level style split
+
+Chapter 9 of *Fundamentals of Software Architecture* uses **monolithic vs distributed** as the primary classification for every architecture style in Part II — layered, pipeline, and microkernel on the monolithic side; service-based, event-driven, space-based, SOA, and microservices on the distributed side (source: chapter-09-foundations.md). The split is load-bearing because distributed architectures all share a common cost structure — the [[fallacies-of-distributed-computing|eight fallacies of distributed computing]], plus distributed logging, distributed transactions, and contract-maintenance overheads — that monolithic architectures avoid by construction.
+
+A monolith in this scheme dodges every fallacy: no network on the business-request path means reliability, latency, bandwidth, and topology concerns don't apply. That's the main reason Richards and Ford treat *monolithic* as a legitimate first choice rather than a legacy label. See [[monolithic-vs-distributed]] for the full Chapter 9 framing.
+
 ## Brownfield is easier than greenfield
 
 A counter-intuitive corollary: an existing monolith you want to decompose is easier to work with than a greenfield microservice design (source: chapter-02-planning-a-migration.md). You have running code to inspect, users to talk to, a working baseline to compare against, and a production performance profile. Newman's advice: most of the time, start with the monolith.
@@ -79,3 +95,7 @@ A counter-intuitive corollary: an existing monolith you want to decompose is eas
 - [[conways-law]]
 - [[when-microservices-are-a-bad-idea]]
 - [[incremental-migration]]
+- [[architectural-quantum]]
+- [[architecture-characteristics]]
+- [[monolithic-vs-distributed]]
+- [[fallacies-of-distributed-computing]]

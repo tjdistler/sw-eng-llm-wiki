@@ -2,7 +2,7 @@
 
 **Summary**: Newman's signature migration pattern, named after the strangler fig vine that envelops a host tree. A new microservice grows alongside the [[monolith]], intercepting calls at the perimeter and gradually replacing functionality, while the original system keeps running until each slice is migrated.
 
-**Sources**: `raw/monolith-to-microservices/chapter-03-splitting-the-monolith.md`
+**Sources**: `raw/monolith-to-microservices/chapter-03-splitting-the-monolith.md`, `raw/fundamentals-of-software-architecture/chapter-01-introduction.md`
 
 **Last updated**: 2026-04-16
 
@@ -77,6 +77,10 @@ The pattern generalises. If the monolith is driven by a batch file upload, inter
 ## Data is the missing piece
 
 The strangler fig elegantly handles code migration but not data. If the new service needs data currently in the monolith's database, you need additional patterns covered in Chapter 4.
+
+## Why Agile makes this pattern practical
+
+Richards and Ford call out the strangler fig (alongside [[feature-toggle]]s) as a restructuring technique that Agile methodologies enable: "Agile methodologies support these kinds of changes better than planning-heavy processes because of the tight feedback loop and encouragement of techniques like the Strangler Pattern and feature toggles" (source: chapter-01-introduction.md). The pattern's step-by-step reversibility assumes that each step can be deployed, observed, and reverted quickly — a short-feedback-loop delivery pipeline is the substrate. On a Waterfall cadence the pattern's main advantage evaporates.
 
 ## Related pages
 

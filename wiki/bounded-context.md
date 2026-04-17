@@ -2,9 +2,9 @@
 
 **Summary**: A domain-driven design concept representing a larger organizational boundary inside an organization, within which explicit responsibilities are carried out and implementation details are hidden. Bounded contexts are the natural starting unit for drawing microservice boundaries.
 
-**Sources**: `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`, `raw/monolith-to-microservices/chapter-02-planning-a-migration.md`
+**Sources**: `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`, `raw/monolith-to-microservices/chapter-02-planning-a-migration.md`, `raw/fundamentals-of-software-architecture/chapter-07-scope-of-architecture-characteristics.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-16 (Chapter 7 ingested)
 
 ---
 
@@ -38,6 +38,16 @@ Chapter 2 adds a second use: each bounded context is a candidate **unit of decom
 
 Newman cautions that the logical model is not the same as the code structure. A bounded context that looks easy to extract logically may turn out to be entangled in shared code or — worse — a shared database. Use the model as a starting point for the conversation, then dig into the code to confirm.
 
+## Bounded context and the architectural quantum
+
+Richards and Ford (Chapter 7 of *Fundamentals of Software Architecture*) connect the DDD bounded context to their [[architectural-quantum]] unit. The bounded context is a *logical* boundary that localises a domain model; the architecture quantum is a *physical* boundary that includes the deployable and its dependent components (source: chapter-07-scope-of-architecture-characteristics.md).
+
+In a well-designed microservice architecture the two align: **one bounded context, one quantum, one service + its own database**. The bounded context gives the quantum its high functional cohesion (the module does one business-meaningful thing), and the service-owns-its-data discipline gives it the independent-deployability requirement.
+
+Richards and Ford credit DDD as "deeply influential on modern architectural thinking" for exactly this reason: before DDD, teams sought holistic reuse across a shared Customer class (or Product, or Order) — which caused coupling, coordination cost, and complexity. The bounded context recognises that each entity works best inside a localised context, and reconciling differences at integration points is cheaper than enforcing a global shared model (source: chapter-07-scope-of-architecture-characteristics.md). The architecture quantum inherits that principle and adds the physical-deployment requirement on top.
+
+The alignment is not automatic. A bounded context that depends synchronously on a database owned by another context isn't a quantum — the shared database collapses both contexts into a single deployable unit regardless of their logical separation. This is why Newman's "own your own data" rule for microservices matters: it's what lets the logical boundary become a physical one.
+
 ## Related pages
 
 - [[aggregate]]
@@ -48,3 +58,5 @@ Newman cautions that the logical model is not the same as the code structure. A 
 - [[cohesion]]
 - [[coupling]]
 - [[extraction-prioritization]]
+- [[architectural-quantum]]
+- [[architecture-characteristics]]

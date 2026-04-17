@@ -2,9 +2,9 @@
 
 **Summary**: An architecture in which each service instance communicates with other services through its own dedicated *local* proxy (sidecar), with central control and monitoring via a control plane. Avoids the contention of a shared "smart pipe" while still centralising cross-cutting concerns like protocol translation, retries, and observability.
 
-**Sources**: `raw/monolith-to-microservices/chapter-03-splitting-the-monolith.md`, `raw/designing-distributed-systems/chapter-02-the-sidecar-pattern.md`, `raw/designing-distributed-systems/chapter-03-ambassadors.md`, `raw/designing-distributed-systems/chapter-04-adapters.md`, `raw/designing-distributed-systems/chapter-05-replicated-load-balanced-services.md`
+**Sources**: `raw/monolith-to-microservices/chapter-03-splitting-the-monolith.md`, `raw/designing-distributed-systems/chapter-02-the-sidecar-pattern.md`, `raw/designing-distributed-systems/chapter-03-ambassadors.md`, `raw/designing-distributed-systems/chapter-04-adapters.md`, `raw/designing-distributed-systems/chapter-05-replicated-load-balanced-services.md`, `raw/fundamentals-of-software-architecture/chapter-17-microservices-architecture.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-16 (Ch 17 added — service mesh as structural feature of microservices, not bolt-on)
 
 ---
 
@@ -48,6 +48,19 @@ Several pieces of Burns's Chapter 5 [[replicated-load-balanced-service]] stack e
 - **[[health-probes|Readiness/liveness]] signal propagation** — mesh proxies participate in the load-balancer membership decisions the probes drive, so the probe contract is preserved across services.
 
 Caching ([[caching-layer]]) is *not* typically a mesh responsibility — HTTP caching still wants a dedicated tier (Varnish) sized differently from application replicas.
+
+## Richards & Ford: the mesh as a native feature of the microservices style
+
+Chapter 17 of *Fundamentals of Software Architecture* treats the service mesh as **a structural feature of the [[microservices]] style rather than optional infrastructure**. The sequence the chapter lays out (source: chapter-17-microservices-architecture.md):
+
+1. Each microservice deploys with a common **sidecar** carrying the operational cross-cutting concerns (logging, monitoring, circuit breakers, etc.).
+2. Sidecars wire into a **service plane** — the uniform interface each sidecar exposes to the rest of the fleet.
+3. The service plane forms the **service mesh** — a holistic view of the operational aspect of the architecture.
+4. The mesh becomes a **console for unified control** over cross-cutting operational concerns across the whole architecture.
+
+The style-level consequence: the mesh is how the microservices architecture honours its *"prefer duplication to coupling"* philosophy for domain logic while still allowing legitimate coupling for operational concerns. Domain reuse is rejected; operational reuse is centralised in the mesh. This is the architectural answer to the [[orchestration-driven-soa]] failure mode of conflating the two kinds of reuse in a single ESB.
+
+Richards and Ford also note that **service discovery** is typically part of the mesh (or the API layer). Rather than invoking a specific service instance, a request goes through service discovery, which monitors request volume and can spin up new instances to handle elasticity demands. This is what lets microservices hit the five-star elasticity and scalability ratings on the Chapter 17 scorecard — the mesh is the mechanism that makes elastic behaviour possible.
 
 ## Relationship to migration patterns
 

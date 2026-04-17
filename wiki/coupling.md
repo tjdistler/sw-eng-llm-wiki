@@ -2,7 +2,7 @@
 
 **Summary**: The degree to which changing one part of a system requires changing another. Newman identifies four types relevant to microservices — implementation, temporal, deployment, and domain — each with different remedies. Reducing coupling is the central design pressure that shapes service boundaries.
 
-**Sources**: `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`
+**Sources**: `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`, `raw/fundamentals-of-software-architecture/chapter-03-modularity.md`
 
 **Last updated**: 2026-04-16
 
@@ -51,6 +51,23 @@ But it can be *minimized* by being careful about what is shared. Newman's Music 
 
 A further variation: have the Order Processing service emit an event that the Warehouse consumes, flipping the dependency direction. Whether to use synchronous calls, asynchronous events, or a richer Pick Instruction depends on the wider interaction model — domain modeling helps here.
 
+## The Structured Design axes: afferent and efferent
+
+Newman's four types above are the distributed-systems framing. Richards and Ford's Chapter 3 goes one layer deeper, to the *code-level* measurement of coupling — the foundation that lets tooling reason about it (source: chapter-03-modularity.md).
+
+Yourdon and Constantine's 1979 *Structured Design* defined the two base metrics:
+
+- **Afferent coupling (Ca)** — incoming dependencies: how many things depend on this module?
+- **Efferent coupling (Ce)** — outgoing dependencies: how many things does this module depend on?
+
+On top of those, Robert Martin defined **abstractness**, **instability**, and **distance from the main sequence** — derived metrics that locate a module on a 2D plot and let architects spot the [[coupling-metrics|zones of pain and uselessness]]. See [[coupling-metrics]] for the full treatment.
+
+## From counting to classifying: connascence
+
+Afferent/efferent only answer *how much* coupling exists. Meilir Page-Jones's [[connascence]] framework (1996) answers *what kind* and *how hard to refactor*. Where structured programming grouped all method-call coupling as "data coupling," connascence splits it into five ordered static forms (CoN, CoT, CoM, CoP, CoA) plus four dynamic forms covering runtime concerns (execution, timing, values, identity) that structured programming never addressed (source: chapter-03-modularity.md).
+
+The two frameworks compose: afferent/efferent counts are the inputs to architectural-scale governance (fitness functions, dependency limits); connascence is the refactoring compass when a specific dependency needs to be weakened.
+
 ## Coupling vs cohesion
 
 Coupling and [[cohesion]] are linked — they are the two halves of Constantine's law. Tightly coupled code tends to have low cohesion (related functionality spread across boundaries); high cohesion tends to reduce coupling (related code grouped together). The microservice movement is at heart a return to modular software design — modules that communicate via networks and can be independently deployed (source: chapter-01-just-enough-microservices.md).
@@ -58,9 +75,13 @@ Coupling and [[cohesion]] are linked — they are the two halves of Constantine'
 ## Related pages
 
 - [[cohesion]]
+- [[coupling-metrics]]
+- [[connascence]]
+- [[modularity]]
 - [[independent-deployability]]
 - [[information-hiding]]
 - [[microservices]]
 - [[monolith]]
 - [[message-brokers]]
 - [[rpc]]
+- [[fundamentals-of-software-architecture]]
