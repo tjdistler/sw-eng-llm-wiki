@@ -13,6 +13,7 @@ wiki/                    Claude-maintained pages
 wiki/index.md            table of contents
 wiki/log.md              append-only record of ingests and edits
 pdf-extractor/           uv project that converts PDFs to per-chapter markdown
+wiki-linter/             uv project that lints the wiki for structural issues
 .claude/skills/          Claude Code skills that drive the workflows below
 CLAUDE.md                full instructions Claude follows in this repo
 ```
@@ -37,6 +38,18 @@ uv run python extract.py "../raw/Book Title.pdf" "../raw/book-title/"
 ```
 
 Output is one `.md` file per chapter plus an `index.md` that replaces page numbers with `[[chapter-file#section-slug]]` wikilinks. If headings look wrong on a new book, tune the font-size thresholds in `classify_line()` in `pdf-extractor/extract.py`. Details in `pdf-extractor/README.md`.
+
+## wiki-linter
+
+Standalone [`uv`](https://docs.astral.sh/uv/) project that runs deterministic structural checks on `wiki/` — page format, wiki-link integrity, orphan pages, index sync, citation validity, filename convention. From the repo root:
+
+```bash
+cd wiki-linter
+uv sync
+uv run python lint.py ../wiki
+```
+
+Emits a numbered markdown report. Semantic judgements (contradictions, outdated claims) are out of scope. Details in `wiki-linter/README.md` and `wiki-linter/REQUIREMENTS.md`.
 
 ## Using the wiki
 
