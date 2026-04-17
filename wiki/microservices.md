@@ -102,3 +102,4 @@ Chapter 5 catalogues the operational and organisational pains that emerge as ser
 - [[when-microservices-are-a-bad-idea]]
 - [[incremental-migration]]
 - [[extraction-prioritization]]
+- [[bulkhead]]

@@ -2,9 +2,9 @@
 
 **Summary**: A coordination service (along with etcd and Consul) that provides [[consensus]]-based primitives -- linearizable atomic operations, [[total-order-broadcast]], failure detection, and change notifications -- enabling distributed systems to outsource leader election, locking, and membership management.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-09-consistency-and-consensus.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-09-consistency-and-consensus.md`, `raw/designing-distributed-systems/chapter-09-ownership-election.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-16
 
 ---
 
@@ -46,6 +46,12 @@ Some consensus systems support **read-only caching replicas** that asynchronousl
 
 In partitioned databases, ZooKeeper serves as the authoritative source of the partition-to-node mapping for [[request-routing]]. Each database node registers itself in ZooKeeper, and ZooKeeper maintains the mapping of partitions to nodes. Routing tiers or partition-aware clients subscribe to this information. When a partition changes ownership or a node is added or removed, ZooKeeper notifies subscribers so routing information stays current. Systems using this pattern include HBase, SolrCloud, Kafka, and LinkedIn's Espresso (via Helix). MongoDB uses a similar architecture with its own config server implementation rather than ZooKeeper (source: chapter-06-partitioning.md).
 
+## Container-level perspective (Burns)
+
+Burns's *Designing Distributed Systems* treats ZooKeeper, etcd, and Consul as interchangeable consensus-backed KV stores at the pattern level — "a large number of distributed key-value stores that have implemented such consensus algorithms for you" — and explicitly discourages implementing Paxos or Raft yourself: "akin to implementing locks on top of assembly code compare-and-swap instructions." (source: raw/designing-distributed-systems/chapter-09-ownership-election.md)
+
+His chapter's hands-on walkthroughs use etcd (because it is Kubernetes-native) and the CoreOS etcd [[operator-pattern|operator]] via Helm. The lock/lease construction he derives from first principles — compare-and-swap + TTL + resource version — is structurally identical to what ZooKeeper provides via ephemeral nodes + zxid/cversion, just mapped onto etcd's API. See [[distributed-locks-on-kv-stores]] for the applied construction and [[ownership-election-pattern]] for the full container-level pattern.
+
 ## Higher-level tools
 
 Libraries like Apache Curator provide higher-level recipes on top of the ZooKeeper client API. Projects that depend on ZooKeeper include HBase, Hadoop YARN, OpenStack Nova, and Kafka. (source: designing-data-intensive-applications, chapter 9)
@@ -61,3 +67,7 @@ Libraries like Apache Curator provide higher-level recipes on top of the ZooKeep
 - [[distributed-transactions]]
 - [[request-routing]]
 - [[partitioning]]
+- [[ownership-election-pattern]]
+- [[distributed-locks-on-kv-stores]]
+- [[renewable-leases]]
+- [[operator-pattern]]

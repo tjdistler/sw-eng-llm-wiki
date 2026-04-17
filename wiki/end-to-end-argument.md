@@ -55,6 +55,7 @@ The more systems included in an integrity check, the fewer opportunities for und
 ## Related pages
 
 - [[exactly-once-semantics]]
+- [[idempotence]]
 - [[timeliness-and-integrity]]
 - [[transactions]]
 - [[distributed-transactions]]

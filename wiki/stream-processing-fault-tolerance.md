@@ -97,3 +97,4 @@ The best approach depends on infrastructure characteristics: in some systems net
 - [[change-data-capture]]
 - [[windowing]]
 - [[fencing-tokens]]
+- [[idempotence]]

@@ -2,9 +2,9 @@
 
 **Summary**: A node in a distributed system can be paused for an arbitrary length of time -- due to garbage collection, VM suspension, disk I/O, or OS scheduling -- without realizing it, creating a dangerous window during which other nodes may take over its responsibilities.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-08-the-trouble-with-distributed-systems.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-08-the-trouble-with-distributed-systems.md`, `raw/designing-distributed-systems/chapter-09-ownership-election.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-16
 
 ---
 
@@ -15,6 +15,8 @@ Consider a database partition leader that holds a **lease** (a lock with a timeo
 There is nothing to tell the paused thread how long it was paused. From its perspective, hardly any time has passed. This is why relying on local time checks between obtaining a lease and using it is unsafe -- the pause can happen at any point. (source: designing-data-intensive-applications, chapter 8)
 
 ## Causes of process pauses
+
+Burns's *Designing Distributed Systems* Chapter 9 adds one more concrete scenario that matters at the container level: "imagine that the original lock holder becomes so overwhelmed that its processor stops running for minutes at a time. This can happen on extremely overscheduled machines." (source: raw/designing-distributed-systems/chapter-09-ownership-election.md) CPU starvation on a noisy-neighbour node produces the same indistinguishable-from-dead effect as a GC pause, and it is the failure mode ownership-election mitigations (resource versions, server-side owner validation) are tuned for. See [[ownership-election-pattern]] and [[distributed-locks-on-kv-stores]].
 
 All of these can preempt a running thread at any point and resume it later without the thread noticing (source: designing-data-intensive-applications, chapter 8):
 

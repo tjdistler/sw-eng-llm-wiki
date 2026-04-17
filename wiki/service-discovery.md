@@ -2,7 +2,7 @@
 
 **Summary**: The general problem of determining which network address and port to contact for a given service or resource, especially in systems with redundant machines where assignments change over time.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-06-partitioning.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-06-partitioning.md`, `raw/designing-distributed-systems/chapter-03-ambassadors.md`
 
 **Last updated**: 2026-04-15
 
@@ -23,6 +23,10 @@ Service discovery solutions range from simple to sophisticated:
 - **Gossip protocols**: nodes disseminate cluster state changes among themselves (used by Cassandra and Riak), avoiding dependency on an external coordination service (source: chapter-06-partitioning.md).
 - **In-house tools**: many companies have built proprietary service discovery systems, and several have been released as open source (source: chapter-06-partitioning.md).
 
+## Container-level implementations
+
+Burns frames service discovery as a container-composition concern too (source: raw/designing-distributed-systems/chapter-03-ambassadors.md). A **service-broker ambassador** — a container coresident with the application that introspects the environment and brokers the right backend connection — is a practical way to deliver service discovery to an application without baking it into the application's code. See [[service-brokering]] for the pattern, and [[ambassador-pattern]] for the wider container pattern it sits inside. A fleet-wide generalization is the [[service-mesh]], where every pod's data-plane proxy performs service discovery for every outbound dependency.
+
 ## Related pages
 
 - [[request-routing]]
@@ -30,3 +34,6 @@ Service discovery solutions range from simple to sophisticated:
 - [[zookeeper]]
 - [[partitioning]]
 - [[consensus]]
+- [[ambassador-pattern]]
+- [[service-brokering]]
+- [[service-mesh]]

@@ -2,9 +2,9 @@
 
 **Summary**: Hadoop (MapReduce + HDFS) and massively parallel processing (MPP) databases both run computations across clusters, but they differ fundamentally in philosophy: MPP databases are monolithic systems optimized for SQL analytics, while Hadoop is a general-purpose platform supporting diverse processing models and storage formats.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-10-batch-processing.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-10-batch-processing.md`, `raw/designing-distributed-systems/chapter-07-scattergather.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-16
 
 ---
 
@@ -57,6 +57,10 @@ The two approaches are converging (source: designing-data-intensive-applications
 
 In the end, both are systems for storing and processing data. The distinction is blurring (source: designing-data-intensive-applications, chapter 10).
 
+## MPP query execution as scatter/gather
+
+The MPP query optimizer's approach — break a complex query into stages and partitions, execute in parallel across nodes, and aggregate the results — is structurally the [[scatter-gather-pattern]] applied at the analytics layer (source: raw/designing-distributed-systems/chapter-07-scattergather.md). The same design tensions recur: more parallelism trades against per-node overhead and [[tail-latency-amplification]], and MPP systems that abort on node failure do so partly because a slow or unavailable straggler would otherwise dominate total query time. Burns's Chapter 7 names the pattern as a serving-tier construct; MPP databases use it for analytical reads.
+
 ## Related pages
 
 - [[batch-processing]]
@@ -67,3 +71,5 @@ In the end, both are systems for storing and processing data. The distinction is
 - [[column-oriented-storage]]
 - [[declarative-vs-imperative-queries]]
 - [[data-models]]
+- [[scatter-gather-pattern]]
+- [[tail-latency-amplification]]

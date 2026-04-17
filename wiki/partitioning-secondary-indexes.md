@@ -2,9 +2,9 @@
 
 **Summary**: Secondary indexes do not map neatly to partitions because they search by value rather than by primary key. Two approaches exist: document-partitioned (local) indexes that require scatter/gather reads, and term-partitioned (global) indexes that require multi-partition writes.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-06-partitioning.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-06-partitioning.md`, `raw/designing-distributed-systems/chapter-07-scattergather.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-16
 
 ---
 
@@ -22,7 +22,7 @@ Each partition maintains its own secondary index covering only the documents sto
 
 **Writes are simple**: when a document is added or updated, only the partition containing that document needs to update its local index.
 
-**Reads require scatter/gather**: a query like "find all red cars" must be sent to every partition because red cars may exist on any partition. All results are combined by the client or a coordinating node. This scatter/gather pattern is prone to tail latency amplification (see [[response-time-percentiles]]) because the overall query is only as fast as the slowest partition.
+**Reads require scatter/gather**: a query like "find all red cars" must be sent to every partition because red cars may exist on any partition. All results are combined by the client or a coordinating node. This is a database-layer instance of the [[scatter-gather-pattern]] — document-partitioned secondary indexes produce the leaf-sharded variant (each partition returns its local matches; the coordinator computes the union). The same pattern is prone to [[tail-latency-amplification]] because the overall query is only as fast as the slowest partition; see [[response-time-percentiles]].
 
 **Used by**: MongoDB, Riak, Cassandra, Elasticsearch, SolrCloud, VoltDB.
 
@@ -58,3 +58,5 @@ The global index can be partitioned by the term value itself (enabling range sca
 - [[indexes]]
 - [[response-time-percentiles]]
 - [[rebalancing-partitions]]
+- [[scatter-gather-pattern]]
+- [[tail-latency-amplification]]

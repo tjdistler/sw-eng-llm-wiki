@@ -1,9 +1,3 @@
----
-name: Avro
-description: Binary encoding format that uses writer's schema / reader's schema resolution instead of field tags; optimized for dynamically generated schemas
-type: reference
----
-
 # Avro
 
 **Summary**: Apache Avro is a binary encoding format distinguished by having no field tags — it encodes only values, relying on schema resolution to match writer's schema against reader's schema by field name. This makes it the most compact of the major binary formats and uniquely suited to dynamically generated schemas.

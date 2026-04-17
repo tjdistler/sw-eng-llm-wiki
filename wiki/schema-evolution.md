@@ -1,9 +1,3 @@
----
-name: Schema Evolution
-description: How binary encoding formats (Thrift, Protocol Buffers, Avro) support adding and removing fields while maintaining backward and forward compatibility
-type: reference
----
-
 # Schema Evolution
 
 **Summary**: Schema evolution is the set of rules a binary encoding format provides for safely changing a schema over time — adding fields, removing fields, changing types — without breaking [[backward-forward-compatibility]].

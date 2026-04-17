@@ -6,6 +6,71 @@
 |---|---|
 | [[designing-data-intensive-applications]] | Book by Martin Kleppmann — concepts, organization, and ingestion status |
 | [[monolith-to-microservices]] | Book by Sam Newman — concepts, organization, and ingestion status |
+| [[designing-distributed-systems]] | Book by Brendan Burns — concepts, organization, and ingestion status |
+
+## Single-node container patterns
+
+| Page | Description |
+|---|---|
+| [[sidecar-pattern]] | Two-container pattern: application container augmented by a sidecar through shared namespaces; legacy modernization and modular reuse |
+| [[ambassador-pattern]] | Coresident container that brokers the application's outbound connections; sharding, service brokering, request splitting |
+| [[pod]] | Atomic container group with shared network, filesystem, and PID namespaces; the Kubernetes substrate for single-node patterns |
+| [[modular-reusable-containers]] | Design discipline for reusable sidecars and ambassadors: parameterize, define the API surface, document |
+| [[legacy-modernization]] | Adapting pre-existing applications to new requirements (HTTPS, dynamic config, observability) via sidecars rather than source changes |
+| [[client-side-sharding]] | Ambassador-pattern use: proxy to a sharded backend from the client's pod (twemproxy/Redis/ketama worked example) |
+| [[service-brokering]] | Ambassador-pattern use: introspect the environment and broker the right dependency connection (MySQL across clouds) |
+| [[request-splitting]] | Ambassador-pattern use: divert a fraction of traffic for canary, dark launch, or parallel-run teeing |
+| [[adapter-pattern]] | Coresident container that transforms the application's outward interface to match a fleet standard (monitoring, logging, health checks) |
+| [[unified-monitoring-interface]] | Adapter-pattern use: one metrics interface across heterogeneous apps; Redis + Prometheus exporter worked example |
+| [[log-normalization]] | Adapter-pattern use: convert heterogeneous log output into a consistent structured stream; fluentd + Redis SLOWLOG and Apache Storm examples |
+| [[health-check-adapter]] | Adapter-pattern use: expose rich application-specific health probes without modifying the upstream image; Go + MySQL worked example |
+
+## Serving patterns
+
+| Page | Description |
+|---|---|
+| [[replicated-load-balanced-service]] | The simplest multi-node pattern: stateless replicas behind a load balancer; the foundation for the other serving patterns |
+| [[health-probes]] | Liveness vs readiness; orchestrator-restart vs load-balancer-deregister; why both are required |
+| [[session-tracked-services]] | Sticky sessions via IP hash or cookie/header; consistent hashing for resilience to scaling events |
+| [[caching-layer]] | Varnish as a replicated HTTP cache tier; few-large-replicas sizing; interaction with session affinity |
+| [[rate-limiting]] | Edge-tier DoS defence; 429 and X-RateLimit-Remaining; anonymous vs authenticated quotas |
+| [[ssl-termination]] | Dedicated nginx edge tier; per-layer certificates; the full three-tier serving stack |
+| [[sharded-service-pattern]] | The second serving pattern: root + shards; stateful services whose state exceeds one machine; the service-level analogue of DDIA partitioning |
+| [[sharded-cache]] | Burns's deep-dive example: memory-utilisation math, hit-rate as capacity multiplier, shard-failure impact, twemproxy + memcached Kubernetes deployment |
+| [[replicated-sharded-service]] | Each shard is itself a replicated load-balanced service; shard-failure tolerance and safe rollouts |
+| [[hot-sharding]] | Per-shard autoscaling in response to organic traffic skew; the service-level answer to celebrity-key hot spots |
+| [[shard-key-selection]] | Choosing what to hash; the "too general / too specific / just right" discussion with the country+path example |
+| [[scatter-gather-pattern]] | The third serving pattern: root fans request out to all leaves in parallel and combines partial results; replication for time; two variants (root-distributed vs leaf-sharded) |
+| [[tail-latency-amplification]] | Why a backend's p99 becomes the scatter/gather system's p50 at modest fan-out; the straggler problem; availability amplification; mitigations |
+| [[functions-as-a-service]] | The fourth serving pattern: short-lived stateless functions triggered by events; when FaaS fits and when it doesn't; benefits, challenges, cost-curve inversion |
+| [[serverless-vs-event-driven]] | Burns's opening distinction: two separate axes that FaaS happens to combine; the four corners of the matrix; why the two benefits come from different axes |
+| [[faas-decorator-pattern]] | Stateless request/response transformation via FaaS; Python-decorator analogy; defaulting worked example; comparison with adapter containers |
+| [[event-pipeline-pattern]] | Directed graph of FaaS handlers connected by webhooks; CI-with-human-approval and new-user-signup worked examples; vs microservices and vs streaming |
+| [[ownership-election-pattern]] | The fifth serving pattern: distributing *assignment*; master election + handoff over etcd/ZooKeeper/Consul; when you don't need it and when you do |
+| [[singleton-pattern]] | The simplest form of ownership: one replica plus orchestrator-backed restart; three-to-four-nines uptime; the upgrade-window SLA ceiling |
+| [[distributed-locks-on-kv-stores]] | Building a correct distributed mutex from compare-and-swap + TTL + resource versions; derivation via fixing the naive implementation's bugs |
+| [[renewable-leases]] | Long-running ownership via short TTL + background refresh every `ttl/2`; Kubernetes active-scheduler example |
+| [[operator-pattern]] | Application-specific controller inside the orchestrator; declarative desired-state API; CoreOS etcd operator worked example |
+
+## Batch computational patterns
+
+| Page | Description |
+|---|---|
+| [[work-queue-pattern]] | The first batch pattern: independent items dispatched to worker containers; generic queue-manager + two narrow interfaces; Kubernetes Jobs as durable state |
+| [[source-container-interface]] | The producer-side ambassador in a work queue; two-endpoint REST API; deliberate omission of completion tracking |
+| [[worker-container-interface]] | The consumer-side file-based interface; `WORK_ITEM_FILE` + ConfigMap mount; Kubernetes Job as reliability substrate; idempotence requirement |
+| [[dynamic-worker-scaling]] | Interarrival vs processing time; `P > processing_time / interarrival_time` for a stable queue; the 90%-heuristic for scaling down |
+| [[multi-worker-pattern]] | Adapter-pattern specialisation for batch workers; aggregator container composing reusable processing containers behind the standard worker interface |
+| [[event-driven-batch-pattern]] | The second batch pattern: chain work queues into workflow DAGs via named linking patterns over a pub/sub broker; workflow-as-specification |
+| [[copier-pattern]] | Fan-out primitive: duplicate one stream into N identical streams; video-transcoding worked example |
+| [[filter-pattern]] | Drop items not meeting criteria; implemented as a source ambassador wrapping an upstream source; Unix `grep` analogy |
+| [[splitter-pattern]] | Route items to different queues by criterion; shipping-notification worked example; subsumes copier and filter |
+| [[sharder-pattern]] | Hash-based even distribution across queues; motivated by reliability and failure-zone spreading rather than semantic routing |
+| [[merger-pattern]] | Fan-in primitive: combine N upstream sources into one; multi-source adapter; CI-across-many-repos worked example |
+| [[publisher-subscriber-infrastructure]] | Kafka/EventGrid/SQS as the workflow transport; Kafka-on-Kubernetes-via-Helm walkthrough; topic-per-output-shard convention |
+| [[coordinated-batch-pattern]] | The third batch pattern: pull parallel workflow outputs back together into a single aggregate; Burns's image-tagging worked example composing every batch pattern |
+| [[join-pattern]] | Barrier synchronization; hold downstream work until every upstream parallel worker has completed; guards destructive steps and global aggregates |
+| [[reduce-pattern]] | Associative pairwise combine that pipelines with upstream work; the container-level naming of MapReduce's reduce step; Burns's count/sum/histogram examples |
 
 ## Core system properties
 
@@ -14,6 +79,7 @@
 | [[reliability]] | Systems that work correctly even when faults occur |
 | [[scalability]] | Coping with increased load while maintaining performance |
 | [[maintainability]] | Keeping systems workable for engineers and operators over time |
+| [[fault-tolerance]] | Preventing component faults from becoming system-wide failures |
 
 ## Microservices fundamentals
 
@@ -53,7 +119,6 @@
 | [[deployment-vs-release]] | The separation that makes all the patterns possible |
 | [[feature-toggle]] | Runtime switches for cutover and rollback |
 | [[progressive-delivery]] | Umbrella for parallel run, canary, dark launch, feature toggles |
-| [[service-mesh]] | Per-service local proxies; avoids the shared-smart-pipe problem |
 
 ## Database decomposition
 
@@ -101,6 +166,8 @@
 | [[running-too-many-things]] | Manual deployment doesn't scale; serverless-first on cloud; Kubernetes when needed |
 | [[desired-state-management]] | Declarative spec + continuous reconciliation; the operational counterpart to many small services |
 | [[robustness-and-resiliency-at-scale]] | Two questions per call; isolation, time-outs, circuit breakers; document what you learn |
+| [[circuit-breaker]] | Fail-fast wrapper around a remote call; open/closed/half-open states; stops cascading failure |
+| [[bulkhead]] | Isolate resources per dependency so one failing call path can't exhaust the whole pool |
 | [[orphaned-services]] | Services running for years with no owner; FT's Biz Ops and the System Operability Score |
 
 ## Observability
@@ -109,7 +176,6 @@
 |---|---|
 | [[monitoring-and-observability]] | From monitoring (known causes) to observability (open-ended questions); the murder-mystery quote |
 | [[log-aggregation]] | Newman's "do this first" recommendation; ELK and Humio; an organisational litmus test |
-| [[correlation-ids]] | Single ID propagated through call chains; the prerequisite for distributed tracing |
 | [[distributed-tracing]] | Jaeger and friends; latency attribution where logs can't help |
 | [[synthetic-transactions]] | Test in production via scripted fake users; the 200-washing-machines warning |
 
@@ -128,12 +194,6 @@
 | [[coupling]] | Four types relevant to microservices: implementation, temporal, deployment, domain |
 | [[cohesion]] | "The code that changes together, stays together"; business cohesion vs technology cohesion |
 | [[information-hiding]] | Parnas's principle: stable interfaces hide what changes; the engine of independent deployability |
-
-## Reliability concepts
-
-| Page | Description |
-|---|---|
-| [[fault-tolerance]] | Preventing component faults from becoming system-wide failures |
 
 ## Scalability concepts
 
@@ -205,6 +265,14 @@
 | [[rpc]] | Remote procedure calls, why the local-call abstraction leaks, REST as the honest alternative, gRPC and modern RPC |
 | [[message-brokers]] | Async message passing; buffering, fan-out, decoupling; the actor model and distributed actor frameworks |
 
+## Service communication infrastructure
+
+| Page | Description |
+|---|---|
+| [[service-discovery]] | General problem of locating services across redundant machines; DNS, coordination services, gossip |
+| [[service-mesh]] | Per-service local proxies; avoids the shared-smart-pipe problem |
+| [[correlation-ids]] | Single ID propagated through call chains; the prerequisite for distributed tracing |
+
 ## Replication
 
 | Page | Description |
@@ -234,7 +302,6 @@
 | [[partitioning-secondary-indexes]] | Document-partitioned (local) vs term-partitioned (global) secondary indexes across partitions |
 | [[rebalancing-partitions]] | Strategies for redistributing partitions: fixed count, dynamic splitting, proportional to nodes |
 | [[request-routing]] | Service discovery for partitioned databases: routing tiers, client-side awareness, ZooKeeper coordination |
-| [[service-discovery]] | General problem of locating services across redundant machines; DNS, coordination services, gossip |
 
 ## Transactions
 
@@ -327,6 +394,7 @@
 | [[derived-data]] | Data created by transforming a system of record; write path vs read path |
 | [[end-to-end-argument]] | Infrastructure guarantees are insufficient; application-level operation IDs needed |
 | [[exactly-once-semantics]] | Effectively-once via idempotence and end-to-end operation identifiers |
+| [[idempotence]] | Operations safe to retry without changing the result beyond the first application; the building block behind effectively-once |
 | [[timeliness-and-integrity]] | Two requirements conflated under "consistency"; decoupling them |
 | [[coordination-avoidance]] | Maintaining integrity without synchronous coordination |
 | [[data-ethics]] | Predictive analytics bias, surveillance, privacy, consent, engineer responsibility |

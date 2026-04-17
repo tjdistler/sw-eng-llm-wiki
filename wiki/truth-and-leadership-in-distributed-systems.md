@@ -2,9 +2,9 @@
 
 **Summary**: A node in a distributed system cannot trust its own judgment -- truth is determined by quorum vote, and any node that believes it is "the chosen one" (leader, lock holder) must have that belief confirmed by the majority to act safely.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-08-the-trouble-with-distributed-systems.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-08-the-trouble-with-distributed-systems.md`, `raw/designing-distributed-systems/chapter-09-ownership-election.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-16
 
 ---
 
@@ -38,6 +38,12 @@ Even if a node believes it is "the chosen one," that doesn't mean a [[quorums|qu
 
 The solution to this problem is [[fencing-tokens]]. (source: designing-data-intensive-applications, chapter 8)
 
+## Applied form at the container level
+
+Burns's Chapter 9 on [[ownership-election-pattern|ownership election]] surfaces the same problem in the pattern idiom of containers and Kubernetes: "imagine that the original lock holder becomes so overwhelmed that its processor stops running for minutes at a time. This can happen on extremely overscheduled machines. In such a case, the lock will time out and some other replica will own the lock. Now the processor frees up the replica that was the original lock holder. Obviously, the handleLockLost() function will quickly be called, but there will be a brief period where the replica still believes it holds the lock." (source: raw/designing-distributed-systems/chapter-09-ownership-election.md)
+
+His mitigations — client-side self-check using `0.75 * ttl`, server-side owner validation at every worker request, and per-request resource versions — are the applied container-level form of the fencing-token solution. See [[distributed-locks-on-kv-stores]] for the construction and [[renewable-leases]] for the long-running ownership case.
+
 ## Related pages
 
 - [[quorums]]
@@ -46,3 +52,6 @@ The solution to this problem is [[fencing-tokens]]. (source: designing-data-inte
 - [[partial-failures]]
 - [[failover]]
 - [[byzantine-faults]]
+- [[ownership-election-pattern]]
+- [[distributed-locks-on-kv-stores]]
+- [[renewable-leases]]

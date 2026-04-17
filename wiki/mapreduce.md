@@ -2,9 +2,9 @@
 
 **Summary**: MapReduce is a programming framework for processing large datasets across a distributed cluster. It provides a simple abstraction — write a mapper and a reducer — while the framework handles partitioning, sorting, data movement, and fault tolerance.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-10-batch-processing.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-10-batch-processing.md`, `raw/designing-distributed-systems/chapter-12-coordinated-batch-processing.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-16
 
 ---
 
@@ -65,6 +65,23 @@ MapReduce has significant drawbacks that motivated the development of [[dataflow
 - **Low-level API**: Implementing joins and complex processing from scratch is laborious.
 - **Always sorts**: Sorting happens between every map and reduce stage, even when it's not needed.
 
+## Container-level perspective: map = sharder, reduce = reduce-pattern
+
+Burns's *Designing Distributed Systems* Chapter 12 ([[coordinated-batch-pattern]]) names the two halves of MapReduce as standalone container-level patterns (source: raw/designing-distributed-systems/chapter-12-coordinated-batch-processing.md):
+
+> "It's easy to see that the map step is an example of sharding a work queue, and the reduce step is an example of coordinated processing that eventually reduces a large number of outputs down to a single aggregate response."
+
+The correspondence is exact:
+
+| MapReduce step | Burns pattern |
+|---|---|
+| Input split + scheduled map tasks | [[work-queue-pattern]] |
+| Shuffle / partition-by-key | [[sharder-pattern]] |
+| "Wait for all mappers" barrier before reduce | [[join-pattern]] |
+| Reduce | [[reduce-pattern]] |
+
+MapReduce's framework-level guarantee that every mapper completes before any reducer starts is a [[join-pattern|join]] in Burns's vocabulary — a barrier synchronization point that costs the straggler latency. [[dataflow-engines|Spark, Flink, Tez]] relax that barrier where the reduce is associative, which is the operator-level form of preferring Burns's [[reduce-pattern|reduce]] (streaming, pipelined) over his [[join-pattern|join]] (blocking, completeness-guaranteeing). So the pattern-level distinction Burns draws at container granularity echoes the engine-level distinction DDIA draws between MapReduce and dataflow execution.
+
 ## Relationship to MPP databases
 
 The parallel join algorithms in MapReduce were not new — MPP databases (Teradata, Tandem NonStop SQL, Gamma) had them a decade earlier. MapReduce's contribution was making general-purpose distributed computation accessible on commodity hardware via [[distributed-filesystems]]. See [[hadoop-vs-mpp-databases]] (source: designing-data-intensive-applications, chapter 10).
@@ -82,3 +99,9 @@ The parallel join algorithms in MapReduce were not new — MPP databases (Terada
 - [[batch-workflow-outputs]]
 - [[partitioning]]
 - [[declarative-vs-imperative-queries]]
+- [[coordinated-batch-pattern]]
+- [[join-pattern]]
+- [[reduce-pattern]]
+- [[sharder-pattern]]
+- [[work-queue-pattern]]
+- [[graph-batch-processing]]

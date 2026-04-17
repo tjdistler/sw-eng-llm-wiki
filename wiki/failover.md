@@ -2,9 +2,9 @@
 
 **Summary**: The process of promoting a follower to leader when the current leader fails — conceptually simple, but rife with edge cases that can corrupt data or leave the system in an inconsistent state.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-05-replication.md`, `raw/designing-data-intensive-applications/chapter-08-the-trouble-with-distributed-systems.md`, `raw/designing-data-intensive-applications/chapter-09-consistency-and-consensus.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-05-replication.md`, `raw/designing-data-intensive-applications/chapter-08-the-trouble-with-distributed-systems.md`, `raw/designing-data-intensive-applications/chapter-09-consistency-and-consensus.md`, `raw/designing-distributed-systems/chapter-09-ownership-election.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-16
 
 ---
 
@@ -57,6 +57,16 @@ Three approaches to handling leader failure (source: designing-data-intensive-ap
 
 Even single-leader databases that do not run consensus on every write still require consensus for leader election and leadership changes. Having a leader "kicks the can down the road" -- consensus is still needed, just less frequently. (source: designing-data-intensive-applications, chapter 9)
 
+## Failover at the container level
+
+Burns's *Designing Distributed Systems* Chapter 9 covers failover in the specific idiom of containerised services. His prescription has three layers (source: raw/designing-distributed-systems/chapter-09-ownership-election.md):
+
+1. **Decide whether you need failover at all.** For many workloads, a [[singleton-pattern|singleton]] under Kubernetes already achieves three to four nines of uptime via automatic restart and machine-level rescheduling. The machinery of proper master election is warranted only when the SLA or the rollout-window constraint demands it.
+2. **Outsource consensus.** Use etcd, [[zookeeper]], or Consul rather than implementing Paxos or Raft yourself. The KV store provides compare-and-swap and TTL, and the application builds locks and leases on top.
+3. **Use [[renewable-leases]] for long-running ownership.** Short TTL, background refresh every `ttl/2`, terminate the process if refresh fails (and let the orchestrator restart it as a passive secondary).
+
+Burns's named alternative to failover — the [[singleton-pattern]] — is worth surfacing because it is rarely treated as a serious option in the replication literature. The book argues explicitly that "distributed" is not always the right answer, and for background asynchronous work, a single orchestrated replica is simpler, cheaper, and probably good enough. See [[ownership-election-pattern]] for the full pattern.
+
 ## Related pages
 
 - [[leader-based-replication]]
@@ -70,3 +80,6 @@ Even single-leader databases that do not run consensus on every write still requ
 - [[consensus]]
 - [[two-phase-commit]]
 - [[zookeeper]]
+- [[ownership-election-pattern]]
+- [[singleton-pattern]]
+- [[renewable-leases]]

@@ -2,9 +2,9 @@
 
 **Summary**: The fundamental problem of getting multiple nodes in a distributed system to agree on a value, despite node crashes and network faults -- equivalent to [[total-order-broadcast]], [[linearizability|linearizable compare-and-set]], and atomic commit, and solvable by algorithms such as Paxos, Raft, and Zab.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-09-consistency-and-consensus.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-09-consistency-and-consensus.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/designing-distributed-systems/chapter-09-ownership-election.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-16
 
 ---
 
@@ -84,6 +84,8 @@ Consensus is not free (source: designing-data-intensive-applications, chapter 9)
 
 In practice, systems outsource consensus to dedicated services like [[zookeeper]] or etcd rather than implementing it themselves. (source: designing-data-intensive-applications, chapter 9)
 
+Burns is unusually blunt about this point in his applied container-level treatment: implementing Paxos or Raft yourself is "akin to implementing locks on top of assembly code compare-and-swap instructions. It's an interesting exercise for an undergraduate computer science course, but it is not something that is generally worth doing in practice." (source: raw/designing-distributed-systems/chapter-09-ownership-election.md) His Chapter 9 builds the full [[ownership-election-pattern|ownership election pattern]] on etcd's compare-and-swap and TTL primitives alone, never touching the consensus layer itself.
+
 ## Consensus, uniqueness, and coordination avoidance
 
 Chapter 12 expands on the relationship between consensus and uniqueness constraints. Enforcing strict uniqueness (usernames, seat bookings) requires consensus, typically via a single leader or partitioned log-based messaging. However, many applications can tolerate **loosely interpreted constraints**: allowing temporary violations and fixing them with compensating transactions (apologies, refunds). This [[coordination-avoidance]] approach achieves strong integrity without the performance and availability costs of consensus. Consensus and coordination remain necessary only for constraints where recovery from violation is impossible (source: chapter-12-the-future-of-data-systems.md).
@@ -106,3 +108,5 @@ Most consensus algorithms are designed for situations where a single node's thro
 - [[coordination-avoidance]]
 - [[data-integration]]
 - [[unbundling-databases]]
+- [[ownership-election-pattern]]
+- [[distributed-locks-on-kv-stores]]

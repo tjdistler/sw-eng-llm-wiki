@@ -2,7 +2,7 @@
 
 **Summary**: Umbrella term coined by James Governor for techniques that control how software is rolled out to users in a nuanced way — allowing faster releases while validating efficacy and limiting blast radius. Includes [[parallel-run-pattern|parallel run]], canary release, dark launch, and feature toggles.
 
-**Sources**: `raw/monolith-to-microservices/chapter-03-splitting-the-monolith.md`, `raw/monolith-to-microservices/chapter-05-growing-pains.md`
+**Sources**: `raw/monolith-to-microservices/chapter-03-splitting-the-monolith.md`, `raw/monolith-to-microservices/chapter-05-growing-pains.md`, `raw/designing-distributed-systems/chapter-03-ambassadors.md`
 
 **Last updated**: 2026-04-16
 
@@ -32,6 +32,10 @@ A specific implementation of dark launching: both old and new run on every call,
 
 Configuration-driven switches that turn capability on or off at runtime, often per-user or per-segment. See [[feature-toggle]] (source: chapter-03-splitting-the-monolith.md).
 
+## Implementation via ambassadors
+
+At the container level, all three traffic-shaping techniques above — canary, dark launch, and parallel run — can be implemented by an ambassador container running in the application's pod. Burns's Chapter 3 [[request-splitting|10%-experiment nginx ambassador]] is a canary release; the same tool teeing both backends is a dark launch or parallel run (source: raw/designing-distributed-systems/chapter-03-ambassadors.md). An ambassador-level implementation is language-agnostic and needs no cooperation from the application — a complement to in-process [[feature-toggle|feature toggles]] rather than a replacement. See [[ambassador-pattern]] and [[request-splitting]].
+
 ## Automated release remediation
 
 Chapter 5 takes progressive delivery further: once you have measurable acceptance thresholds (95th-percentile latency, error rate), the rollout decision can be automated (source: chapter-05-growing-pains.md). If thresholds are met, the rollout continues; if not, automated rollback. Netflix's **Spinnaker** is the canonical example.
@@ -56,3 +60,6 @@ Migration is exactly when bad releases are most likely: new code, new operationa
 - [[incremental-migration]]
 - [[end-to-end-testing]]
 - [[synthetic-transactions]]
+- [[ambassador-pattern]]
+- [[request-splitting]]
+- [[service-mesh]]

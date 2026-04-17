@@ -58,3 +58,4 @@ Coordination reduces apologies for inconsistencies but may increase apologies fo
 - [[fault-tolerance]]
 - [[multi-leader-replication]]
 - [[event-sourcing]]
+- [[idempotence]]

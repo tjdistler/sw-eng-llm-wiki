@@ -1,9 +1,3 @@
----
-name: Scalability
-description: A system's ability to cope with increased load while maintaining acceptable performance
-type: concept
----
-
 # Scalability
 
 **Summary**: Scalability describes a system's ability to cope with increased load — in data volume, traffic volume, or complexity — and the strategies available for handling that growth.
@@ -73,3 +67,4 @@ Architecture must match the application's specific load parameters. There is no 
 - [[replication]]
 - [[reliability]]
 - [[maintainability]]
+- [[replicated-load-balanced-service]]

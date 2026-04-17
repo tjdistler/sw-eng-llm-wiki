@@ -2,7 +2,7 @@
 
 **Summary**: Specifying the number and location of service instances you require, and having the platform continuously maintain that state. Manual or script-based deployment doesn't scale to tens or hundreds of services with different desired states; Kubernetes and serverless platforms exist largely to solve this.
 
-**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md`
+**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md`, `raw/designing-distributed-systems/chapter-08-functions-and-event-driven-processing.md`, `raw/designing-distributed-systems/chapter-09-ownership-election.md`
 
 **Last updated**: 2026-04-16
 
@@ -39,6 +39,7 @@ For container-based microservices, Kubernetes has emerged as the tool of choice 
 Newman's caveats:
 
 - **Vanilla Kubernetes is not developer-friendly.** Higher-order abstractions are still being built. Larger organisations often adopt packaged distributions like **OpenShift** for corporate identity/access integration and friendlier developer abstractions.
+    - *Note (2026): this gap has substantially filled in. The [[operator-pattern]] became the standard packaging for stateful applications, Helm charts cover most common deployments, and internal developer platforms (Backstage, Port, Humanitec-style IDPs) now abstract Kubernetes for application teams in mature organisations. Vanilla `kubectl` is no longer the expected developer interface.*
 - **Don't reach for Kubernetes too early.** It is "a bit too early" a default for many teams. If your existing solutions handle your five services fine, don't switch.
 
 ## Serverless / Function-as-a-Service
@@ -49,6 +50,8 @@ For teams already on the public cloud, Newman recommends a **serverless-first** 
 
 The reasoning: with FaaS, the platform handles essentially all operational work — including most of what desired-state management is for. You only fall back to container-orchestration platforms when the FaaS limits actually bite.
 
+Burns's Chapter 8 of *Designing Distributed Systems* elaborates the [[functions-as-a-service|FaaS]] model as a serving pattern in its own right and catalogues where the limits actually are — long-running work, large warm in-memory state, sustained high-volume request serving, and systems whose cross-function dependencies are hard to reason about (source: raw/designing-distributed-systems/chapter-08-functions-and-event-driven-processing.md). See [[serverless-vs-event-driven]] for the two-axis distinction that matters when picking a platform: you can get the managed-operations benefit without the event-driven constraints (via container-as-a-service platforms) or the event-driven programming model without managed servers (via self-hosted FaaS on Kubernetes).
+
 ## Don't adopt because everyone else is
 
 Newman closes the section with the same warning he applies to microservices themselves:
@@ -56,6 +59,10 @@ Newman closes the section with the same warning he applies to microservices them
 > "Don't adopt a Kubernetes-based platform just because you see everyone else doing it, which can also be said for microservices!" (source: chapter-05-growing-pains.md)
 
 Wait until your existing approach is genuinely straining. Adopting Kubernetes "for the future" before you have the present problem it solves is a way to inherit operational complexity you didn't need.
+
+## Application-specific desired state: the operator pattern
+
+Burns's Chapter 9 worked deployment introduces a narrower specialisation: the [[operator-pattern]]. An operator is itself a container running in the orchestrator whose sole job is to manage one specific application — etcd in the chapter's example — via a custom desired-state API. Users create declarative `Cluster` objects and the operator reconciles the pods, services, and volumes required to make the stated cluster real (source: raw/designing-distributed-systems/chapter-09-ownership-election.md). The operator is a bet that the operational knowledge for a given application is complicated enough to warrant its own reconciliation loop rather than expecting users to compose raw primitives.
 
 ## Connection to other Chapter 5 pains
 
@@ -71,3 +78,8 @@ Wait until your existing approach is genuinely straining. Adopting Kubernetes "f
 - [[microservices]]
 - [[independent-deployability]]
 - [[service-discovery]]
+- [[functions-as-a-service]]
+- [[serverless-vs-event-driven]]
+- [[operator-pattern]]
+- [[ownership-election-pattern]]
+- [[singleton-pattern]]

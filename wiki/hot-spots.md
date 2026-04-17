@@ -2,9 +2,9 @@
 
 **Summary**: A hot spot is a partition that receives a disproportionate share of reads or writes, undermining the scalability benefits of partitioning and making the overloaded node a bottleneck.
 
-**Sources**: raw/designing-data-intensive-applications/chapter-06-partitioning.md
+**Sources**: raw/designing-data-intensive-applications/chapter-06-partitioning.md, raw/designing-distributed-systems/chapter-06-sharded-services.md
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-16
 
 ---
 
@@ -40,6 +40,12 @@ Most databases today cannot automatically compensate for highly skewed workloads
 
 This is an application-level trade-off with no clean general solution. Future database systems may detect and rebalance hot keys automatically (source: chapter-06-partitioning.md).
 
+## Service-level mitigation: hot sharding
+
+At the service layer, hot spots appear as "hot shards" — one shard of a [[sharded-service-pattern|sharded service]] receiving disproportionate traffic. Burns's response is to deploy each shard as a [[replicated-sharded-service|replicated sub-service]] and autoscale replica count per shard in response to load (source: raw/designing-distributed-systems/chapter-06-sharded-services.md). When a viral photo drives massive traffic to its shard, the shard is replicated onto additional machines; cold shards can be packed onto fewer machines to free capacity. The shard count and sharding function stay constant — only per-shard replica count changes — so there is no re-sharding and no cache invalidation. See [[hot-sharding]] for the full pattern.
+
+This service-level response complements the write-side key-splitting described above: key-splitting is an application-level workaround when you cannot change the serving topology; hot sharding is a deployment-level response that keeps the sharding function untouched. Key-splitting works for write-heavy database hot keys; hot sharding works for read-heavy cache / serving hot keys.
+
 ## Structural mitigation via compound keys
 
 Cassandra's compound primary key approach can help avoid hot spots structurally. By hashing the first column of the key to determine the partition while using remaining columns for sort order within the partition, one-to-many relationships are spread across partitions by their parent key while remaining efficiently queryable within a partition. For example, a social media site can key updates as `(user_id, update_timestamp)` -- writes for different users go to different partitions, and within each user's partition, updates are sorted by time. See [[partitioning-strategies#Hybrid compound key partitioning]] for details (source: chapter-06-partitioning.md).
@@ -51,3 +57,6 @@ Cassandra's compound primary key approach can help avoid hot spots structurally.
 - [[consistent-hashing]]
 - [[rebalancing-partitions]]
 - [[scalability]]
+- [[hot-sharding]]
+- [[sharded-service-pattern]]
+- [[replicated-sharded-service]]

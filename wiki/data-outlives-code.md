@@ -1,9 +1,3 @@
----
-name: Data Outlives Code
-description: Database records encoded under old schemas persist long after the code that wrote them is replaced; how to handle this safely
-type: reference
----
-
 # Data Outlives Code
 
 **Summary**: Unlike application code, database records are rarely migrated when a schema changes. A row encoded five years ago with an old schema sits in the same table as a row written today. The code is long gone; the data remains. This asymmetry has important consequences for [[backward-forward-compatibility]] in database systems.

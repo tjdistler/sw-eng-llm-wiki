@@ -64,3 +64,5 @@ The robustness/resilience distinction layers cleanly on top of [[fault-tolerance
 - [[microservices]]
 - [[robustness-and-resiliency-at-scale]]
 - [[desired-state-management]]
+- [[circuit-breaker]]
+- [[bulkhead]]

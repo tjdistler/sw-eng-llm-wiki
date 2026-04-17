@@ -2,9 +2,9 @@
 
 **Summary**: Once data is partitioned across nodes, clients need a way to find the right node for a given key. Three approaches exist -- client-side routing, a dedicated routing tier, and node-forwarding -- each relying on some mechanism to track the ever-changing assignment of partitions to nodes.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-06-partitioning.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-06-partitioning.md`, `raw/designing-distributed-systems/chapter-03-ambassadors.md`, `raw/designing-distributed-systems/chapter-06-sharded-services.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-16
 
 ---
 
@@ -26,9 +26,13 @@ All client requests go to a partition-aware load balancer (a routing tier) that 
 
 **Used by**: LinkedIn Espresso (via Helix/ZooKeeper), MongoDB (via mongos daemons and a config server), HBase, SolrCloud, Kafka.
 
+Burns's [[sharded-service-pattern|sharded services]] use the term **root** for this component — a shard-aware load balancer in front of the shards. His Chapter 6 hands-on explicitly describes deploying twemproxy (or an nginx consistent-hashing proxy) as a **shared shard-routing service**: a [[replicated-load-balanced-service]] of routing processes fronted by a Kubernetes `Service` (source: raw/designing-distributed-systems/chapter-06-sharded-services.md). The trade-off against the client-side-ambassador approach: a shared service means less per-client complexity but introduces an extra network hop and must itself be scaled as load grows. See [[sharded-service-pattern#Deployment variants: ambassador vs shared routing service]].
+
 ### 3. Client-side awareness
 
 Clients themselves know the partitioning scheme and the partition-to-node assignment, and connect directly to the appropriate node with no intermediary.
+
+A practical refinement of client-side awareness is to move the routing logic out of the client process and into a coresident ambassador container. Burns's [[client-side-sharding]] example uses a twemproxy ambassador in each client [[pod]]: the application opens a plain Redis connection to `localhost:6379`, and the ambassador hashes each key and picks the right shard using [[consistent-hashing|ketama]]. This keeps the client application code routing-agnostic while still avoiding a shared server-side routing tier. See [[ambassador-pattern]] (source: raw/designing-distributed-systems/chapter-03-ambassadors.md).
 
 ## Keeping routing information current
 
@@ -70,3 +74,7 @@ Simple key-value queries need routing to a single partition. But massively paral
 - [[consensus]]
 - [[fault-tolerance]]
 - [[data-warehousing]]
+- [[ambassador-pattern]]
+- [[client-side-sharding]]
+- [[sharded-service-pattern]]
+- [[shard-key-selection]]

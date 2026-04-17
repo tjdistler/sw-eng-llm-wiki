@@ -1,9 +1,3 @@
----
-name: Accidental Complexity
-description: Complexity arising from implementation choices rather than the inherent difficulty of the problem being solved
-type: concept
----
-
 # Accidental Complexity
 
 **Summary**: Accidental complexity is complexity not inherent in the problem a system solves, but introduced by implementation choices — and unlike essential complexity, it can be removed.

@@ -2,7 +2,7 @@
 
 **Summary**: Forwarding log output from many short-lived processes to a central queryable store. Newman's "first thing to do" when adopting microservices — both because it's immediately useful and because organisations that can't manage it probably aren't ready for microservices.
 
-**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md`
+**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md`, `raw/designing-distributed-systems/chapter-04-adapters.md`
 
 **Last updated**: 2026-04-16
 
@@ -43,9 +43,15 @@ The market has many alternatives (Splunk, Datadog Logs, Loki, OpenSearch, etc.);
 
 Logs are batched and shipped on intervals. That makes them a coarse instrument for **timing** questions — "where did the latency go in this call chain?" For that, you need [[distributed-tracing]], which captures span-level timing data with synchronised intent.
 
+## Normalising logs before aggregation
+
+Log aggregation assumes log output is in a consistent structured shape. In a fleet assembled from first-party services, vendor binaries, and off-the-shelf open source, that assumption usually doesn't hold (source: raw/designing-distributed-systems/chapter-04-adapters.md). Brendan Burns's [[log-normalization]] — the logging variant of the [[adapter-pattern]] — is the container-level mechanism for restoring it: an adapter container alongside the application redirects files to stdout, parses heterogeneous formats into a single structured representation, and normalises timestamps before the aggregator ingests them. The adapter approach avoids forking the upstream image just to fix its logging.
+
 ## Related pages
 
 - [[monitoring-and-observability]]
 - [[correlation-ids]]
 - [[distributed-tracing]]
 - [[microservices]]
+- [[adapter-pattern]]
+- [[log-normalization]]

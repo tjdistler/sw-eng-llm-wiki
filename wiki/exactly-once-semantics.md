@@ -64,6 +64,7 @@ Reliable exactly-once processing preserves [[timeliness-and-integrity|integrity]
 
 ## Related pages
 
+- [[idempotence]]
 - [[end-to-end-argument]]
 - [[timeliness-and-integrity]]
 - [[coordination-avoidance]]

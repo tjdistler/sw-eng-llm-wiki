@@ -1,9 +1,3 @@
----
-name: Backward and Forward Compatibility
-description: The two directions of schema/encoding compatibility required for safe system evolution and rolling upgrades
-type: reference
----
-
 # Backward and Forward Compatibility
 
 **Summary**: Backward compatibility means new code can read old data; forward compatibility means old code can read new data. Both are required whenever old and new versions of code coexist in production simultaneously.

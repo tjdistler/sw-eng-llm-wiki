@@ -2,7 +2,7 @@
 
 **Summary**: An architecture in which each service instance communicates with other services through its own dedicated *local* proxy (sidecar), with central control and monitoring via a control plane. Avoids the contention of a shared "smart pipe" while still centralising cross-cutting concerns like protocol translation, retries, and observability.
 
-**Sources**: `raw/monolith-to-microservices/chapter-03-splitting-the-monolith.md`
+**Sources**: `raw/monolith-to-microservices/chapter-03-splitting-the-monolith.md`, `raw/designing-distributed-systems/chapter-02-the-sidecar-pattern.md`, `raw/designing-distributed-systems/chapter-03-ambassadors.md`, `raw/designing-distributed-systems/chapter-04-adapters.md`, `raw/designing-distributed-systems/chapter-05-replicated-load-balanced-services.md`
 
 **Last updated**: 2026-04-16
 
@@ -22,6 +22,33 @@ Square migrated from a homegrown RPC system to gRPC with minimal disruption to e
 
 Newman is conceptually positive about service meshes but warns that the tooling space took a while to stabilise. Istio appeared to be the leader but many alternatives were emerging weekly. His advice was to **let the space settle** before committing if you can (source: chapter-03-splitting-the-monolith.md).
 
+*Note (2026): the space has largely settled. Istio and Linkerd are the dominant control-plane choices, Envoy is the de facto data-plane proxy, and the service-mesh pattern itself is mainstream rather than emerging — Newman's "wait and see" advice has been overtaken by events.*
+
+## The sidecar as underlying primitive
+
+A service mesh is, architecturally, a fleet-wide deployment of the [[sidecar-pattern]]. Each service runs in a [[pod]] alongside a proxy container (Envoy, Linkerd-proxy, etc.) that shares the network namespace with the application; the proxy terminates mTLS, applies retry and routing policy, and emits telemetry — all without the application being aware. The chapter-2 HTTPS-terminating nginx sidecar Burns describes (source: raw/designing-distributed-systems/chapter-02-the-sidecar-pattern.md) is a miniature, bespoke version of what a service mesh industrializes.
+
+Viewed this way, service-mesh adoption is a special case of the more general discipline of [[modular-reusable-containers]]: the mesh's data-plane proxy is a standard sidecar, parameterized and documented well enough to be deployed alongside every application in the organization.
+
+## The mesh as fleet-wide ambassador
+
+The [[ambassador-pattern]] — a coresident container that brokers the application's *outbound* connections — maps directly onto the outbound side of a service-mesh data plane. The mesh proxy does for every outbound dependency what a hand-rolled ambassador does for one: service discovery, load balancing, retries, traffic shifting, mTLS. Burns's Chapter 3 examples (sharding via twemproxy, service brokering, 10% experiment via nginx) are the single-service, bespoke versions of what a service mesh generalizes and industrializes across the fleet (source: raw/designing-distributed-systems/chapter-03-ambassadors.md). The mesh-vs-hand-rolled-ambassador choice is the same client-side-vs-server-side-proxy-tier trade-off Burns articulates in Chapter 3: mesh proxies are a per-pod solution; a central load-balancer/gateway is the server-side alternative.
+
+## The mesh as fleet-wide adapter
+
+The mesh proxy also plays the [[adapter-pattern]] role for a slice of observability: regardless of what internal metrics each application emits, the mesh produces a uniform set of request-level metrics (rates, errors, latencies), access logs, and traces — a fleet-standard observability interface laid on top of whatever each application does natively (source: raw/designing-distributed-systems/chapter-04-adapters.md). That covers the cross-cutting HTTP/gRPC layer; application-specific signals (Redis hit rate, MySQL replication lag, queue depth) still need dedicated adapter containers like the ones Burns walks through in Chapter 4. In practice a production pod combines a mesh proxy (sidecar + ambassador + partial adapter) with dedicated application-specific adapters for deeper telemetry.
+
+## The mesh and serving-pattern cross-cutting concerns
+
+Several pieces of Burns's Chapter 5 [[replicated-load-balanced-service]] stack end up handled by the mesh proxy in a fleet-wide deployment (source: raw/designing-distributed-systems/chapter-05-replicated-load-balanced-services.md):
+
+- **Session affinity** ([[session-tracked-services]]) — cookie- or header-based sticky-session routing can be implemented uniformly at the mesh proxy instead of being configured per load balancer.
+- **mTLS** — the mesh terminates and re-establishes TLS between services, replacing internal-only SSL termination. An edge-tier [[ssl-termination]] layer is still typically needed for external HTTPS.
+- **[[rate-limiting]]** — mesh control planes (Istio, Linkerd) can enforce quota policies centrally.
+- **[[health-probes|Readiness/liveness]] signal propagation** — mesh proxies participate in the load-balancer membership decisions the probes drive, so the probe contract is preserved across services.
+
+Caching ([[caching-layer]]) is *not* typically a mesh responsibility — HTTP caching still wants a dedicated tier (Varnish) sized differently from application replicas.
+
 ## Relationship to migration patterns
 
 A service mesh is not itself a migration pattern but a piece of infrastructure that supports them. In particular:
@@ -31,8 +58,22 @@ A service mesh is not itself a migration pattern but a piece of infrastructure t
 
 ## Related pages
 
+- [[sidecar-pattern]]
+- [[ambassador-pattern]]
+- [[adapter-pattern]]
+- [[client-side-sharding]]
+- [[service-brokering]]
+- [[request-splitting]]
+- [[unified-monitoring-interface]]
+- [[pod]]
+- [[modular-reusable-containers]]
 - [[strangler-fig-pattern]]
 - [[independent-deployability]]
 - [[rpc]]
 - [[progressive-delivery]]
 - [[migration-pattern-selection]]
+- [[replicated-load-balanced-service]]
+- [[session-tracked-services]]
+- [[ssl-termination]]
+- [[circuit-breaker]]
+- [[bulkhead]]

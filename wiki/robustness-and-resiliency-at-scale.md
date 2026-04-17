@@ -29,7 +29,7 @@ Asking these on every call into another service forces explicit decisions about 
 Reduce the surface over which one service's problem can spread:
 
 - Async communication via [[message-brokers]] avoids the **temporal coupling** of a synchronous call chain (see [[coupling]]). The producer doesn't have to wait for the consumer to be up.
-- Bulkheads — separating resources so one workload's exhaustion doesn't starve another — limit blast radius.
+- [[bulkhead|Bulkheads]] — separating resources (thread pools, connection pools, instances) so one workload's exhaustion doesn't starve another — limit blast radius. The name is from Nygard's *Release It!*, after the compartments in a ship's hull that stop a single breach from sinking the vessel. Concrete forms span per-dependency thread pools at one end of the spectrum to process-per-tenant or extracted microservices at the other.
 
 ### Sensible time-outs
 
@@ -37,7 +37,7 @@ Without time-outs, a slow downstream service holds your caller's resources indef
 
 ### Circuit breakers
 
-Pair time-outs with a circuit breaker (Newman names but doesn't describe in depth here). When repeated calls fail or time out, the breaker opens, immediately failing further calls without trying the downstream service. This prevents back pressure from accumulating and gives the downstream service room to recover.
+Pair time-outs with a [[circuit-breaker|circuit breaker]]. When repeated calls fail or time out, the breaker opens, immediately failing further calls without trying the downstream service. This prevents back pressure from accumulating and gives the downstream service room to recover. Nygard's formulation is a three-state machine: **closed** (calls flow, failures counted), **open** (calls fail fast, skipping the downstream entirely), and **half-open** (a single probe after a cool-down decides whether to close again). Time-outs detect the slow call and feed the breaker's failure counter; the breaker short-circuits subsequent calls before they even reach the timeout.
 
 The pattern is from Michael Nygard's *Release It!* — Newman's recommended deeper reference.
 
@@ -76,6 +76,8 @@ Newman's microservice-flavoured patterns sit on top of the broader [[fault-toler
 - [[unreliable-networks]]
 - [[network-faults]]
 - [[timeouts]]
+- [[circuit-breaker]]
+- [[bulkhead]]
 - [[coupling]]
 - [[message-brokers]]
 - [[desired-state-management]]

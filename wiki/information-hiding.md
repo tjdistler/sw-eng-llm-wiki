@@ -2,7 +2,7 @@
 
 **Summary**: David Parnas's 1971 principle that module boundaries should be stable and should hide the parts of the implementation expected to change. In microservices, information hiding is the engine of [[independent-deployability]]: by exposing as little as possible at a service boundary, you preserve freedom to change everything inside.
 
-**Sources**: `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`, `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`
+**Sources**: `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`, `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/designing-distributed-systems/chapter-02-the-sidecar-pattern.md`, `raw/designing-distributed-systems/chapter-04-adapters.md`
 
 **Last updated**: 2026-04-16
 
@@ -48,6 +48,12 @@ If you decide to split a service that models an entire [[bounded-context]] into 
 
 A Pick Instruction sent to a Warehouse service contains only what the warehouse needs to package and send the item — not the full Order, with credit card details and pricing. Exposing only what is needed is information hiding applied to inter-service messages (source: chapter-01-just-enough-microservices.md). See [[coupling|domain coupling]].
 
+### Information hiding at the deployment layer
+
+Brendan Burns's [[sidecar-pattern]] is information hiding in operational clothing (source: raw/designing-distributed-systems/chapter-02-the-sidecar-pattern.md). A legacy application that only speaks HTTP, reads config from disk, and exposes no introspection endpoints is augmented by sidecar containers that terminate HTTPS, sync config from an API, and expose a `/topz` view — all without changing the application itself. Consumers of the pod see a modern interface; the application's deficiencies remain hidden inside the [[pod]] boundary. The same logic applies to the [[service-mesh]], which standardises this approach fleet-wide. [[modular-reusable-containers]] describes the API-surface discipline that makes this work at scale.
+
+The [[adapter-pattern]] extends the same idea to outward-facing interfaces (source: raw/designing-distributed-systems/chapter-04-adapters.md). Redis's native stats protocol, a Java server's JMX endpoint, an off-the-shelf database's opaque error channel — all implementation detail, hidden inside the pod behind a fleet-standard Prometheus / fluentd / HTTP-probe interface the adapter presents. The rest of the infrastructure is coupled only to the adapter's outward contract, not to whatever the application natively emits, exactly the split Parnas argued for.
+
 ## Related pages
 
 - [[microservices]]
@@ -61,3 +67,6 @@ A Pick Instruction sent to a Warehouse service contains only what the warehouse 
 - [[database-view-pattern]]
 - [[database-wrapping-service]]
 - [[database-as-a-service-interface]]
+- [[sidecar-pattern]]
+- [[adapter-pattern]]
+- [[modular-reusable-containers]]

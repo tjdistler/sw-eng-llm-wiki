@@ -1,9 +1,3 @@
----
-name: Load Parameters
-description: Quantitative metrics that describe the current load on a system, used as the basis for scalability reasoning
-type: concept
----
-
 # Load Parameters
 
 **Summary**: Load parameters are the numbers that best describe what a system is currently doing — the foundation for any meaningful discussion of scalability or performance.

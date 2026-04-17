@@ -1,9 +1,3 @@
----
-name: Remote Procedure Calls (RPC)
-description: The RPC abstraction, why it leaks, how modern RPC frameworks address the problems, and how REST differs
-type: reference
----
-
 # Remote Procedure Calls (RPC)
 
 **Summary**: Remote Procedure Call (RPC) tries to make a network request look like a local function call. This abstraction is fundamentally leaky — networks behave very differently from local function calls — and the attempt to hide that difference causes subtle bugs. Modern RPC frameworks are more explicit about the difference; REST rejects the abstraction entirely.
@@ -90,3 +84,4 @@ When a service is public or crosses organizational boundaries, the provider has 
 - [[schema-evolution]]
 - [[message-brokers]]
 - [[microservices]]
+- [[idempotence]]

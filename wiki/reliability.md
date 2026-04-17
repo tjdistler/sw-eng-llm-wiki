@@ -1,9 +1,3 @@
----
-name: Reliability
-description: Systems that continue to work correctly even when faults occur
-type: concept
----
-
 # Reliability
 
 **Summary**: Reliability means a system continues to perform its correct function, at the desired level of performance, even in the face of hardware faults, software bugs, and human error.

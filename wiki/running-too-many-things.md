@@ -2,7 +2,7 @@
 
 **Summary**: As service count and instance count grow, deployment and configuration management techniques that worked for a monolith stop scaling. The core capability you need is [[desired-state-management]] — and the operational frame Newman recommends is "serverless-first if you can; Kubernetes when you must; don't adopt either too early".
 
-**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md`
+**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md`, `raw/designing-distributed-systems/chapter-08-functions-and-event-driven-processing.md`
 
 **Last updated**: 2026-04-16
 
@@ -40,6 +40,8 @@ If you're already on the public cloud, default to **Function-as-a-Service** (sou
 
 The reasoning: with FaaS, the platform handles essentially all the operational work that desired-state management exists for. Reach for container orchestration only when FaaS limits actually bite.
 
+Burns's Chapter 8 of *Designing Distributed Systems* catalogues **where those limits actually are** (source: raw/designing-distributed-systems/chapter-08-functions-and-event-driven-processing.md): sustained high-volume request serving (pay-per-request loses to VMs), work that needs large warm in-memory state (cold starts dominate latency), long-running background jobs (runtime caps disqualify it), and workloads whose cross-function dependencies are hard to reason about (debugging is the main operational complaint). See [[functions-as-a-service]] for the full discussion and [[serverless-vs-event-driven]] for the distinction between the two axes — you can get one benefit without the other. Burns's recommendation in the same chapter for teams that have outgrown the per-request pricing of public-cloud FaaS matches Newman's other recommendation on this page: **run an open-source FaaS on a Kubernetes cluster you control**.
+
 ### Kubernetes when needed
 
 For container-based microservices, Kubernetes is the dominant choice. Newman's caveats:
@@ -70,3 +72,5 @@ If five microservices fit comfortably in your existing solution, stay there.
 - [[microservices]]
 - [[independent-deployability]]
 - [[orphaned-services]]
+- [[functions-as-a-service]]
+- [[serverless-vs-event-driven]]

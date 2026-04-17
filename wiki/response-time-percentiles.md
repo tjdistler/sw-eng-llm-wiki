@@ -1,16 +1,10 @@
----
-name: Response Time Percentiles
-description: Percentile-based metrics for measuring service response time, and why they matter more than averages
-type: concept
----
-
 # Response Time Percentiles
 
 **Summary**: Percentiles — not mean response time — are the correct way to reason about service performance, because they capture the distribution of user experience rather than a misleading aggregate.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-01-reliable-scalable-and-maintainable-applications.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-01-reliable-scalable-and-maintainable-applications.md`, `raw/designing-distributed-systems/chapter-07-scattergather.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-16
 
 ---
 
@@ -52,6 +46,8 @@ At p9999 (1 in 10,000), optimizing further was deemed too expensive and yielding
 
 In systems where a single end-user request fans out to multiple backend calls, tail latencies compound. Even if only 1% of individual backend calls are slow, the probability that *at least one* of N parallel calls is slow grows quickly with N. This effect — **tail latency amplification** — means that overall end-user latency worsens faster than individual service latency would suggest. (source: chapter-01)
 
+Brendan Burns's *Designing Distributed Systems* Chapter 7 treats this as the central design concern of the [[scatter-gather-pattern]], with concrete arithmetic: a backend p99 of 2 s becomes the system's p95 at 5 leaves and is practically guaranteed at 100 leaves (source: raw/designing-distributed-systems/chapter-07-scattergather.md). The dedicated page [[tail-latency-amplification]] covers the math, the straggler framing, the availability-compounding parallel, and the common mitigations (hedged requests, bounded leaf count, leaf replication, approximate gather).
+
 ## Head-of-line blocking
 
 A server can process only a limited number of requests in parallel (bounded by CPU cores). A small number of slow requests can hold up the processing of subsequent fast requests. From the client's perspective, those subsequent requests appear slow even though their own processing time is short. This is **head-of-line blocking**. It is why response time must be measured on the **client side**, not just the server side. (source: chapter-01)
@@ -74,3 +70,5 @@ Percentiles are the standard language of service level objectives and agreements
 - [[scalability]]
 - [[load-parameters]]
 - [[scaling-approaches]]
+- [[tail-latency-amplification]]
+- [[scatter-gather-pattern]]

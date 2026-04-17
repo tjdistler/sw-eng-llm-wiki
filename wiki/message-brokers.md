@@ -1,16 +1,10 @@
----
-name: Message Brokers and Async Message Passing
-description: Asynchronous message passing via message brokers and actor frameworks; advantages over RPC and implications for schema compatibility
-type: reference
----
-
 # Message Brokers and Async Message Passing
 
 **Summary**: Message brokers sit between services, storing messages temporarily and delivering them asynchronously. They decouple producers from consumers in time, space, and identity — providing reliability, buffering, and fan-out that direct [[rpc|RPC]] calls cannot. The actor model extends this pattern to concurrency within and across nodes.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`, `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`, `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/designing-distributed-systems/chapter-08-functions-and-event-driven-processing.md`, `raw/designing-distributed-systems/chapter-10-work-queue-systems.md`, `raw/designing-distributed-systems/chapter-11-event-driven-batch-processing.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-16
 
 ---
 
@@ -97,6 +91,25 @@ This is a natural fit for distributed systems: the same message-passing mechanis
 
 All three can support rolling upgrades with the right encoding, but it requires explicit attention — the framework doesn't do it for you.
 
+## Brokers as a work-queue source
+
+Burns's [[work-queue-pattern|Chapter 10 work queue]] treats a broker topic as one of several interchangeable work-item sources: an application-specific [[source-container-interface|source ambassador]] fronting a Kafka or Redis queue turns the broker into a pull-style item list that the generic queue-manager can consume (source: raw/designing-distributed-systems/chapter-10-work-queue-systems.md). The queue-manager never learns that the backing store is a broker — it issues `GET /api/v1/items` calls against `localhost`, the ambassador drains the broker and responds.
+
+Two differences from a classic broker-consumer loop:
+
+- Completion tracking lives in Kubernetes Job annotations, not in broker acks or Kafka consumer offsets. Work-item identity is the Job's name.
+- The queue-manager is generic across source shapes — a filesystem listing, a cloud-storage bucket, or a broker all look the same behind the source-ambassador interface.
+
+This makes the work queue a useful bridge between broker-shaped ingress and container-based batch processing.
+
+## Brokers as the workflow transport
+
+Burns's [[event-driven-batch-pattern|Chapter 11 event-driven batch pattern]] uses a pub/sub broker as the **transport layer** that wires together multi-stage batch workflows (source: raw/designing-distributed-systems/chapter-11-event-driven-batch-processing.md). Each output stream of each workflow stage is a topic; linking containers ([[copier-pattern|copiers]], [[filter-pattern|filters]], [[splitter-pattern|splitters]], [[sharder-pattern|sharders]], [[merger-pattern|mergers]]) publish and subscribe to topics to build the workflow DAG. Burns treats Apache Kafka, Azure EventGrid, and Amazon SQS as interchangeable substrates at the pattern level. See [[publisher-subscriber-infrastructure]] for the Kafka-on-Kubernetes-via-Helm walkthrough and the topic-per-output-shard convention.
+
+## FaaS as a broker consumer
+
+Burns's Chapter 8 ([[functions-as-a-service]]) positions FaaS as a compute substrate for broker-driven event handlers: a function fires per message, runs a small stateless handler, and returns. This is a clean fit for the broker model because brokers already provide buffering and fan-out — the FaaS platform adds automatic scaling and scale-to-zero (source: raw/designing-distributed-systems/chapter-08-functions-and-event-driven-processing.md). Multiple FaaS handlers chained through a broker form Burns's [[event-pipeline-pattern]].
+
 ## Related pages
 
 - [[rpc]]
@@ -109,3 +122,14 @@ All three can support rolling upgrades with the right encoding, but it requires 
 - [[event-streams]]
 - [[change-data-capture]]
 - [[two-phase-commit]]
+- [[functions-as-a-service]]
+- [[event-pipeline-pattern]]
+- [[work-queue-pattern]]
+- [[source-container-interface]]
+- [[event-driven-batch-pattern]]
+- [[publisher-subscriber-infrastructure]]
+- [[copier-pattern]]
+- [[filter-pattern]]
+- [[splitter-pattern]]
+- [[sharder-pattern]]
+- [[merger-pattern]]

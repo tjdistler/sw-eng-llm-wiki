@@ -2,9 +2,9 @@
 
 **Summary**: Sort-merge joins (also called reduce-side joins) are the default join strategy in MapReduce. Mappers extract join keys, the framework sorts and partitions the data, and reducers merge the sorted streams to perform the actual join — bringing all related data to the same place.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-10-batch-processing.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-10-batch-processing.md`, `raw/designing-distributed-systems/chapter-12-coordinated-batch-processing.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-16
 
 ---
 
@@ -47,6 +47,10 @@ Compensation algorithms:
 
 (source: designing-data-intensive-applications, chapter 10)
 
+## Note on two uses of "join"
+
+DDIA's "join" here is the relational-algebra operator: match records from two datasets by a common key and combine them. Burns's [[join-pattern|Chapter 12 join pattern]] uses the word differently — it is a **barrier synchronization** that waits for every upstream parallel worker to complete before releasing downstream work (source: raw/designing-distributed-systems/chapter-12-coordinated-batch-processing.md). Both legitimately carry the name because both "bring parallel work together," but they describe different mechanisms: a sort-merge join is what the reducer *does* with paired records, while a Burns barrier-join is about *when* the downstream stage may start. MapReduce's implicit "wait for every mapper before any reducer starts" semantics is an instance of Burns's barrier-join sitting above the relational join that the reducer eventually performs.
+
 ## Comparison to map-side joins
 
 Sort-merge joins make **no assumptions** about the input data — they work regardless of data properties. The cost is sorting, shuffling, and merging across the network. [[map-side-joins]] avoid this cost by exploiting properties of the input (small size, co-partitioning, pre-sorting), but require those properties to hold (source: designing-data-intensive-applications, chapter 10).
@@ -59,3 +63,5 @@ Sort-merge joins make **no assumptions** about the input data — they work rega
 - [[partitioning]]
 - [[partitioning-strategies]]
 - [[dataflow-engines]]
+- [[join-pattern]]
+- [[coordinated-batch-pattern]]

@@ -2,9 +2,9 @@
 
 **Summary**: A monotonically increasing token issued with each lock or lease grant, used to prevent a node that falsely believes it holds a lock from corrupting data -- the resource rejects any write carrying a token older than one it has already seen.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-08-the-trouble-with-distributed-systems.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-08-the-trouble-with-distributed-systems.md`, `raw/designing-distributed-systems/chapter-09-ownership-election.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-16
 
 ---
 
@@ -39,6 +39,20 @@ If ZooKeeper is used as a lock service, the **transaction ID (zxid)** or the **n
 
 For resources that do not explicitly support fencing tokens, workarounds may be possible -- for example, including the token in the filename of a file storage service. But some form of check is necessary. (source: designing-data-intensive-applications, chapter 8)
 
+## Applied container-level form (Burns)
+
+Burns derives the same construction from first principles in his Chapter 9 treatment of ownership election, without naming it "fencing" (source: raw/designing-distributed-systems/chapter-09-ownership-election.md). His recipe for a distributed lock over etcd stores the KV store's per-write **resource version** when the lock is acquired, and the holder includes that version with every downstream request. Workers validate the version against the current value in the KV store before acting — rejecting any request whose version is out of date, even if the lock's current holder name happens to match by coincidence.
+
+The scenario he walks through to motivate the mechanism is exactly the DDIA HBase bug transposed to a sharded service:
+
+1. Shard-1 becomes master and sends request R1 tagged with version v1.
+2. The network delays R1.
+3. Shard-1's TTL expires, Shard-2 becomes master, sends and completes R2 with v2.
+4. Shard-2 crashes; Shard-1 re-acquires ownership with v3.
+5. R1 finally arrives. The worker sees Shard-1 is the current master, but the request carries v1 — older than any version the worker has already processed — so it is rejected.
+
+See [[distributed-locks-on-kv-stores]] for the full construction, and [[ownership-election-pattern]] for the broader pattern context. In etcd, the fencing role is played by the mod revision; in ZooKeeper, by the zxid or cversion.
+
 ## Related pages
 
 - [[truth-and-leadership-in-distributed-systems]]
@@ -46,3 +60,7 @@ For resources that do not explicitly support fencing tokens, workarounds may be 
 - [[quorums]]
 - [[failover]]
 - [[byzantine-faults]]
+- [[ownership-election-pattern]]
+- [[distributed-locks-on-kv-stores]]
+- [[renewable-leases]]
+- [[idempotence]]

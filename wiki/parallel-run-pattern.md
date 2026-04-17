@@ -2,7 +2,7 @@
 
 **Summary**: A migration verification pattern where both the old and new implementations execute on every request and their results are compared. One implementation remains the source of truth (typically the old one) until the new one has earned trust. Useful when correctness or non-functional behaviour of the new service is high-risk.
 
-**Sources**: `raw/monolith-to-microservices/chapter-03-splitting-the-monolith.md`
+**Sources**: `raw/monolith-to-microservices/chapter-03-splitting-the-monolith.md`, `raw/designing-distributed-systems/chapter-03-ambassadors.md`
 
 **Last updated**: 2026-04-16
 
@@ -35,6 +35,10 @@ Spies running in a separate process complicate verification timing — typically
 
 GitHub's open-source [Scientist](https://github.com/github/scientist) Ruby library implements the pattern at code level: declare a `science` block with old and new candidates, and the library handles execution, comparison, and metrics. Ports exist for Java, .NET, Python, Node.js and others (source: chapter-03-splitting-the-monolith.md).
 
+## Teeing at the ambassador / proxy layer
+
+An alternative to in-process libraries is to do the teeing *outside* the application. Burns's Chapter 3 [[request-splitting|request-splitting ambassador]] describes exactly this: an ambassador container proxies requests to both the production system and a newer undeployed version, returns the production response to the user, and discards or logs the experimental response (source: raw/designing-distributed-systems/chapter-03-ambassadors.md). That is a parallel run implemented at the transport layer, with no application-side code. Compared to Scientist-style in-process libraries it is language-agnostic and does not require each application to adopt the library; compared to Scientist it has less access to application-level semantic comparison, so the comparison logic tends to be coarser (e.g. byte-equality or HTTP-status-code equality).
+
 ## N-version programming: a relative
 
 Safety-critical control systems (fly-by-wire avionics) deploy multiple independent implementations of the same subsystem, send each input to all of them, and pick the answer agreed by a quorum. The goal is fault tolerance during operation rather than migration verification — but the structural pattern is the same (source: chapter-03-splitting-the-monolith.md).
@@ -65,3 +69,5 @@ Parallel runs are non-trivial to implement. Newman has used the pattern only "on
 - [[deployment-vs-release]]
 - [[feature-toggle]]
 - [[migration-pattern-selection]]
+- [[request-splitting]]
+- [[ambassador-pattern]]

@@ -1,9 +1,3 @@
----
-name: Fault Tolerance
-description: Design techniques for preventing component faults from cascading into system-wide failures
-type: concept
----
-
 # Fault Tolerance
 
 **Summary**: Fault tolerance is the property of a system that allows it to continue operating correctly when one or more of its components fail, by isolating faults before they become failures.
@@ -129,3 +123,5 @@ See [[end-to-end-argument]] for the broader principle that integrity checks must
 - [[derived-data]]
 - [[event-sourcing]]
 - [[timeliness-and-integrity]]
+- [[replicated-load-balanced-service]]
+- [[health-probes]]

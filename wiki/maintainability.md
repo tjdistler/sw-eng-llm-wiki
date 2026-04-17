@@ -1,9 +1,3 @@
----
-name: Maintainability
-description: Designing systems so engineering and operations teams can work on them productively over time
-type: concept
----
-
 # Maintainability
 
 **Summary**: Maintainability is about making life better for the engineers and operators who must work with a system over its lifetime — fixing bugs, adapting to new use cases, and keeping it running.

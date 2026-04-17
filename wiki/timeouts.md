@@ -45,3 +45,5 @@ In practice, timeouts should be determined experimentally by measuring the distr
 - [[partial-failures]]
 - [[failover]]
 - [[process-pauses]]
+- [[circuit-breaker]]
+- [[bulkhead]]

@@ -2,9 +2,9 @@
 
 **Summary**: Dataflow engines (Spark, Tez, Flink) improve on MapReduce by modeling an entire workflow as a single job with flexible operators, avoiding the unnecessary materialization of intermediate state to disk and enabling pipelined execution.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-10-batch-processing.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-10-batch-processing.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/designing-distributed-systems/chapter-11-event-driven-batch-processing.md`, `raw/designing-distributed-systems/chapter-12-coordinated-batch-processing.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-16
 
 ---
 
@@ -92,10 +92,32 @@ Chapter 12 discusses how dataflow engines are evolving to handle both batch and 
 
 This convergence means a single codebase can handle both real-time event processing and historical reprocessing for [[derived-data|derived data]] systems, without maintaining separate batch and stream implementations.
 
+## Container-level counterpart: Burns's event-driven batch
+
+Burns's *Designing Distributed Systems* Chapter 11 — the [[event-driven-batch-pattern]] — is the container-level form of the dataflow-DAG idea (source: raw/designing-distributed-systems/chapter-11-event-driven-batch-processing.md). The shape is the same — a DAG of processing stages connected by data channels — but the granularity and transport differ:
+
+| Aspect | DDIA dataflow engines | Burns event-driven batch |
+|---|---|---|
+| DAG unit | Operator (map, join, filter, aggregate) | [[work-queue-pattern\|Work queue]] (one topic, one worker pool) |
+| Transport | In-memory / shuffle files in one cluster | Pub/sub broker ([[publisher-subscriber-infrastructure\|Kafka]], EventGrid, SQS) |
+| Scheduling | Single engine owns the whole DAG | Each stage is independent; broker is the glue |
+| Fault tolerance | RDD lineage or operator checkpoints | Per-item Kubernetes Job retries + broker durability |
+| DAG vocabulary | `join`, `groupBy`, `filter`, `broadcast` | [[copier-pattern\|copier]], [[filter-pattern\|filter]], [[splitter-pattern\|splitter]], [[sharder-pattern\|sharder]], [[merger-pattern\|merger]] |
+
+Dataflow engines win on throughput and fine-grained DAG optimisation within a cluster. Burns's workflow pattern wins on heterogeneity, participant diversity, and the ability to splice work across loosely-coupled teams and systems (because the transport is a broker rather than an engine-internal shuffle). They solve the same abstract problem at different deployment scales.
+
+Chapter 12 — [[coordinated-batch-pattern|coordinated batch processing]] — adds aggregation primitives that close the loop (source: raw/designing-distributed-systems/chapter-12-coordinated-batch-processing.md). The [[join-pattern|join]] (barrier; wait for every upstream worker to finish) and the [[reduce-pattern|reduce]] (associative pairwise combine; pipelines with upstream work) at container granularity are the same choices dataflow engines make at operator granularity — whether to materialise an intermediate result across a barrier (MapReduce-style) or to pipeline through a reducer as outputs arrive (dataflow-style). Burns's pattern-level distinction between join and reduce is the coarse-grained form of the dataflow optimiser's fine-grained decision about where to pipeline and where to materialise.
+
 ## Related pages
 
 - [[batch-processing]]
 - [[mapreduce]]
+- [[event-driven-batch-pattern]]
+- [[coordinated-batch-pattern]]
+- [[join-pattern]]
+- [[reduce-pattern]]
+- [[publisher-subscriber-infrastructure]]
+- [[work-queue-pattern]]
 - [[materialization-of-intermediate-state]]
 - [[distributed-filesystems]]
 - [[sort-merge-joins]]

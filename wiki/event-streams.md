@@ -2,9 +2,9 @@
 
 **Summary**: An event stream is a sequence of immutable, timestamped records (events) that are incrementally produced over time and consumed by one or more subscribers. Events are the fundamental unit of data in [[stream-processing]] systems.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/designing-distributed-systems/chapter-08-functions-and-event-driven-processing.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-16
 
 ---
 
@@ -65,6 +65,10 @@ Events are immutable records of things that happened. This property is powerful 
 
 For the relationship between mutable state and immutable event logs, see [[event-sourcing]].
 
+## FaaS as an event consumer
+
+Burns's Chapter 8 treatment of [[functions-as-a-service|FaaS]] positions event-driven functions as natural consumers of event streams: small, stateless, asynchronous handlers that fire once per event and scale automatically with event rate (source: raw/designing-distributed-systems/chapter-08-functions-and-event-driven-processing.md). The broker-and-FaaS combination is common in practice — the broker provides buffering, fan-out, and replay; the FaaS provides compute that scales to zero when no events arrive. Burns's [[event-pipeline-pattern]] arranges multiple such functions into a directed graph; [[faas-decorator-pattern]] is the inbound request variant.
+
 ## Related pages
 
 - [[stream-processing]]
@@ -74,3 +78,5 @@ For the relationship between mutable state and immutable event logs, see [[event
 - [[event-sourcing]]
 - [[encoding-formats]]
 - [[windowing]]
+- [[functions-as-a-service]]
+- [[event-pipeline-pattern]]

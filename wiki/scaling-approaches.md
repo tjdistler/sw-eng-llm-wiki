@@ -1,16 +1,10 @@
----
-name: Scaling Approaches
-description: Strategies for handling increased load — vertical vs horizontal scaling, elastic vs manual, stateless vs stateful
-type: concept
----
-
 # Scaling Approaches
 
 **Summary**: There is no one-size-fits-all scaling strategy. The right approach depends on a system's specific [[load-parameters]], and good architectures usually combine several techniques.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-01-reliable-scalable-and-maintainable-applications.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-01-reliable-scalable-and-maintainable-applications.md`, `raw/designing-distributed-systems/chapter-05-replicated-load-balanced-services.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-16
 
 ---
 
@@ -37,6 +31,8 @@ Scaling stateless services (e.g. web servers, API handlers) across multiple mach
 
 The conventional wisdom has historically been: scale your database up (single node) until cost or availability requirements force distribution. As distributed systems tooling matures, this threshold is shifting. (source: chapter-01)
 
+The standard container-level realisation of stateless horizontal scaling is the [[replicated-load-balanced-service]] pattern from Burns's *Designing Distributed Systems*, Chapter 5: identical replicas behind a load balancer, with a [[health-probes|readiness probe]] telling the load balancer when a replica can serve traffic (source: raw/designing-distributed-systems/chapter-05-replicated-load-balanced-services.md). Burns's two-replica-minimum argument — that hitting a three-nines SLA from a single instance is essentially impossible because rollouts alone eat the downtime budget — is a concrete case of why even "small" services benefit from horizontal distribution the moment they claim any availability guarantee.
+
 ## Architecture is application-specific
 
 There is no "magic scaling sauce" — a generic architecture that works for all problems. A system handling 100,000 × 1 kB requests/sec looks completely different from one handling 3 × 2 GB requests/min, even though both have the same total throughput. The bottleneck may be read volume, write volume, storage volume, data complexity, response time requirements, access patterns, or some combination. (source: chapter-01)
@@ -51,3 +47,5 @@ For early-stage products, the ability to iterate quickly on features typically m
 - [[load-parameters]]
 - [[response-time-percentiles]]
 - [[maintainability]]
+- [[replicated-load-balanced-service]]
+- [[health-probes]]

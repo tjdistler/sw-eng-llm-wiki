@@ -2,9 +2,9 @@
 
 **Summary**: Partitioning (also called sharding) splits a large dataset across multiple nodes so that data and query load can scale beyond what a single machine can handle.
 
-**Sources**: raw/designing-data-intensive-applications/chapter-06-partitioning.md, raw/designing-data-intensive-applications/chapter-11-stream-processing.md
+**Sources**: raw/designing-data-intensive-applications/chapter-06-partitioning.md, raw/designing-data-intensive-applications/chapter-11-stream-processing.md, raw/designing-distributed-systems/chapter-03-ambassadors.md, raw/designing-distributed-systems/chapter-06-sharded-services.md, raw/designing-distributed-systems/chapter-07-scattergather.md
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-16
 
 ---
 
@@ -54,7 +54,7 @@ See [[hot-spots]] and [[partitioning-strategies]] for the mechanisms that cause 
 
 ## Parallel query execution
 
-Most NoSQL distributed datastores support only simple queries that read or write a single key (plus scatter/gather for document-partitioned secondary indexes). However, massively parallel processing (MPP) relational database products, often used for [[data-warehousing|analytics]], support much more sophisticated queries. The MPP query optimizer breaks complex queries -- involving joins, filtering, grouping, and aggregation -- into execution stages and partitions, many of which run in parallel on different nodes. Queries that scan large parts of the dataset particularly benefit from parallel execution (source: chapter-06-partitioning.md).
+Most NoSQL distributed datastores support only simple queries that read or write a single key (plus scatter/gather for document-partitioned secondary indexes — see [[partitioning-secondary-indexes]] and the general [[scatter-gather-pattern]]). However, massively parallel processing (MPP) relational database products, often used for [[data-warehousing|analytics]], support much more sophisticated queries. The MPP query optimizer breaks complex queries -- involving joins, filtering, grouping, and aggregation -- into execution stages and partitions, many of which run in parallel on different nodes. Queries that scan large parts of the dataset particularly benefit from parallel execution (source: chapter-06-partitioning.md). MPP query execution is effectively scatter/gather at the analytics layer — see [[hadoop-vs-mpp-databases]].
 
 ## Partitioning in batch processing
 
@@ -71,6 +71,14 @@ Partitioning is central to [[batch-processing]] systems. In [[mapreduce]], the i
 Load balancing in log-based brokers works at the partition level rather than per-message: entire partitions are assigned to consumer nodes. This means the maximum parallelism is bounded by the number of partitions (unlike AMQP/JMS-style [[message-brokers]] where individual messages can be distributed). See [[log-based-message-brokers]] (source: chapter-11-stream-processing.md).
 
 Stream processing state can also be partitioned to match the event log: if events for a customer in partition 3 only require updating partition 3 of the application state, a single-threaded log consumer needs no concurrency control for writes. See [[event-sourcing]] (source: chapter-11-stream-processing.md).
+
+## Client integration via ambassadors
+
+Connecting clients to a sharded backend is itself a design decision. One option is to build the sharding logic into a server-side load balancer; another is to run a **client-side sharding ambassador** in each client's pod that presents the sharded cluster as a single `localhost` endpoint. Burns covers the ambassador option in Chapter 3 of *Designing Distributed Systems* with a worked twemproxy/Redis/ketama example (source: raw/designing-distributed-systems/chapter-03-ambassadors.md). Either approach is valid; the trade-off is complexity on the client pod vs complexity on the sharded service. See [[client-side-sharding]] and [[ambassador-pattern]].
+
+## Partitioning applied to stateful serving tiers
+
+DDIA's partitioning is framed in terms of databases, but the same ideas recur in the design of stateful **serving** tiers — caches, session stores, game worlds, any service whose working-set exceeds one machine. Burns's Chapter 6 of *Designing Distributed Systems* names this the [[sharded-service-pattern]]: a root routes each request to one shard based on a sharding function, each shard owns a subset of the state, and losing a shard takes out the requests mapped to it. The design questions (shard count, shard key, re-sharding cost, hot shards) are the same as at the database layer, and the same vocabulary applies: [[partitioning-strategies]], [[consistent-hashing]], [[hot-spots]], [[rebalancing-partitions]], [[request-routing]]. What is distinctive at the service layer is the operational story — how you roll out a new shard, how you replicate shards for reliability ([[replicated-sharded-service]]), and how you respond to organic traffic skew ([[hot-sharding]]) — which Burns's chapter treats directly (source: raw/designing-distributed-systems/chapter-06-sharded-services.md).
 
 ## Related pages
 
@@ -91,3 +99,12 @@ Stream processing state can also be partitioned to match the event log: if event
 - [[stream-processing]]
 - [[log-based-message-brokers]]
 - [[event-sourcing]]
+- [[client-side-sharding]]
+- [[ambassador-pattern]]
+- [[sharded-service-pattern]]
+- [[replicated-sharded-service]]
+- [[hot-sharding]]
+- [[shard-key-selection]]
+- [[sharded-cache]]
+- [[scatter-gather-pattern]]
+- [[tail-latency-amplification]]

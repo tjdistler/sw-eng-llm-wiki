@@ -91,6 +91,7 @@ What Newman likes about the saga path beyond avoiding 2PC's pitfalls: it forces 
 - [[two-phase-locking]]
 - [[derived-data]]
 - [[exactly-once-semantics]]
+- [[idempotence]]
 - [[end-to-end-argument]]
 - [[coordination-avoidance]]
 - [[data-integration]]

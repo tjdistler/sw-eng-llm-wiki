@@ -2,9 +2,9 @@
 
 **Summary**: Batch processing systems take a large, bounded dataset as input, run a computation over it, and produce output data. They prioritize throughput over latency, and their design philosophy of immutable inputs and deterministic outputs enables fault tolerance and easy reasoning.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-10-batch-processing.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-10-batch-processing.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/designing-distributed-systems/chapter-10-work-queue-systems.md`, `raw/designing-distributed-systems/chapter-11-event-driven-batch-processing.md`, `raw/designing-distributed-systems/chapter-12-coordinated-batch-processing.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-16 (Chapter 12 added)
 
 ---
 
@@ -85,6 +85,16 @@ The [[lambda-architecture]] originally proposed running batch and stream process
 
 See [[lambda-architecture]] and [[data-integration]] for the full picture.
 
+## Container-level perspective: Burns's work queue
+
+Burns's *Designing Distributed Systems* Chapter 10 opens Part III of that book with the **[[work-queue-pattern]]** — the simplest batch computational pattern, for wholly independent items with no shuffle, join, or cross-item dependency (source: raw/designing-distributed-systems/chapter-10-work-queue-systems.md). The work queue sits **below** the DDIA batch lineage in the stack: it is the dispatch-one-item-per-worker primitive that [[mapreduce]] composes with partitioning, and that [[dataflow-engines]] generalise into arbitrary DAGs. A MapReduce job is structurally a work queue for mappers, plus a shuffle, plus a work queue for reducers.
+
+Burns's contribution is **container-level**: the generic queue-management logic (fetch items, schedule workers, track completion, handle failure) is packaged once as a reusable library container, with the application-specific parts reduced to a [[source-container-interface|source ambassador]] and a [[worker-container-interface|file-based worker]]. Kubernetes Jobs with annotations provide the durable state — the queue-manager itself stores nothing. This is the deployment-shape counterpart to DDIA's algorithmic coverage.
+
+Burns's Chapter 11 — the [[event-driven-batch-pattern]] — chains these work queues into multi-stage workflows, a named vocabulary of linking patterns ([[copier-pattern]], [[filter-pattern]], [[splitter-pattern]], [[sharder-pattern]], [[merger-pattern]]) wired over a [[publisher-subscriber-infrastructure|pub/sub broker]] (source: raw/designing-distributed-systems/chapter-11-event-driven-batch-processing.md). This is the container-level analogue of a [[dataflow-engines|dataflow engine's]] DAG, with each node a work queue rather than an operator and the transport a broker rather than in-cluster shuffles. It covers the same design ground as Airflow, Argo Workflows, Prefect, and Luigi — workflow schedulers that operate at batch-stage granularity rather than per-record.
+
+Chapter 12 closes Burns's batch trilogy with [[coordinated-batch-pattern|coordinated batch processing]] (source: raw/designing-distributed-systems/chapter-12-coordinated-batch-processing.md): pulling parallel workflow outputs back together into a single aggregate result. Two primitives do that work — the [[join-pattern|join]] (barrier synchronization, waits for every upstream worker) and the [[reduce-pattern|reduce]] (associative pairwise combine, pipelines with upstream work). Burns's framing makes the identity with [[mapreduce|MapReduce]] explicit: map = [[sharder-pattern|sharder]], reduce = reduce-pattern, the MapReduce "wait for all mappers" barrier = join-pattern. This names at container granularity the same structural choices that [[dataflow-engines]] expose at operator granularity when they decide to pipeline through a reduce or to materialise for a barrier.
+
 ## Related pages
 
 - [[unix-philosophy]]
@@ -107,3 +117,18 @@ See [[lambda-architecture]] and [[data-integration]] for the full picture.
 - [[derived-data]]
 - [[data-integration]]
 - [[exactly-once-semantics]]
+- [[work-queue-pattern]]
+- [[source-container-interface]]
+- [[worker-container-interface]]
+- [[dynamic-worker-scaling]]
+- [[multi-worker-pattern]]
+- [[event-driven-batch-pattern]]
+- [[copier-pattern]]
+- [[filter-pattern]]
+- [[splitter-pattern]]
+- [[sharder-pattern]]
+- [[merger-pattern]]
+- [[publisher-subscriber-infrastructure]]
+- [[coordinated-batch-pattern]]
+- [[join-pattern]]
+- [[reduce-pattern]]

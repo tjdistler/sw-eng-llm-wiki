@@ -1,9 +1,3 @@
----
-name: Encoding Formats
-description: Three categories of data encoding (language-specific, textual, binary schema-driven) and their compatibility and portability tradeoffs
-type: reference
----
-
 # Encoding Formats
 
 **Summary**: When data moves between processes — over a network or to disk — it must be encoded as a byte sequence. Encoding formats fall into three categories with very different tradeoffs around portability, human-readability, compactness, and schema evolution support.

@@ -2,7 +2,7 @@
 
 **Summary**: Monolithic-era monitoring assumed a small number of long-lived processes with binary up/down failure modes. Microservices break that assumption: failures are partial, processes are short-lived, and "is everything OK?" stops being a simple question. Newman frames the shift as moving from monitoring (known causes) to observability (open-ended questions).
 
-**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md`
+**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md`, `raw/designing-distributed-systems/chapter-04-adapters.md`
 
 **Last updated**: 2026-04-16
 
@@ -76,6 +76,16 @@ Roughly:
 
 The transition from "monitoring works" to "monitoring doesn't work" is mostly silent. There's no error at the moment the dashboard becomes uninformative. You discover it the next time a real production incident happens and the team can't tell what's going on. Newman's prescription is to invest *ahead* of that moment.
 
+## The container-level mechanism: adapters
+
+Newman's chapter makes the operational case; Brendan Burns's [[adapter-pattern]] is the container-level mechanism for satisfying it in a heterogeneous fleet. A single monitoring tool can only aggregate metrics if every application exposes the same interface — but real fleets include first-party code, vendor binaries, and off-the-shelf open source with many incompatible native interfaces (source: raw/designing-distributed-systems/chapter-04-adapters.md). Rather than fork each image to embed standard metrics, run an adapter container alongside that translates whatever the application emits into the fleet-standard shape. The Chapter 4 worked examples cover the three pieces of the toolbox above:
+
+- **Metrics** — [[unified-monitoring-interface]]: a Prometheus exporter running alongside Redis presents the fleet-standard pull endpoint without modifying the Redis image.
+- **Logs** — [[log-normalization]]: a fluentd adapter normalises and restructures heterogeneous log streams before they reach the aggregator.
+- **Deep health** — [[health-check-adapter]]: a custom adapter runs workload-representative queries and exposes an HTTP probe the orchestrator can consume.
+
+A [[service-mesh]] supplies the cross-cutting HTTP/gRPC telemetry for free; adapter containers fill in the application-specific gaps.
+
 ## Related pages
 
 - [[log-aggregation]]
@@ -86,3 +96,6 @@ The transition from "monitoring works" to "monitoring doesn't work" is mostly si
 - [[fault-tolerance]]
 - [[service-mesh]]
 - [[end-to-end-testing]]
+- [[adapter-pattern]]
+- [[unified-monitoring-interface]]
+- [[health-check-adapter]]

@@ -60,6 +60,8 @@ Even in all-to-all topologies, causality violations can occur: if link speeds va
 
 Multi-leader replication is **not linearizable**: writes are processed concurrently on multiple nodes and replicated asynchronously, producing conflicts that require resolution. This is an inherent artifact of having no single copy of the data. (source: designing-data-intensive-applications, chapter 9)
 
+The claim is categorical rather than hedged: concurrent writes accepted at different leaders are, by definition, not linearizable unless they are serialised through a single point — and serialising through a single point is just single-leader replication. There is no "sometimes linearizable" multi-leader configuration. This is why the claim here is stronger than the "*probably* not linearizable" framing on [[leaderless-replication]]: a leaderless system with strict quorums at least *appears* linearizable until you examine the race conditions, whereas multi-leader is non-linearizable by construction.
+
 However, multi-leader systems gain a significant advantage in the [[cap-theorem]] trade-off: during a network partition between datacenters, each datacenter can continue operating normally because writes are asynchronously queued and exchanged when connectivity is restored. A single-leader system would make the follower datacenter unavailable for writes and linearizable reads during the same partition. (source: designing-data-intensive-applications, chapter 9)
 
 Multi-leader and leaderless systems do not use global [[consensus]]. The conflicts that arise are a consequence of this design choice -- but for many use cases, the availability and performance benefits outweigh the consistency trade-off. (source: designing-data-intensive-applications, chapter 9)

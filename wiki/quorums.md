@@ -48,7 +48,7 @@ The conclusion: **Dynamo-style databases are optimized for use cases that can to
 
 ## Monitoring staleness
 
-In leader-based systems, replication lag is measurable by comparing follower and leader log positions. In leaderless systems, there is no fixed write order, so lag is harder to quantify. Without anti-entropy, a rarely-read stale value may be arbitrarily old. Formalizing staleness metrics for quorum systems is an open research area, not yet standard practice.
+In leader-based systems, replication lag is measurable by comparing follower and leader log positions. In leaderless systems, there is no fixed write order, so lag is harder to quantify. Without anti-entropy, a rarely-read stale value may be arbitrarily old. Formalising staleness metrics for quorum systems is an active research area; historically not standard, though cloud vendors have since made replication-lag observability routine for their managed offerings.
 
 ## Quorums and linearizability
 

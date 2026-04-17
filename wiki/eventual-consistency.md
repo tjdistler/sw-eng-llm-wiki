@@ -36,7 +36,7 @@ These are separate, stronger guarantees that can be layered on top of eventual c
 
 ## The operability problem
 
-"Eventually" is not a useful quantity for operations. If a replica falls hours behind, the system is behaving badly — but eventual consistency provides no metric to detect this. Better operational practice requires measuring **replication lag** concretely and alerting on it. Research has been done on bounding the probability of stale reads given parameters n, w, r in quorum systems, but this is not yet standard practice.
+"Eventually" is not a useful quantity for operations. If a replica falls hours behind, the system is behaving badly — but eventual consistency provides no metric to detect this. Better operational practice requires measuring **replication lag** concretely and alerting on it. Research has been done on bounding the probability of stale reads given parameters n, w, r in quorum systems; formalising this was historically not standard, though cloud vendors have since made replication-lag observability routine.
 
 ## Transactions as the honest alternative
 
