@@ -2,9 +2,9 @@
 
 **Summary**: Tests that exercise multiple services together to verify a user journey. In a microservice architecture they become slow, flaky, expensive, and ambiguous in their failure modes. Newman's prescription: keep their scope tight, push verification to consumer-driven contracts and progressive delivery, and continuously refine the feedback cycle.
 
-**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md`
+**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md`, `raw/building-event-driven-microservices/chapter-15-testing-event-driven-microservices.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -56,6 +56,14 @@ Even *manual* progressive delivery (without automated rollback) is a big step up
 
 Test suites tend to grow monotonically because adding a test feels safer than removing one. Someone — preferably with cross-cutting context — needs the authority and the willingness to delete tests that no longer pull their weight, and to add tests where production defects are escaping.
 
+## EDM-specific framing (Bellemare)
+
+Bellemare's Chapter 15 arrives at a similar place from the [[event-driven-microservices|EDM]] side, but with different mechanics (source: chapter-15-testing-event-driven-microservices.md). Because EDM services are small, modular, and communicate only through durable event streams, they are *easier* to test in isolation than monolithic services — [[unit-testing-topology-functions|unit tests]] on topology functions, [[topology-testing]] on whole topologies, and [[local-integration-testing]] on the full microservice + broker + registry environment cover most of what matters before you get to the cross-service layer.
+
+When cross-service end-to-end testing is still needed, Bellemare frames it as [[remote-integration-testing]] and offers three concrete options, each with different cost/realism/risk trade-offs: a programmatically-created temporary environment, a single shared staging environment (the "tragedy of the commons" option), or testing in production with outputs redirected to test-only streams. Investment in [[edm-supportive-tooling|supportive tooling]] — especially [[cluster-creation-and-management]] and [[cross-cluster-replication]] for seeding [[test-data-strategies|test data]] — is what lets an organization prefer the temporary-environment option over the shared-cluster-with-pathologies option.
+
+The convergence point with Newman: **the cure for slow, flaky, expensive end-to-end tests is to push verification further left (CDCs, topology tests, local integration tests) and further right (progressive delivery, synthetic transactions in production), narrowing what the cross-service suite actually has to cover.**
+
 ## Where end-to-end tests still live
 
 Newman doesn't argue for zero end-to-end tests. He argues for keeping their scope tight, their ownership clear, their count small, and their role complemented by [[synthetic-transactions]] in production and [[progressive-delivery]] at the cutover. The shift is from "end-to-end tests as primary safety net" to "end-to-end tests as one technique among many".
@@ -69,3 +77,8 @@ Newman doesn't argue for zero end-to-end tests. He argues for keeping their scop
 - [[synthetic-transactions]]
 - [[breaking-changes]]
 - [[independent-deployability]]
+- [[unit-testing-topology-functions]]
+- [[topology-testing]]
+- [[local-integration-testing]]
+- [[remote-integration-testing]]
+- [[test-data-strategies]]

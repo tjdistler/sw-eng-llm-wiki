@@ -2,9 +2,9 @@
 
 **Summary**: Melvin Conway's 1968 observation that the structure of a system mirrors the communication structure of the organization that built it. For microservices, the implication is twofold: the three-tier architecture exists because organizations were structured around technical specialties, and aligning teams around business domains is a precondition for microservices to work.
 
-**Sources**: `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`, `raw/monolith-to-microservices/chapter-02-planning-a-migration.md`, `raw/fundamentals-of-software-architecture/chapter-08-component-based-thinking.md`
+**Sources**: `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`, `raw/monolith-to-microservices/chapter-02-planning-a-migration.md`, `raw/fundamentals-of-software-architecture/chapter-08-component-based-thinking.md`, `raw/building-event-driven-microservices/chapter-01-why-event-driven-microservices.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 ---
 
 ## The law
@@ -57,6 +57,23 @@ Chapter 2 develops the second direction in more detail. If you adopt microservic
 
 See [[reorganizing-teams]] for the full treatment, [[skills-self-assessment]] for the tactical approach to bridging skill gaps, and [[team-autonomy]] for autonomy as a microservices motivation.
 
+## Bellemare's three-substructure refinement
+
+Adam Bellemare's Chapter 1 of *Building Event-Driven Microservices* refines Conway's law by naming three distinct **[[communication-structures|communication structures]]** the law operates on, not one (source: chapter-01-why-event-driven-microservices.md):
+
+- **Business communication structure** — teams, departments, reporting lines.
+- **Implementation communication structure** — the code, schemas, and intra-process calls that realise the subdomain model.
+- **Data communication structure** — how data moves *between* implementations across the organization.
+
+Bellemare's load-bearing claim: the **data communication structure is usually weak or missing**, so the implementation communication structure ends up doing its job. That dual duty is the Conway's-law mechanism behind two recurring pathologies:
+
+1. **Discouraging new products.** Getting domain data out of an existing implementation is hard, so teams avoid creating logically separate products that would need it.
+2. **Expanding existing products.** Existing domain data is easy to reach inside the owning implementation, so new requirements accrete onto whatever service already owns the data — producing monolith sprawl.
+
+The prescriptive move is to formalize the data communication structure as a durable set of [[event-streams]] — the thesis of [[event-driven-microservices]]. Once data can flow freely between implementations, the Conway's-law pressure to keep stuffing new functionality into the nearest data-owning service disappears.
+
+This refinement composes cleanly with Newman's "the architecture follows the org" framing and Richards & Ford's Inverse Conway Maneuver: business and implementation structures are what those sources describe, and Bellemare adds the third substructure as the load-bearing missing piece.
+
 ## Related pages
 
 - [[microservices]]
@@ -71,3 +88,6 @@ See [[reorganizing-teams]] for the full treatment, [[skills-self-assessment]] fo
 - [[technical-vs-domain-partitioning]]
 - [[components]]
 - [[fundamentals-of-software-architecture]]
+- [[communication-structures]]
+- [[event-driven-microservices]]
+- [[event-streams]]

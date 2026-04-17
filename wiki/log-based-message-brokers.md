@@ -2,9 +2,9 @@
 
 **Summary**: Log-based message brokers (Apache Kafka, Amazon Kinesis, Twitter DistributedLog) combine the durable, replayable storage of databases with the low-latency notification of [[message-brokers]], using append-only partitioned logs with consumer offsets to track progress.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/building-event-driven-microservices/chapter-02-event-driven-microservice-fundamentals.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-17
 
 ---
 
@@ -68,6 +68,17 @@ With log compaction, a new consumer can start from offset 0 and obtain a full co
 
 See [[change-data-capture]] for how log compaction interacts with CDC, and [[event-sourcing]] for why log compaction works differently with event-sourced systems.
 
+## As the EDM substrate (Bellemare)
+
+Adam Bellemare's Chapter 2 of *Building Event-Driven Microservices* treats a log-based broker as the **required substrate** of an event-driven microservice platform — he names this role the [[event-broker]]. The mechanics from Kleppmann (partitioning, offsets, retention, compaction) carry over directly, but the framing shifts: the broker is positioned as the organization's **single source of truth**, not as a transport between specific services (source: raw/building-event-driven-microservices/chapter-02-event-driven-microservice-fundamentals.md).
+
+Two EDM-specific concepts layered on top:
+
+- **[[consumer-group]]** — multiple consumer instances treated as one logical consumer, with partitions dynamically assigned across members. A new joiner triggers rebalancing; the parallelism ceiling is the partition count.
+- **[[consumer-offset|Consumer lag]]** — the tail-minus-current gap, used as an autoscaling signal and a wakeup signal for [[functions-as-a-service|FaaS]]-based handlers.
+
+Bellemare also surfaces a consumption mode the Kleppmann treatment mostly ignores: **queue-style consumption**, where each event is marked consumed after delivery and never re-delivered. Event order is not maintained under parallel queue consumption. Apache Pulsar supports queues; Apache Kafka does not (source: raw/building-event-driven-microservices/chapter-02-event-driven-microservice-fundamentals.md). See [[event-broker]] for the EDM-centric framing of the same technology and [[message-brokers]] for why a classical queue-only broker cannot play this role.
+
 ## Related pages
 
 - [[stream-processing]]
@@ -81,3 +92,9 @@ See [[change-data-capture]] for how log compaction interacts with CDC, and [[eve
 - [[batch-processing]]
 - [[hash-indexes]]
 - [[sstables-and-lsm-trees]]
+- [[event-broker]]
+- [[event-driven-microservices]]
+- [[consumer-offset]]
+- [[consumer-group]]
+- [[log-compaction]]
+- [[tombstone]]

@@ -2,9 +2,9 @@
 
 **Summary**: When data moves between processes — over a network or to disk — it must be encoded as a byte sequence. Encoding formats fall into three categories with very different tradeoffs around portability, human-readability, compactness, and schema evolution support.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`, `raw/building-event-driven-microservices/chapter-03-communication-and-data-contracts.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-17
 
 ---
 
@@ -68,6 +68,16 @@ In the Hadoop ecosystem, structured binary formats replace the ad hoc text parsi
 
 These formats eliminate the low-value syntactic parsing (e.g., `{print $7}`) that Unix tools require, while providing efficient, schema-aware encoding that evolves over time (source: designing-data-intensive-applications, chapter 10).
 
+## Format selection for event-driven microservices
+
+Adam Bellemare's Chapter 3 of *Building Event-Driven Microservices* gives a sharp recommendation for [[event-driven-microservices|EDM]] event formats (source: chapter-03-communication-and-data-contracts.md):
+
+- **Recommended**: Apache Avro, Apache Thrift, or Google Protocol Buffers — strongly-typed, schema-driven formats with full-compatibility schema evolution support. Both Apache Kafka and Apache Pulsar support serializing/deserializing events in these formats, usually via a [[schema-registry]].
+- **Discouraged**: JSON. Bellemare is explicit: "I do not recommend JSON, as it does not provide full-compatibility schema evolution."
+- **Strongly discouraged**: plain-text events with simple key/value pairs and no explicit schema. They look flexible but compromise microservices' ability to stay isolated via a strong [[data-contract|data contract]] and typically become a burden for both producers and consumers as use cases evolve.
+
+The force behind the recommendation is the same as the force behind [[explicit-vs-implicit-schemas|explicit schemas]]: without a typed, evolvable format, consumers end up interpreting data on their own, and the architecture drifts back toward implicit coupling.
+
 ## Related pages
 
 - [[backward-forward-compatibility]]
@@ -78,3 +88,7 @@ These formats eliminate the low-value syntactic parsing (e.g., `{print $7}`) tha
 - [[batch-processing]]
 - [[distributed-filesystems]]
 - [[column-oriented-storage]]
+- [[data-contract]]
+- [[schema-registry]]
+- [[explicit-vs-implicit-schemas]]
+- [[event-driven-microservices]]

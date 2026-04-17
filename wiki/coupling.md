@@ -2,9 +2,9 @@
 
 **Summary**: The degree to which changing one part of a system requires changing another. Newman identifies four types relevant to microservices — implementation, temporal, deployment, and domain — each with different remedies. Reducing coupling is the central design pressure that shapes service boundaries.
 
-**Sources**: `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`, `raw/fundamentals-of-software-architecture/chapter-03-modularity.md`
+**Sources**: `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`, `raw/fundamentals-of-software-architecture/chapter-03-modularity.md`, `raw/building-event-driven-microservices/chapter-01-why-event-driven-microservices.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -68,6 +68,17 @@ Afferent/efferent only answer *how much* coupling exists. Meilir Page-Jones's [[
 
 The two frameworks compose: afferent/efferent counts are the inputs to architectural-scale governance (fitness functions, dependency limits); connascence is the refactoring compass when a specific dependency needs to be weakened.
 
+## Coupling on domain data, not on APIs
+
+Adam Bellemare's *Building Event-Driven Microservices* Chapter 1 recasts one of the central trade-offs in service-to-service integration: whether services couple on an **implementation API** (the synchronous-microservice default) or on **domain data** shared through durable [[event-streams]] (source: chapter-01-why-event-driven-microservices.md).
+
+- **API coupling** — the caller depends on the specific signatures, error modes, and versioning strategy of the callee's implementation. Changes to the implementation force coordinated rollouts. This is the implementation coupling above, dressed up as a network interface.
+- **Domain-data coupling** — the consumer depends on the **schema and semantics of an event stream**, not on any particular producer implementation. The producer owns emission; the consumer owns modeling. A producer can rewrite, re-host, or replace its implementation with no consumer-visible change as long as the event schema is preserved.
+
+The point is not that domain-data coupling is zero — every dependency is a coupling — but that it is **weaker and more evolvable** than API coupling because the event schema is a narrow, explicitly-versioned contract, and because consumers read asynchronously from a log rather than synchronously from a live process. Bellemare calls out data schemas specifically as the mechanism that gives change-management properties APIs alone cannot match.
+
+This is the coupling reframing behind [[event-driven-microservices]]: by pushing cross-service integration onto the data communication structure, services couple on what changes least (domain events) rather than on what changes most (each other's implementations). See [[communication-structures]] and [[synchronous-microservices]] for the structural context.
+
 ## Coupling vs cohesion
 
 Coupling and [[cohesion]] are linked — they are the two halves of Constantine's law. Tightly coupled code tends to have low cohesion (related functionality spread across boundaries); high cohesion tends to reduce coupling (related code grouped together). The microservice movement is at heart a return to modular software design — modules that communicate via networks and can be independently deployed (source: chapter-01-just-enough-microservices.md).
@@ -85,3 +96,7 @@ Coupling and [[cohesion]] are linked — they are the two halves of Constantine'
 - [[message-brokers]]
 - [[rpc]]
 - [[fundamentals-of-software-architecture]]
+- [[event-driven-microservices]]
+- [[synchronous-microservices]]
+- [[event-streams]]
+- [[communication-structures]]

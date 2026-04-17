@@ -2,9 +2,9 @@
 
 **Summary**: Backward compatibility means new code can read old data; forward compatibility means old code can read new data. Both are required whenever old and new versions of code coexist in production simultaneously.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`, `raw/building-event-driven-microservices/chapter-03-communication-and-data-contracts.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-17
 
 ---
 
@@ -54,6 +54,16 @@ Compatibility is required everywhere data crosses a boundary:
 - **REST/RPC**: clients and servers are deployed independently. See [[rpc]].
 - **Message brokers**: publishers and consumers are deployed independently. See [[message-brokers]].
 
+## Full compatibility as the EDM default
+
+Bellemare's Chapter 3 of *Building Event-Driven Microservices* names the union of forward and backward compatibility as **full compatibility** and recommends it as the default for event-driven [[data-contract|data contracts]] (source: chapter-03-communication-and-data-contracts.md):
+
+> "Full compatibility — the union of forward compatibility and backward compatibility — is the strongest guarantee and the one you should use whenever possible. You can always loosen the compatibility requirements at a later date, but it is often far more difficult to tighten them."
+
+Under full compatibility, producer and consumer can be on different schema versions in either direction indefinitely, which is the precondition for the [[independent-deployability]] that [[event-driven-microservices]] rely on. See [[schema-evolution]] for the mechanics and [[schema-registry]] for the enforcement point.
+
+Bellemare is also explicit that JSON fails this bar — JSON has no full-compatibility schema evolution story — which is why he recommends [[avro]] or Protobuf for EDM event formats (source: chapter-03-communication-and-data-contracts.md).
+
 ## Related pages
 
 - [[schema-evolution]]
@@ -62,3 +72,6 @@ Compatibility is required everywhere data crosses a boundary:
 - [[rpc]]
 - [[message-brokers]]
 - [[avro]]
+- [[data-contract]]
+- [[schema-registry]]
+- [[event-driven-microservices]]

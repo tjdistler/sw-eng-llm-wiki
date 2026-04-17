@@ -2,9 +2,9 @@
 
 **Summary**: Transactions that span multiple nodes or heterogeneous systems, using protocols like [[two-phase-commit]] to ensure atomic commit -- powerful for maintaining cross-system consistency, but carrying significant operational and performance costs. In microservice architectures, both Kleppmann and Newman recommend avoiding them entirely; Newman's preferred alternative is the [[saga]].
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-09-consistency-and-consensus.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-09-consistency-and-consensus.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/building-event-driven-microservices/chapter-08-building-workflows-with-microservices.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -79,6 +79,14 @@ Newman's three options when an old transaction boundary is being broken (source:
 
 What Newman likes about the saga path beyond avoiding 2PC's pitfalls: it forces you to model your business processes **explicitly**, where they were previously implicit and scattered across the codebase.
 
+## Bellemare's EDM perspective: avoid, or accept compensation
+
+Bellemare's Chapter 8 treats distributed transactions as a special case of [[workflows-in-edm|EDM workflows]] and echoes the Kleppmann / Newman stance with a blunt warning: *"It is best to avoid implementing distributed transactions whenever possible, as they can add significant risk and complexity to a workflow."* The list of concerns he enumerates is familiar — synchronizing work between systems, facilitating rollbacks, managing transient failures, and network connectivity (source: chapter-08-building-workflows-with-microservices.md).
+
+When distributed transactions *are* required in an EDM context, Bellemare's name for them is **saga**, implementable as either a choreographed saga or an orchestrated saga. Both the forward and reversing actions of each participant must be **idempotent** so that transient failures on retry do not leave the system inconsistent. See [[saga]] and [[idempotence]].
+
+A third option Bellemare names — worth distinguishing from distributed transactions proper — is the **[[compensation-workflow]]**. Rather than reversing a failed transaction, complete what can be completed and remediate the rest with a business-level policy (replenish stock and offer a discount code; rebook the overbooked passenger; credit the ticket). This is the pragmatic choice when strict rollback is technically possible but business-inappropriate (source: chapter-08-building-workflows-with-microservices.md).
+
 ## Related pages
 
 - [[two-phase-commit]]
@@ -96,3 +104,5 @@ What Newman likes about the saga path beyond avoiding 2PC's pitfalls: it forces 
 - [[coordination-avoidance]]
 - [[data-integration]]
 - [[database-decomposition]]
+- [[workflows-in-edm]]
+- [[compensation-workflow]]

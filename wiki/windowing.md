@@ -2,9 +2,9 @@
 
 **Summary**: Windows define time-bounded subsets of an [[event-streams|event stream]] for aggregation and analysis. Choosing the right window type and correctly handling event time vs processing time are critical challenges in [[stream-processing]].
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/building-event-driven-microservices/chapter-06-deterministic-stream-processing.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-17
 
 ---
 
@@ -67,6 +67,20 @@ By subtracting (2) from (3), you estimate the device clock offset and apply it t
 
 (source: chapter-11-stream-processing.md)
 
+## Windowing and determinism (Bellemare)
+
+In the [[event-driven-microservices|event-driven microservices]] framing, windowing is the canonical example of **time-sensitive business logic**, and every window is the deadline against which [[late-arriving-events|late-event]] policy is measured (source: chapter-06-deterministic-stream-processing.md). Three practical window types:
+
+- **Tumbling** — fixed size, non-overlapping. Answers "what was the peak hour for product usage?"
+- **Sliding** — fixed size, incremental slide. Answers "how many users clicked on my product in the past hour?"
+- **Session** — dynamically sized, terminated by an inactivity gap. Answers "what does a user look at in a given browsing session?"
+
+(source: chapter-06-deterministic-stream-processing.md)
+
+Bellemare stresses that windowing **can** be done on either event time or processing time, but event-time windowing has "more business applications" because it is the only kind that is reproducible under [[reprocessing-event-streams|reprocessing]] (source: chapter-06-deterministic-stream-processing.md). Every windowed operator must pick a late-event handling strategy — drop, wait, or grace period — because of the fundamental truth that *you can never be sure all events have arrived*.
+
+For the underlying mechanisms that track window completeness across a parallel topology, see [[watermarks]] and [[stream-time]].
+
 ## Related pages
 
 - [[stream-processing]]
@@ -75,3 +89,10 @@ By subtracting (2) from (3), you estimate the device clock offset and apply it t
 - [[stream-processing-fault-tolerance]]
 - [[batch-processing]]
 - [[response-time-percentiles]]
+- [[deterministic-stream-processing]]
+- [[event-timestamps]]
+- [[watermarks]]
+- [[stream-time]]
+- [[out-of-order-events]]
+- [[late-arriving-events]]
+- [[reprocessing-event-streams]]

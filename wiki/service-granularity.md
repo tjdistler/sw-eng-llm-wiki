@@ -2,9 +2,9 @@
 
 **Summary**: The size and scope of an individual service — the architect's hardest single decision when drawing service boundaries in any distributed architecture style. Richards and Ford frame it as the decision that most determines whether a [[microservices]] architecture succeeds or collapses under communication overhead, and [[service-based-architecture]], [[orchestration-driven-soa]], and [[event-driven-architecture]] each answer the granularity question differently.
 
-**Sources**: `raw/fundamentals-of-software-architecture/chapter-17-microservices-architecture.md`, `raw/fundamentals-of-software-architecture/chapter-13-service-based-architecture-style.md`, `raw/fundamentals-of-software-architecture/chapter-16-orchestration-driven-service-oriented-architecture.md`, `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`
+**Sources**: `raw/fundamentals-of-software-architecture/chapter-17-microservices-architecture.md`, `raw/fundamentals-of-software-architecture/chapter-13-service-based-architecture-style.md`, `raw/fundamentals-of-software-architecture/chapter-16-orchestration-driven-service-oriented-architecture.md`, `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`, `raw/building-event-driven-microservices/chapter-17-conclusion.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -79,6 +79,18 @@ Granularity is a cross-cutting concern in Richards and Ford's style catalog. Eac
 
 The pattern across the catalog: styles with a single [[architectural-quantum|quantum]] don't have a granularity problem (there's no boundary to draw); styles with many quanta must solve it. Microservices is the style where getting it right matters most, because the style's entire value proposition depends on the boundaries being in the right places.
 
+## "Not all microservices need be micro" (Bellemare, Ch 17)
+
+Bellemare's conclusion to *Building Event-Driven Microservices* adds a pragmatic escape hatch for organizations that haven't fully paid the [[microservice-tax]]: **larger services are fine if they follow three principles** (source: chapter-17-conclusion.md). The point is that the EDM discipline is not about service size — it's about how services communicate and where the authoritative state lives. If you obey these three rules, you retain the ability to *later* split any of your large services into finer-grained ones decoupled from the existing landscape:
+
+1. **Put important business entities and events into the event broker.** Your data must live on the shared [[event-streams|event streams]], not only inside the large service. This is [[data-liberation]] applied at whatever size your services happen to be.
+2. **Use the event broker as the single source of truth.** Consumers — including new, fine-grained future services — read from the broker, not from the large service's database. See [[event-as-single-source-of-truth]].
+3. **Avoid direct calls between services.** Synchronous point-to-point coupling is what makes later decomposition expensive. Keep the default communication asynchronous over streams.
+
+Follow the rules and a large service is just a large bounded context that *could* be split later — not a dead end. Violate them and splitting any future fine-grained service out of the tangle becomes the same monolith-extraction job Newman's migration book is about.
+
+Bellemare also reinforces the technical-vs-domain alignment point: **steer clear of technical boundaries; align with the business's bounded context.** A technical microservice (e.g., "the email service") couples itself to every unrelated workflow that uses it; a failure or inadvertent change takes down multiple business workflows at once. This is the same disease Richards and Ford diagnose in [[technical-vs-domain-partitioning]] and that the fine-grained-too-soon failure mode above hints at.
+
 ## Relationship to [[architectural-quantum|architectural quanta]]
 
 The Chapter 7 framing provides the physical interpretation of granularity: a service's quantum is the service-plus-its-database-plus-its-dependent-components. A finer-grained split that breaks a logical bounded context in half produces two quanta that share synchronous connascence — they look independent on the deployment diagram but collapse operationally into one unit during any call chain spanning them.
@@ -112,3 +124,7 @@ The architect's granularity choice is therefore a choice between which *kind* of
 - [[fallacies-of-distributed-computing]]
 - [[entity-trap]]
 - [[incremental-migration]]
+- [[event-driven-microservices]]
+- [[data-liberation]]
+- [[event-as-single-source-of-truth]]
+- [[microservice-tax]]

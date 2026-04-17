@@ -118,6 +118,7 @@ This matters because it tells you what idempotence *doesn't* do: it does not gua
 - **[[exactly-once-semantics]]** — the pattern for converting at-least-once infrastructure into effectively-once application behaviour.
 - **[[saga]]** — compensating actions rely on the original action and its compensation both being idempotent, so partial-retry scenarios don't double-apply either step.
 - **[[change-data-capture]]** and **[[event-sourcing]]** — derived-state pipelines that replay events must produce the same state every time; idempotent writes are the mechanism.
+- **[[effectively-once-processing]]** — Bellemare's EDM framing of the same property; when broker transactions aren't available, a consumer-side dedup store keyed by high-cardinality dedup IDs (producer-generated or consumer-hashed from event key + value + creation timestamp) implements the idempotence discipline on the consumer.
 
 ## Summary of honest forms
 
@@ -147,3 +148,4 @@ In every case, the honest form pushes the identifier to the layer that can actua
 - [[log-based-message-brokers]]
 - [[change-data-capture]]
 - [[event-sourcing]]
+- [[effectively-once-processing]]

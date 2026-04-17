@@ -2,9 +2,9 @@
 
 **Summary**: A modeling discipline introduced by Eric Evans (2004) for representing a problem domain inside a software system. For microservices, DDD provides the conceptual tools — chiefly the [[aggregate]] and the [[bounded-context]] — for finding service boundaries that match how the business actually works.
 
-**Sources**: `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`, `raw/monolith-to-microservices/chapter-02-planning-a-migration.md`
+**Sources**: `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`, `raw/monolith-to-microservices/chapter-02-planning-a-migration.md`, `raw/building-event-driven-microservices/chapter-01-why-event-driven-microservices.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -45,6 +45,22 @@ Newman recommends:
 
 For the collaborative modelling technique Newman highlights for shaping these models with non-developer colleagues, see [[event-storming]].
 
+## Bellemare's concise vocabulary
+
+Chapter 1 of *Building Event-Driven Microservices* restates the DDD vocabulary in four crisp definitions that are useful for framing event-driven designs (source: chapter-01-why-event-driven-microservices.md):
+
+- **Domain** — the **problem space** the business occupies, including rules, processes, ideas, and terminology. The domain exists regardless of whether the business exists.
+- **Subdomain** — a component of the domain focused on a subset of responsibilities, usually reflecting some organizational structure (Warehouse, Sales, Engineering). A subdomain is itself a domain.
+- **Domain model** — an **abstraction** of the domain useful for business purposes. Part of the **solution space** (domain itself is the problem space). Discernible through the business's products, customer interfaces, and internal processes.
+- **[[bounded-context|Bounded context]]** — the **logical boundaries** (inputs, outputs, events, requirements, processes, data models) relevant to a subdomain. Part of the solution space. Ideally aligned with a subdomain one-to-one, but legacy systems, technical debt, and third-party integrations often create exceptions.
+
+Two properties matter most for service design (source: chapter-01-why-event-driven-microservices.md):
+
+- **Bounded contexts should be highly cohesive.** The vast majority of communication should happen *internally*, not cross-boundary. High cohesion keeps design scope and implementation simple. See [[cohesion]].
+- **Connections between bounded contexts should be loosely coupled.** Changes inside one context should minimize or eliminate impact on neighbours. See [[coupling]].
+
+These two together are the load-bearing DDD inputs to the [[event-driven-microservices]] style — bounded contexts become the unit of microservice ownership, and the data communication structure (durable [[event-streams]]) carries whatever crosses the boundaries.
+
 ## Related pages
 
 - [[aggregate]]
@@ -54,3 +70,6 @@ For the collaborative modelling technique Newman highlights for shaping these mo
 - [[information-hiding]]
 - [[cohesion]]
 - [[extraction-prioritization]]
+- [[event-driven-microservices]]
+- [[communication-structures]]
+- [[coupling]]

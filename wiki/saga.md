@@ -2,9 +2,9 @@
 
 **Summary**: An algorithm for coordinating a sequence of state changes across multiple services without holding distributed locks. The original 1987 paper by Hector Garcia-Molina and Kenneth Salem proposed sagas to handle long-lived transactions; modern microservice architectures use them as the standard alternative to [[two-phase-commit|2PC]] / [[distributed-transactions]].
 
-**Sources**: `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/fundamentals-of-software-architecture/chapter-14-event-driven-architecture-style.md`, `raw/fundamentals-of-software-architecture/chapter-17-microservices-architecture.md`
+**Sources**: `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/fundamentals-of-software-architecture/chapter-14-event-driven-architecture-style.md`, `raw/fundamentals-of-software-architecture/chapter-17-microservices-architecture.md`, `raw/building-event-driven-microservices/chapter-08-building-workflows-with-microservices.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 ---
 
 ## What a saga is
@@ -126,6 +126,26 @@ Chapter 17 also names the two concrete implementations of the compensating-trans
 
 Both match Newman's backward-vs-forward-recovery framing above; Richards and Ford's contribution is flagging the design-cost asymmetry of the undo-pair style — the undo is typically *much* harder than the do, and the complexity multiplier should be part of the saga-vs-re-draw-the-boundary decision.
 
+## Bellemare's EDM framing
+
+Bellemare's Chapter 8 treats sagas as the transactional special case of [[workflows-in-edm|EDM workflows]]. The top-level framing echoes Newman and Richards & Ford, but two EDM-specific observations are worth pulling out (source: chapter-08-building-workflows-with-microservices.md):
+
+### Idempotence is load-bearing for both actions
+
+Bellemare emphasizes that both the forward action and the reversing action of each participant must be **idempotent**. This is a stronger statement than the 1987 paper's requirement — in an EDM context, transient failures cause events to be replayed, and a non-idempotent reversal that fires twice can leave the system in a worse state than the original failure. See [[idempotence]] and [[effectively-once-processing]].
+
+### The single-writer asymmetry in choreographed sagas
+
+A choreographed saga has a structural asymmetry Bellemare flags clearly: successful transactions finalize in the *last* service's output stream, but aborted transactions finalize in the *first* service's output stream (since the first service is the one that decides what to do with the failed result). A consumer that wants the complete picture has to listen to both streams. This is consistent with the [[single-writer-principle]] but makes end-to-end monitoring harder than in an orchestrated saga, where the single orchestrator can emit both success and failure results to one output stream (source: chapter-08-building-workflows-with-microservices.md).
+
+### Orchestrated sagas admit more signals
+
+Because the orchestrator materializes workflow state, it can act on signals beyond success/failure from its workers — **timeouts** (how long has this transaction been in flight?) and **human inputs** (cancellation via a REST API). A choreographed saga has no natural home for either. Orchestrated sagas are therefore the natural choice when workflows may involve manual approvals, interrupts, or timeout-based abort policies (source: chapter-08-building-workflows-with-microservices.md).
+
+### Compensation vs strict rollback
+
+Bellemare also names a third option that sits alongside both saga styles: the **[[compensation-workflow]]**. Instead of reversing a failed transaction, complete what can be completed and remediate the rest via a business-level policy (ticketing overbooking, inventory shortfall). This is the operational-pragmatism escape hatch when neither choreographed nor orchestrated strict rollback is appropriate.
+
 ## A note on BPM tools
 
 Business process modelling tools (e.g. older enterprise platforms) are often pitched for orchestrated sagas. Newman's experience: the central conceit — that nondevelopers will define business processes — almost never holds. Developers end up using GUI-based tools that are hard to version-control and test. (source: chapter-04-decomposing-the-database.md)
@@ -160,3 +180,8 @@ See [[distributed-transactions]] for the operational problems sagas avoid, and [
 - [[service-granularity]]
 - [[microservices]]
 - [[connascence]]
+- [[workflows-in-edm]]
+- [[compensation-workflow]]
+- [[idempotence]]
+- [[effectively-once-processing]]
+- [[single-writer-principle]]

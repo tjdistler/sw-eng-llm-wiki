@@ -8,6 +8,7 @@
 | [[monolith-to-microservices]] | Book by Sam Newman — concepts, organization, and ingestion status |
 | [[designing-distributed-systems]] | Book by Brendan Burns — concepts, organization, and ingestion status |
 | [[fundamentals-of-software-architecture]] | Book by Mark Richards & Neal Ford — concepts, organization, and ingestion status |
+| [[building-event-driven-microservices]] | Book by Adam Bellemare — concepts, organization, and ingestion status |
 
 ## Architecture fundamentals
 
@@ -117,6 +118,12 @@ The ninth Part II style — microservices — is catalogued in *Microservices fu
 | [[scatter-gather-pattern]] | The third serving pattern: root fans request out to all leaves in parallel and combines partial results; replication for time; two variants (root-distributed vs leaf-sharded) |
 | [[tail-latency-amplification]] | Why a backend's p99 becomes the scatter/gather system's p50 at modest fan-out; the straggler problem; availability amplification; mitigations |
 | [[functions-as-a-service]] | The fourth serving pattern: short-lived stateless functions triggered by events; when FaaS fits and when it doesn't; benefits, challenges, cost-curve inversion |
+| [[event-stream-listener]] | The adapter between an event broker and a FaaS trigger; pulls batches and invokes the function |
+| [[faas-triggers]] | What wakes a function up: HTTP, schedule, queue, stream, bucket events; the control-flow input |
+| [[faas-offset-management]] | When to commit stream offsets relative to function invocation; at-least-once vs effectively-once |
+| [[cold-start-warm-start]] | The first-invocation latency tax; mitigation strategies and the cost/latency/concurrency trade-off |
+| [[faas-batch-processing]] | Invoking a function with many events per call; throughput, retry granularity, and poison-pill handling |
+| [[faas-function-composition]] | Chaining functions into workflows; orchestration via queues/streams vs a dedicated workflow engine |
 | [[serverless-vs-event-driven]] | Burns's opening distinction: two separate axes that FaaS happens to combine; the four corners of the matrix; why the two benefits come from different axes |
 | [[faas-decorator-pattern]] | Stateless request/response transformation via FaaS; Python-decorator analogy; defaulting worked example; comparison with adapter containers |
 | [[event-pipeline-pattern]] | Directed graph of FaaS handlers connected by webhooks; CI-with-human-approval and new-user-signup worked examples; vs microservices and vs streaming |
@@ -217,6 +224,8 @@ The ninth Part II style — microservices — is catalogued in *Microservices fu
 | [[move-foreign-key-to-code]] | Replace a cross-service DB join with a service call; handle referential-integrity fallout |
 | [[shared-static-data]] | Four patterns for country-code-style reference data: duplicate, dedicated schema, library, service |
 | [[saga]] | Coordinate multi-service operations without distributed locks; orchestrated vs choreographed; compensating actions |
+| [[workflows-in-edm]] | Multi-step business processes in an event-driven system; choreographed vs orchestrated realizations |
+| [[compensation-workflow]] | The undo half of a saga: explicit compensating events that roll back committed local steps |
 
 ## Team and organization
 
@@ -341,6 +350,14 @@ The ninth Part II style — microservices — is catalogued in *Microservices fu
 | [[schema-evolution]] | Field tags (Thrift/Protobuf) and writer's/reader's schema (Avro) as mechanisms for safe schema change over time |
 | [[avro]] | Binary format with no field tags; writer's/reader's schema resolution; ideal for dynamically generated schemas |
 | [[data-outlives-code]] | Database records encoded under old schemas persist long after the code that wrote them is gone |
+| [[data-contract]] | The producer-consumer agreement enforced by the event format and schema registry; the decoupling mechanism at the heart of EDM |
+| [[schema-registry]] | Central store of schemas by subject/version; producers register and consumers fetch; enforcement of compatibility modes |
+| [[code-generation]] | Generating typed producer/consumer classes from schemas; compile-time safety and refactor-friendliness |
+| [[explicit-vs-implicit-schemas]] | Why explicit schemas always beat implicit ones in EDM; the cost of implicit schemas expressed as consumer fragility |
+| [[event-design-guidelines]] | Principles for designing good events: truth, single definition, narrow purpose, thin events, avoiding coupling |
+| [[single-purpose-events]] | One event type per business fact; why multi-purpose events break consumer contracts |
+| [[singular-event-definition-per-stream]] | Every stream holds exactly one event type; the predictability contract consumers depend on |
+| [[event-as-single-source-of-truth]] | The producer's stream is the canonical record; all derived state flows from it |
 
 ## Service communication
 
@@ -467,6 +484,153 @@ The ninth Part II style — microservices — is catalogued in *Microservices fu
 | [[stream-joins]] | Three join types: stream-stream, stream-table, table-table |
 | [[windowing]] | Event time vs processing time; tumbling, hopping, sliding, session windows |
 | [[stream-processing-fault-tolerance]] | Microbatching, checkpointing, idempotent writes, atomic commits |
+| [[stateless-stream-processing]] | Transformations that need no accumulated state; map/filter/branch; the scalability default |
+| [[event-transformations]] | Per-event functions: map, filter, flatMap; the workhorse operators |
+| [[stream-branching-and-merging]] | Predicate-based splitting of a stream into multiple streams; union/merge of streams into one |
+| [[repartitioning]] | Rekeying and reshuffling a stream to co-locate data for joins and aggregations |
+| [[copartitioning]] | Partitioning two streams on the same key and partition count so matching keys land together |
+| [[stream-table-table-join]] | The three-way join pattern for enriching a stream with two table streams |
+
+## Event structure and types
+
+| Page | Description |
+|---|---|
+| [[event-structure]] | The envelope: key + value + metadata + timestamp; the substrate every event type builds on |
+| [[unkeyed-event]] | Events with no key; for append-only facts that need no co-location; round-robin partitioned |
+| [[entity-event]] | Events whose key is a domain entity ID; carry the full entity state; the compacted-stream payload |
+| [[keyed-event]] | Events with a key but no full-entity snapshot; for co-location and partial updates |
+| [[tombstone]] | Null-valued event signaling deletion; how entity streams represent "gone" under compaction |
+| [[log-compaction]] | Broker-side retention by key: keep the latest value per key forever; the mechanism behind entity streams |
+| [[table-stream-duality]] | Every stream implies a table and every table implies a stream; the theoretical core of stream processing |
+
+## Determinism in stream processing
+
+| Page | Description |
+|---|---|
+| [[deterministic-stream-processing]] | Given the same input streams, produce the same output streams; the reprocessing prerequisite |
+| [[event-timestamps]] | Event time vs ingestion time vs processing time; the clock the system uses for ordering |
+| [[event-scheduling]] | The runtime discipline of picking which event to process next; how processors advance time |
+| [[watermarks]] | Progressing notion of "time has passed"; the signal that windows can close |
+| [[stream-time]] | The processor's internal clock derived from observed event timestamps |
+| [[out-of-order-events]] | Events whose timestamps go backward relative to the stream; causes and mitigations |
+| [[late-arriving-events]] | Events whose timestamp is older than the current watermark; grace periods and side outputs |
+| [[reprocessing-event-streams]] | Replaying from the beginning to rebuild derived state or apply new logic |
+
+## Stateful streaming
+
+| Page | Description |
+|---|---|
+| [[stateful-stream-processing]] | Processors that accumulate state across events; aggregations, joins, enrichment |
+| [[materialized-state]] | A table view derived from a stream; the query surface for key lookups |
+| [[state-store]] | The abstraction for durable per-processor state; internal, external, or global |
+| [[internal-state-store]] | State colocated with the processor and backed by a changelog stream; the recommended default |
+| [[external-state-store]] | State held in a remote database; flexibility at the cost of latency and coupling |
+| [[global-state-store]] | Fully replicated state on every processor instance; for small shared reference data |
+| [[changelog-stream]] | The compacted stream that backs an internal state store; enables rebuilds and hot replicas |
+| [[hot-replicas]] | Stand-by processor instances tailing the changelog; how stateful services fail over quickly |
+| [[state-store-rebuilding-vs-migrating]] | Trade-off on instance restart: replay the changelog fresh, or copy state from a peer |
+| [[effectively-once-processing]] | Exactly-once semantics in practice: idempotence plus transactional offset commits |
+
+## Event-driven microservice fundamentals
+
+| Page | Description |
+|---|---|
+| [[event-driven-microservices]] | Microservices that communicate via durable event streams; Bellemare's organizing architecture |
+| [[communication-structures]] | Business, implementation, and data communication structures; Conway's law in the EDM context |
+| [[synchronous-microservices]] | The request-response baseline Bellemare contrasts EDM against; the coupling and availability costs |
+| [[microservice-topology]] | The logical graph of microservices and the streams connecting them |
+| [[business-topology]] | The mapping of business domains and sub-domains onto microservice boundaries |
+| [[event-broker]] | The durable immutable log substrate (Kafka, Pulsar) that makes EDM possible |
+| [[single-writer-principle]] | One microservice, one stream: the write ownership rule that keeps data sources unambiguous |
+| [[consumer-offset]] | Per-consumer-group position pointer in a partitioned log; the basis for replay and progress tracking |
+| [[consumer-group]] | The unit of parallel consumption and offset tracking; how multiple instances share a stream |
+| [[partition-assignor]] | The algorithm that distributes partitions to consumer-group members; range, round-robin, sticky |
+| [[microservice-tax]] | The fixed cost overhead every service pays for infrastructure, ops, tooling, CI/CD |
+| [[container-management-system]] | Kubernetes and peers: the scheduling substrate EDM microservices deploy onto |
+
+## Data liberation and integration
+
+| Page | Description |
+|---|---|
+| [[data-liberation]] | Extracting data from legacy siloed systems into event streams so EDM consumers can use it |
+| [[query-based-cdc]] | Periodic polling of source tables; simple but lossy and load-bearing on the database |
+| [[outbox-table-pattern]] | Writing events to a same-transaction outbox table and streaming them out asynchronously |
+| [[cdc-triggers]] | Trigger-based CDC that inserts into a change table; precise but intrusive |
+| [[event-sinking]] | The reverse flow: writing events back into downstream databases for query |
+| [[eventification]] | The act of turning request/response APIs or legacy data into first-class events |
+| [[data-liberation-framework]] | The organizational capability and tooling for sustained liberation across many sources |
+
+## EDM implementation styles
+
+| Page | Description |
+|---|---|
+| [[basic-producer-consumer-microservice]] | The simplest EDM shape: consume, process per-event, produce; no framework required |
+| [[gating-pattern]] | A guard consumer that admits events into a downstream stream only when a condition is met |
+| [[hybrid-bpc-stream-processing]] | Mixing a basic producer-consumer with stream-processing library features as needs grow |
+| [[heavyweight-framework-microservice]] | Flink/Spark-style: microservice runs on a cluster that provides scheduling, state, checkpointing |
+| [[stream-processing-cluster]] | The shared compute substrate for heavyweight frameworks; JobManager/TaskManager topology |
+| [[application-submission-modes]] | Job submission styles in heavyweight frameworks: client, cluster, session, per-job |
+| [[checkpointing-stream-processing]] | Periodic durable snapshots of operator state and offsets; the recovery primitive |
+| [[external-shuffle-service]] | Cluster-level component that holds shuffle data independent of executor lifetimes |
+| [[stream-processing-scaling-strategies]] | Horizontal scaling, parallelism, partition count, and state-store implications |
+| [[multitenancy-in-streaming-clusters]] | Running many jobs on one cluster; resource isolation, quota, noisy-neighbor mitigation |
+| [[lightweight-framework-microservice]] | Kafka-Streams-style: library embedded in the service; no cluster; coordination via the broker |
+| [[broker-as-shuffle-service]] | Using the event broker itself for repartitioning traffic; the lightweight-framework secret |
+
+## Request-response integration with EDM
+
+| Page | Description |
+|---|---|
+| [[event-driven-request-response-integration]] | Hub: how synchronous clients, external APIs, and UIs plug into an event-driven backbone |
+| [[external-events-ingestion]] | Accepting events from outside the organization (webhooks, partner feeds); validation and trust |
+| [[third-party-api-integration]] | Wrapping external request-response APIs so EDM services see events instead of synchronous calls |
+| [[serving-state-from-edm]] | Exposing read APIs backed by materialized state built from event streams |
+| [[smart-load-balancer]] | Partition-aware routing that sends requests to the instance already hosting the relevant state |
+| [[request-as-event]] | Modelling a synchronous request as an event with a reply-to stream; turning RPC into async |
+| [[asynchronous-ui]] | UIs that display eventual-consistency state and reflect updates as they arrive |
+| [[micro-frontends]] | Composing a UI from independently deployed fragments owned by different teams |
+
+## EDM supportive tooling
+
+| Page | Description |
+|---|---|
+| [[edm-supportive-tooling]] | Hub: the platform services every mature EDM org builds around its broker |
+| [[microservice-to-team-assignment]] | The registry that maps services and streams to owning teams; the on-call prerequisite |
+| [[event-stream-metadata]] | Per-stream documentation: owner, schema, retention, purpose, SLAs |
+| [[event-broker-quotas]] | Per-client throughput and storage limits; noisy-neighbor defense at the broker |
+| [[event-stream-acls]] | Who can produce to and consume from each stream; authorization at the broker |
+| [[schema-change-notifications]] | Alerting downstream consumers when an upstream schema changes |
+| [[application-reset-tool]] | Operational tooling to wipe state and rewind offsets so a service can reprocess from scratch |
+| [[consumer-lag-monitoring]] | Tracking how far behind each consumer group is; the primary EDM health metric |
+| [[microservice-creation-workflow]] | The paved road: scaffolding, repo, CI/CD, topic ACLs, dashboards created in one step |
+| [[cluster-creation-and-management]] | Provisioning and operating broker clusters; the capacity-and-config surface |
+| [[cross-cluster-replication]] | MirrorMaker-style replication across regions or environments; DR and data locality |
+| [[dependency-tracking-and-topology-visualization]] | Tools that render the live graph of streams and services; the "what calls what" map |
+| [[data-lineage]] | End-to-end tracking of how an event flows from source to every derived dataset |
+| [[orphaned-streams]] | Streams with no active consumers; the EDM analogue of dead code |
+
+## Testing event-driven systems
+
+| Page | Description |
+|---|---|
+| [[unit-testing-topology-functions]] | Testing pure per-event functions in isolation; the fastest, cheapest feedback tier |
+| [[topology-testing]] | Driving a whole processor topology with fixture inputs in-process; verifying emitted events |
+| [[local-integration-testing]] | Running a real broker locally (Docker, Testcontainers) and asserting end-to-end behavior |
+| [[remote-integration-testing]] | Running against a shared remote staging environment; isolating per-test via topic namespacing |
+| [[hosted-service-mocks]] | Fake implementations of third-party APIs you integrate with; repeatable tests without external flake |
+| [[test-data-strategies]] | Synthetic, sampled, and captured-from-prod fixture approaches; privacy and reproducibility trade-offs |
+
+## Deploying event-driven systems
+
+| Page | Description |
+|---|---|
+| [[edm-deployment-principles]] | The ground rules: reversibility, compatibility, observability, blast-radius control |
+| [[edm-deployment-patterns]] | Hub: the canonical deployment patterns and when each applies |
+| [[continuous-integration-delivery-deployment]] | CI/CD/CD pipeline shape for EDM services; schema checks and topic provisioning |
+| [[basic-full-stop-deployment]] | Stop all instances, deploy, start; the simplest and most disruptive pattern |
+| [[rolling-update-pattern]] | Replace instances one by one while consumer-group rebalance handles partition handoff |
+| [[blue-green-deployment]] | Two full parallel deployments with traffic cutover; safe rollback at the cost of double capacity |
+| [[breaking-schema-deployment]] | Coordinating a producer-consumer schema break across the fleet; dual-write and dual-read phases |
 
 ## Future of data systems
 

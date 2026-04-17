@@ -2,9 +2,9 @@
 
 **Summary**: A single-node pattern made up of two coscheduled containers — an application container that holds the core logic, and a sidecar container that augments or extends the application container, often without the application container's knowledge. The sidecar shares filesystem, network, and other namespaces with the application via a [[pod]]-style atomic container group.
 
-**Sources**: `raw/designing-distributed-systems/chapter-02-the-sidecar-pattern.md`, `raw/designing-distributed-systems/chapter-03-ambassadors.md`, `raw/designing-distributed-systems/chapter-04-adapters.md`, `raw/designing-distributed-systems/chapter-05-replicated-load-balanced-services.md`, `raw/fundamentals-of-software-architecture/chapter-17-microservices-architecture.md`
+**Sources**: `raw/designing-distributed-systems/chapter-02-the-sidecar-pattern.md`, `raw/designing-distributed-systems/chapter-03-ambassadors.md`, `raw/designing-distributed-systems/chapter-04-adapters.md`, `raw/designing-distributed-systems/chapter-05-replicated-load-balanced-services.md`, `raw/fundamentals-of-software-architecture/chapter-17-microservices-architecture.md`, `raw/building-event-driven-microservices/chapter-10-basic-producer-and-consumer-microservices.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 ---
 
 ## The shape of the pattern
@@ -123,6 +123,22 @@ All three are covered in depth on [[modular-reusable-containers]].
 
 Chapter 5's caching discussion (source: raw/designing-distributed-systems/chapter-05-replicated-load-balanced-services.md) contains a rare explicit "don't use a sidecar here" case. Running a Varnish cache as a sidecar in every application pod is the *simplest* deployment of a cache, but it forces the cache and the application to scale together — and because each sidecar cache holds its own copy of the working set, ten small cache sidecars store ten copies of the same content, gutting the hit rate. Chapter 5 therefore recommends deploying the cache as a separate [[replicated-load-balanced-service]] tier (few large replicas, many small app replicas), not as a sidecar. See [[caching-layer]] for the full argument. This is a useful corrective case: the sidecar pattern is not always the right answer, and the sizing asymmetry between two workloads is a good test for whether they should share a pod.
 
+## Sidecars in event-driven microservices
+
+Bellemare reaches for the sidecar pattern in Chapter 10 of *Building Event-Driven Microservices* for the same reason Burns does: modernizing legacy systems without changing their code (source: chapter-10-basic-producer-and-consumer-microservices.md).
+
+The worked example is an ecommerce frontend that sources its product and stock data from a read-only subordinate database via a scheduled batch job. The modernization goal is to replace batch synchronization with a near-real-time feed from two event streams (`products` and `stock-levels`) — but the frontend's code cannot be safely changed.
+
+The sidecar solution:
+
+- A [[basic-producer-consumer-microservice|BPC]] sidecar runs in the same deployable as the frontend.
+- It consumes the two event streams and **upserts the events into the frontend's local data store**, which the frontend already reads from.
+- The frontend sees near-real-time updates without any code change.
+
+This is [[event-sinking]] implemented as a sidecar: an external source of truth (the event broker) is projected into a downstream system's data store through a coresident container. Bellemare notes that the sidecar must be part of the *single deployable* of the frontend — which means additional integration tests, because the sidecar's correctness is now load-bearing for the frontend's data freshness.
+
+The broader point Bellemare makes: the sidecar pattern "allows you to add new functionality to a system without requiring significant changes to the legacy codebase" — exactly the Burns framing, applied to EDM integration rather than HTTPS termination or config sync.
+
 ## Sibling patterns: ambassador and adapter
 
 Chapters 3 and 4 of the book introduce the [[ambassador-pattern]] and [[adapter-pattern]], the sidecar's two sibling patterns. All three are single-node multi-container patterns built on a shared [[pod]] and `localhost` communication; all three factor cross-cutting concerns into a separate container. The distinction is intent (source: raw/designing-distributed-systems/chapter-03-ambassadors.md; raw/designing-distributed-systems/chapter-04-adapters.md):
@@ -150,3 +166,5 @@ In real deployments the line blurs (an Envoy in a [[service-mesh]] does bits of 
 - [[caching-layer]]
 - [[replicated-load-balanced-service]]
 - [[designing-distributed-systems]]
+- [[basic-producer-consumer-microservice]]
+- [[event-sinking]]

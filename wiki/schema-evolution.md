@@ -2,9 +2,9 @@
 
 **Summary**: Schema evolution is the set of rules a binary encoding format provides for safely changing a schema over time — adding fields, removing fields, changing types — without breaking [[backward-forward-compatibility]].
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`, `raw/building-event-driven-microservices/chapter-03-communication-and-data-contracts.md`, `raw/building-event-driven-microservices/chapter-15-testing-event-driven-microservices.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-17
 
 ---
 
@@ -98,9 +98,38 @@ Beyond compatibility, schemas provide:
 - **Code generation**: statically typed languages get type-safe generated code with IDE support.
 - **Compactness**: field names are omitted from the encoded data.
 
+## Bellemare's three compatibility types
+
+Chapter 3 of *Building Event-Driven Microservices* names the three compatibility modes every event-driven [[data-contract]] must be configured with (source: chapter-03-communication-and-data-contracts.md):
+
+- **Forward compatibility** — data written with a *newer* schema is readable as if written with an *older* schema. This is the most common pattern in practice: the producer updates its schema and begins writing the new format while consumers still hold the old schema. Consumers only update if they need access to the new fields.
+- **Backward compatibility** — data written with an *older* schema is readable as if written with a *newer* schema. Useful when the consumer needs to be released before the producer (schema-already-defined), when a producer's release cadence lags (customer-installed software like a phone app reporting metrics), or when consumers reprocess historical data under the current schema.
+- **Full compatibility** — the union of forward and backward. Bellemare's explicit recommendation: *use this whenever possible*. "You can always loosen the compatibility requirements at a later date, but it is often far more difficult to tighten them" (source: chapter-03-communication-and-data-contracts.md).
+
+Full compatibility also enables a specific freedom in [[code-generation|consumer code generation]]: under full compatibility the consumer can use any version of the schema — older, newer, or the same — to generate its class definitions.
+
+## Why schema evolution is non-negotiable in EDM
+
+Bellemare frames schema evolution as a *requirement*, not a convenience (source: chapter-03-communication-and-data-contracts.md). Without it, producers and consumers must coordinate closely on releases; previously compatible data stops being readable; old consumers are forced to update whenever a producer changes its schema. All of those pathologies directly contradict the [[independent-deployability]] property that [[event-driven-microservices]] are supposed to deliver. Schema evolution is the mechanism that makes the data contract *evolvable* without producer/consumer lock-step.
+
+## Schema-format selection and evolution
+
+The format you pick directly determines what evolution rules are available. Bellemare recommends [[avro|Apache Avro]] or [[encoding-formats|Protobuf]] and explicitly warns against JSON because "it does not provide full-compatibility schema evolution" (source: chapter-03-communication-and-data-contracts.md). Plain-text key/value events are similarly discouraged.
+
+A [[schema-registry]] is the enforcement point — it evaluates proposed schema changes against the configured compatibility mode and rejects registrations that would break the rule, before the producer can deploy.
+
+## Testing compatibility at code-submission time
+
+Chapter 15 recommends moving the compatibility check *earlier* than deployment: pull the registered schemas from the [[schema-registry]] and run evolutionary-rule checking as part of the code-submission/CI pipeline (source: chapter-15-testing-event-driven-microservices.md). For stacks that auto-generate schemas from class/struct definitions at compile time, this becomes a mechanical diff between the previous registered schema and the new compile-time-generated one — a failing check blocks the PR rather than the deploy. Good candidate for a [[architecture-fitness-function]].
+
 ## Related pages
 
 - [[encoding-formats]]
 - [[backward-forward-compatibility]]
 - [[avro]]
 - [[data-outlives-code]]
+- [[data-contract]]
+- [[schema-registry]]
+- [[code-generation]]
+- [[breaking-changes]]
+- [[event-driven-microservices]]

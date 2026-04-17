@@ -2,9 +2,9 @@
 
 **Summary**: The fourth serving pattern in Burns's catalogue. Functions-as-a-Service (FaaS) is an event-driven style of computing in which short-lived, stateless functions are instantiated in response to discrete events or requests, scaled automatically by the platform, and billed per invocation. FaaS shines for lightweight, stateless, bursty event handlers and decorators — and is a poor fit for long-running work, in-memory state, and sustained steady-state load.
 
-**Sources**: `raw/designing-distributed-systems/chapter-08-functions-and-event-driven-processing.md`
+**Sources**: `raw/designing-distributed-systems/chapter-08-functions-and-event-driven-processing.md`, `raw/building-event-driven-microservices/chapter-09-microservices-using-function-as-a-service.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -141,11 +141,67 @@ Newman's [[running-too-many-things]] argues that for teams on the public cloud, 
 
 A FaaS deployment is a degenerate microservice architecture in which each "service" is a single function. This gives the [[independent-deployability]] and [[information-hiding]] benefits of microservices very cheaply, at the cost of the operational visibility problem Burns flags. For systems small enough that the pipeline fits in a person's head, FaaS can deliver the benefits of microservices without the usual platform investment. For systems that grow past that threshold, either the operational tooling has to catch up or the system has to consolidate into larger services.
 
+## Bellemare's EDM framing
+
+Chapter 9 of *Building Event-Driven Microservices* treats FaaS as a first-class option for implementing event-driven microservices, with a specifically EDM-shaped design discipline layered on top of Burns's pattern-level framing. Bellemare's mental model: think of a FaaS solution as "a basic consumer/producer implementation that regularly fails" — a function will always end after a predetermined amount of time, and any connections and state associated with it will go away (source: chapter-09-microservices-using-function-as-a-service.md).
+
+### Four components of every function-based microservice
+
+Regardless of framework, every function-based microservice has four parts (source: chapter-09-microservices-using-function-as-a-service.md):
+
+1. **The function** itself — in whatever language the FaaS framework supports.
+2. **Input event stream(s)** — subscribed via the framework or via an external connector.
+3. **Triggering logic** — a function-trigger map binding events to the function. See [[faas-triggers]] for the full catalogue and [[event-stream-listener]] for the canonical EDM case.
+4. **Error, scaling, and consumer policies** — consumer group (every function-based microservice gets its own), batch size, batch window, retry policy, scaling policy.
+
+### Design disciplines
+
+Bellemare's four FaaS design rules for EDM (source: chapter-09-microservices-using-function-as-a-service.md):
+
+- **Strict bounded-context membership.** Functions and the internal event streams they use must belong to a single owner. Mapping of function → [[bounded-context]] can be 1:1 or n:1 (several functions per context) but not the other way around. Enforce it with private data stores, standard request/response or event interfaces at the edge, metadata, and per-context repositories.
+- **Commit offsets only after processing completes.** The at-least-once discipline standard for every other microservice style. Committing on function start is a FaaS anti-pattern that risks data loss. See [[faas-offset-management]].
+- **Less is more.** Avoid "write one function, reuse it in five services" — ownership becomes ambiguous, change risk opaque, versioning overhead compounds. Fewer functions per bounded context is easier to test, debug, and manage than many granular ones.
+- **Clean up on termination.** Intermittent functions should close broker connections and relinquish partition assignments at end-of-life. Near-always-on functions can leave them open. See [[cold-start-warm-start]].
+
+### Choosing a provider
+
+Open-source options include OpenWhisk, OpenFaaS, Kubeless, and Apache Pulsar's built-in FaaS. Cloud providers (AWS, GCP, Azure) offer proprietary FaaS tightly integrated with their own event brokers — attractive if you are already a subscriber, but with an important caveat Bellemare flags: all three cloud-provider brokers limit event retention to seven days, which is a tight constraint for an EDM substrate that depends on indefinite replay. Kafka Connect and similar bridges can integrate the proprietary FaaS with open-source brokers at additional setup cost (source: chapter-09-microservices-using-function-as-a-service.md).
+
+### Triggers, batching, and composition — linked pages
+
+The chapter's remaining material splits cleanly along four axes that each get their own page:
+
+- **[[faas-triggers]]** — five trigger categories: event-stream listener, consumer-group lag, schedule, webhook, resource events.
+- **[[event-stream-listener]]** — the canonical EDM trigger, with batch size, batch window, sync vs async dispatch, and integrated-vs-external listener variants.
+- **[[cold-start-warm-start]]** — the function lifecycle and its interaction with consumer-group rebalancing.
+- **[[faas-batch-processing]]** — tuning batch size, execution time, and resource allocation to avoid the fail-retry-fail-again loop; automatic batch halving.
+- **[[faas-offset-management]]** — the before-vs-after commit decision and its effect on data loss.
+- **[[faas-function-composition]]** — event-driven communication vs direct call (sync / async), and how each maps onto [[workflows-in-edm|choreography and orchestration]].
+
+### When FaaS fits EDM
+
+Bellemare's summary of where FaaS shines aligns with Burns's list but adds EDM-specific framing (source: chapter-09-microservices-using-function-as-a-service.md):
+
+- Simple topologies and [[stateless-stream-processing|stateless]] or lightly stateful processing.
+- Workloads that do not require deterministic processing across multiple event streams (no [[event-scheduling|event scheduling]]).
+- Wide-fan queue-based processing where ordering doesn't matter.
+- Highly variable volumes where scale-to-zero pays off.
+
+Determinism and copartitioned processing are the main limits — same constraint as the [[stateful-stream-processing|stateful-stream]] heavyweight frameworks, and for the same reason: only one function can process a given partition at a time.
+
 ## Related pages
 
 - [[serverless-vs-event-driven]]
 - [[faas-decorator-pattern]]
 - [[event-pipeline-pattern]]
+- [[faas-triggers]]
+- [[event-stream-listener]]
+- [[faas-offset-management]]
+- [[faas-batch-processing]]
+- [[cold-start-warm-start]]
+- [[faas-function-composition]]
+- [[event-driven-microservices]]
+- [[workflows-in-edm]]
 - [[replicated-load-balanced-service]]
 - [[sharded-service-pattern]]
 - [[scatter-gather-pattern]]

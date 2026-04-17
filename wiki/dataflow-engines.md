@@ -92,6 +92,10 @@ Chapter 12 discusses how dataflow engines are evolving to handle both batch and 
 
 This convergence means a single codebase can handle both real-time event processing and historical reprocessing for [[derived-data|derived data]] systems, without maintaining separate batch and stream implementations.
 
+## Heavyweight streaming descendant
+
+Bellemare's [[heavyweight-framework-microservice]] page covers the same engines — Spark, Flink, Storm, Heron, Beam — from the event-driven-microservices angle (source: raw/building-event-driven-microservices/chapter-11-heavyweight-framework-microservices.md). The dataflow-engine architecture described here is the runtime these frameworks execute on; the BEDM framing adds the deployment question ([[stream-processing-cluster|dedicated cluster]] vs CMS-native per-job), application submission modes ([[application-submission-modes|driver vs cluster]]), [[checkpointing-stream-processing|checkpointing]] for long-running stream state, [[external-shuffle-service|ESS-based dynamic scaling]], and the [[multitenancy-in-streaming-clusters|multitenancy]] trade-offs when many streaming jobs share one cluster. DDIA covers the engine; BEDM covers what it takes to run dozens of them as microservices.
+
 ## Container-level counterpart: Burns's event-driven batch
 
 Burns's *Designing Distributed Systems* Chapter 11 — the [[event-driven-batch-pattern]] — is the container-level form of the dataflow-DAG idea (source: raw/designing-distributed-systems/chapter-11-event-driven-batch-processing.md). The shape is the same — a DAG of processing stages connected by data channels — but the granularity and transport differ:
@@ -130,3 +134,7 @@ Chapter 12 — [[coordinated-batch-pattern|coordinated batch processing]] — ad
 - [[derived-data]]
 - [[exactly-once-semantics]]
 - [[stream-processing]]
+- [[heavyweight-framework-microservice]]
+- [[checkpointing-stream-processing]]
+- [[external-shuffle-service]]
+- [[stream-processing-cluster]]

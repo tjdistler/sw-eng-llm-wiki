@@ -2,9 +2,9 @@
 
 **Summary**: A change to a microservice that breaks an existing consumer's expectations — either structurally (schema) or semantically (behaviour). Newman treats eliminating accidental breakages and managing deliberate ones as a survival requirement: organisations that don't sort this out don't last long enough to become large microservice organisations.
 
-**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md`
+**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md`, `raw/building-event-driven-microservices/chapter-03-communication-and-data-contracts.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -72,6 +72,33 @@ Newman is unusually blunt about this pain point:
 
 If accidental breakages keep hitting production and there's no managed mechanism for deliberate ones, the architecture becomes untenable.
 
+## Breaking changes in event-driven microservices
+
+Adam Bellemare's Chapter 3 of *Building Event-Driven Microservices* treats breaking schema changes as an inevitable but distinct failure mode that deserves its own accommodation strategy (source: chapter-03-communication-and-data-contracts.md). Causes he names: evolving business requirements that alter the original domain model, improper scoping of the original domain, and plain human error in the initial schema.
+
+### Communicate early and clearly
+
+Bellemare's framing of the communication rule is unambiguous: the producer and consumers must agree on the migration plan, and no consumer should be caught unprepared (source: chapter-03-communication-and-data-contracts.md). Renegotiating the [[data-contract]] is a business-level activity, not a unilateral producer decision — the alteration of the domain model requires buy-in from everyone.
+
+### The impact differs by event type
+
+Breaking changes are much more painful for events describing long-lived entities than for transient business events, because the old entity data persists indefinitely (source: chapter-03-communication-and-data-contracts.md).
+
+**For [[entity-event|entity events]]** — two choices, with a clear preference:
+
+1. **Let old and new schemas coexist.** Easy for the producer, but pushes the reconciliation onto every consumer. Contradicts the whole point of the data contract. Bellemare warns: "The consumer will never be in a better position than the producer for resolving divergent schema definitions. It is bad practice to defer this responsibility to the consumer" (source: chapter-03-communication-and-data-contracts.md).
+2. **Re-create all entities under the new schema** — either by migration or by reprocessing from source. Harder for the producer, but forces the organization to resolve what these entities actually mean. Bellemare's tip: leave the old entities in their original stream for reprocessing validation and forensic investigation; produce new and updated entities to a new stream.
+
+**For non-entity events** — the simplest option is to create a new event stream and begin producing the new-format events there. Consumers register against the new stream. The old stream is left alone; as retention elapses, it drains naturally and can eventually be deleted (source: chapter-03-communication-and-data-contracts.md). This follows the [[singular-event-definition-per-stream]] rule — never mix evolutionarily incompatible types on one stream.
+
+### Relationship to Newman's three rules
+
+Bellemare's approach composes with Newman's three rules. The "create a new stream" move is a concrete form of Newman's "give consumers time to migrate" — the old contract continues to be honored on the old stream while consumers migrate in their own time. The "reprocess from source" move is the strongest form of "eliminate accidental breakage" applied retroactively: it erases the incompatibility from the data itself, rather than leaving it as a runtime hazard.
+
+### Deployment mechanics for breaking schemas
+
+Chapter 16 of *Building Event-Driven Microservices* turns the Chapter 3 policy into a deployment shape: the two concrete strategies (**eventual migration via two event streams** vs **synchronized migration**) and the coordination checklist that precedes either. See [[breaking-schema-deployment]] for the mechanics and [[edm-deployment-principles|principles 6 and 7]] for the autonomy framing.
+
 ## Related pages
 
 - [[independent-deployability]]
@@ -82,3 +109,8 @@ If accidental breakages keep hitting production and there's no managed mechanism
 - [[schema-evolution]]
 - [[backward-forward-compatibility]]
 - [[end-to-end-testing]]
+- [[data-contract]]
+- [[entity-event]]
+- [[singular-event-definition-per-stream]]
+- [[event-driven-microservices]]
+- [[breaking-schema-deployment]]

@@ -2,9 +2,9 @@
 
 **Summary**: Change data capture (CDC) is the process of observing all data changes written to a database and extracting them as a stream that can be replicated to other systems -- making one database the leader and turning derived systems (search indexes, caches, warehouses) into followers.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/monolith-to-microservices/chapter-03-splitting-the-monolith.md`, `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/monolith-to-microservices/chapter-03-splitting-the-monolith.md`, `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/building-event-driven-microservices/chapter-04-integrating-event-driven-architectures-with-existing-systems.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -91,6 +91,44 @@ Newman recommends keeping CDC use to a minimum during migration because of the i
 
 The pattern unavoidably couples the new system to the monolith's *datastore*, not just its API. That's a real cost worth weighing against the benefit of not having to change the monolith. See [[migration-pattern-selection]] for the broader picture.
 
+## CDC in Bellemare's three-pattern taxonomy
+
+Bellemare decomposes change-data capture into **three patterns for extracting data from an underlying store** as part of [[data-liberation]] — the broader umbrella under which CDC sits in the event-driven microservices story (source: chapter-04-integrating-event-driven-architectures-with-existing-systems.md):
+
+| Pattern | Page | Core idea |
+|---|---|---|
+| Query-based | [[query-based-cdc]] | Periodic SELECT against the source store, filtered by `updated_at` or autoincrementing id |
+| Log-based | this page | Parse the binlog / WAL / oplog directly |
+| Outbox / table-based | [[outbox-table-pattern]] | Application writes to an outbox inside the business transaction; publisher drains it |
+
+Triggers are a fourth, older mechanism — see [[cdc-triggers]]. The log-based option is what the DDIA and Newman sections above describe.
+
+### Benefits of log-based CDC (Bellemare's framing)
+
+- **Hard-delete tracking.** Binlogs contain deletes; no soft-delete workaround needed, unlike [[query-based-cdc]] (source: chapter-04-integrating-event-driven-architectures-with-existing-systems.md).
+- **Minimal performance impact on the source.** Log-based capture reads the change log, not the live tables. Change-data-table systems (e.g., SQL Server) scale with volume instead.
+- **Low latency.** Updates propagate as soon as the write lands in the log.
+
+### Drawbacks of log-based CDC
+
+- **Internal-data-model exposure.** The log contains the internal schema, and there is no view-layer equivalent to hide it. Isolation must be managed carefully and selectively — or compensated downstream with [[eventification]] (source: chapter-04-integrating-event-driven-architectures-with-existing-systems.md).
+- **Denormalization happens outside the data store.** Logs emit single-table entries, so highly normalized sources produce highly normalized event streams. Downstream consumers (or a dedicated eventifier) must handle foreign-key joins.
+- **Brittle schema coupling.** Like query-based CDC, the capture mechanism lives outside the source application's codebase. A valid DDL change can be an invalid schema evolution for the output event. DDL handling is pattern-specific — see the DDL section in [[data-liberation]].
+
+### Bootstrapping
+
+The log is not retained back to the beginning of time. A new log-based CDC pipeline must start with a **snapshot query** of the source table (a performance-impacting bulk read), with overlap guaranteed against the log's start to avoid missing records (source: chapter-04-integrating-event-driven-architectures-with-existing-systems.md). Progress is then checkpointed; a failure can restore from the last checkpoint and re-read from the log. This gives **at-least-once** production semantics, which is usually fine for entity data because updates are idempotent.
+
+### Tooling
+
+- **Debezium** is the most widely used log-based CDC reader. It handles most common relational databases and writes to Kafka or Pulsar. See also [[data-liberation-framework]].
+- **Maxwell** is MySQL-only, Kafka-only, and lighter.
+- Modern NoSQL stores often expose change logs as a first-class API — MongoDB Change Streams, Couchbase replication, etc.
+
+### Log-based CDC as a bootstrap, not a destination
+
+Bellemare is explicit that CDC tooling is **"primarily meant to help bootstrap the process"** of moving to EDM, not its final form. Organizations that rely on centralized connectors permanently tend to institutionalize two anti-patterns: exposing internal data models, and leaving source teams passive about event production. For actively developed systems, migrate from log-based CDC to the [[outbox-table-pattern]] as the source team matures (source: chapter-04-integrating-event-driven-architectures-with-existing-systems.md).
+
 ## CDC's role in database decomposition
 
 Newman returns to CDC repeatedly in his database-decomposition chapter. Beyond the migration-pattern use above, it appears as the recommended mechanism for several other patterns (source: chapter-04-decomposing-the-database.md):
@@ -121,3 +159,10 @@ The recurring theme: CDC turns the monolith's database into a source of events f
 - [[database-as-a-service-interface]]
 - [[synchronize-data-in-application]]
 - [[tracer-write]]
+- [[data-liberation]]
+- [[query-based-cdc]]
+- [[outbox-table-pattern]]
+- [[cdc-triggers]]
+- [[data-liberation-framework]]
+- [[event-sinking]]
+- [[eventification]]

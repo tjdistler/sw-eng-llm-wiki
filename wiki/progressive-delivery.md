@@ -63,3 +63,5 @@ Migration is exactly when bad releases are most likely: new code, new operationa
 - [[ambassador-pattern]]
 - [[request-splitting]]
 - [[service-mesh]]
+- [[edm-deployment-patterns]]
+- [[blue-green-deployment]]

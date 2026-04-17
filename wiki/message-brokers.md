@@ -2,9 +2,9 @@
 
 **Summary**: Message brokers sit between services, storing messages temporarily and delivering them asynchronously. They decouple producers from consumers in time, space, and identity — providing reliability, buffering, and fan-out that direct [[rpc|RPC]] calls cannot. The actor model extends this pattern to concurrency within and across nodes.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`, `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/designing-distributed-systems/chapter-08-functions-and-event-driven-processing.md`, `raw/designing-distributed-systems/chapter-10-work-queue-systems.md`, `raw/designing-distributed-systems/chapter-11-event-driven-batch-processing.md`, `raw/fundamentals-of-software-architecture/chapter-14-event-driven-architecture-style.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`, `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/designing-distributed-systems/chapter-08-functions-and-event-driven-processing.md`, `raw/designing-distributed-systems/chapter-10-work-queue-systems.md`, `raw/designing-distributed-systems/chapter-11-event-driven-batch-processing.md`, `raw/fundamentals-of-software-architecture/chapter-14-event-driven-architecture-style.md`, `raw/building-event-driven-microservices/chapter-02-event-driven-microservice-fundamentals.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -65,6 +65,17 @@ These patterns can be combined: multiple consumer groups each receive all messag
 Consumers may crash before finishing processing. Brokers use **acknowledgments**: a consumer must explicitly tell the broker it has finished processing a message. If the connection closes without an acknowledgment, the broker redelivers the message to another consumer (source: chapter-11-stream-processing.md).
 
 Redelivery combined with load balancing can break message ordering: if consumer 2 crashes while processing message m3, and consumer 1 is processing m4, then m3 is redelivered to consumer 1, which processes m4 before m3. Messages that are independent of each other are unaffected, but causal dependencies can be violated. To avoid this, use a separate queue per consumer (source: chapter-11-stream-processing.md).
+
+## Message broker vs event broker (Bellemare)
+
+Adam Bellemare's Chapter 2 of *Building Event-Driven Microservices* argues that message brokers and [[event-broker|event brokers]] solve **different problems**, and that an event broker can replace a message broker but a message broker cannot substitute for an event broker (source: raw/building-event-driven-microservices/chapter-02-event-driven-microservice-fundamentals.md).
+
+Two specific deficiencies make a message broker insufficient as an EDM substrate:
+
+- **Shared-queue consumption.** Multiple applications consuming from the same queue each receive only a **subset** of messages — the queue load-balances across them. No single consumer ever sees the full stream. This makes it "impossible to correctly communicate state via events" because no consumer gets a full copy.
+- **Delete-after-acknowledge.** Messages are removed from the broker once acknowledged. This precludes indefinite retention, global access, and replay — three properties a durable event log depends on.
+
+Bellemare stresses that queue-shaped access patterns are still valid inside EDM architectures for specific use cases — message brokers "still have a role" — but they are not sufficient as the primary substrate of the architecture (source: chapter-02-event-driven-microservice-fundamentals.md). See [[event-broker]] for the corresponding concept page.
 
 ## Log-Based Message Brokers
 
@@ -148,3 +159,5 @@ Burns's Chapter 8 ([[functions-as-a-service]]) positions FaaS as a compute subst
 - [[broker-topology]]
 - [[mediator-topology]]
 - [[correlation-ids]]
+- [[event-broker]]
+- [[event-driven-microservices]]

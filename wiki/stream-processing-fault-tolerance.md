@@ -85,6 +85,17 @@ Stream processors that maintain state (windowed aggregations, join tables, index
 
 The best approach depends on infrastructure characteristics: in some systems network delay is lower than disk latency, in others disk bandwidth exceeds network bandwidth. There is no universally ideal trade-off (source: chapter-11-stream-processing.md).
 
+## Bellemare's EDM framing
+
+Chapter 7 of *Building Event-Driven Microservices* treats the same problem from a microservices lens and adds several concrete practices (source: chapter-07-stateful-streaming.md):
+
+- Bellemare uses the term **[[effectively-once-processing|effectively-once]]** rather than exactly-once, and is explicit that a service may execute the same event code multiple times as long as the committed effect on the single source of truth is applied consistently.
+- The "state change replication" row of the table above corresponds to the Kafka Streams [[changelog-stream]] — a compacted broker topic into which every [[state-store]] mutation is written. Recovery replays the changelog into a fresh state store on the replacement instance.
+- The "Rebuild from input" row is covered in detail as a fallback when no changelog exists; Bellemare warns that this approach re-emits output events, so downstream consumers must be idempotent or tolerate duplicates.
+- For zero-downtime failover, BEDM adds [[hot-replicas]] — a second instance already holds the partition's state and takes over immediately on leader failure.
+- The atomic-commit row is split into two: **client-broker transactions** (Kafka's approach, wrapping offsets + changelog + outputs in one transaction) and **consumer-side local transactions** with explicit deduplication (when the broker doesn't support transactions). See [[effectively-once-processing]].
+- Chapter 11's [[heavyweight-framework-microservice|heavyweight-framework]] treatment names the [[checkpointing-stream-processing|checkpointing]] variant concretely — operator state `<partitionId, offset>` and key state `<key, state>` recorded synchronously to external durable storage (HDFS or HA KV store), with full restore semantics on rescale or failure.
+
 ## Related pages
 
 - [[stream-processing]]
@@ -98,3 +109,10 @@ The best approach depends on infrastructure characteristics: in some systems net
 - [[windowing]]
 - [[fencing-tokens]]
 - [[idempotence]]
+- [[stateful-stream-processing]]
+- [[effectively-once-processing]]
+- [[changelog-stream]]
+- [[hot-replicas]]
+- [[state-store]]
+- [[checkpointing-stream-processing]]
+- [[heavyweight-framework-microservice]]

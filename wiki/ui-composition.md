@@ -38,6 +38,8 @@ Orbitz (now part of Expedia) had its UI broken into "modules" (search form, book
 
 The newer term for widget composition specifically inside single-page-application frameworks (Vue, React, Angular). The Web Components specification has tried to standardise this but adoption has lagged. Real-world micro-frontend implementations are largely about making different SPA frameworks coexist on one page without dependency clashes (source: chapter-03-splitting-the-monolith.md).
 
+Newman frames micro-frontends as a *migration* technique. Bellemare (in a different book) frames them as a first-class steady-state architecture aligned to [[bounded-context|bounded contexts]] and paired with [[event-driven-microservices]] backends. The mechanics are the same; the framing differs. See [[micro-frontends]] for the steady-state treatment.
+
 ## Mobile
 
 Native iOS and Android apps complicate UI migration: each release must pass app-store review, and the app itself is a deployment monolith. Many organisations work around this by driving UI from the server side — embedded web views, or more sophisticated approaches like Spotify's component-driven UI where layouts are described declaratively on the server and rendered by the native app. This lets Spotify experiment with new layouts without a new app submission (source: chapter-03-splitting-the-monolith.md).
@@ -59,3 +61,4 @@ It is *not* a server-side migration substitute — it complements server-side pa
 - [[migration-pattern-selection]]
 - [[incremental-migration]]
 - [[reorganizing-teams]]
+- [[micro-frontends]]

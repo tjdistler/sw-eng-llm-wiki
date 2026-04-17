@@ -2,9 +2,9 @@
 
 **Summary**: A domain-driven design concept representing a larger organizational boundary inside an organization, within which explicit responsibilities are carried out and implementation details are hidden. Bounded contexts are the natural starting unit for drawing microservice boundaries.
 
-**Sources**: `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`, `raw/monolith-to-microservices/chapter-02-planning-a-migration.md`, `raw/fundamentals-of-software-architecture/chapter-07-scope-of-architecture-characteristics.md`
+**Sources**: `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`, `raw/monolith-to-microservices/chapter-02-planning-a-migration.md`, `raw/fundamentals-of-software-architecture/chapter-07-scope-of-architecture-characteristics.md`, `raw/building-event-driven-microservices/chapter-01-why-event-driven-microservices.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 ---
 
 ## The concept
@@ -47,6 +47,25 @@ Richards and Ford credit DDD as "deeply influential on modern architectural thin
 
 The alignment is not automatic. A bounded context that depends synchronously on a database owned by another context isn't a quantum — the shared database collapses both contexts into a single deployable unit regardless of their logical separation. This is why Newman's "own your own data" rule for microservices matters: it's what lets the logical boundary become a physical one.
 
+## Align on business requirements, not technical requirements
+
+Bellemare's Chapter 1 of *Building Event-Driven Microservices* makes the alignment rule explicit: **bounded contexts should be built around business requirements, not technological requirements** (source: chapter-01-why-event-driven-microservices.md). The reasoning:
+
+- **Business requirements change; underlying technology rarely changes independent of the business.** Aligning on business requirements means the bounded context moves when the business moves, which is when the implementation needs to move anyway.
+- **Business-aligned contexts give teams autonomy.** A single team can design and implement a solution end-to-end for its own requirements, with minimal cross-team dependency.
+- **Technical alignment distributes one business function across multiple contexts.** The classic anti-pattern: one team owns the application layer, another owns the data layer. Every business change now involves multiple teams, multiple schedules, and coupling across both team and API boundaries. A seemingly innocent change can have ripple effects on every service that uses the shared technical system.
+
+Bellemare's diagram of "sole ownership vs cross-cutting ownership" is the picture: on the left, one team owns a business requirement end to end (application + data); on the right, application and data layers have separate team owners and the business requirement spans them both. Event-driven microservice architectures almost never use technical alignment, and Bellemare recommends avoiding it completely when possible (source: chapter-01-why-event-driven-microservices.md).
+
+This is the same axis Richards & Ford name as [[technical-vs-domain-partitioning|technical vs domain partitioning]] and that Conway-shaped reorganisations target when they shift from competency silos to product teams (see [[reorganizing-teams]]). Bellemare adds two acknowledgements about the cost of going domain-aligned (source: chapter-01-why-event-driven-microservices.md):
+
+- **Code may be duplicated** — multiple services may share similar data-access patterns. The duplication is usually cheaper than the coupling the alternative would create. This matches Richards & Ford's "prefer duplication to coupling" microservices philosophy (see [[microservices]]).
+- **Teams may need full-stack expertise** — the organization should operationalize common needs so vertical teams can support themselves; specialised skills can be provided cross-team on an as-needed basis.
+
+### Tip (Bellemare)
+
+> Keep loose coupling between bounded contexts, and focus on minimizing intercontext dependencies. This will allow bounded context implementations to change as necessary, without subsequently breaking many (or any) other systems. (source: chapter-01-why-event-driven-microservices.md)
+
 ## Related pages
 
 - [[aggregate]]
@@ -59,3 +78,7 @@ The alignment is not automatic. A bounded context that depends synchronously on 
 - [[extraction-prioritization]]
 - [[architectural-quantum]]
 - [[architecture-characteristics]]
+- [[technical-vs-domain-partitioning]]
+- [[event-driven-microservices]]
+- [[communication-structures]]
+- [[reorganizing-teams]]
