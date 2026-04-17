@@ -61,15 +61,27 @@ SKIP_TITLES = {"copyright", "table of contents", "colophon"}
 SPECIAL_L1 = {"preface", "foreword", "glossary", "index", "about the author",
               "self-assessment questions"}
 
-# Require a period after the chapter number ("Chapter 1.") to avoid matching
+# Require a period after the chapter number ("Chapter 1." or "1.") to avoid matching
 # self-assessment subsections that use a colon ("Chapter 1: Introduction").
-_CHAPTER_RE = re.compile(r"^chapter\s+\d+\.", re.IGNORECASE)
+# The "Chapter " prefix is optional — some books list chapters as "1. Title".
+_CHAPTER_RE = re.compile(r"^(?:chapter\s+)?\d+\.", re.IGNORECASE)
 _APPENDIX_RE = re.compile(r"^appendix\s+([a-z0-9]+)[.\s]+(.*)$", re.IGNORECASE)
+# Bare-letter appendix form used by some books (e.g. "A. Serialization…"). Only
+# safe to apply once we've seen a numbered chapter — before then, a bare "I."
+# could be a Roman-numeral part label.
+_APPENDIX_BARE_RE = re.compile(r"^([A-Z])\.\s+(.+)$")
 
 
-def _appendix_filename(title: str) -> str | None:
-    """Return `appendix-a-bibliography` for 'Appendix A. Bibliography', else None."""
-    m = _APPENDIX_RE.match(title.strip())
+def _appendix_filename(title: str, allow_bare: bool = False) -> str | None:
+    """Return `appendix-a-bibliography` for 'Appendix A. Bibliography', else None.
+
+    When `allow_bare` is True, also matches the bare form 'A. Bibliography'
+    used by books that omit the 'Appendix' prefix in their TOC.
+    """
+    s = title.strip()
+    m = _APPENDIX_RE.match(s)
+    if not m and allow_bare:
+        m = _APPENDIX_BARE_RE.match(s)
     if not m:
         return None
     letter = m.group(1).lower()
@@ -112,12 +124,12 @@ def build_toc(doc: fitz.Document) -> list[Section]:
 
         if level in (1, 2) and _CHAPTER_RE.match(low):
             chapter_num += 1
-            clean = re.sub(r"^chapter\s+\d+[.\s]+", "", title, flags=re.IGNORECASE).strip()
+            clean = re.sub(r"^(?:chapter\s+)?\d+[.\s]+", "", title, flags=re.IGNORECASE).strip()
             candidates.append((chapter_filename(chapter_num, clean), start))
             continue
 
         if level in (1, 2):
-            appendix = _appendix_filename(title)
+            appendix = _appendix_filename(title, allow_bare=chapter_num > 0)
             if appendix:
                 candidates.append((appendix, start))
                 continue
@@ -162,10 +174,10 @@ def build_page_index(doc: fitz.Document) -> dict[int, tuple[str, str]]:
         low = title.lower().strip()
         if level in (1, 2) and _CHAPTER_RE.match(low):
             chapter_num += 1
-            clean = re.sub(r"^chapter\s+\d+[.\s]+", "", title, flags=re.IGNORECASE).strip()
+            clean = re.sub(r"^(?:chapter\s+)?\d+[.\s]+", "", title, flags=re.IGNORECASE).strip()
             current_chapter = chapter_filename(chapter_num, clean)
             current_section = slugify(title)
-        elif level in (1, 2) and (appendix := _appendix_filename(title)):
+        elif level in (1, 2) and (appendix := _appendix_filename(title, allow_bare=chapter_num > 0)):
             current_chapter = appendix
             current_section = slugify(title)
         elif level == 1 and (special := _match_special_l1(low)):
@@ -195,8 +207,11 @@ def build_page_index(doc: fitz.Document) -> dict[int, tuple[str, str]]:
 MONOSPACE_HINTS = {"courier", "mono", "code", "consolas", "menlo", "monaco",
                    "inconsolata", "anonymous", "sourcecodepro", "jetbrains"}
 
-# The display font used for all headings in DDIA
-HEADING_FONT = "myriadpro"
+# Display fonts used for headings. Different O'Reilly books use different fonts
+# — add new ones here as you encounter them. Any span whose font name contains
+# one of these substrings (case-insensitive, spaces/dashes stripped) is treated
+# as a heading candidate.
+HEADING_FONTS = ("myriadpro", "helvetica", "arialbold")
 
 
 def is_monospace(font_name: str) -> bool:
@@ -205,7 +220,8 @@ def is_monospace(font_name: str) -> bool:
 
 
 def is_heading_font(font_name: str) -> bool:
-    return HEADING_FONT in font_name.lower().replace(" ", "").replace("-", "")
+    name = font_name.lower().replace(" ", "").replace("-", "")
+    return any(hf in name for hf in HEADING_FONTS)
 
 
 def classify_line(spans: list[dict]) -> str:
