@@ -2,9 +2,9 @@
 
 **Summary**: Batch processing systems take a large, bounded dataset as input, run a computation over it, and produce output data. They prioritize throughput over latency, and their design philosophy of immutable inputs and deterministic outputs enables fault tolerance and easy reasoning.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-10-batch-processing.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/designing-distributed-systems/chapter-10-work-queue-systems.md`, `raw/designing-distributed-systems/chapter-11-event-driven-batch-processing.md`, `raw/designing-distributed-systems/chapter-12-coordinated-batch-processing.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-10-batch-processing.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/designing-distributed-systems/chapter-10-work-queue-systems.md`, `raw/designing-distributed-systems/chapter-11-event-driven-batch-processing.md`, `raw/designing-distributed-systems/chapter-12-coordinated-batch-processing.md`, `raw/site-reliability-engineering/chapter-25-data-processing-pipelines.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 ---
 
 ## Three types of systems
@@ -94,12 +94,25 @@ Burns's Chapter 11 — the [[event-driven-batch-pattern]] — chains these work 
 
 Chapter 12 closes Burns's batch trilogy with [[coordinated-batch-pattern|coordinated batch processing]] (source: raw/designing-distributed-systems/chapter-12-coordinated-batch-processing.md): pulling parallel workflow outputs back together into a single aggregate result. Two primitives do that work — the [[join-pattern|join]] (barrier synchronization, waits for every upstream worker) and the [[reduce-pattern|reduce]] (associative pairwise combine, pipelines with upstream work). Burns's framing makes the identity with [[mapreduce|MapReduce]] explicit: map = [[sharder-pattern|sharder]], reduce = reduce-pattern, the MapReduce "wait for all mappers" barrier = join-pattern. This names at container granularity the same structural choices that [[dataflow-engines]] expose at operator granularity when they decide to pipeline through a reduce or to materialise for a barrier.
 
+## Operational pathology of large periodic batch chains (SRE Ch 25)
+
+Kleppmann and Burns describe the algorithmic and container-level shape of batch processing; SRE Chapter 25 (Dan Dennison) is the **operational** complement that names what goes wrong at large scale. The chapter develops two contrasts (source: raw/site-reliability-engineering/chapter-25-data-processing-pipelines.md):
+
+- A [[periodic-pipeline|periodic pipeline]] — the cron-scheduled chained-program design pattern — is stable when carefully tuned but **fragile under organic growth**. Five named failure modes accumulate as the pipeline grows: [[pipeline-uneven-work-distribution|hanging chunks]], [[pipeline-batch-scheduling-drawbacks|batch-scheduling drawbacks including the execution-frequency floor]], [[pipeline-monitoring-problems|monitoring blackouts when jobs fail mid-run]], [[pipeline-thundering-herd|start-of-cycle thundering herds]], and the multi-pipeline [[moire-load-pattern|Moiré load pattern]] on shared infrastructure.
+- The architectural alternative is [[continuous-data-processing|continuous data processing]] — workers that never stop running and process work units as they arrive. Google's specific implementation is [[google-workflow|Workflow]], a 2003 system with leader-follower coordination, an in-memory [[task-master|Task Master]] using the [[system-prevalence-pattern|system prevalence pattern]] for durability, [[workflow-correctness-guarantees|four structural correctness guarantees]] providing exactly-once semantics, and a [[workflow-business-continuity|multi-cluster business-continuity layer]] for surviving datacenter loss.
+
+The chapter's recommendation: if the data processing problem is continuous or will organically grow to become continuous, do not use a periodic pipeline. The Kleppmann immutable-input/replaceable-output principles still apply at the algorithmic level; the SRE Ch 25 contribution is naming when the **deployment shape** of those algorithms (cron-driven batch chain) breaks down and what the alternative shape (long-running workers + coordinator) looks like. Workflow predates the modern open-source [[stream-processing|stream processing]] family by ~10 years and is one of the systems whose design choices the Flink/Spark/Beam lineage absorbed.
+
 ## Related pages
 
 - [[unix-philosophy]]
 - [[mapreduce]]
 - [[dataflow-engines]]
 - [[distributed-filesystems]]
+- [[periodic-pipeline]]
+- [[continuous-data-processing]]
+- [[google-workflow]]
+- [[data-processing-pipelines]]
 - [[sort-merge-joins]]
 - [[map-side-joins]]
 - [[batch-workflow-outputs]]

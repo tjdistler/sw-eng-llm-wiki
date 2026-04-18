@@ -2,9 +2,9 @@
 
 **Summary**: The logical grouping of related code — classes into packages, functions into namespaces, modules into components. Richards and Ford treat modularity as an **implicit architecture characteristic**: no requirement ever asks for it, yet sustainable codebases demand it. The three tools for reasoning about modularity are [[cohesion]], [[coupling]], and [[connascence]].
 
-**Sources**: `raw/fundamentals-of-software-architecture/chapter-03-modularity.md`, `raw/fundamentals-of-software-architecture/chapter-08-component-based-thinking.md`
+**Sources**: `raw/fundamentals-of-software-architecture/chapter-03-modularity.md`, `raw/fundamentals-of-software-architecture/chapter-08-component-based-thinking.md`, `raw/site-reliability-engineering/chapter-09-simplicity.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 ---
 
 ## Definition
@@ -60,6 +60,22 @@ Richards and Ford use **module** as a generic term for "bundling of related code
 
 Newman's *Monolith to Microservices* treats modularity as the engine of [[microservices]]: loose coupling between services, high [[cohesion|cohesion]] of business functionality, and [[information-hiding|hidden internals]] are what make services independently deployable. Richards and Ford's Chapter 3 is the *theoretical* layer underneath that practical framing — it names the code-level structures and metrics that modular systems (monolithic or distributed) must exhibit. Both framings converge on Constantine's law: **a structure is stable if cohesion is high and coupling is low** — see [[coupling]] and [[cohesion]] for Newman's expression of the same idea.
 
+## The SRE framing (Chapter 9)
+
+Chapter 9 of *Site Reliability Engineering* extends the same object-oriented rules of thumb explicitly to distributed systems (source: chapter-09-simplicity.md):
+
+> Expanding outward from APIs and single binaries, many of the rules of thumb that apply to object-oriented programming also apply to the design of distributed systems. The ability to make changes to parts of the system in isolation is essential to creating a supportable system.
+
+Luebbe derives three SRE-specific practices from this:
+
+1. **Loose coupling between binaries** (and between binaries and configuration) is the simplicity pattern that makes *both* developer agility and operational stability possible. A bug in one component can be fixed and deployed without rebuilding the rest.
+2. **APIs must themselves be modular.** Versioning an API lets consumers adopt the new version on their own schedule rather than forcing a simultaneous rebuild of the entire system. (See [[backward-forward-compatibility]] and [[protocol-buffers]] — designed with backward and forward compatibility as explicit goals.)
+3. **No grab-bag binaries.** "Just as it is understood that it is poor practice to write a 'grab bag' class that contains unrelated functions, it is also poor practice to create and put into production a 'util' or 'misc' binary. A well-designed distributed system consists of collaborators, each of which has a clear and well-scoped purpose." (source: chapter-09-simplicity.md)
+
+The third point is Constantine's low-cohesion warning at binary granularity. A "util" service is the distributed-system analogue of a util class — everyone depends on it, nothing changes in it without risking everyone, and nobody can say precisely what it is for.
+
+See [[simplicity-sre]] for the full Chapter 9 treatment and [[coupling]] for Newman's four-type taxonomy that the "loose coupling between binaries" framing refines.
+
 ## Related pages
 
 - [[cohesion]]
@@ -72,3 +88,7 @@ Newman's *Monolith to Microservices* treats modularity as the engine of [[micros
 - [[components]]
 - [[technical-vs-domain-partitioning]]
 - [[fundamentals-of-software-architecture]]
+- [[simplicity-sre]]
+- [[minimal-apis]]
+- [[protocol-buffers]]
+- [[backward-forward-compatibility]]

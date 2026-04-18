@@ -2,9 +2,9 @@
 
 **Summary**: Accidental complexity is complexity not inherent in the problem a system solves, but introduced by implementation choices — and unlike essential complexity, it can be removed.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-01-reliable-scalable-and-maintainable-applications.md`, `raw/fundamentals-of-software-architecture/chapter-01-introduction.md`, `raw/fundamentals-of-software-architecture/chapter-16-orchestration-driven-service-oriented-architecture.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-01-reliable-scalable-and-maintainable-applications.md`, `raw/fundamentals-of-software-architecture/chapter-01-introduction.md`, `raw/fundamentals-of-software-architecture/chapter-16-orchestration-driven-service-oriented-architecture.md`, `raw/site-reliability-engineering/chapter-09-simplicity.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -72,6 +72,23 @@ The style is worth knowing as accidental complexity's **architectural-scale limi
 
 [[architecture-vitality|Structural decay]] is an accumulated form of accidental complexity: individually reasonable local changes that cumulatively erode [[architecture-characteristics]]. [[architecture-fitness-function|Fitness functions]] are how [[evolutionary-architecture]] keeps the accumulation visible.
 
+## The SRE framing (Chapter 9)
+
+Chapter 9 of *Site Reliability Engineering* applies Brooks's essential-vs-accidental distinction as the intellectual backbone of its [[simplicity-sre|simplicity]] mandate. Luebbe restates the distinction (source: chapter-09-simplicity.md):
+
+> Essential complexity is the complexity inherent in a given situation that cannot be removed from a problem definition, whereas accidental complexity is more fluid and can be resolved with engineering effort.
+
+The chapter's worked example is the garbage-collection one: writing a web server entails the essential complexity of serving pages quickly; writing it in Java introduces the accidental complexity of managing garbage-collection pauses so they don't hurt latency. The latter is a consequence of the implementation choice.
+
+From this, Chapter 9 assigns SRE teams two specific responsibilities (source: chapter-09-simplicity.md):
+
+1. **Push back when accidental complexity is introduced** into the systems for which they are responsible.
+2. **Constantly strive to eliminate complexity** in systems they onboard and take operational responsibility for.
+
+The SRE-specific contribution is organisational: the team that runs the system at 3am has the motivation and, via the [[toil-and-engineering-balance|50% cap]] and the [[error-budget]], the authority to refuse changes that add accidental complexity. See [[virtue-of-boring]] for the aesthetic framing, [[negative-lines-of-code]] for the deletion discipline, [[minimal-apis]] for the API-surface corollary, and [[monitoring-simplicity]] for the Ch 6 specialisation to monitoring systems. The Hoare epigraph that opens Chapter 9 is the slogan form of the whole stack:
+
+> The price of reliability is the pursuit of the utmost simplicity. — C.A.R. Hoare
+
 ## Related pages
 
 - [[maintainability]]
@@ -86,3 +103,8 @@ The style is worth knowing as accidental complexity's **architectural-scale limi
 - [[service-based-architecture]]
 - [[event-driven-architecture]]
 - [[laws-of-software-architecture]]
+- [[simplicity-sre]]
+- [[virtue-of-boring]]
+- [[negative-lines-of-code]]
+- [[minimal-apis]]
+- [[monitoring-simplicity]]

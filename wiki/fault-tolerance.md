@@ -2,9 +2,9 @@
 
 **Summary**: Fault tolerance is the property of a system that allows it to continue operating correctly when one or more of its components fail, by isolating faults before they become failures.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-01-reliable-scalable-and-maintainable-applications.md`, `raw/designing-data-intensive-applications/chapter-08-the-trouble-with-distributed-systems.md`, `raw/designing-data-intensive-applications/chapter-09-consistency-and-consensus.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-01-reliable-scalable-and-maintainable-applications.md`, `raw/designing-data-intensive-applications/chapter-08-the-trouble-with-distributed-systems.md`, `raw/designing-data-intensive-applications/chapter-09-consistency-and-consensus.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/site-reliability-engineering/chapter-21-handling-overload.md`, `raw/site-reliability-engineering/chapter-22-addressing-cascading-failures.md`, `raw/site-reliability-engineering/chapter-26-data-integrity-what-you-read-is-what-you-wrote.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-17
 
 ---
 
@@ -101,6 +101,45 @@ Cryptographic tools (Merkle trees, as used in certificate transparency and distr
 
 See [[end-to-end-argument]] for the broader principle that integrity checks must be end-to-end to catch all sources of corruption.
 
+## Data integrity as a defence-in-depth discipline (Chapter 26)
+
+SRE Chapter 26 specialises the fault-tolerance framing to **data integrity at scale** (source: chapter-26-data-integrity-what-you-read-is-what-you-wrote.md). The key move: treat user-visible data loss as a fault class that needs its own cooperating stack of tolerance mechanisms, not a single mechanism. Chapter 26 catalogues 24 distinct failure modes (6 root causes × 2 scopes × 2 rates — see [[data-integrity-failure-modes]]) and argues that no single defence covers all 24; the response is a three-layer [[defense-in-depth-data|defence in depth]]:
+
+- **Layer 1: [[soft-deletion]]** — primary defence against accidental user/developer/hijacker deletion; data is marked deleted but recoverable by admin paths within a grace window.
+- **Layer 2: [[tiered-backup-strategy|backups]]** — multi-tier copies at progressively diverse storage technologies (local snapshots → distributed filesystem → offsite tape), each protecting against failure modes the previous tier shares with live data.
+- **Layer 3: [[data-validation-pipelines|out-of-band validators]]** — MapReduce/Hadoop pipelines that continuously check cross-datastore invariants and catch low-grade corruption before it propagates beyond recovery.
+
+Chapter 26 also explicitly strengthens Kleppmann's "trust but verify" framing with an operational rule: [[recovery-testing|continuously test the recovery process]] in normal operations and alert on missing success heartbeats. The only way to know backups are backups (not archives) is to actually restore from them, repeatedly. See [[data-integrity-sre]] for the hub and [[data-integrity-principles]] for the five principles Ch 26 closes with.
+
+The 2011 [[gmail-gtape-restore|Gmail GTape restore]] and 2012 [[google-music-runaway-deletion|Google Music runaway-deletion]] case studies in Chapter 26 are the worked examples of the three-layer discipline paying off at Google scale.
+
+## Overload as a fault class
+
+SRE Chapter 21 treats **overload** as a fault class that deserves its own tolerance machinery (source: chapter-21-handling-overload.md). The failure mode: the serving system receives more requests than it can process, queues pile up, memory fills, latency spikes, and eventually the task crashes — taking all in-flight work with it. The engineering goal is the same as for any other fault: the system as a whole remains useful even when the "we're not provisioned for this much load" fault occurs.
+
+Chapter 21's cooperating mechanisms together form a textbook fault-tolerance pattern for serving systems:
+
+- [[per-customer-quotas]] — contain the blast radius of a misbehaving customer to their own budget.
+- [[adaptive-throttling]] — client-side self-regulation so rejections don't become the load.
+- [[utilization-signals]] + [[load-shedding]] — per-task self-defence: reject what cannot be served so the rest can be.
+- [[request-criticality]] — preferentially shed low-priority traffic under pressure.
+- [[graceful-degradation]] — serve a cheaper response when the full response would fail.
+- [[retry-budget]] — cap retry amplification so a small overload doesn't cascade into a large one.
+
+The operating principle — **partial degradation beats total failure** — is the same principle that motivates [[replicated-load-balanced-service|replication]], [[health-probes|health-probe-based deregistration]], and [[stream-processing-fault-tolerance|effectively-once semantics]]. Overload is the load-shaped fault; the Chapter 21 stack is how serving systems tolerate it.
+
+See [[handling-overload]] for the hub page covering all eight mechanisms and how they compose.
+
+## Cascading failure: when fault tolerance produces positive feedback
+
+SRE Chapter 22 identifies a specific hazard in fault-tolerant systems: the very mechanisms that absorb faults in the steady state can *amplify* faults under overload, producing positive feedback (source: chapter-22-addressing-cascading-failures.md). A fault-tolerant system has load balancing to shift traffic off failing tasks; but shifted traffic arrives at peers that may also be near capacity, overloads them, and the failure spreads. Retries improve success rates when one task is briefly slow; but retries amplify load when the whole fleet is overloaded. Automatic failover reduces MTTR; but failover health-checks can death-loop a recovering fleet.
+
+Chapter 22's closing argument (source: chapter-22-addressing-cascading-failures.md):
+
+> Retrying on failures, shifting load around from unhealthy servers, killing unhealthy servers, adding caches to improve performance or reduce latency: all of these might be implemented to improve the normal case, but can improve the chance of causing a large-scale failure. Be careful when evaluating changes to ensure that one outage is not being traded for another.
+
+The fault-tolerance pattern applies with a warning: evaluate each mechanism not just for its steady-state benefit but for its behaviour under overload. See [[cascading-failure]] for the full treatment, including the specific failure modes ([[gc-death-spiral]], [[retry-amplification]], [[bimodal-latency]], [[slow-startup-and-cold-caching]]) and the mitigations ([[queue-management]], [[deadline-propagation]], [[intra-layer-communication]] discipline, and [[testing-for-cascading-failures]]).
+
 ## Related pages
 
 - [[reliability]]
@@ -125,3 +164,32 @@ See [[end-to-end-argument]] for the broader principle that integrity checks must
 - [[timeliness-and-integrity]]
 - [[replicated-load-balanced-service]]
 - [[health-probes]]
+- [[mttr-and-mttf]]
+- [[emergency-response]]
+- [[site-reliability-engineering]]
+- [[handling-overload]]
+- [[load-shedding]]
+- [[graceful-degradation]]
+- [[adaptive-throttling]]
+- [[retry-budget]]
+- [[cascading-failure]]
+- [[server-overload]]
+- [[resource-exhaustion]]
+- [[gc-death-spiral]]
+- [[retry-amplification]]
+- [[queue-management]]
+- [[latency-and-deadlines]]
+- [[deadline-propagation]]
+- [[bimodal-latency]]
+- [[slow-startup-and-cold-caching]]
+- [[intra-layer-communication]]
+- [[testing-for-cascading-failures]]
+- [[addressing-ongoing-cascading-failure]]
+- [[data-integrity-sre]]
+- [[defense-in-depth-data]]
+- [[data-integrity-failure-modes]]
+- [[soft-deletion]]
+- [[tiered-backup-strategy]]
+- [[data-validation-pipelines]]
+- [[recovery-testing]]
+- [[data-integrity-principles]]

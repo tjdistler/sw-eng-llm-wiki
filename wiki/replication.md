@@ -2,9 +2,9 @@
 
 **Summary**: Keeping a copy of the same data on multiple machines, connected via a network. The simple goal — same data everywhere — turns out to be extraordinarily difficult in the presence of change.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-05-replication.md`, `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-05-replication.md`, `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/site-reliability-engineering/chapter-26-data-integrity-what-you-read-is-what-you-wrote.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-17
 
 ---
 
@@ -68,6 +68,22 @@ This insight connects databases to [[stream-processing]] in a deep way:
 - **[[log-based-message-brokers]]** (Kafka, Kinesis) use the same append-only log structure as replication logs but generalize it for arbitrary event streams. Consumer offsets in Kafka are directly analogous to log sequence numbers in database replication -- both track a follower's position in the leader's log (source: chapter-11-stream-processing.md).
 - **[[event-sourcing]]** applies the same idea at the application level: store all state changes as an immutable event log, and derive current state by replaying the log.
 
+## Replication is not recoverability (SRE Ch 26)
+
+A classic but flawed response to "do you have a backup?" is "we have something even better than a backup — replication!" SRE Chapter 26 rejects this directly (source: chapter-26-data-integrity-what-you-read-is-what-you-wrote.md):
+
+> Replication provides many benefits, including locality of data and protection from a site-specific disaster, but it can't protect you from many sources of data loss. Datastores that automatically sync multiple replicas guarantee that a corrupt database row or errant delete are pushed to all of your copies, likely before you can isolate the problem.
+
+Replication protects against the failure modes replication was designed for — machine loss, rack loss, datacenter loss. It **does not** protect against:
+
+- **User or admin error** — an errant `DELETE` propagates to every replica, usually within seconds.
+- **Application bugs** — a deletion pipeline with a race condition (see [[google-music-runaway-deletion]]) corrupts every replica simultaneously.
+- **Zero-day vulnerabilities in low-level components** — a bug in the filesystem or device driver affects every disk-backed replica at the same time.
+
+Chapter 26's prescription: keep **non-serving copies on diverse components** — different media (disk and tape), different stack layers, different storage technologies. This is exactly the [[tiered-backup-strategy|multi-tier backup]] architecture. Replication is useful *within* each tier but cannot substitute *for* any tier. See [[defense-in-depth-data]] and [[data-integrity-sre]] for the broader framing.
+
+The 2011 [[gmail-gtape-restore|Gmail incident]] is the canonical worked example: Gmail's internal replication and online backups both failed; only the offsite tape layer (media diverse from disks) still worked.
+
 ## Replication in distributed filesystems
 
 [[distributed-filesystems|HDFS]] replicates file blocks across multiple machines for fault tolerance, using the same core idea as database replication but applied to immutable file blocks rather than mutable records. Two approaches are used: full replication (multiple identical copies) and erasure coding (e.g., Reed-Solomon codes) which allows recovery with lower storage overhead. The techniques are similar to RAID but operate across machines over a conventional datacenter network (source: designing-data-intensive-applications, chapter 10).
@@ -93,3 +109,8 @@ This insight connects databases to [[stream-processing]] in a deep way:
 - [[event-sourcing]]
 - [[log-based-message-brokers]]
 - [[stream-processing]]
+- [[data-integrity-sre]]
+- [[defense-in-depth-data]]
+- [[tiered-backup-strategy]]
+- [[gmail-gtape-restore]]
+- [[google-music-runaway-deletion]]

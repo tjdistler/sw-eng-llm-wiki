@@ -2,9 +2,9 @@
 
 **Summary**: Capping the rate of requests a client can make, enforced at the edge (typically by an HTTP reverse proxy like Varnish or nginx) to defend against denial-of-service — whether malicious, accidental misconfiguration, or a runaway load test pointed at production by mistake. Burns frames it as a standard pluggable feature of the [[caching-layer]] tier in the replicated-load-balanced serving pattern.
 
-**Sources**: `raw/designing-distributed-systems/chapter-05-replicated-load-balanced-services.md`
+**Sources**: `raw/designing-distributed-systems/chapter-05-replicated-load-balanced-services.md`, `raw/site-reliability-engineering/chapter-21-handling-overload.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -74,6 +74,28 @@ A published rate-limit contract — which headers, which status code, how the qu
 
 Rate-limit decisions are a strong signal to log and monitor: a spike in 429s often precedes or accompanies a real incident, whether on the client side or in an abuse scenario. See [[monitoring-and-observability]].
 
+## Internal rate limiting: per-customer quotas and adaptive throttling
+
+SRE Chapter 21 describes the internal-services version of rate limiting, which differs from Burns's public-API-edge version in two important ways (source: chapter-21-handling-overload.md):
+
+- **CPU, not QPS.** Internal quotas are expressed in **CPU seconds per second** rather than requests per second. The [[queries-per-second-pitfalls|argument against QPS as a capacity metric]] applies especially to internal services, where the request mix changes as client services ship new versions. A CPU-denominated quota is stable across client evolution in a way a QPS-denominated one is not.
+- **Global, not per-instance.** The limit is enforced against aggregated *cross-datacenter* usage, pushed as per-task effective limits. Edge rate limiters typically enforce per-instance rates and accept modest inconsistency; Google's internal quota system computes a globally aggregated view in real time.
+
+See [[per-customer-quotas]] for the mechanism and [[adaptive-throttling]] for the client-side cooperation that stops clients from continuing to hammer a backend that is rejecting them. The layering is explicit: Burns's edge rate limiting catches abusive and runaway *external* clients; Chapter 21's per-customer quotas catch misbehaving *internal* clients; per-task [[utilization-signals|load shedding]] catches what both miss when local conditions change faster than either can react.
+
+## Rate limiting's place in the Chapter 21 stack
+
+Chapter 21's overall defence layers rate limiting at three different granularities:
+
+| Layer | Mechanism | Enforcer | Measure |
+|---|---|---|---|
+| Edge | [[rate-limiting]] (this page) | HTTP reverse proxy | QPS by IP / user / path |
+| RPC ingress | [[per-customer-quotas]] | Backend task | CPU-sec/sec per customer |
+| Client-side | [[adaptive-throttling]] | Client task | Accept ratio |
+| Per-task | [[load-shedding]] | Backend task | [[utilization-signals|Utilisation]] |
+
+Each layer catches cases the others cannot. Edge limits stop DoS before it reaches the application; internal quotas stop one internal customer starving another; client-side throttling stops an over-quota client from wasting backend CPU on rejections; per-task shedding stops a locally overloaded task from dying regardless of why it became overloaded.
+
 ## Related pages
 
 - [[caching-layer]]
@@ -86,3 +108,9 @@ Rate-limit decisions are a strong signal to log and monitor: a spike in 429s oft
 - [[circuit-breaker]]
 - [[bulkhead]]
 - [[designing-distributed-systems]]
+- [[handling-overload]]
+- [[per-customer-quotas]]
+- [[adaptive-throttling]]
+- [[load-shedding]]
+- [[utilization-signals]]
+- [[queries-per-second-pitfalls]]

@@ -2,7 +2,7 @@
 
 **Summary**: Tests that exercise multiple services together to verify a user journey. In a microservice architecture they become slow, flaky, expensive, and ambiguous in their failure modes. Newman's prescription: keep their scope tight, push verification to consumer-driven contracts and progressive delivery, and continuously refine the feedback cycle.
 
-**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md`, `raw/building-event-driven-microservices/chapter-15-testing-event-driven-microservices.md`
+**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md`, `raw/building-event-driven-microservices/chapter-15-testing-event-driven-microservices.md`, `raw/site-reliability-engineering/chapter-17-testing-for-reliability.md`
 
 **Last updated**: 2026-04-17
 
@@ -64,6 +64,12 @@ When cross-service end-to-end testing is still needed, Bellemare frames it as [[
 
 The convergence point with Newman: **the cure for slow, flaky, expensive end-to-end tests is to push verification further left (CDCs, topology tests, local integration tests) and further right (progressive delivery, synthetic transactions in production), narrowing what the cross-service suite actually has to cover.**
 
+## SRE framing (Chapter 17)
+
+Google SRE's Chapter 17 arrives at the same destination from yet another direction. Its [[testing-for-reliability|hierarchy]] separates **traditional tests** (unit, integration, system — with smoke, performance, and regression flavours) from **production tests** (configuration, stress, canary) and argues that the production layer is essential (source: chapter-17-testing-for-reliability.md). End-to-end tests in the Ch 17 vocabulary are [[system-tests|system tests]] at the widest scope; their production counterpart is the combination of [[canary-test|canary tests]], [[production-probes]], and [[configuration-test|configuration tests]].
+
+Chapter 17 adds the [[zero-mttr-testing|zero-MTTR]] framing: a system-level test that detects exactly what monitoring would detect, at push time, is strictly better than the same detection in production. That's the economic argument for keeping a thin layer of end-to-end tests even as most verification moves to smaller tests and production techniques.
+
 ## Where end-to-end tests still live
 
 Newman doesn't argue for zero end-to-end tests. He argues for keeping their scope tight, their ownership clear, their count small, and their role complemented by [[synthetic-transactions]] in production and [[progressive-delivery]] at the cutover. The shift is from "end-to-end tests as primary safety net" to "end-to-end tests as one technique among many".
@@ -82,3 +88,8 @@ Newman doesn't argue for zero end-to-end tests. He argues for keeping their scop
 - [[local-integration-testing]]
 - [[remote-integration-testing]]
 - [[test-data-strategies]]
+- [[testing-for-reliability]]
+- [[system-tests]]
+- [[canary-test]]
+- [[production-probes]]
+- [[zero-mttr-testing]]

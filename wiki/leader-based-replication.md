@@ -2,9 +2,9 @@
 
 **Summary**: A replication architecture where one node (the leader) accepts all writes and propagates changes to followers; also called master–slave or active/passive replication.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-05-replication.md`, `raw/designing-data-intensive-applications/chapter-09-consistency-and-consensus.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-05-replication.md`, `raw/designing-data-intensive-applications/chapter-09-consistency-and-consensus.md`, `raw/site-reliability-engineering/chapter-23-managing-critical-state-distributed-consensus-for-reliability.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-17
 
 ---
 
@@ -61,6 +61,10 @@ The replication log in single-leader replication effectively implements [[total-
 
 Partitioning a single-leader database (one leader per partition) does not affect linearizability, since linearizability is a single-object guarantee. Cross-partition consistency requires [[distributed-transactions]]. (source: designing-data-intensive-applications, chapter 9)
 
+## Stable leaders inside consensus systems (SRE Chapter 23)
+
+The same *stable-leader* pattern used in leader-based DB replication is used inside [[consensus]] systems themselves — [[multi-paxos|Multi-Paxos]], Zab ([[zookeeper]]), and Raft all elect a stable leader so the steady-state cost of consensus is a single round trip from the leader to a quorum. See [[stable-leader]] for the Chapter-23 framing of the performance benefits, the three structural liabilities (non-local client latency, leader outgoing bandwidth, leader-machine performance), and the [[multi-paxos|dueling-proposers]] failure mode on re-election (source: chapter-23-managing-critical-state-distributed-consensus-for-reliability.md).
+
 ## Related pages
 
 - [[replication]]
@@ -72,3 +76,5 @@ Partitioning a single-leader database (one leader per partition) does not affect
 - [[total-order-broadcast]]
 - [[state-machine-replication]]
 - [[zookeeper]]
+- [[stable-leader]]
+- [[managing-critical-state]]

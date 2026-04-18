@@ -2,9 +2,9 @@
 
 **Summary**: The first of Burns's batch computational patterns. A **work queue** processes a batch of wholly independent work items by dispatching each item to a worker container; the system as a whole is responsible for ensuring every item is processed within some target time, and it scales workers up and down to keep up. Burns's thesis is that the machinery around the queue — pulling items, tracking which are done, scheduling workers — is almost entirely generic and can live in a **reusable library container**, while the application-specific parts collapse into two narrow interfaces: a **source container** that produces items and a **worker container** that processes them.
 
-**Sources**: `raw/designing-distributed-systems/chapter-10-work-queue-systems.md`, `raw/designing-distributed-systems/chapter-11-event-driven-batch-processing.md`, `raw/designing-distributed-systems/chapter-12-coordinated-batch-processing.md`
+**Sources**: `raw/designing-distributed-systems/chapter-10-work-queue-systems.md`, `raw/designing-distributed-systems/chapter-11-event-driven-batch-processing.md`, `raw/designing-distributed-systems/chapter-12-coordinated-batch-processing.md`, `raw/site-reliability-engineering/chapter-25-data-processing-pipelines.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -102,6 +102,22 @@ When a single transformation isn't enough — when a job needs multiple outputs 
 
 Burns's [[coordinated-batch-pattern|Chapter 12 coordinated batch pattern]] then closes the loop by adding two aggregation primitives that pull parallel workflow outputs back together: the [[join-pattern|join]] (barrier; wait for every upstream worker before continuing) and the [[reduce-pattern|reduce]] (pairwise associative combine; the container-level naming of MapReduce's reduce step) (source: raw/designing-distributed-systems/chapter-12-coordinated-batch-processing.md). Together, Chapters 10–12 form Burns's batch trilogy — work queue as the primitive, event-driven batch as the composition, coordinated batch as the aggregation.
 
+## Industrial-scale equivalent: Google Workflow (SRE Ch 25)
+
+Burns's container-level work queue is structurally the **simplest case** of the architecture SRE Chapter 25 (Dan Dennison) describes at much larger scale as Google [[google-workflow|Workflow]] (source: raw/site-reliability-engineering/chapter-25-data-processing-pipelines.md). Both designs share the same architectural intuition:
+
+- A **coordinator** holds the source of truth for "what work exists, what's in progress, what's done." Burns calls this the queue manager and pushes the state into Kubernetes Job annotations; Workflow calls it the [[task-master|Task Master]] and uses the [[system-prevalence-pattern|system prevalence pattern]] — in-memory state with synchronous journaling.
+- **Stateless workers** lease work from the coordinator, process it, and commit results. Burns's worker container is one-shot per item (Kubernetes Job lifetime); Workflow's worker is long-running and processes many items, but each individual item-lease is structurally the same.
+- **State lives outside the worker.** Burns pushes it into the orchestrator (Kubernetes); Workflow pushes it into the Task Master plus a [[distributed-filesystems|distributed filesystem]] for bulk data.
+
+Workflow generalises Burns's pattern in three directions:
+
+1. **Multi-stage pipelines.** Workflow's task groups let arbitrary-depth pipelines run inside one coordinator; Burns's [[event-driven-batch-pattern]] composes multiple work queues over a broker to do the same thing across containers.
+2. **Strong correctness guarantees.** Workflow's [[workflow-correctness-guarantees|four guarantees]] (lease + unique filenames + configuration barriers + server tokens) provide exactly-once semantics without requiring idempotent workers. Burns's pattern relies on the application worker being idempotent because Kubernetes Jobs may restart on failure.
+3. **Multi-cluster business continuity.** Workflow's [[workflow-business-continuity|reference-task pattern]] across two or more clusters survives whole-datacenter loss; Burns's pattern is single-cluster.
+
+The progression Burns → Workflow is the path a work queue takes as the workload outgrows what container-level patterns alone can guarantee. For most batch workloads at human scale, Burns's pattern is sufficient; for production data pipelines whose business value justifies surviving datacenter loss with provable exactly-once correctness, the additional machinery Workflow provides is warranted.
+
 ## Related pages
 
 - [[source-container-interface]]
@@ -126,6 +142,10 @@ Burns's [[coordinated-batch-pattern|Chapter 12 coordinated batch pattern]] then 
 - [[dataflow-engines]]
 - [[message-brokers]]
 - [[log-based-message-brokers]]
+- [[google-workflow]]
+- [[task-master]]
+- [[continuous-data-processing]]
+- [[data-processing-pipelines]]
 - [[functions-as-a-service]]
 - [[exactly-once-semantics]]
 - [[designing-distributed-systems]]

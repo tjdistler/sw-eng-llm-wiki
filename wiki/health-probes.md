@@ -2,9 +2,9 @@
 
 **Summary**: Container orchestrators like Kubernetes distinguish two kinds of health checks. A **liveness probe** tells the orchestrator whether the process is still usable or needs to be restarted. A **readiness probe** tells the load balancer whether the replica is ready to receive user traffic. The two answer different questions and should be implemented as distinct endpoints.
 
-**Sources**: `raw/designing-distributed-systems/chapter-05-replicated-load-balanced-services.md`, `raw/designing-distributed-systems/chapter-04-adapters.md`, `raw/designing-distributed-systems/chapter-09-ownership-election.md`
+**Sources**: `raw/designing-distributed-systems/chapter-05-replicated-load-balanced-services.md`, `raw/designing-distributed-systems/chapter-04-adapters.md`, `raw/designing-distributed-systems/chapter-09-ownership-election.md`, `raw/site-reliability-engineering/chapter-20-load-balancing-in-the-datacenter.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -80,6 +80,16 @@ By allowing replicas to temporarily leave the load-balancer pool without being k
 
 Burns's Chapter 9 uses liveness probes as load-bearing machinery for the [[singleton-pattern]]: a single-replica service running under Kubernetes relies on a liveness probe to trigger restart when the container hangs, which is one of the three automatic recovery behaviours the orchestrator provides. Without a liveness probe, a hung singleton stays hung — the pattern's "pretty good" three- to four-nines uptime assumes the probe is in place (source: raw/designing-distributed-systems/chapter-09-ownership-election.md).
 
+### Health probes and the SRE three-state backend model
+
+SRE Chapter 20 frames the same territory as a three-state model ([[backend-task-states]]): *healthy*, *refusing connections*, and *[[lame-duck-state|lame duck]]* (source: raw/site-reliability-engineering/chapter-20-load-balancing-in-the-datacenter.md). The binary readiness probe collapses two of those states into "not ready" without distinguishing them, which loses information that matters for graceful shutdown. Chapter 20's contribution is making the shutdown case explicit:
+
+- **Refusing connections** is the failure/startup case that readiness was designed for. The load balancer drops the replica; the orchestrator may restart it.
+- **Lame duck** is a backend *choosing* to stop receiving new work while still serving in-flight requests. There is no vanilla Kubernetes equivalent — the closest is the termination grace period during which the pod is being shut down.
+- **Healthy** is "readiness true."
+
+The SRE book pushes the state model into the RPC framework itself ([[stubby|Stubby]]), which gives every service graceful shutdown for free and propagates state changes to inactive clients via UDP health checks in 1-2 RTT. Burns's Kubernetes-level machinery gets you the healthy/unhealthy distinction; Chapter 20 adds the backend-initiated drain signal on top.
+
 ### Health probes and monitoring
 
 Probes are narrow: one bit per probe per replica. [[monitoring-and-observability]] covers the richer telemetry that an application should still expose separately. Probes and monitoring are complements, not substitutes.
@@ -95,4 +105,7 @@ Probes are narrow: one bit per probe per replica. [[monitoring-and-observability
 - [[pod]]
 - [[service-discovery]]
 - [[singleton-pattern]]
+- [[backend-task-states]]
+- [[lame-duck-state]]
+- [[stubby]]
 - [[designing-distributed-systems]]

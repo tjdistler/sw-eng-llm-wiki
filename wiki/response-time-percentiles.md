@@ -2,9 +2,9 @@
 
 **Summary**: Percentiles — not mean response time — are the correct way to reason about service performance, because they capture the distribution of user experience rather than a misleading aggregate.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-01-reliable-scalable-and-maintainable-applications.md`, `raw/designing-distributed-systems/chapter-07-scattergather.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-01-reliable-scalable-and-maintainable-applications.md`, `raw/designing-distributed-systems/chapter-07-scattergather.md`, `raw/site-reliability-engineering/chapter-04-service-level-objectives.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -62,8 +62,10 @@ Percentiles should not be averaged across machines or time windows — averaging
 
 Percentiles are the standard language of service level objectives and agreements:
 
-- **SLO** (Service Level Objective): internal target, e.g. p50 < 200 ms and p99 < 1 s
-- **SLA** (Service Level Agreement): contractual commitment to clients; violations may entitle customers to refunds
+- **[[service-level-objective|SLO]]** — internal target, e.g. p50 < 200 ms and p99 < 1 s
+- **[[service-level-agreement|SLA]]** — contractual commitment to clients; violations may entitle customers to refunds
+
+SRE's Chapter 4 makes the case for percentiles directly: averages hide the tail, most metrics are better thought of as distributions, and user studies show people prefer a slightly slower *steady* system to one with high variance — so if p999 is good, the typical experience is certainly going to be (source: chapter-04-service-level-objectives.md). See [[sli-aggregation]] for the SRE-side aggregation discipline.
 
 ## Related pages
 
@@ -72,3 +74,6 @@ Percentiles are the standard language of service level objectives and agreements
 - [[scaling-approaches]]
 - [[tail-latency-amplification]]
 - [[scatter-gather-pattern]]
+- [[service-level-indicator]]
+- [[service-level-objective]]
+- [[sli-aggregation]]

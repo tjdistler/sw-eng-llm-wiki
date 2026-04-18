@@ -2,9 +2,9 @@
 
 **Summary**: An algorithm for achieving atomic transaction commit across multiple nodes, ensuring either all nodes commit or all abort -- the most common protocol for [[distributed-transactions]], but vulnerable to blocking if the coordinator fails. Newman's blunt advice for microservices: "just say no" — use [[saga|sagas]] instead.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-09-consistency-and-consensus.md`, `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-09-consistency-and-consensus.md`, `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/site-reliability-engineering/chapter-23-managing-critical-state-distributed-consensus-for-reliability.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -50,6 +50,8 @@ An alternative called 3PC has been proposed that avoids blocking. However, 3PC a
 ## 2PC as a consensus algorithm
 
 2PC is technically a consensus algorithm, but not a fault-tolerant one: it does not satisfy the termination property because it can block indefinitely waiting for a crashed coordinator. This is why better [[consensus]] algorithms (Paxos, Raft, Zab) were developed -- they require only majority votes rather than unanimity, and include recovery mechanisms for leader/coordinator changes. (source: designing-data-intensive-applications, chapter 9)
+
+Laura Nolan's *Site Reliability Engineering* Chapter 23 reinforces the same point from the operational side: atomic commit in the [[paxos|Paxos]] family uses **majority quorums** with elected coordinators and recovery protocols, which is why [[consensus-replica-count|5 replicas tolerating 2 failures]] is the normal production shape. 2PC tolerates zero coordinator failures until the coordinator's log is recovered, which is why it keeps appearing alongside warnings rather than on production critical paths (source: chapter-23-managing-critical-state-distributed-consensus-for-reliability.md).
 
 ## Newman's view from microservice migrations
 

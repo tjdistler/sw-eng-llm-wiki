@@ -2,9 +2,9 @@
 
 **Summary**: The weakest useful replication consistency guarantee: if writes to a replicated system stop, all replicas will *eventually* converge to the same value — but with no bound on when, and no guarantees about intermediate states.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-05-replication.md`, `raw/designing-data-intensive-applications/chapter-08-the-trouble-with-distributed-systems.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-05-replication.md`, `raw/designing-data-intensive-applications/chapter-08-the-trouble-with-distributed-systems.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/site-reliability-engineering/chapter-23-managing-critical-state-distributed-consensus-for-reliability.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -56,6 +56,21 @@ Newman emphasises a practical operational requirement that mirrors the operabili
 
 The same principle reappears in [[saga|sagas]]: sub-transactions across services are not atomic, so observers can briefly see inconsistent intermediate states. The shorter the inconsistency window you require, the more difficult the implementation becomes — pick a tolerance you can live with and build your synchronisation accordingly.
 
+## The operator burden (SRE Chapter 23)
+
+Laura Nolan's *Site Reliability Engineering* Chapter 23 is blunter still about the cost of eventual consistency to downstream teams. She quotes Jeff Shute:
+
+> We find developers spend a significant fraction of their time building extremely complex and error-prone mechanisms to cope with eventual consistency and handle data that may be out of date. We think this is an unacceptable burden to place on developers and that consistency problems should be solved at the database level.
+
+(source: chapter-23-managing-critical-state-distributed-consensus-for-reliability.md)
+
+Nolan reinforces the point with two specific operational failure modes that Multimaster-replication systems with BASE semantics are vulnerable to:
+
+- **Clock drift** — multimaster conflict resolution commonly uses "latest timestamp wins," which fails silently under [[unreliable-clocks|clock skew]].
+- **Network partitioning** — partitions produce divergent histories whose reconciliation depends on the specific LWW / CRDT / merge rules, which are easy to get wrong.
+
+Kyle Kingsbury's Jepsen series is cited as the canonical body of evidence for what can go wrong in practice. The chapter's framing: eventual consistency is appropriate for some workloads but is not a generic substitute for correctness on critical state — and critical state is exactly what [[consensus]] is for. See [[managing-critical-state]] and the [[cap-theorem|CAP theorem reframing]] in the same chapter.
+
 ## Eventual consistency as a timeliness violation
 
 Chapter 12 clarifies the relationship between eventual consistency and [[timeliness-and-integrity|integrity]]. Violations of timeliness are "eventual consistency" -- temporary and self-healing. Violations of integrity are "perpetual inconsistency" -- permanent and requiring explicit repair. In most applications, integrity is far more important than timeliness. Event-based dataflow systems decouple the two, providing strong integrity guarantees (via [[exactly-once-semantics|idempotent processing]]) while accepting weak timeliness (asynchronous updates). This enables [[coordination-avoidance|coordination-avoiding systems]] that scale better than systems requiring [[linearizability]] (source: chapter-12-the-future-of-data-systems.md).
@@ -80,3 +95,5 @@ Chapter 12 clarifies the relationship between eventual consistency and [[timelin
 - [[synchronize-data-in-application]]
 - [[saga]]
 - [[database-decomposition]]
+- [[consensus]]
+- [[managing-critical-state]]

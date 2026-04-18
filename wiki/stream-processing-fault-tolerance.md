@@ -2,9 +2,9 @@
 
 **Summary**: Achieving [[fault-tolerance]] in [[stream-processing]] is harder than in [[batch-processing]] because streams are infinite -- you cannot simply restart from the beginning or wait until a task finishes before revealing output. Techniques include microbatching, checkpointing, atomic commits, and idempotent writes.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/site-reliability-engineering/chapter-25-data-processing-pipelines.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-17
 
 ---
 
@@ -96,6 +96,27 @@ Chapter 7 of *Building Event-Driven Microservices* treats the same problem from 
 - The atomic-commit row is split into two: **client-broker transactions** (Kafka's approach, wrapping offsets + changelog + outputs in one transaction) and **consumer-side local transactions** with explicit deduplication (when the broker doesn't support transactions). See [[effectively-once-processing]].
 - Chapter 11's [[heavyweight-framework-microservice|heavyweight-framework]] treatment names the [[checkpointing-stream-processing|checkpointing]] variant concretely — operator state `<partitionId, offset>` and key state `<key, state>` recorded synchronously to external durable storage (HDFS or HA KV store), with full restore semantics on rescale or failure.
 
+## Alternative realisation: Workflow's structural guarantees (SRE Ch 25)
+
+Google's [[google-workflow|Workflow]] system, described in SRE Chapter 25 (Dan Dennison), reaches the same effectively-once destination by a **different structural path**: instead of microbatching, checkpointing, and atomic commits, Workflow uses [[workflow-correctness-guarantees|four guarantees]] enforced by the [[task-master|Task Master]] (source: raw/site-reliability-engineering/chapter-25-data-processing-pipelines.md):
+
+1. **Configuration tasks act as barriers.** Workers commit only if the configuration ID they used is still current; configuration changes invalidate in-flight work.
+2. **Lease-bound commits.** Each work unit has a lease; only the lease holder may commit. Orphaned workers cannot commit because their lease has been reassigned.
+3. **Unique output filenames.** Each worker writes to a uniquely-named file; orphaned workers' files become unreferenced and harmless.
+4. **Server-token validation.** Each task carries a server token identifying the Task Master; misconfiguration (load balancer in front of multiple Task Masters, post-restart address collision) is detected on every operation.
+
+The trade-off compared to the Kleppmann/Bellemare approaches:
+
+| Aspect | Kleppmann/Bellemare (idempotence + atomic commits) | Workflow (structural guarantees) |
+|---|---|---|
+| Substrate requirement | Any broker + atomic commit support | Specialised Task Master + unique-and-immutable task model |
+| Application code requirement | Idempotent handlers OR transactional commits | None — correctness is structural |
+| Configuration evolution | Manual migration | Automatic via barrier tasks |
+| HA across datacenters | Cross-cluster replication separately configured | Built in via [[workflow-business-continuity\|reference-task pattern]] |
+| Lineage | Open-source ecosystem (Kafka, Flink, Spark) | Google internal (2003); ideas absorbed by Flink/Beam |
+
+Both paths are valid. The Workflow approach has the advantage that it does not depend on the application code being idempotent, which is hard to enforce across a large team. The Kleppmann/Bellemare approach has the advantage that it composes with general open-source infrastructure rather than requiring a specialised coordinator.
+
 ## Related pages
 
 - [[stream-processing]]
@@ -116,3 +137,9 @@ Chapter 7 of *Building Event-Driven Microservices* treats the same problem from 
 - [[state-store]]
 - [[checkpointing-stream-processing]]
 - [[heavyweight-framework-microservice]]
+- [[google-workflow]]
+- [[workflow-correctness-guarantees]]
+- [[workflow-business-continuity]]
+- [[task-master]]
+- [[continuous-data-processing]]
+- [[data-processing-pipelines]]

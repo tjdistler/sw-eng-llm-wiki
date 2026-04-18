@@ -2,9 +2,9 @@
 
 **Summary**: Umbrella term coined by James Governor for techniques that control how software is rolled out to users in a nuanced way — allowing faster releases while validating efficacy and limiting blast radius. Includes [[parallel-run-pattern|parallel run]], canary release, dark launch, and feature toggles.
 
-**Sources**: `raw/monolith-to-microservices/chapter-03-splitting-the-monolith.md`, `raw/monolith-to-microservices/chapter-05-growing-pains.md`, `raw/designing-distributed-systems/chapter-03-ambassadors.md`
+**Sources**: `raw/monolith-to-microservices/chapter-03-splitting-the-monolith.md`, `raw/monolith-to-microservices/chapter-05-growing-pains.md`, `raw/designing-distributed-systems/chapter-03-ambassadors.md`, `raw/site-reliability-engineering/chapter-01-introduction.md`, `raw/site-reliability-engineering/chapter-27-reliable-product-launches-at-scale.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -46,6 +46,29 @@ Newman frames this as part of the response to [[end-to-end-testing|end-to-end te
 
 Even *manual* progressive delivery — without automated rollback — is a big step up from rolling out to all users at once.
 
+## The SRE framing: 70% of outages come from change
+
+Google SRE's Chapter 1 reaches the same recipe from a different starting point (source: raw/site-reliability-engineering/chapter-01-introduction.md):
+
+> SRE has found that roughly 70% of outages are due to changes in a live system.
+
+The response is a three-part automation trio that is essentially progressive delivery restated as change-management discipline:
+
+1. **Progressive rollouts**.
+2. **Quickly and accurately detecting problems**.
+3. **Rolling back changes safely**.
+
+Chapter 1 frames progressive rollouts and 1% experiments as ways to *free up* [[error-budget]]: if you can launch something without consuming much budget, you can launch more often. This closes the loop between [[change-management-sre|change management]] and velocity. See [[change-management-sre]] for the full SRE framing.
+
+## The SRE Ch 27 elaboration: launches as the distinctive case
+
+SRE Chapter 27 specialises the progressive-delivery recipe for product launches, at up to 70 per week at Google scale. Chapter 27's additions:
+
+- [[gradual-rollout]] is the staged-rollout pattern, at three typical stages (subset in one datacenter → whole datacenter → global) with observation windows between. Client-fleet variants cover Android app rollouts to install fractions; invite systems are the sign-up-rate-limited variant.
+- [[feature-flag-framework]] is infrastructure for running many small changes in parallel, each revertible independently — two styles (HTTP-payload rewriter for stateless UI, request routing for stateful business logic) that absorb the launch process for flag-gated changes.
+- [[abusive-client-behavior]] names the dormant-functionality pattern: ship code inactive, activate server-side. The server-controlled client configuration makes emergency rollback possible without a client-binary update.
+- [[launch-checklist]] and [[launch-checklist-themes]] encode the cross-cutting concerns (capacity, failure modes, client behaviour, external dependencies, rollout planning) into a single curated instrument that every launch crosses.
+
 ## Why it matters in microservice migration
 
 Migration is exactly when bad releases are most likely: new code, new operational profile, new dependencies. Progressive delivery techniques let you take the migration step in production with the safety net of fast, reversible exposure (source: chapter-03-splitting-the-monolith.md). Both [[strangler-fig-pattern]] and [[branch-by-abstraction]] explicitly hand off to progressive delivery techniques at the cutover step.
@@ -65,3 +88,11 @@ Migration is exactly when bad releases are most likely: new code, new operationa
 - [[service-mesh]]
 - [[edm-deployment-patterns]]
 - [[blue-green-deployment]]
+- [[change-management-sre]]
+- [[error-budget]]
+- [[reliable-product-launches]]
+- [[launch-coordination-engineering]]
+- [[launch-checklist]]
+- [[gradual-rollout]]
+- [[feature-flag-framework]]
+- [[abusive-client-behavior]]

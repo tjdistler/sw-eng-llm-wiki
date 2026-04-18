@@ -2,9 +2,9 @@
 
 **Summary**: Stream processing is the continuous, incremental processing of unbounded data as it arrives, in contrast to [[batch-processing]] which operates on fixed-size, bounded inputs. It occupies the "near-real-time" space between online services and batch jobs.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/site-reliability-engineering/chapter-25-data-processing-pipelines.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-17
 
 ---
 
@@ -79,6 +79,22 @@ Chapter 12 extends stream processing beyond traditional data pipelines toward an
 
 See [[unbundling-databases]] and [[derived-data]] for the broader vision of stream-centric application architecture.
 
+## Historical precursor: Google Workflow (SRE Ch 25)
+
+SRE Chapter 25 (Dan Dennison) describes a Google internal system called [[google-workflow|Workflow]] that has been providing continuous data processing with exactly-once semantics since 2003 — predating the modern open-source stream-processing family by approximately a decade (source: raw/site-reliability-engineering/chapter-25-data-processing-pipelines.md). Structurally, Workflow is a stream-processing system: long-running stateless workers, a coordinator (the [[task-master|Task Master]]) holding job topology and progress, multi-stage pipelines via task groups, and strong correctness guarantees.
+
+The mapping to modern terminology:
+
+| Workflow concept (SRE Ch 25) | Modern stream-processing equivalent |
+|---|---|
+| [[task-master\|Task Master]] | Flink JobManager / Spark Driver / Kafka Streams broker-coordinated state |
+| Stateless workers | Flink TaskManagers / Spark executors / Kafka Streams instances |
+| Task groups (per pipeline stage) | Operator DAG nodes |
+| Lease + unique-filename + barrier guarantees | [[stream-processing-fault-tolerance\|checkpointing + atomic offset commits]] |
+| [[workflow-business-continuity\|Multi-cluster reference tasks]] | [[cross-cluster-replication\|MirrorMaker / Kafka cross-cluster replication]] |
+
+The Kleppmann text on stream processing is the contemporary public packaging of architectural intuitions Workflow developed in production a decade earlier. The SRE Ch 25 chapter is also the operational counterpart to this page's optimistic framing: it names the **failure modes of periodic batch pipelines** that motivated the move to continuous processing in the first place — see [[periodic-pipeline]] and the subordinate failure-mode pages ([[pipeline-uneven-work-distribution]], [[pipeline-thundering-herd]], [[moire-load-pattern]]).
+
 ## Related pages
 
 - [[event-streams]]
@@ -97,3 +113,8 @@ See [[unbundling-databases]] and [[derived-data]] for the broader vision of stre
 - [[data-integration]]
 - [[lambda-architecture]]
 - [[exactly-once-semantics]]
+- [[google-workflow]]
+- [[task-master]]
+- [[continuous-data-processing]]
+- [[periodic-pipeline]]
+- [[data-processing-pipelines]]

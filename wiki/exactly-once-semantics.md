@@ -2,9 +2,9 @@
 
 **Summary**: Arranging a computation so that the final effect is the same as if no faults had occurred, even if operations were retried due to failures -- achieved primarily through idempotence and end-to-end operation identifiers rather than through infrastructure-level guarantees alone.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/site-reliability-engineering/chapter-25-data-processing-pipelines.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-17
 
 ---
 
@@ -53,6 +53,29 @@ For operations spanning multiple partitions (e.g., transferring money between tw
 
 This avoids [[two-phase-commit]] entirely. Single-object writes are atomic in almost all systems, so the request either appears in the log or it doesn't. Deterministic processing means duplicate instructions are identical and easily deduplicated (source: chapter-12-the-future-of-data-systems.md).
 
+## Workflow as a structural alternative (SRE Ch 25)
+
+Google's [[google-workflow|Workflow]] system, described in SRE Chapter 25 (Dan Dennison), achieves exactly-once semantics by a **structural** rather than defensive route (source: raw/site-reliability-engineering/chapter-25-data-processing-pipelines.md). Instead of "at-least-once + idempotent handlers + end-to-end operation IDs," Workflow's [[workflow-correctness-guarantees|four guarantees]] make exactly-once a property of the substrate:
+
+1. **Configuration tasks act as barriers** — workers can only commit if their result references the current configuration's task ID.
+2. **Lease-bound commits** — only the current lease holder can commit; orphaned workers' commits are rejected.
+3. **Unique output filenames** — orphaned workers and valid workers write to distinct files, so the orphan's output is unreferenced and harmless.
+4. **Server-token validation** — every operation checks that it is talking to the expected Task Master, defending against load-balancer misconfiguration and address collision.
+
+Critically, **Workflow does not require the application code to be idempotent**. Correctness comes from the substrate enforcing the four guarantees on every operation. This is the opposite design choice from Kleppmann's recommendation of "make operations idempotent" — both reach the same correctness destination, but by different paths and with different requirements on the surrounding ecosystem.
+
+The trade-off:
+
+| Aspect | Idempotence + operation IDs | Workflow's structural guarantees |
+|---|---|---|
+| Substrate requirement | General databases / brokers | Specialised Task Master with unique-and-immutable tasks |
+| Application code requirement | All handlers must be idempotent | None |
+| End-to-end operation IDs needed | Yes, for cross-stage dedup | No — leases serve the same role internally |
+| Suitable for heterogeneous systems | Yes | No — limited to inside the Workflow boundary |
+| Lineage | Open-source (Kafka, Flink, application code) | Google internal (2003) |
+
+The two approaches are complementary. End-to-end operation IDs are still useful for crossing the boundary into Workflow from external systems (HTTP requests, third-party APIs); inside the Workflow boundary, the structural guarantees do the work.
+
 ## Integrity through exactly-once processing
 
 Reliable exactly-once processing preserves [[timeliness-and-integrity|integrity]] in asynchronous [[derived-data|derived data]] systems through a combination of (source: chapter-12-the-future-of-data-systems.md):
@@ -75,3 +98,8 @@ Reliable exactly-once processing preserves [[timeliness-and-integrity|integrity]
 - [[event-sourcing]]
 - [[fencing-tokens]]
 - [[stream-processing]]
+- [[google-workflow]]
+- [[workflow-correctness-guarantees]]
+- [[task-master]]
+- [[continuous-data-processing]]
+- [[data-processing-pipelines]]

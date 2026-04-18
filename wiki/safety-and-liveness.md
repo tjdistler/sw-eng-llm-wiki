@@ -2,9 +2,9 @@
 
 **Summary**: Two categories of properties for distributed algorithms -- safety properties say "nothing bad happens" and must hold at all times, while liveness properties say "something good eventually happens" and are allowed to have caveats about fault conditions.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-08-the-trouble-with-distributed-systems.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-08-the-trouble-with-distributed-systems.md`, `raw/site-reliability-engineering/chapter-23-managing-critical-state-distributed-consensus-for-reliability.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-17
 
 ---
 
@@ -33,9 +33,22 @@ The distinction helps deal with difficult [[system-models]] (source: designing-d
 
 The partially synchronous model requires that the system eventually returns to a synchronous state -- any period of network interruption lasts only a finite duration. This is what makes liveness properties achievable: the system can make progress once conditions improve, while safety is maintained throughout. (source: designing-data-intensive-applications, chapter 8)
 
+## Application to consensus (SRE Chapter 23)
+
+Laura Nolan applies the safety-vs-liveness distinction directly to the [[consensus]] problem as the operational explanation for how production systems sidestep the [[flp-impossibility|FLP impossibility result]]:
+
+> The protocols guarantee safety, and adequate redundancy in the system encourages liveness.
+
+(source: chapter-23-managing-critical-state-distributed-consensus-for-reliability.md)
+
+So consensus algorithms are designed so that **safety is absolute** (no two values ever committed for the same proposal, regardless of how pathological the network) and **liveness is conditional** (progress requires enough healthy replicas and acceptable network connectivity, which is why deployments pick [[consensus-replica-count|5 replicas]] rather than the bare minimum of 3, and why [[multi-paxos|leader-election timeouts]] use randomised backoffs to avoid [[multi-paxos|dueling-proposers]] livelock).
+
 ## Related pages
 
 - [[system-models]]
 - [[eventual-consistency]]
 - [[fencing-tokens]]
 - [[fault-tolerance]]
+- [[consensus]]
+- [[flp-impossibility]]
+- [[managing-critical-state]]

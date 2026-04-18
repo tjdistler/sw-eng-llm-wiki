@@ -2,9 +2,9 @@
 
 **Summary**: The fundamental problem of getting multiple nodes in a distributed system to agree on a value, despite node crashes and network faults -- equivalent to [[total-order-broadcast]], [[linearizability|linearizable compare-and-set]], and atomic commit, and solvable by algorithms such as Paxos, Raft, and Zab.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-09-consistency-and-consensus.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/designing-distributed-systems/chapter-09-ownership-election.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-09-consistency-and-consensus.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/designing-distributed-systems/chapter-09-ownership-election.md`, `raw/site-reliability-engineering/chapter-23-managing-critical-state-distributed-consensus-for-reliability.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -94,6 +94,24 @@ Chapter 12 expands on the relationship between consensus and uniqueness constrai
 
 Most consensus algorithms are designed for situations where a single node's throughput can process the entire event stream. They do not provide a mechanism for multiple nodes to share the work of ordering events. Designing consensus algorithms that scale beyond a single node and work well in geographically distributed settings remains an open research problem (source: chapter-12-the-future-of-data-systems.md).
 
+## Chapter 23 operational framing (SRE book)
+
+Laura Nolan's *Site Reliability Engineering* Chapter 23 is the operational companion to this page's theoretical framing. Her opening rule collapses the entire space of ad-hoc coordination mechanisms into a single instruction (source: chapter-23-managing-critical-state-distributed-consensus-for-reliability.md):
+
+> Whenever you see leader election, critical shared state, or distributed locking, we recommend using distributed consensus systems that have been formally proven and tested thoroughly. Informal approaches to solving this problem can lead to outages, and more insidiously, to subtle and hard-to-fix data consistency problems that may prolong outages in your system unnecessarily.
+
+The chapter's [[consensus-coordination-failures|three opening case studies]] are real outages caused by heartbeats, gossip, and human-escalated failover standing in for real consensus. See [[managing-critical-state]] for the chapter's hub.
+
+Three additional framings Chapter 23 sharpens:
+
+- **Crash-recover, not crash-fail.** Real production consensus systems must be *crash-recover* — tolerating nodes that leave and return — because "most problems in real systems are transient in nature due to a slow network, restarts, and so on." [[paxos|Paxos]] and its descendants are crash-recover (source: chapter-23-managing-critical-state-distributed-consensus-for-reliability.md).
+- **Non-Byzantine is the default.** [[byzantine-faults|Byzantine failures]] (nodes passing incorrect messages from bugs or adversaries) are "comparatively costly to handle, and less often encountered." Protocols for non-Byzantine failure only need 2f+1 replicas to tolerate f failures; Byzantine tolerance needs 3f+1.
+- **Safety is always; liveness is conditional.** The [[flp-impossibility|FLP impossibility result]] rules out bounded-time consensus in the purely asynchronous model. The production answer: ensure sufficient healthy replicas and network connectivity for progress "most of the time," and use randomised backoffs so retries don't cascade. "The protocols guarantee safety, and adequate redundancy in the system encourages liveness."
+
+Chapter 23 also catalogues the system-architecture patterns that sit on top of consensus primitives: [[replicated-state-machine|reliable replicated state machines]], [[reliable-replicated-datastore|reliable replicated datastores]], highly-available-processing via leader election, [[distributed-barrier|barriers]] and locks, [[reliable-distributed-queue|reliable distributed queuing]]. The shared design insight: the consensus algorithm itself is low-level and primitive; the useful abstractions are always a layer above, and the [[zookeeper|ZooKeeper]] / etcd / [[chubby|Chubby]] service-rather-than-library packaging is how most applications consume consensus in practice.
+
+The performance story — [[multi-paxos|stable leaders]], [[quorum-leases]], batching, pipelining, [[consensus-disk-access|disk-log optimisation]], [[mencius-epaxos|leaderless alternatives]] — is covered on [[consensus-performance]]. The deployment story ([[consensus-replica-count]], [[consensus-replica-placement]], [[quorum-composition]], [[hierarchical-quorums]]) and the operational monitoring story ([[consensus-monitoring]]) round out the chapter.
+
 ## Related pages
 
 - [[total-order-broadcast]]
@@ -110,3 +128,26 @@ Most consensus algorithms are designed for situations where a single node's thro
 - [[unbundling-databases]]
 - [[ownership-election-pattern]]
 - [[distributed-locks-on-kv-stores]]
+- [[managing-critical-state]]
+- [[consensus-coordination-failures]]
+- [[paxos]]
+- [[multi-paxos]]
+- [[fast-paxos]]
+- [[flp-impossibility]]
+- [[replicated-state-machine]]
+- [[reliable-replicated-datastore]]
+- [[distributed-barrier]]
+- [[atomic-broadcast]]
+- [[reliable-distributed-queue]]
+- [[consensus-performance]]
+- [[stable-leader]]
+- [[quorum-leases]]
+- [[consensus-read-optimisations]]
+- [[mencius-epaxos]]
+- [[consensus-disk-access]]
+- [[consensus-replica-count]]
+- [[consensus-replica-placement]]
+- [[quorum-composition]]
+- [[hierarchical-quorums]]
+- [[consensus-monitoring]]
+- [[chubby]]

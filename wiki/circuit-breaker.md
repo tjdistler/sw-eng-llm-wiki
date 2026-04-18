@@ -2,9 +2,9 @@
 
 **Summary**: A stability pattern (Michael Nygard, *Release It!*) that short-circuits calls to a failing downstream dependency so that a slow or broken service does not consume upstream resources and propagate failure. The breaker watches the failure rate, opens when it crosses a threshold, and after a cool-down probes with a single request before closing again.
 
-**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md`
+**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md`, `raw/site-reliability-engineering/chapter-21-handling-overload.md`, `raw/site-reliability-engineering/chapter-22-addressing-cascading-failures.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -99,6 +99,30 @@ Burns's Chapter 5 [[replicated-load-balanced-service]] stack does not name circu
 
 In a multi-service workflow implemented as a [[saga]], a circuit breaker on an outbound call can determine whether to trigger a compensating action or to queue the step for later. The breaker provides the fast binary signal — "this dependency is unavailable" — that the saga's orchestration logic can react to.
 
+### The Chapter 21 probabilistic alternative
+
+SRE Chapter 21 describes a functionally similar mechanism — [[adaptive-throttling]] — that sits in the same position as a circuit breaker (client-side, caps traffic to a downstream that is rejecting) but with a different policy shape:
+
+| Aspect | Classical circuit breaker | Adaptive throttling |
+|---|---|---|
+| State | Binary (open / closed / half-open) | Continuous (drop probability) |
+| Transition | Sharp on threshold | Smooth as rejection rate grows |
+| Recovery | Probe request at timer expiry | Automatic — probability decays with acceptance |
+| Tunable | Thresholds, timer | Single `K` multiplier (default 2) |
+
+Both cap the caller's waste on a failing downstream; both need an accurate signal of downstream failure; both make the shed-vs-serve decision with only local information. The classical breaker is coarser and more responsive; adaptive throttling is smoother and needs a steady request stream to stay calibrated. A system running in a steady-state overload scenario benefits more from adaptive throttling; a system that cares about sharp recovery from a brief outage benefits more from a breaker.
+
+Chapter 21's **"overloaded; don't retry"** response (see [[retry-budget]]) is a second point of comparison. When a backend detects widespread overload via its retry-count histograms, it returns this error to tell the caller "the problem is bigger than me." Structurally, this is the server side asking the client to treat the circuit as open: an explicit signal that further retries won't help. Where a classical breaker opens on repeated *caller-observed* failures, the Chapter 21 mechanism has the server emit an explicit signal directly. The two mechanisms converge on the same outcome by different routes.
+
+### Circuit breakers as cascade defence (Chapter 22)
+
+SRE Chapter 22 doesn't name the circuit-breaker pattern explicitly, but its [[retry-amplification]] and [[intra-layer-communication]] sections develop exactly the failure modes circuit breakers are designed to break (source: chapter-22-addressing-cascading-failures.md). Chapter 22 frames the same mechanism from a different angle:
+
+- The "overloaded; don't retry" backend response (see [[retry-budget]]) is a server-initiated circuit break — the server tells the client to stop calling, structurally similar to the client observing enough failures to open the breaker itself.
+- The chapter's "retry only at the layer immediately above" rule is what prevents circuit-breaker state from stacking — if every layer has its own breaker and every layer retries, the breakers are solving the retry-amplification problem locally but still producing 3^N aggregate retries.
+
+The broader Chapter 22 warning is worth noting: the chapter closes by observing that **adding retries is one of the changes that improves the normal case but increases cascading-failure risk**. Circuit breakers address this directly by bounding how much damage those retries can do.
+
 ### And robustness vs resilience
 
 Newman places circuit breakers firmly on the **robustness** side of the [[robustness-vs-resilience]] distinction: they handle a known, anticipated failure mode. He puts this bluntly in the same section: "resiliency is more than just implementing a few patterns. It's about a whole way of working—building an organization that not only is ready to handle the unforeseeable problems that will inevitably crop up, but also evolves working practices as necessary" (source: raw/monolith-to-microservices/chapter-05-growing-pains.md). The resilience side — learning from incidents, evolving the configuration, running game days — is what keeps the breaker's thresholds useful over time.
@@ -116,3 +140,9 @@ Newman places circuit breakers firmly on the **robustness** side of the [[robust
 - [[saga]]
 - [[partial-failures]]
 - [[desired-state-management]]
+- [[adaptive-throttling]]
+- [[retry-budget]]
+- [[handling-overload]]
+- [[cascading-failure]]
+- [[retry-amplification]]
+- [[intra-layer-communication]]

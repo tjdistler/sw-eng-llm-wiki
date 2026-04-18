@@ -2,9 +2,9 @@
 
 **Summary**: Remote Procedure Call (RPC) tries to make a network request look like a local function call. This abstraction is fundamentally leaky — networks behave very differently from local function calls — and the attempt to hide that difference causes subtle bugs. Modern RPC frameworks are more explicit about the difference; REST rejects the abstraction entirely.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`, `raw/site-reliability-engineering/chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-17
 
 ---
 
@@ -77,6 +77,18 @@ The compatibility properties are inherited from the encoding format:
 
 When a service is public or crosses organizational boundaries, the provider has no control over clients and cannot force upgrades. Compatibility must be maintained for a long time — possibly indefinitely. This often requires maintaining multiple API versions side by side.
 
+## RPC as the default inside Google
+
+The SRE book's Chapter 2 frames RPC use at Google more aggressively than Kleppmann's "when you need it" stance (source: site-reliability-engineering, chapter 2):
+
+> Often, an RPC call is made even when a call to a subroutine in the local program needs to be performed. This makes it easier to refactor the call into a different server if more modularity is needed, or when a server's codebase grows.
+
+All Google services communicate via [[stubby|Stubby]], whose open-source release is gRPC; data on the wire is [[protocol-buffers|protocol-buffer]]-encoded. [[gslb|GSLB]] load-balances RPCs the same way it load-balances externally visible services. The SRE book also inverts the usual RPC vocabulary: inside a service, the caller is the **frontend** (client) and the callee is the **backend** (server), regardless of who is browser-facing.
+
+The Google style is a design stance in favour of [[independent-deployability]]: even in-process modularity gets expressed as an RPC boundary so it can later be moved across machines without refactoring.
+
+SRE Chapter 20 further shows that Stubby is not just a wire protocol: it also implements [[backend-task-states|backend state propagation]] (including [[lame-duck-state|graceful shutdown via lame duck]]), [[subsetting|per-client backend subsetting]], and [[load-balancing-policies|client-side load balancing]] culminating in [[weighted-round-robin]]. These are "RPC framework responsibilities" in Google's stance, not per-service concerns — which is what lets [[change-management-sre|rolling deployments]] be non-disruptive across every Google service by default.
+
 ## Related pages
 
 - [[backward-forward-compatibility]]
@@ -85,3 +97,6 @@ When a service is public or crosses organizational boundaries, the provider has 
 - [[message-brokers]]
 - [[microservices]]
 - [[idempotence]]
+- [[stubby]]
+- [[protocol-buffers]]
+- [[gslb]]

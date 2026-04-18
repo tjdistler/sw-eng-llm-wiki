@@ -9,6 +9,7 @@
 | [[designing-distributed-systems]] | Book by Brendan Burns — concepts, organization, and ingestion status |
 | [[fundamentals-of-software-architecture]] | Book by Mark Richards & Neal Ford — concepts, organization, and ingestion status |
 | [[building-event-driven-microservices]] | Book by Adam Bellemare — concepts, organization, and ingestion status |
+| [[site-reliability-engineering]] | Book edited by Beyer, Jones, Petoff & Murphy — concepts, organization, and ingestion status |
 
 ## Architecture fundamentals
 
@@ -455,6 +456,75 @@ The ninth Part II style — microservices — is catalogued in *Microservices fu
 | [[cap-theorem]] | Linearizability vs availability during partitions; historically important but practically limited |
 | [[state-machine-replication]] | Deterministic replicas processing same operations in same order stay consistent |
 | [[zookeeper]] | Coordination service: consensus-based primitives, failure detection, leader election |
+| [[managing-critical-state]] | SRE Ch 23 hub: consensus as the answer to leader election, critical shared state, distributed locking, group membership, and reliable queuing |
+| [[consensus-coordination-failures]] | SRE Ch 23's three opening case studies: STONITH-via-heartbeats split-brain, human-escalated failover that doesn't scale, gossip-based membership under partition |
+| [[paxos]] | Lamport's 1998 protocol: sequence numbers + majority-quorum overlap; safe but agrees on one value once |
+| [[multi-paxos]] | Stable-leader Paxos; one RTT steady-state; dueling-proposers livelock on re-election |
+| [[fast-paxos]] | Client-to-acceptor direct sends; sometimes slower because of the latency-tail effect; hard to batch |
+| [[flp-impossibility]] | The 1985 result that bounded-time asynchronous consensus is impossible; how production systems sidestep it |
+| [[stable-leader]] | The Multi-Paxos/Zab/Raft design pattern; three liabilities (non-local latency, leader bandwidth, leader machine) |
+| [[mencius-epaxos]] | Rotating-leader (Mencius) and leaderless (EPaxos) alternatives for wide-area workloads |
+| [[replicated-state-machine]] | The deliberate architectural layer above consensus; any deterministic program can be made HA as an RSM |
+| [[reliable-replicated-datastore]] | Consensus in the critical path of every write; the ZooKeeper/etcd/Chubby packaging |
+| [[distributed-barrier]] | RSM-backed primitive blocking a group until a condition is met; MapReduce phase boundary as the canonical case |
+| [[atomic-broadcast]] | Reliable + totally-ordered delivery; Chandra-Toueg equivalence to consensus |
+| [[reliable-distributed-queue]] | Queue as RSM; lease-based task claiming; work-distribution vs publish-subscribe shapes |
+| [[consensus-performance]] | Workload and deployment axes; the optimisation menu — leaders, leases, batching, disk-log combining |
+| [[quorum-leases]] | Read-lease optimisation for geographically concentrated read-heavy workloads |
+| [[consensus-read-optimisations]] | Four options for strongly-consistent reads: consensus read, leader read, quorum lease, stale replica |
+| [[consensus-disk-access]] | The durable-log bottleneck; combine RSM and consensus logs; batch to amortise disk cost |
+| [[consensus-replica-count]] | 2f+1 tolerates f failures; 3 is floor, 5 is practical; why losing quorum is (in theory) unrecoverable |
+| [[consensus-replica-placement]] | Failure domains vs latency; the rule that you shouldn't be more geographically robust than your clients |
+| [[quorum-composition]] | Linchpin placements across continents; drastic latency jump on linchpin loss |
+| [[hierarchical-quorums]] | Majority-of-groups plus majority-of-members; mitigates the flat-quorum linchpin weakness |
+| [[consensus-monitoring]] | Member health, lagging replicas, leader existence, leader-change rate, transaction number, proposals |
+
+## Distributed scheduling
+
+| Page | Description |
+|---|---|
+| [[distributed-cron]] | SRE Ch 24 hub: Google's datacenter-wide cron service; Paxos-replicated state, Fast-Paxos leader as service leader, Borg as backing scheduler, per-datacenter scope sharing fate with Borg |
+| [[cron-reliability-challenges]] | Ch 24 — what changes when cron goes distributed: multiple failure domains, container isolation, partial launch failures, diverse replica placement, per-datacenter-not-global scope |
+| [[cron-idempotency-and-skip-vs-double-launch]] | Ch 24 — cron jobs span idempotent/non-idempotent and skippable/not-skippable; the fail-closed default (skip rather than double-launch) because skipped launches are usually recoverable while double launches often are not |
+| [[cron-leader-follower]] | Ch 24 — Paxos leader holds mutual exclusion to the datacenter scheduler; launches bracketed by synchronous about-to-launch and launch-completed Paxos records; on lost leadership the leader must immediately stop talking to the datacenter scheduler |
+| [[cron-partial-failure-resolution]] | Ch 24 — precomputed datacenter-scheduler job names plus scheduled launch time embedded in the name; state lookup on the downstream scheduler as the resolution mechanism; idempotence-or-lookup as the implementation-independent requirement |
+| [[cron-state-storage]] | Ch 24 — Paxos logs on local disk only (three copies), snapshots on local disk *and* distributed filesystem; the asymmetric backup strategy from the observation that losing logs is bounded-time loss while losing snapshots is unrecoverable |
+| [[cron-thundering-herd]] | Ch 24 — the `?` crontab extension: "any value is acceptable", chosen by hashing the job configuration to distribute launches stably across the range; mitigates the midnight-daily synchronised MapReduce spawn |
+
+## Data processing pipelines
+
+| Page | Description |
+|---|---|
+| [[data-processing-pipelines]] | SRE Ch 25 hub: the operational pathology of large-scale periodic data pipelines and Google's continuous-processing alternative; the periodic-vs-continuous architectural choice point |
+| [[periodic-pipeline]] | Ch 25 — cron-scheduled chained-program design pattern; the depth metric; stable when carefully tuned, fragile under organic growth; the catalogue of failure modes that compound |
+| [[pipeline-uneven-work-distribution]] | Ch 25 — the hanging chunk problem: end-to-end runtime capped by largest chunk; standard kill-and-restart wastes all completed work because pipelines have no checkpointing |
+| [[pipeline-batch-scheduling-drawbacks]] | Ch 25 — periodic pipelines as low-priority batch jobs: open-ended startup latency, preemption risk, and the execution-frequency floor below which scheduling more often produces overlapping or aborted runs |
+| [[pipeline-monitoring-problems]] | Ch 25 — collect-during-report-on-completion is a structural blind spot: jobs that fail mid-run produce no statistics; continuous pipelines escape this by construction |
+| [[pipeline-thundering-herd]] | Ch 25 — synchronised worker spawn at start-of-cycle; engineers adding workers to compensate makes the next cycle's herd worse; only fix that addresses the root is to stop being periodic |
+| [[moire-load-pattern]] | Ch 25 — multi-pipeline generalisation: pipelines whose schedules drift into occasional alignment produce aggregate spikes on shared resources; visible only in stacked plots |
+| [[google-workflow]] | Ch 25 — Google's 2003 continuous data processing system: leader-follower + system prevalence + MVC framing; Task Master as model, stateless workers as view, optional controller for runtime concerns |
+| [[task-master]] | Ch 25 — the in-memory model at the heart of Workflow: holds all job state in RAM for fast access, synchronously journals mutations to disk; holds only pointers to work with bulk data in a distributed filesystem |
+| [[system-prevalence-pattern]] | Ch 25 — the storage technique Task Master uses: in-memory model + synchronous mutation journal + periodic snapshots; conceptually identical to Redis AOF, event-sourcing, in-memory databases with WAL |
+| [[workflow-correctness-guarantees]] | Ch 25 — the four structural mechanisms for exactly-once semantics: configuration tasks as barriers, lease-bound commits, unique output filenames, server-token validation; correctness without requiring idempotent payloads |
+| [[workflow-business-continuity]] | Ch 25 — multi-cluster pattern for surviving datacenter loss: local Workflows in distinct clusters plus a global Workflow holding reference tasks; Spanner-backed with Chubby-elected writers |
+| [[continuous-data-processing]] | Ch 25 — the architectural alternative the chapter advocates: workers never stop running, work flows in continuously rather than per-cycle; structurally avoids each periodic-pipeline failure mode |
+
+## Data integrity
+
+| Page | Description |
+|---|---|
+| [[data-integrity-sre]] | SRE Ch 26 hub — user-perspective definition; the 24-hour "too long" threshold; 99.99% good bytes is catastrophic; three-layer defence; two case studies; five closing principles |
+| [[data-availability-vs-integrity]] | Ch 26 — data integrity is the means, data availability is the goal; users can't distinguish loss, corruption, and extended unavailability |
+| [[data-integrity-failure-modes]] | Ch 26 — the 24 combinations: root cause × scope × rate; Google's empirical finding that app-bug creeping loss dominates; point-in-time recovery |
+| [[defense-in-depth-data]] | Ch 26 — the three-layer architecture ([[soft-deletion]] + [[tiered-backup-strategy|backups]] + [[data-validation-pipelines|validators]]); replication as overarching optimisation, never a substitute |
+| [[soft-deletion]] | Ch 26 layer 1 — trash folder / admin undelete / developer lazy deletion; 15-60 day retention windows; Blobstore's default tombstones |
+| [[backups-vs-archives]] | Ch 26 — the distinction (backups are loadable, archives aren't); the "nobody wants backups, they want restores" maxim; designing backward from the recovery requirement |
+| [[tiered-backup-strategy]] | Ch 26 layer 2 — local snapshots + distributed-filesystem + offsite tape; retention and restore-time trade-offs; point-in-time recovery; the 1T vs 1E scale argument (trust points, horizontal sharding); redundancy codes and media isolation |
+| [[data-validation-pipelines]] | Ch 26 layer 3 — out-of-band MapReduce/Hadoop validators; Google Drive's 2013 auto-repair transformation; engineering-velocity payoff; tiered validation and central-framework organisation |
+| [[recovery-testing]] | Ch 26 — the light-bulb analogy; why manual annual DiRT isn't enough; the five things a recovery test must confirm; continuous automation as the only reliable discipline |
+| [[gmail-gtape-restore]] | Ch 26 case study — February 2011 first large-scale GTape restore; 99%+ data recovered within estimated window; tape as media diversity |
+| [[google-music-runaway-deletion]] | Ch 26 case study — March 2012 runaway deletion; 600,000 audio references deleted for 21,000 users; 5,475 tape restores, 1.5 PB, 7 days; the race-condition root cause |
+| [[data-integrity-principles]] | Ch 26 closing — the five principles (beginner's mind, trust but verify, hope is not a strategy, defence in depth, revisit and reexamine); the N→0 recovery-time aspiration |
 
 ## Batch processing
 
@@ -646,3 +716,325 @@ The ninth Part II style — microservices — is catalogued in *Microservices fu
 | [[timeliness-and-integrity]] | Two requirements conflated under "consistency"; decoupling them |
 | [[coordination-avoidance]] | Maintaining integrity without synchronous coordination |
 | [[data-ethics]] | Predictive analytics bias, surveillance, privacy, consent, engineer responsibility |
+
+## Site Reliability Engineering
+
+| Page | Description |
+|---|---|
+| [[sre-discipline]] | SRE is what happens when you ask a software engineer to design an operations team; hiring split, the bored-by-manual-work filter, sublinear scaling |
+| [[sysadmin-approach]] | The industry-standard alternative SRE replaces; direct and indirect costs; the structural dev-vs-ops conflict and its trench warfare |
+| [[devops-vs-sre]] | Treynor Sloss's framing — DevOps as generalisation, SRE as a specific (more opinionated) implementation |
+| [[sre-tenets]] | Hub for the eight core responsibilities: availability, latency, performance, efficiency, change, monitoring, emergency response, capacity planning |
+| [[error-budget]] | 100% is the wrong reliability target; the SLO's unavailability share is a budget spent on velocity; the mechanism that dissolves the dev-vs-ops conflict |
+| [[service-level-objective]] | The reliability target; a product decision, not a technical one; the denominator from which error budgets derive |
+| [[toil-and-engineering-balance]] | The 50% cap on operational work; the safety-valve feedback loop; automatic not just automated; the two-events-per-shift on-call target; Ch 5's six toil characteristics, the on-call arithmetic floor, ranked toil sources, and the personal/organisational harms of excess toil |
+| [[engineering-work-categories]] | Ch 5's four-way time accounting (software engineering, systems engineering, toil, overhead); which count toward the 50% engineering half and the boundary-case rules (grungy-but-permanent, manually-run scripts, first/second-time work) |
+| [[blameless-postmortem]] | Surfacing faults without blame; significant-incident postmortems whether they paged or not; non-paging postmortems as monitoring-gap signals |
+| [[mttr-and-mttf]] | Reliability as a function of mean time to failure and mean time to repair; why lowering MTTR (by removing humans) often beats lowering failure frequency |
+| [[emergency-response]] | The MTTR-focused tenet; humans add latency; the ~3x advantage of a practised on-call engineer with a playbook |
+| [[on-call-playbook]] | Documented troubleshooting steps ahead of the incident; Wheel of Misfortune drills |
+| [[change-management-sre]] | 70% of outages come from change; the automation trio — progressive rollouts, fast detection, safe rollback |
+| [[capacity-planning]] | Organic + inorganic demand forecasting; load-testing to correlate raw to service capacity; why SRE owns it |
+| [[provisioning]] | The intersection of change management and capacity planning; quickly and only when necessary; riskier than load shifting |
+| [[sre-efficiency]] | Resource use as a function of demand, capacity, and software efficiency; SRE's control of provisioning as the lever |
+| [[sre-monitoring-outputs]] | The only three valid monitoring outputs: alerts, tickets, logs; email-alert-requires-interpretation as the named anti-pattern |
+| [[risk-management-sre]] | Chapter 3's framing: risk as a continuum, nonlinear cost, two cost dimensions (redundancy + opportunity), the availability target as both minimum and maximum |
+| [[availability-measurement]] | Time-based `uptime/(uptime+downtime)` vs Google's request-success-rate formula; generalisation to non-serving systems; quarterly targets tracked weekly/daily |
+| [[risk-tolerance]] | Consumer services (availability, failure shape, cost, non-availability metrics; Google Apps for Work vs YouTube; the $900 nine; ISP background error rate) and infrastructure services (partition by service level; Bigtable low-latency vs throughput clusters; externalise cost to clients) |
+| [[service-level-indicator]] | SLI as the metric; direct vs proxy; server-vs-client-side collection; four service-type SLI sets; pick a handful; availability as yield; nines |
+| [[service-level-agreement]] | The explicit-or-implicit contract with consequences; the "what happens if the SLOs aren't met?" test; SRE's role in avoiding breaches and defining measurable SLIs; Google Search vs Google for Work |
+| [[sli-aggregation]] | Windows, percentiles vs averages; 200-req/even-sec burst example; tail-hidden-by-average; Ch 4 statistical-fallacy warnings against assuming normal distributions |
+| [[sli-standardization]] | The six-dimension template (interval, region, frequency, filter, source, latency-definition) that collapses SLI specs from paragraphs to sentences |
+| [[slo-expectations]] | Publishing SLOs sets expectations; over-reliance vs under-reliance; safety margin and don't-overachieve tactics; Chubby's synthesized planned outages |
+| [[four-golden-signals]] | Ch 6's canonical metrics: latency (success and failure separately), traffic, errors (explicit/implicit/by-policy), saturation (with leading-indicator-via-tail-latency and imminent-saturation predictions); the "measure these four and you're at least decently covered" rule |
+| [[symptoms-vs-causes]] | Ch 6's "what vs why" distinction — the single biggest lever for monitoring signal/noise; page on symptoms, debug with causes; one layer's symptom is another's cause in multi-layer systems |
+| [[black-box-vs-white-box-monitoring]] | External user-view probing vs internal-metric instrumentation; Google's heavy-white-box plus modest-critical-black-box mix; why black-box is always symptom-oriented and white-box sometimes-symptom-sometimes-cause |
+| [[alert-philosophy]] | Ch 6's four principles (urgent / actionable / intelligent / novel) and five-question checklist for new alerts; the Bigtable over-alerting and Gmail rote-response case studies; pager fatigue as the cost of noise |
+| [[long-tail-latency]] | Why histograms beat means — the 1%-at-5-seconds example; exponential bucket boundaries; error-latency-separately; tail as leading indicator of saturation; the Bigtable mean-to-75th-percentile switch |
+| [[monitoring-resolution]] | Matching measurement granularity to the question; the server-local sampling into buckets plus external minute-granularity aggregation trick; when not to go high-frequency |
+| [[monitoring-simplicity]] | The complexity trap (alerts on every percentile, dashboards for every cause); three pruning rules; avoid magic; limit dependency hierarchies; keep monitoring/profiling/log-analysis as distinct loosely-coupled systems |
+| [[automation-at-google]] | Ch 7 hub: five values of automation (consistency, platform, faster repairs, faster action, time saving); the five-level hierarchy; three case studies (MoB, cluster turnup, Borg); autonomous-system argument; reliability-is-the-fundamental-feature closing |
+| [[hierarchy-of-automation-classes]] | The five-level path: no automation → externally maintained system-specific → externally maintained generic → internally maintained system-specific → autonomous; bit rot and maintainer-incentive arguments for why level 4 beats level 3 |
+| [[autonomous-systems]] | Level 5 in detail: automatic-vs-automated, the CPU analogy, preconditions (decoupled subsystems, APIs, minimised side effects, self-introspection), operator-skill-atrophy failure mode |
+| [[mysql-on-borg]] | Ch 7 case study: Decider reduced MySQL failover from 30-90 min to under 30 s 95% of the time; 95% ops-work drop, 60% hardware freed; platform-over-script as the lesson |
+| [[cluster-turnup-automation]] | Ch 7 case study: shell scripts → Prodtest → idempotent fixes → dedicated turnup team (specialisation trap) → Service-Oriented Architecture with per-service Admin Server RPCs |
+| [[prodtest]] | Python unit tests extended to validate real services; dependency-aware chains; paired idempotent fix scripts; the forerunner of modern reconciliation-loop automation |
+| [[automation-gone-wrong]] | Ch 7 cautionary tales: the Bigtable disk-zero wipe and Diskerase CDN-wide erase; implicit-safety-signal failure; rate-limiting / audit trails / workflow idempotence as mitigations |
+| [[release-engineering]] | Ch 8 hub: the named engineering discipline for building and delivering software; the release-engineer role; four guiding principles; the Rapid + Blaze + MPM + Sisyphus tooling stack; branching and configuration management; start-at-the-beginning and "not-just-for-Googlers" lessons |
+| [[release-engineering-principles]] | Ch 8's four principles: self-service, high velocity, hermetic builds, policy enforcement; how they reinforce each other |
+| [[self-service-release-model]] | Principle 1 — teams run their own releases; release engineering provides tools, documentation, defaults, and telemetry; the structural reason the model scales at Google |
+| [[high-release-velocity]] | Principle 2 — frequent releases mean fewer changes per version; hourly builds with selective deployment vs push-on-green; velocity as a consequence of everything else in the chapter |
+| [[hermetic-builds]] | Principle 3 — builds insensitive to the machine; same revision + versioned build tools = identical output; the property that makes cherry-picking onto old branches safe and release audits trustworthy |
+| [[release-policy-enforcement]] | Principle 4 — layered access control on the six gated release operations; CL review as first layer; auto-generated release change report for SRE troubleshooting |
+| [[rapid-release-system]] | Ch 8 — Google's automated release system; blueprints, workflows, Borg-resident task executors; typical release flow (branch, build-and-test, system-test-and-canary, report); handoff to Sisyphus for complicated rollouts |
+| [[blaze-bazel]] | Ch 8 — Google's build tool, open-sourced as Bazel; declarative build targets with explicit dependency graphs; the mechanism behind hermetic builds |
+| [[midas-package-manager]] | Ch 8 — MPM: named, hash-versioned, signed packages; movable labels (dev / canary / production) as the promotion primitive; configuration packages |
+| [[sisyphus]] | Ch 8 — SRE-developed general-purpose rollout automation framework; Python classes plus dashboard; rollout paced to the risk profile of the service |
+| [[release-branching-and-cherry-picking]] | Ch 8 — branch-from-mainline, never-merge-back, cherry-pick-fixes model; what makes each release's contents precisely known; needs hermetic builds and branch-test reruns |
+| [[configuration-management-sre]] | Ch 8 — four models for distributing configuration files (mainline, bundled-in-MPM, separate MPM config package, external store); the two universal rules (in-repo + strict code review) |
+| [[push-on-green]] | Ch 2 / Ch 8 — every build that passes all tests is automatically deployed; preconditions (hermetic builds, test coverage, change-management trio, error budget); the endpoint of the high-velocity logic chain |
+| [[simplicity-sre]] | Ch 9 hub: software simplicity as a prerequisite to reliability; the stability-vs-agility tension; boring as a virtue; deleting code; minimal APIs; modularity and loose coupling between binaries; release simplicity; Hoare's Turing-lecture epigraph |
+| [[system-stability-vs-agility]] | Ch 9 — the governing tension; the vacuum thought experiment; reliable processes actually increase developer agility; exploratory coding as a deliberate imbalance |
+| [[virtue-of-boring]] | Ch 9 — boring is a desirable property of source code; Muth's "unlike a detective story" quote; Brooks's essential-vs-accidental framing; the SRE mandate to push back on accidental complexity |
+| [[negative-lines-of-code]] | Ch 9 — every line in a 24/7 service is a liability; deleting dead code as a high-value activity; the three bad objections (keep for later / comment out / flag) and their answers; the Knight Capital cautionary tale |
+| [[minimal-apis]] | Ch 9 — Saint-Exupery's "no longer anything to take away"; small APIs as the hallmark of a well-understood problem; the connection to Newman's expose-as-little-as-possible rule |
+| [[release-simplicity]] | Ch 9 — simple releases are better than complicated releases; the gradient-descent analogy; the convergence of the Ch 8 high-velocity and Ch 9 simplicity arguments |
+| [[varz-endpoints]] | Ch 10 — Google's standardised `/varz` HTTP metrics exposition format; plain-text key/value pairs, mapped variables for labels; auto-registered in every Google binary; the interface Prometheus inherited essentially unchanged |
+| [[time-series-arena]] | Ch 10 — Borgmon's in-memory store of `(timestamp, value)` tuples indexed by labelset; horizon, ~24 bytes per point, ~12 hours typical sizing; older data archived to an external TSDB |
+| [[borgmon-rules]] | Ch 10 — Borgmon's algebraic rule language; counters over gauges; sum-of-rates-not-rate-of-sums; aggregation as the cornerstone; the `agg:var:op` naming convention; unit-tested and CI-shipped rule config |
+| [[alertmanager]] | Ch 10 — centrally-run alert routing service; deduplicates, inhibits, groups, fans in/out; realises the [[sre-monitoring-outputs]] three-bucket routing; name and design inherited by Prometheus |
+| [[prober]] | Ch 10 — Google's black-box monitoring tool; protocol checks with payload validation; alerts directly or via its own `/varz`; probes both in front of and behind the load balancer to distinguish localised vs user-visible failure |
+| [[monitoring-topology-sharding]] | Ch 10 — the Borgmon hierarchy (scraper shards / DC aggregators / global aggregators); streaming protocol between tiers; filtered pull-up; why two global replicas |
+| [[prometheus-connection]] | Ch 10 — explicit genealogy from Borgmon to Prometheus and friends (Riemann, Heka, Bosun); what carried over (pull model, rule language, Alertmanager, federation) and what didn't (BNS, auto-varz, internal CI) |
+| [[sre-on-call-engagement]] | Ch 11 — SRE engagement model for on-call; paging response times (5 min / 30 min); primary and secondary rotation patterns; guardian-of-production framing |
+| [[balanced-on-call]] | Ch 11 — the two axes (quantity, quality); 25% on-call sub-cap; 8-engineer single-site / 6-engineer dual-site arithmetic; 6-hour-per-incident average → 2-incidents-per-12-hour-shift upper bound |
+| [[on-call-compensation]] | Ch 11 — time-off or cash, capped at a salary fraction; the cap as the structural limit that prevents individual overload and burnout |
+| [[multi-site-on-call]] | Ch 11 — follow-the-sun rotations preferred once a service justifies growth; night shifts harmful; coordination overhead as the trade-off |
+| [[incident-response-mindset]] | Ch 11 — Kahneman intuitive vs rational; stress hormones (cortisol, CRH) impair cognition; confirmation bias as the named trap; escalation paths, incident-management protocol, and blameless postmortems as supporting resources |
+| [[operational-overload]] | Ch 11 — measurable overload symptoms; misconfigured monitoring as the common cause; alert fan-out control; give-back-the-pager as last-resort escape hatch; SRE-dev balance of powers |
+| [[operational-underload]] | Ch 11 — the treacherous enemy; confidence drift and knowledge gaps surfaced only by incidents; remedies: team sizing (on-call at least 1-2x per quarter), Wheel of Misfortune, DiRT |
+| [[troubleshooting-model]] | Ch 12 hub — the six-step loop (problem report → triage → examine → diagnose → test/treat → cure); hypothetico-deductive framing; stop-the-bleeding rule; Shakespeare running example; App Engine whitelist-caching case study |
+| [[hypothetico-deductive-debugging]] | Ch 12 — debugging as scientific method; observations + theoretical basis + iteration; knowing what you know / don't know / need to know; system knowledge as the accelerator; the five-whys connection |
+| [[triage-sre]] | Ch 12 — fly-the-airplane-first rule; emergency options (divert, drop, disable, freeze); preserve evidence while mitigating; counterintuitive for product-development transplants |
+| [[troubleshooting-anti-patterns]] | Ch 12 — the four common pitfalls; horses-not-zebras; Occam vs Hickam; correlation is not causation; latching onto past causes; naming as the antidote |
+| [[divide-and-conquer-debugging]] | Ch 12 — simplify-and-reduce; bisection vs linear scan; ask what/where/why with the Spanner regex worked example; "what touched it last" |
+| [[test-and-treat]] | Ch 12 — rule-in/rule-out experiments; five considerations (mutual exclusivity, likelihood ordering, confounds, side effects, suggestive tests); written notes; reversibility of active tests |
+| [[negative-results]] | Ch 12 sidebar (Bosetti) — disconfirming experiments are conclusive; web-server-lock-contention worked example; tools outlive the experiment; the data-driven culture argument; publish-including-failure as postmortem culture generalised |
+| [[making-troubleshooting-easier]] | Ch 12 — design-time disciplines that reduce MTTR: observability from the ground up; well-defined observable interfaces; consistent request IDs; simplify/control/log changes |
+| [[test-induced-emergency]] | Ch 13 case study — proactive MySQL dependency test blows up; rollback was never rehearsed; the then-new incident-response process hadn't been disseminated; rule: thoroughly test rollback procedures before large-scale tests |
+| [[change-induced-emergency]] | Ch 13 case study — Friday abuse-protection config push crash-loops external Google services and internal tooling; saved by push engineer watching chat, out-of-band communication, and CLI fallback tools; canary must match the combinatorial surface, not the apparent risk |
+| [[process-induced-emergency]] | Ch 13 case study — Diskerase CDN wipe retold from the response side; traffic drain, automation freeze, three-day phased manual rebuild; recovery infrastructure is a system in its own right |
+| [[learning-from-outages]] | Ch 13 closing — keep a written history of outages; ask the big, improbable questions; encourage proactive testing; follow-through on action items as the accountability rule; "an incident is closed when the follow-ups land" |
+| [[incident-management-framework]] | Ch 14 hub — Google's adaptation of FEMA's Incident Command System; the five elements (recursive role separation, named roles, command post, live incident document, handoff); the unmanaged vs managed narrative contrast; best practices |
+| [[incident-command-system]] | Ch 14 — FEMA NIMS / FIRESCOPE-derived emergency-response framework; modular, scalable, common-terminology; the source Google adapted; what kept and what was dropped |
+| [[unmanaged-incident-anti-patterns]] | Ch 14 — sharp focus on the technical problem, poor communication, freelancing; structural failure modes the framework is designed to defeat; everyone-is-doing-their-job framing |
+| [[recursive-separation-of-responsibilities]] | Ch 14 — the organising principle; clear boundaries increase autonomy; IC holds everything not delegated; vertical (sub-incidents) and horizontal (system components) recursion |
+| [[incident-commander]] | Ch 14 — the apex coordinating role; structures the response, holds high-level state, removes roadblocks; default holder of every undelegated position |
+| [[incident-ops-lead]] | Ch 14 — the technical hands-on role; the *only* group permitted to modify the system during an incident; the structural defence against freelancing |
+| [[incident-communications-lead]] | Ch 14 — public face of the response; periodic updates to the team and stakeholders; may keep the incident document current; audience-appropriate framing |
+| [[incident-planning-lead]] | Ch 14 — longer-horizon support; bugs, dinners, handoffs, tracking deviations from the norm so they can be reverted |
+| [[recognized-command-post]] | Ch 14 — the known place (war room, IRC) for stakeholders to find the IC; reliability, log-as-byproduct, geographic-distribution as Google's IRC rationale; bots that log alerts to the channel |
+| [[live-incident-state-document]] | Ch 14 — IC's most important responsibility; concurrently editable (Google Docs); independent of the system being fixed (Google Docs SRE on Sites); messy-but-functional with important info at top; retained for postmortem |
+| [[incident-handoff]] | Ch 14 — explicit verbal "you're now the incident commander, okay?" with firm acknowledgment; broadcast to the team; aviation-cockpit derivation; follow-the-sun handoffs |
+| [[declaring-an-incident]] | Ch 14 — bias toward declaring early; three-question test (second team / customer-visible / unsolved after an hour); use the framework on planned operations to keep the muscle fresh |
+| [[postmortem-philosophy]] | Ch 15 hub — why postmortems exist (scale + velocity → inevitable incidents); three primary goals (document, understand root causes, put preventive actions in place); blameless foundation; not-a-formality framing; the compounding loop |
+| [[postmortem-triggers]] | Ch 15 — define criteria before the incident; common triggers (user-visible degradation, data loss, on-call intervention, resolution-time threshold, monitoring failure); stakeholder-requested postmortems; team flexibility with mandatory blamelessness |
+| [[postmortem-template]] | Ch 15 — Google Docs template (Appendix D); required capabilities (real-time collaboration, commenting, email notifications); metadata fields for trend analysis; Etsy's Morgue as the public-domain repository |
+| [[postmortem-review-process]] | Ch 15 — senior-engineer internal review; five review criteria (data, impact, root-cause depth, action plan, stakeholder sharing); "no postmortem left unreviewed" best practice; regular review sessions; transparent broad sharing |
+| [[postmortem-culture-activities]] | Ch 15 — postmortem of the month, Google+ postmortem group, reading clubs, Wheel of Misfortune reenactments; each targets a specific failure mode (filed-and-forgotten, authors-only audience, no external learning, knowledge-dies-with-responder) |
+| [[rewarding-postmortems]] | Ch 15 best practice — visibly reward people for doing the right thing; peer bonuses, TGIF public recognition, internal social networks; the four-minute-outage TGIF story; why fear removal alone is insufficient |
+| [[postmortem-feedback-surveys]] | Ch 15 best practice — ask for feedback on postmortem effectiveness; the four survey questions (culture, toil, best practices, tools); defence against process calcification; surveys as governance instrument |
+| [[postmortems-at-google-working-group]] | Ch 15 — central coordinating group for postmortem practice across Google; template stewardship, incident-tool integration, cross-product trend analysis; forward-looking ML workstreams (weakness prediction, real-time investigation, duplicate detection) |
+| [[outage-tracking]] | Ch 16 hub — the baseline-and-progress thesis; tracking every alert and outage as the breadth complement to per-incident postmortem depth; the two-layer Escalator/Outalator architecture; unexpected benefits (cross-team visibility, system-of-record uses) |
+| [[escalator]] | Ch 16 — centralised replicated paging system tracking ack/no-ack and auto-escalating on timeout; the transparent-email-copy design that let it integrate with existing workflows without forcing user or monitoring-system change |
+| [[outalator]] | Ch 16 — outage tracker built on Escalator; time-interleaved multi-queue view, original-notification storage, important-annotation affordance, grouping, tagging, reporting; dummy-Escalator system-of-record use for audit and non-idempotent periodic jobs |
+| [[incident-aggregation]] | Ch 16 — grouping multiple alerts into one logical incident; horizontal vs vertical fan-out; why "incidents per day" and "alerts per day" are distinct useful numbers; post-hoc archival counterpart to Alertmanager's real-time inhibition/dedup |
+| [[incident-tagging]] | Ch 16 — free-form colon-namespaced metadata (`cause:network:switch`, `bug:76543`, `bogus`); the avoid-predetermined-list design; `cause:` and `action:` primary prefixes; per-team suggested-prefix feedback loop; probably Outalator's most useful unique feature |
+| [[outage-analysis]] | Ch 16 — the three analytic layers (counting, comparison across time/teams, semantic cross-cutting); weekly report mode; shift-handoff email; surfacing over-performing infrastructure that warrants deliberate artificial failures; most-incidents-caused as starting-point-not-verdict |
+| [[testing-for-reliability]] | Ch 17 hub — testing as the mechanism for quantifying confidence in change; traditional vs production test taxonomy; zero-MTTR testing as the most potent reliability lever |
+| [[zero-mttr-testing]] | Ch 17 — system-level test applied to a subsystem that detects exactly what monitoring would detect, but at push time; blocks the bug from reaching users; raises user-experienced MTBF |
+| [[unit-tests]] | Ch 17 — smallest form of testing; verification and specification in one; the base of the traditional-test pyramid |
+| [[integration-tests]] | Ch 17 — assembled components with dependency-injected mocks; Dagger as the tool; controlled assembly |
+| [[system-tests]] | Ch 17 — largest-scale undeployed test; three flavours (smoke, performance, regression); the expensive batch tier |
+| [[smoke-tests]] | Ch 17 — very simple critical behaviour; short-circuits more expensive testing; the highest-impact first test for an untested codebase |
+| [[performance-tests]] | Ch 17 — guards against incremental degradation release over release; 8 GB → 32 GB memory, 10 ms → 100 ms response time |
+| [[regression-tests]] | Ch 17 — gallery of rogue bugs preserved as recurring assertions; bug-to-test conversion as the cultural practice |
+| [[configuration-test]] | Ch 17 — production test comparing checked-in config with the running config; inherently non-hermetic; distributed-monitoring input |
+| [[stress-tests]] | Ch 17 — find the catastrophic-failure cliff before production does; calibrates capacity planning and saturation thresholds |
+| [[canary-test]] | Ch 17 — not really a test, structured user acceptance; exponential rollout; mathematical framing for fault-order estimation (U=1 regression-testable, U≥2 not) |
+| [[testing-at-scale]] | Ch 17 — dependency-closure problem; release tests transitively depend on every object in the repository; Bazel's dependency graph enables selective rebuild-and-test |
+| [[testing-scalable-tools]] | Ch 17 — SRE tools need their own tests; barrier-protected tools vs mainstream-API tools vs automation tools; distinct testing profiles |
+| [[testing-automation-tools]] | Ch 17 — automation tools' purpose is an invisible side effect to another API client; tests verify the other layer's invariants; circular-dependency case (restart semantics, test coverage, independent checkpoint health) |
+| [[testing-disaster-recovery]] | Ch 17 — offline-checkpoint tools are easy to test; online repair tools operate outside the mainstream API and race against eventually-consistent state — significantly harder |
+| [[statistical-testing-techniques]] | Ch 17 — Lemon, Chaos Monkey, Jepsen; non-deterministic but useful; log the seed, refactor failures as release tests, escalate when later runs produce worse failures; the SRE-book's earliest chaos-engineering treatment |
+| [[test-flakiness-budget]] | Ch 17 — 21,000 tests × 2 (before and after patch) × 1% rejection tolerance → 99.9999% per-test reliability floor; flakiness at scale is structurally unaffordable |
+| [[testing-deadlines]] | Ch 17 — interactive (self-contained, seconds) vs batch (orchestrated, minutes-to-hours); the engineer's context-switch as the informal deadline |
+| [[break-glass-push]] | Ch 17 — emergency push before tests complete; don't disable tests, run them in parallel and back-annotate; boost test priority; file a bug for a more robust resolution |
+| [[build-system-discipline]] | Ch 17 — source control + continuous build + instant breakage notification + fix-the-build-first culture; stability drives agility via emergency-release readiness |
+| [[testing-entry-strategy]] | Ch 17 — where to start when joining an untested project: smoke tests on mission-critical paths, bug-to-test conversion, tests on APIs other teams integrate against |
+| [[barrier-defenses]] | Ch 17 — three-tool pattern (set barrier, risky work, remove barrier) that keeps unhealthy replicas away from users and risky software away from healthy replicas |
+| [[production-probes]] | Ch 17 — three request sets replayed as monitoring probes; covers frontend × backend version combinations that release tests never see; probe failure pauses rollout |
+| [[fake-backend-versions]] | Ch 17 — peer-team-maintained fake backends cut on the same schedule as the real backend; cross-product testing on new releases; rollout block, not release block |
+| [[configuration-integration-testing]] | Ch 17 — config content as potentially hostile input; protocol buffers > YAML+safe_load > interpreted-language config; bounded runtime + load-time schema validation |
+| [[software-engineering-in-sre]] | Ch 18 hub — why SRE teams run full software-engineering projects, not just one-off scripts; firsthand experience; the sublinear-scaling argument; balance against interrupts; staffing and retention; stay-embedded as the non-negotiable |
+| [[auxon]] | Ch 18 case study — Google's intent-based capacity planner; seven-component architecture (Performance Data / Forecast / Supply / Pricing / Intent Config / Config Engine / Solver → Allocation Plan); agnostic decoupling as the adoption lever |
+| [[intent-based-capacity-planning]] | Ch 18 — "specify the requirements, not the implementation"; the four-rung chain of abstraction; the three precursors (dependencies, performance metrics, prioritisation); regenerable plans that reach known-optimal solutions |
+| [[traditional-capacity-planning]] | Ch 18 — the demand-driven spreadsheet cycle Auxon replaces; four structural weaknesses (brittle, laborious, imprecise, loses intent); the tooling pathology |
+| [[sre-software-development-lessons]] | Ch 18 — practices distilled from Auxon: stay embedded; approximation over perfection (the Stupid Solver); agnostic design; modular interfaces for fuzzy requirements; launch and iterate |
+| [[sre-product-adoption]] | Ch 18 — the adoption playbook: sustained socialisation, aspirational-vs-MVP expectation setting, targeting teams without existing solutions, white-glove early-adopter support, designing at the right level of generality |
+| [[fostering-software-engineering-in-sre]] | Ch 18 — project selection (good candidates vs red flags); the two-extremes failure modes; generalist seed team plus specialists later; PM/TPM partnership; defending non-interrupt project time; the stay-embedded rule |
+| [[introducing-sre-software-development]] | Ch 18 — change-management guide: create and communicate a clear message, evaluate organisational capabilities, launch and iterate with a six-month rhythm, don't lower standards |
+| [[frontend-load-balancing]] | Ch 19 hub — the layered architecture (DNS → VIP → backend); why not one big machine (speed of light + single-point-of-failure); latency vs throughput; the HTTP-over-TCP vs stateless-UDP caveat |
+| [[dns-load-balancing]] | Ch 19 — DNS as the first load-balancing layer; 512-byte reply cap; the recursive-resolver middleman (resolver IP vs user IP, nondeterministic paths, TTL caching); capacity and health as parts of "best location"; why DNS alone is not enough |
+| [[anycast-dns]] | Ch 19 — advertising the authoritative nameserver IP from multiple regions so queries flow to the nearest instance by BGP; the public-DNS and large-ISP cases where resolver-near-user assumption breaks |
+| [[edns0-client-subnet]] | Ch 19 — the DNS extension that carries the user's subnet upstream so the authoritative server optimises for the user, not the resolver; the scope field for correct cache partitioning; privacy vs routing-quality trade-off |
+| [[virtual-ip-address]] | Ch 19 — the IP not bound to a single interface; hides the backend fleet behind one stable address; the second layer DNS resolves *to* |
+| [[network-load-balancer]] | Ch 19 — the device fronting a VIP; two design axes (backend selection: least-loaded / hash-mod-N / consistent-hashing; packet delivery: NAT / L2 rewriting / encapsulation); Google's Maglev-style combination |
+| [[direct-server-return]] | Ch 19 — reply-path optimisation where backends bypass the balancer and send replies directly to the client; the asymmetric-HTTP case; L2 MAC rewriting vs GRE encapsulation |
+| [[packet-encapsulation-load-balancer]] | Ch 19 — Google's current VIP load balancer; wraps forwarded packets in outer IP+GRE so backends can be anywhere routable, not just on the same L2 segment; the MTU cost and the larger-internal-MTU mitigation |
+| [[datacenter-load-balancing]] | Ch 20 hub — the intra-datacenter arc (state management → subsetting → policies); the ideal-case "1,000 reserved but only 700 usable" framing; Google's four-layer balancer (DNS / VIP / service / RPC); integration with GFE and Stubby |
+| [[backend-task-states]] | Ch 20 — the three-state model (healthy / refusing connections / lame duck); the crude active-request-limit flow control (default 100) as predecessor and last-resort; why three states beat a binary readiness signal; propagation to inactive clients via UDP health checks |
+| [[lame-duck-state]] | Ch 20 — backend-initiated graceful drain; five-step shutdown protocol with 10-150s interval; RPC-framework-level clean shutdown for every service; the symmetric "connect early, ready later" startup use; has no vanilla Kubernetes equivalent |
+| [[subsetting]] | Ch 20 — limiting each client's connection pool to 20-100 backends; the three requirements (uniform load, low churn, graceful resizes); the idle-connection TCP-to-UDP optimisation that complements but does not replace subsetting |
+| [[random-subsetting]] | Ch 20 — the rejected naive algorithm; 300×300×30% simulation produces 63%-121% spread; 10% subsets produce 50%-150% spread; would need ≥75% subsets to balance, defeating the point |
+| [[deterministic-subsetting]] | Ch 20 — Google's algorithm; clients grouped into rounds, shared round seed for intra-round shuffle, different seeds across rounds so a backend failure redistributes across the whole fleet; per-backend connection count differs by at most 1 |
+| [[load-balancing-policies]] | Ch 20 hub — the per-request backend selection problem; the distributed-stale-partial-realtime decision framing; why the three-rung ladder is mostly about getting more information into the decision |
+| [[simple-round-robin]] | Ch 20 — the baseline; Google's most common policy for years; up to 2x CPU spread in practice from four compounding factors (small subsetting, varying query cost up to 1000x, machine diversity addressed via GCU, antagonistic neighbours and restart warmup) |
+| [[least-loaded-round-robin]] | Ch 20 — filter by minimum active-request count then round-robin; the sinkholing pitfall where fast-failing backends attract more traffic; the error-counting fix; residual 2x spread at scale from the poor-proxy and partial-view problems |
+| [[weighted-round-robin]] | Ch 20 — backends report QPS, errors, and utilisation in every response; clients maintain capability scores and route proportionally with error penalties; Figure 20-6's dramatic CPU-distribution tightening; the closed-loop controller inside the RPC client |
+| [[handling-overload]] | Ch 21 hub — the cooperating stack of eight mechanisms (QPS pitfalls, quotas, throttling, criticality, utilisation, shedding, degradation, retry budgets, connection load) that lets a serving system degrade gracefully at 2-10x provisioned load instead of collapsing |
+| [[queries-per-second-pitfalls]] | Ch 21 — why QPS (and request-shape proxies like keys-read) is a moving target; measure capacity in CPU directly; cost-of-a-request as normalised CPU-time; GC-memory-becomes-CPU simplification |
+| [[per-customer-quotas]] | Ch 21 — CPU-second-per-second per-customer limits; the Gmail/Calendar/Android 4k+4k+3k+2k+500 example summing above the 10k fleet; over-subscription as intentional; real-time global aggregation pushing per-task effective limits |
+| [[adaptive-throttling]] | Ch 21 — client-side self-regulation; two-minute `requests` / `accepts` window; drop probability `max(0, (requests − K × accepts) / (requests + 1))`; K = 2 as the speed-of-propagation-vs-waste trade-off; worst case one rejection per success |
+| [[request-criticality]] | Ch 21 — four-valued ladder (CRITICAL_PLUS / CRITICAL / SHEDDABLE_PLUS / SHEDDABLE); automatic RPC-stack propagation; set close to the browser/mobile client; orthogonal to latency and network QoS; standardisation replaces ad hoc per-service notions |
+| [[utilization-signals]] | Ch 21 — the executor load average (smoothed count of ready threads vs processor count) as Google's preferred overload signal; plug in any backend-specific signal; combine multiple; higher thresholds for higher criticalities |
+| [[load-shedding]] | Ch 21 — reject-but-preserve-the-rest; the shed-vs-serve decision combines utilisation and criticality; the "task continues serving at provisioned rate even under 10x traffic" corollary; rejecting cheaply as a design requirement |
+| [[graceful-degradation]] | Ch 21 — serve a cheaper response instead of rejecting; partial-corpus search and local-cache-instead-of-canonical as canonical examples; the ordering correct → degraded → rejected → failed; degradation as designed architectural work |
+| [[retry-budget]] | Ch 21 — three-attempts per-request budget, 10% per-client retry ratio, retry-count metadata with backend histograms, "overloaded; don't retry" when widespread overload is detected, retry-only-at-the-layer-immediately-above rule that prevents 3^N combinatorial explosion |
+| [[connection-level-load]] | Ch 21 — the CPU/memory cost of maintaining and churning connections; the health-check-dominates-work pathology at large low-rate-client fan-in; dynamic connection creation/teardown; the batch-proxy fuse pattern that absorbs batch-job connection storms |
+| [[cascading-failure]] | Ch 22 hub — failures that grow through positive feedback; causes (overload, resource exhaustion, service-unavailability snowball), triggers, prevention, testing, in-progress remedies; also known as meltdown / thundering herd; the closing warning that reliability-improving changes can worsen cascade risk |
+| [[server-overload]] | Ch 22 — the dominant cause of cascades; the 1,000-QPS-in-each-of-two-clusters worked example; 10,000-QPS-healthy-needing-drop-to-1,000-to-recover snowball mechanic; the overload-inversion where served rate falls as offered rate climbs |
+| [[resource-exhaustion]] | Ch 22 — CPU, memory, threads, file descriptors; the effects of each; the nine-step worked scenario where Java GC tuning is the root cause and backend health-check failure is step nine's visible symptom |
+| [[gc-death-spiral]] | Ch 22 — memory-pressure → more GC → less CPU → slower requests → more concurrent requests → more RAM → more GC; why the spiral is self-sustaining; restart as the only escape |
+| [[queue-management]] | Ch 22 — 50% queue-to-thread ratio for steady traffic; Gmail's queueless approach; dynamic queue sizing for bursty loads; LIFO and CoDel as staleness-aware alternatives to FIFO; deadlines complement queue management |
+| [[retry-amplification]] | Ch 22 — naïve retries turning 100 QPS of overload into runaway growth; randomised exponential backoff; the combinatorial-retry rule (retry at only one layer); clear retriable/nonretriable error codes; even restoring pre-overload traffic may not fix the cascade |
+| [[latency-and-deadlines]] | Ch 22 — deadlines cap how long a server consumes client resources; missed deadlines waste work; picking a deadline as a balance; the stages-of-processing deadline-check discipline |
+| [[deadline-propagation]] | Ch 22 — a single absolute deadline flowing through the RPC tree; the 30s-root-to-23s-A→B-to-19s-B→C worked example; cancellation propagation; per-hop safety margin and outgoing-deadline upper bounds |
+| [[bimodal-latency]] | Ch 22 — 5% unservable × 100s deadline / 1,000 threads = 80% error rate; look at distributions not means; match deadline to mean latency; per-keyspace concurrency limits |
+| [[slow-startup-and-cold-caching]] | Ch 22 — the restart-after-crash amplifier; latency caches (service works when empty) vs capacity caches (it doesn't); overprovisioning, separate caching tier (memcache), gradual ramp as mitigations |
+| [[intra-layer-communication]] | Ch 22 — "Always go downward in the stack"; distributed deadlock, sudden-mode-switch under load, bootstrap complexity; client-mediated routing vs backend-to-backend proxying |
+| [[cascading-failure-triggers]] | Ch 22 — the five trigger classes (process death, process updates, new rollouts, organic growth, planned drains / turndowns); the "check recent changes first" diagnostic hint |
+| [[testing-for-cascading-failures]] | Ch 22 — test to failure and beyond; gradual vs impulse load; recovery-after-overload testing; per-component testing; production tests (reducing task counts, losing a cluster, blackholing backends); test popular clients and noncritical backends |
+| [[addressing-ongoing-cascading-failure]] | Ch 22 — the eight remedies (increase resources, stop health-check deaths, restart servers, drop traffic, enter degraded modes, eliminate batch load, eliminate bad traffic, escalate); the meta-rule: fix the triggering condition before restoring load |
+
+## Reliable product launches
+
+| Page | Description |
+|---|---|
+| [[reliable-product-launches]] | SRE Ch 27 hub — launches as a distinctive reliability problem; the 70-per-week rate; the five criteria for a good launch process; three-piece organising principle (LCE, checklist, gradual-rollout/feature-flag techniques); LCE evolution 2003→2008; the three unsolved post-launch pathologies |
+| [[launch-coordination-engineering]] | Ch 27 — the dedicated SRE consulting team for launches; five activities (audit, liaise, drive, gatekeep, educate); breadth/cross-functional/objectivity as the team advantages; formal staffing in 2004 |
+| [[launch-coordination-engineer-role]] | Ch 27 — the individual LCE role; hiring paths; SWE plus communication plus leadership skills; six-month training; dual accelerator-plus-gatekeeper responsibility |
+| [[launch-checklist]] | Ch 27 — the curated launch checklist as the central LCE artifact; question/action-item/pointer-to-infrastructure shape; substantiated-by-disaster and concrete-instruction curation rules; continuous plus annual full-review rhythm |
+| [[launch-checklist-themes]] | Ch 27 — the nine checklist themes: architecture/dependencies, integration, capacity, failure modes, client behaviour, processes/automation, development process, external dependencies, rollout planning |
+| [[gradual-rollout]] | Ch 27 — the canonical three-stage pattern (subset-in-one-datacenter → whole-datacenter → global) with observation windows; client-side variants (Android app install fractions); invite systems as rate-limited sign-up ramps |
+| [[feature-flag-framework]] | Ch 27 — infrastructure for parallel small-scope feature rollouts; six framework requirements; two classes (HTTP payload rewriter for stateless UI vs request routing for stateful business logic) |
+| [[abusive-client-behavior]] | Ch 27 — the non-user-initiated-request problem; retry amplification and thundering-herd pitfalls; server-controlled client configuration; the dormant-functionality pattern (ship inactive, activate server-side) |
+| [[overload-behavior-launches]] | Ch 27 — why overload deserves extra launch-time attention; non-linear behaviour at the top of the load curve; logging-amplification lockup; GC thrashing; load tests as mandatory because first-principles prediction fails |
+| [[norad-tracks-santa]] | Ch 27 — the opening case study: Keyhole at 25x normal peak (1M req/s) on Christmas Eve 2011; all the hard-launch attributes in one project; the "Make-children-cry switches" kill-switch name |
+
+## SRE training and onboarding
+
+| Page | Description |
+|---|---|
+| [[sre-onboarding]] | SRE Ch 28 hub — blueprint for bootstrapping a new SRE to on-call and beyond; Figure 28-1 time-by-abstract/applied blueprint; three aspirational attributes; five practices for aspiring on-callers; "scale your humans faster than your machines" maxim |
+| [[trial-by-fire-anti-pattern]] | Ch 28 — the named anti-pattern (throwing newbies at the ticket queue); survivorship bias, false premise that SRE can be taught strictly by doing, three unanswered questions; why ops-driven teams self-perpetuate this failure mode |
+| [[cumulative-learning-paths]] | Ch 28 — sequential, ordered curriculum; frontload abstract concepts + intermix hands-on work; the query-path ordering example; tiered access as progress gating ("powerups") |
+| [[on-call-learning-checklist]] | Ch 28 — the document artifact: expert contacts, key docs, basic knowledge, probing questions, concrete outcomes; three audiences (student / mentor / team); deliberately does not encode procedures; Search SRE practice |
+| [[targeted-project-work]] | Ch 28 — starter projects instead of menial tickets; three patterns (user-visible feature + release shepherding, monitoring blind spots, automate a pain point); bidirectional trust building |
+| [[reverse-engineering-skills]] | Ch 28 aspirational attribute 1 — figuring out how systems you've never seen work; debugging surfaces, RPC boundaries, logs as reflexive fluencies; "follow the RPC" heuristic |
+| [[statistical-comparative-thinking]] | Ch 28 aspirational attribute 2 — pruning a massive decision tree under pressure via experience + hypothesis construction; the "which of these things is not like the other?" game; architectural requirement that variables be individually controllable |
+| [[improvisational-troubleshooting]] | Ch 28 aspirational attribute 3 — defence in depth applied to problem-solving behaviour; the zoom-out manoeuvre; two named failure modes (too procedural, too many untested assumptions) |
+| [[reverse-engineering-class]] | Ch 28 — the Google News Bermuda Triangle cruise class; all three attributes in one session; take-home assignment that produces bidirectional senior-newbie learning |
+| [[teachable-postmortems]] | Ch 28 practice 1 — postmortems as training material for engineers not yet hired; teachable vs rote; reading clubs and "tales of fail" formats; feedstock for Wheel of Misfortune scenarios |
+| [[disaster-role-playing]] | Ch 28 practice 2 — the Wheel of Misfortune full operational manual; GM + primary/secondary, 30-60 min scenarios, Kennedy's SRE Zork framing, successful-session criterion |
+| [[breaking-real-systems]] | Ch 28 practice 3 — hands-on chaos on a loaned-from-production instance; Search SRE's "Let's burn a search cluster to the ground!" quarterly inverse-pattern exercise |
+| [[documentation-as-apprenticeship]] | Ch 28 practice 4 — newbie overhauls outdated checklist sections; the senior-carries-state-in-head asymmetry that makes newbies the natural doc maintainers |
+| [[shadow-on-call]] | Ch 28 practice 5 — business-hours page copying; two visibility payoffs; the trust-building-to-prevent-burnout mechanism; postmortem co-authorship rule |
+| [[reverse-shadow-on-call]] | Ch 28 — optional final pre-on-call step: newbie is primary, mentor lurks and independently diagnoses without modifying state |
+| [[sre-continuing-education]] | Ch 28 closing — learning after on-call; regular learning series with developer co-presenters; recorded sessions as future training material; talks to developer counterparts |
+
+## Dealing with interrupts
+
+| Page | Description |
+|---|---|
+| [[dealing-with-interrupts]] | SRE Ch 29 hub — interrupt management as a team-design problem; the three operational-load categories; the two shapes of flow; the three levers (polarise / structure roles / reduce); connection to the 50% cap and Ch 11 overload |
+| [[operational-load]] | Ch 29 — the three-category taxonomy (pages / tickets / ongoing responsibilities) with distinct SLOs; Google's common management shapes; the metrics teams use to choose; the warning that response-time metrics don't price human cost |
+| [[cognitive-flow-state]] | Ch 29 — Csikszentmihalyi's four flow elements; the two SRE-flavoured shapes (creative-engaged and Angry-Birds); the constant-interruptability failure mode that prevents both |
+| [[context-switch-cost]] | Ch 29 — the 20-minutes-costs-two-hours principle; the Fred-has-a-free-day running example; the rejected "engineer as interruptible unit of work" model |
+| [[polarizing-time]] | Ch 29 — week / day / half-day work-mode polarisation; Paul Graham's maker schedule; what polarisation rules out and requires; the handoff discipline |
+| [[interrupt-role-structuring]] | Ch 29 — "do one thing well"; the add-another-person-not-distribute-load rule; on-call / tickets / ongoing-responsibilities rules including *stop randomly assigning tickets* and *be on interrupts or don't be* |
+| [[reducing-interrupts]] | Ch 29 — ticket scrubs as well as page reviews; silencing-with-deadlines; policy-pushback on customers; the deprecate / replace / give-the-pager-back ladder |
+
+## Embedding an SRE to recover from overload
+
+| Page | Description |
+|---|---|
+| [[embedding-sre]] | SRE Ch 30 hub — the rescue playbook for a team stuck in ops mode; one-SRE-not-two; three phases (learn / share / drive); the postvitam exit; also the starter playbook for a first SRE team; positioning on the overload-escalation ladder |
+| [[ops-mode]] | Ch 30 — the named failure mode: humans-per-load instead of software-per-load; the "more tickets should not require more SREs" test; the "my service is tiny" rationalisation and its refutation; healthy work habits matter as much as automation |
+| [[identifying-kindling]] | Ch 30 — Phase 1's complement to existing-stress-sources; nine specific warning signals including shallow postmortem action items, "we don't own that" answers, reactive capacity plans, and common undiagnosed alerts; the don't-fix-it-yourself discipline |
+| [[bad-apple-theory]] | Ch 30 — the unspoken belief that outages come from flawed individuals; Dekker's cross-industry evidence that it's false; the canonical refutation phrasing for the "why me?" postmortem reaction; what blameless culture has to displace |
+| [[explaining-reasoning]] | Ch 30 — Phase 3's pedagogical discipline: explain every decision whether or not asked; refer to first principles; four worked examples (two good, two insufficient); success criterion is the team predicting the visiting SRE's comment |
+| [[leading-questions]] | Ch 30 — Phase 3's partner technique: specific observation + invitation to reason about a shared principle; leading vs loaded; two good examples (TaskFailures / turnup) and two counter-examples; why an outside voice is required |
+| [[postvitam]] | Ch 30 — the exit-report artefact named in contrast to a postmortem; perspective + examples + explanation + action items; the prospective (not retrospective) character of the document |
+
+## Communication and collaboration in SRE
+
+| Page | Description |
+|---|---|
+| [[communication-and-collaboration-in-sre]] | SRE Ch 31 hub — SRE as two-masters distributed org; data-flow and API-as-contract metaphors; production meetings + cross-SRE collaboration + SRE-dev collaboration; the Viceroy and DFP-to-F1 case studies |
+| [[production-meetings]] | Ch 31 — weekly 30-60 minute service-oriented meeting; default agenda (changes / metrics / outages / paging / nonpaging / actions); rotating chair with the chair-on-smaller-side VC trick; compulsory attendance with partner product-dev; the Google Docs real-time-collaborative agenda |
+| [[sre-team-composition]] | Ch 31 — the three formal roles (TL / SRM / TPM); the rigid-vs-fluid responsibility spectrum; diversity as collaboration multiplier; great role-holders flex across all three |
+| [[cross-sre-collaboration]] | Ch 31 — why SRE collaboration is mostly cross-site; specialisation as a double-edged tool; crisp team charters; homogeneity-by-culture; singleton projects usually fail; written-first + periodic-travel |
+| [[viceroy-case-study]] | Ch 31 — 2012-2014 cross-SRE monitoring-dashboard consolidation; Monarch migration as trigger; Viceroy + Consoles++ initial incompatibility; late-2013 convergence; extended-team churn and dilution-of-ownership challenges; declared (not mandated) the SRE-wide solution |
+| [[cross-site-project-recommendations]] | Ch 31 — the distilled recommendations from Viceroy: only cross-site when you must, vet contributor commitment, strong project leaders with local decision authority, divide-and-conquer, beware Conway's distortion, design documents and reviews, time-limited debates → decisions → documentation, in-person leaders and team summits |
+| [[sre-dev-collaboration]] | Ch 31 — the early-in-design thesis; OKRs as the tracking mechanism; service-team-mainstay framing; SRE (infrastructure) + dev (BL) complementarity; peer engineering status as the leverage |
+| [[dfp-to-f1-migration]] | Ch 31 — case study: DoubleClick for Publishers' main DB migrated MySQL → F1 while the serving system stayed untouched; SRE drove infrastructure design, dev owned BL, weekly syncs, interface-contract-up-front, validation-by-output-comparison, seamless cutover |
+
+## SRE engagement model
+
+| Page | Description |
+|---|---|
+| [[sre-engagement-model]] | SRE Ch 32 hub — the production-concerns set every engagement points at; the three successive engagement models (Simple PRR / Early Engagement / Frameworks and SRE Platform); how SRE decides to engage |
+| [[simple-prr-model]] | Ch 32 — the classical takeover pattern for already-launched services; six phases (Engagement / Analysis / Improvements / Training / Onboarding / Continuous Improvement); the typical initial step of SRE engagement; limitations that motivate the other two models |
+| [[production-readiness-review]] | Ch 32 — the formal review SRE conducts before accepting production responsibility; the gate concept; checklist examples; the lead-time costs that drove the framework-based model |
+| [[prr-engagement-phase]] | Ch 32 phase 1 — SRE leadership picks a team, 1-3 SRE reviewers self-nominate, discussion opens with the development team on SLO/SLA, disruptive design changes, and planning |
+| [[prr-analysis-phase]] | Ch 32 phase 2 — reviewers learn the service, run the PRR checklist, review recent incidents and postmortems; checklist drawn from domain expertise + Production Guide; team-specific gold standards |
+| [[prr-improvements-and-refactoring]] | Ch 32 phase 3 — prioritise gaps for reliability impact, negotiate execution with the development team, jointly refactor and add controls; the longest and most variable phase |
+| [[prr-training-phase]] | Ch 32 phase 4 — PRR reviewers train the receiving SRE team via design overviews, request-flow deep dives, production setup, hands-on exercises |
+| [[prr-onboarding-phase]] | Ch 32 phase 5 — progressive transfer of operations, change management, access rights; development team stays available to advise as SRE settles in |
+| [[prr-continuous-improvement]] | Ch 32 phase 6 — steady-state partnership; SRE maintains reliability as the service evolves and contributes lessons back to the Production Guide |
+| [[shakespeare-example-prr]] | Ch 32 worked example — Shakespeare service runs through a PRR; monitoring-coverage gap found and fixed, pager handed to SRE with two devs remaining in rotation, weekly on-call meeting becomes the coordination venue |
+| [[early-engagement-model]] | Ch 32 — the engagement model that moves SRE into the Design phase; cheaper fixes, smoother launches, faster onboarding; "the best production incidents are those that never happen" |
+| [[early-engagement-candidates]] | Ch 32 — the three qualifying patterns (significant new functionality in an SRE-managed system, significant rewrite, dev team that proactively approached SRE); the entrance criterion that has to be satisfied without production evidence |
+| [[disengaging-from-a-service]] | Ch 32 — valid Early Engagement outcome where SRE doesn't take over: service turned out reliable enough to stay with devs, or failed to meet projected scale; named explicitly as positive outcomes |
+| [[frameworks-and-sre-platform]] | Ch 32 — the structural answer to the SRE staffing barrier; codify production best practices as service frameworks, build on a common platform with uniform control surface; faster PRR, lower cognitive load, shared-responsibility model |
+| [[service-framework]] | Ch 32 — what a framework provides: module-encapsulated production concerns, standard semantic components, monitoring dimensions, log formats, load-shedding configuration, capacity/overload measure; per-language implementations with identical APIs and behaviour |
+| [[shared-responsibility-engagement]] | Ch 32 — the staffing model frameworks unlock: SRE supports platform infrastructure, dev teams carry the pager for application bugs; breaks the "full SRE or nothing" binary |
+| [[sre-alternative-support]] | Ch 32 — fallback support for services SRE can't take on: documentation (Production Guide) and consultation (LCE, ad-hoc SRE advice); the two original alternatives plus the framework-era shared-responsibility middle ground |
+| [[production-guide]] | Ch 32 — Google's internal repository of production best practices documented from SRE and dev experience; substrate for PRR checklists; consumed directly by teams without SRE engagement; fed back by Continuous Improvement |
+
+## Lessons from other industries
+
+| Page | Description |
+|---|---|
+| [[lessons-from-other-industries]] | SRE Ch 33 hub — Petoff's cross-industry survey across aviation, lifeguarding, LASIK, telecom/E911, medical devices, military, rail, manufacturing, finance, nuclear, ATC; the four-theme distillation; the closing velocity-vs-reliability argument |
+| [[preparedness-and-disaster-testing]] | Ch 33 — *hope is not a strategy*; DiRT and Wheel of Misfortune in the family of nuclear-Navy live drills, lifeguard mystery-shopper drownings, aviation simulators with live data feeds; the seven cross-industry preparedness strategies |
+| [[organizational-safety-culture]] | Ch 33 — *every management meeting started with a discussion of safety*; Alcoa under O'Neill's 24-hour-notification practice and CEO-distributed-home-phone-number; the empowered-to-speak-up cultural property |
+| [[near-miss-reporting]] | Ch 33 — manufacturing/chemical preemptive postmortem; the UK CHIRP confidential reporting programme; *latent error plus enabling condition equals things not working quite the way you planned* (Brasseur) |
+| [[swing-capacity]] | Ch 33 — telecom switch-on-wheels mobile telco office; predictable surges (Olympics) and unpredictable ones (2005 leaked-celebrity-phone-number traffic); pre-built reserved capacity moved into position |
+| [[safety-integrity-level]] | Ch 33 — SIL 1-4 from UK Defence Standard 00-56, IEC 61508, IEC513, US DO-178B/C, DO-254; externally imposed reliability classification compared to SRE's self-set SLO |
+| [[structured-and-rational-decision-making]] | Ch 33 — four-property data-driven discipline; the *HiPPO* (Highest-Paid Person's Opinion) anti-pattern; the four-shape industry spectrum (if-it-ain't-broke / playbook-and-binder / controlled-experiment / enforcement-team-separation); 2010 Flash Crash and 2012 Knight Capital |
+| [[velocity-vs-reliability-tradeoff]] | Ch 33 closing argument — Google's higher appetite for velocity is correct because most products live where lives aren't at stake; error budgets fund the difference; Google adopts practices compatible with high velocity from regulated industries and leaves the others |
+
+## Google production infrastructure
+
+| Page | Description |
+|---|---|
+| [[google-datacenter-topology]] | Machine / rack / row / cluster / building / campus; the machine-vs-server terminology split |
+| [[borg]] | Google's cluster OS; failure-domain-aware binpacking; Kubernetes' ancestor |
+| [[bns]] | Borg Naming Service; stable symbolic names → `IP:port`; the service-discovery layer for Borg |
+| [[jupiter-network]] | Clos network fabric inside a datacenter; 1.3 Pbps bisection bandwidth |
+| [[b4-network]] | OpenFlow-based software-defined backbone between datacenters; elastic bandwidth allocation |
+| [[software-defined-networking]] | The control-plane/data-plane split underlying Jupiter and B4 |
+| [[colossus]] | Cluster-wide filesystem over per-machine D fileservers; GFS successor |
+| [[bigtable]] | Sparse multidimensional sorted-map NoSQL DB on Colossus; eventual consistency |
+| [[spanner]] | SQL-like globally consistent database; backed by TrueTime |
+| [[chubby]] | Paxos-based lock and coordination service; ZooKeeper's ancestor |
+| [[borgmon]] | Scrape-based metrics monitoring; Prometheus' ancestor |
+| [[gslb]] | Global Software Load Balancer; three-level (DNS / service / RPC) over BNS addresses |
+| [[google-frontend]] | Edge HTTP reverse proxy; TCP/TLS termination and service lookup |
+| [[stubby]] | Internal RPC framework; gRPC is its open-source release |
+| [[protocol-buffers]] | Binary schema-driven wire format for Stubby and storage |
+| [[google-monorepo]] | Single shared repo; CL review, datacenter-parallel build, continuous testing, push-on-green |
+| [[n-plus-2-redundancy]] | Sizing rule: N for peak load, + 2 for one task updating and one failing during the update |
+| [[life-of-a-request]] | The Shakespeare end-to-end trace: DNS → GSLB → GFE → frontend → backend → Bigtable |

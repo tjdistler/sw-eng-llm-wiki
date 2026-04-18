@@ -2,9 +2,9 @@
 
 **Summary**: MapReduce is a programming framework for processing large datasets across a distributed cluster. It provides a simple abstraction — write a mapper and a reducer — while the framework handles partitioning, sorting, data movement, and fault tolerance.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-10-batch-processing.md`, `raw/designing-distributed-systems/chapter-12-coordinated-batch-processing.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-10-batch-processing.md`, `raw/designing-distributed-systems/chapter-12-coordinated-batch-processing.md`, `raw/site-reliability-engineering/chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -82,6 +82,26 @@ The correspondence is exact:
 
 MapReduce's framework-level guarantee that every mapper completes before any reducer starts is a [[join-pattern|join]] in Burns's vocabulary — a barrier synchronization point that costs the straggler latency. [[dataflow-engines|Spark, Flink, Tez]] relax that barrier where the reduce is associative, which is the operator-level form of preferring Burns's [[reduce-pattern|reduce]] (streaming, pipelined) over his [[join-pattern|join]] (blocking, completeness-guaranteeing). So the pattern-level distinction Burns draws at container granularity echoes the engine-level distinction DDIA draws between MapReduce and dataflow execution.
 
+## At Google: the production MapReduce
+
+The SRE book's Chapter 2 refers to MapReduce alongside indefinitely-running servers as one of the two kinds of job [[borg]] runs — framing MapReduce as a first-class citizen of Google's cluster OS rather than a separate system (source: site-reliability-engineering, chapter 2). The Chapter 2 Shakespeare example (see [[life-of-a-request]]) uses MapReduce as the batch indexer that writes per-word location tuples into [[bigtable]]:
+
+- Map: split Shakespeare's texts into words.
+- Shuffle: sort tuples by word.
+- Reduce: emit `(word, list-of-locations)`, one Bigtable row per word.
+
+It is the textbook three-phase MapReduce with [[bigtable]] as the sink instead of HDFS. The preempt-at-5% observation above is from Google's mixed-use datacenters in the same era, when batch MapReduce runs were scheduled at low priority and preempted to free resources for production serving jobs.
+
+## SRE Chapter 25: MapReduce as the framework periodic pipelines are written in
+
+SRE Chapter 25 (Dan Dennison) names MapReduce as one of the two frameworks Google uses to write [[periodic-pipeline|periodic data pipelines]] (the other is Flume) (source: raw/site-reliability-engineering/chapter-25-data-processing-pipelines.md). The chapter is not a critique of MapReduce per se — it credits MapReduce as useful and stable when sized for the workload — but it catalogues the operational failure modes that emerge when MapReduce-based pipelines grow into deep multi-phase chains:
+
+- Cycle-aligned worker spawn produces [[pipeline-thundering-herd|thundering herds]] on the cluster scheduler. Ch 25 frames the canonical case as "a daily cron at midnight spawning thousands of MapReduce workers" — exactly Ch 24's [[cron-thundering-herd]] but at the application layer.
+- The straggler problem named under Limitations above (a workflow waits for the slowest task in the preceding job) is what Ch 25 calls the [[pipeline-uneven-work-distribution|hanging chunk problem]], with the additional observation that the standard kill-and-restart response wastes all completed work because periodic pipelines lack checkpointing.
+- The [[pipeline-batch-scheduling-drawbacks|execution-frequency floor]] from running at batch priority limits how fresh MapReduce-pipeline outputs can be.
+
+The chapter's recommendation is not to fix MapReduce but to **adopt a different shape** for workloads where the failure modes matter: continuous data processing via [[google-workflow|Workflow]] with its long-running workers and exactly-once guarantees. Modern open-source [[dataflow-engines]] (Spark, Flink) sit between the two — they retain MapReduce's per-job submission model but pipeline through stages so the straggler-amplification problem is reduced, and Flink in particular offers continuous-streaming modes that approach Workflow's shape.
+
 ## Relationship to MPP databases
 
 The parallel join algorithms in MapReduce were not new — MPP databases (Teradata, Tandem NonStop SQL, Gamma) had them a decade earlier. MapReduce's contribution was making general-purpose distributed computation accessible on commodity hardware via [[distributed-filesystems]]. See [[hadoop-vs-mpp-databases]] (source: designing-data-intensive-applications, chapter 10).
@@ -105,3 +125,8 @@ The parallel join algorithms in MapReduce were not new — MPP databases (Terada
 - [[sharder-pattern]]
 - [[work-queue-pattern]]
 - [[graph-batch-processing]]
+- [[periodic-pipeline]]
+- [[pipeline-thundering-herd]]
+- [[pipeline-uneven-work-distribution]]
+- [[google-workflow]]
+- [[data-processing-pipelines]]

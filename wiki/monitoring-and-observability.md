@@ -2,9 +2,9 @@
 
 **Summary**: Monolithic-era monitoring assumed a small number of long-lived processes with binary up/down failure modes. Microservices break that assumption: failures are partial, processes are short-lived, and "is everything OK?" stops being a simple question. Newman frames the shift as moving from monitoring (known causes) to observability (open-ended questions).
 
-**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md`, `raw/designing-distributed-systems/chapter-04-adapters.md`
+**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md`, `raw/designing-distributed-systems/chapter-04-adapters.md`, `raw/site-reliability-engineering/chapter-01-introduction.md`, `raw/site-reliability-engineering/chapter-06-monitoring-distributed-systems.md`, `raw/site-reliability-engineering/chapter-10-practical-alerting-from-time-series-data.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -86,8 +86,54 @@ Newman's chapter makes the operational case; Brendan Burns's [[adapter-pattern]]
 
 A [[service-mesh]] supplies the cross-cutting HTTP/gRPC telemetry for free; adapter containers fill in the application-specific gaps.
 
+## The SRE taxonomy: alerts, tickets, logs
+
+Google SRE's Chapter 1 adds a sharper taxonomy for the *output* side of a monitoring system (source: raw/site-reliability-engineering/chapter-01-introduction.md). There are only three valid monitoring outputs:
+
+- **Alerts** — a human must act *now*.
+- **Tickets** — a human must act, but not immediately.
+- **Logs** — nobody needs to read this unless something else prompts them to.
+
+The named anti-pattern is the email alert that requires a human to interpret whether action is needed. *Software should do the interpreting, and humans should be notified only when they need to take action.* The full page is [[sre-monitoring-outputs]]; it slots neatly inside Newman's *monitoring* half of the monitoring-vs-observability split.
+
+## The SRE monitoring chapter: what to measure and what to page on
+
+Chapter 6 of the SRE book (Rob Ewaschuk) is the full treatment of monitoring philosophy (source: raw/site-reliability-engineering/chapter-06-monitoring-distributed-systems.md). Where Chapter 1 established *what outputs monitoring should have*, Chapter 6 fills in *what to measure* and *when to page*. The resulting pages all slot inside Newman's monitoring half:
+
+- [[four-golden-signals]] — latency, traffic, errors, saturation: if you can only measure four things, measure these
+- [[symptoms-vs-causes]] — the single most important distinction for signal-vs-noise; page on symptoms, debug with causes
+- [[black-box-vs-white-box-monitoring]] — heavy white-box + modest critical black-box; Google's mix
+- [[alert-philosophy]] — urgent, actionable, user-visible, novel; the four principles for page criteria
+- [[long-tail-latency]] — why histograms beat means, especially under fan-out
+- [[monitoring-resolution]] — matching measurement granularity to the question; server-local sampling
+- [[monitoring-simplicity]] — the complexity trap and the three pruning rules; keep the paging path robust
+
+These concepts supply the *"what makes a good monitoring signal"* answer that Newman's chapter leaves implicit. The two views are complementary: Newman focuses on the monitoring-vs-observability split and the toolbox sequencing; SRE Chapter 6 focuses on paging discipline and measurement hygiene.
+
+## The SRE monitoring-system architecture (Chapter 10)
+
+Chapter 10 of the SRE book (Jamie Wilkinson) is the architecture deep-dive behind the philosophy of Chapter 6 (source: raw/site-reliability-engineering/chapter-10-practical-alerting-from-time-series-data.md). It describes [[borgmon]] — Google's internal monitoring system and the explicit ancestor of Prometheus — in enough detail that the design choices carry over to any modern time-series monitoring stack:
+
+- [[varz-endpoints]] — the `/varz` HTTP metrics exposition format; every Google binary auto-registers metrics. The pull-with-text-format convention Prometheus inherited.
+- [[time-series-arena]] — in-memory store for ~12 hours of labelled `(timestamp, value)` tuples; older data archived to an external TSDB.
+- [[borgmon-rules]] — the centralised rule language for computing new time-series from existing ones; aggregation-via-sum-of-rates as the cornerstone; the direct ancestor of PromQL.
+- [[alertmanager]] — centrally-run service that deduplicates, inhibits, groups, and routes fired alerts to pager / ticket / dashboard; the Prometheus Alertmanager inherits the design and the name.
+- [[prober]] — the concrete black-box monitoring tool that complements Borgmon's white-box approach; Newman's [[synthetic-transactions]] in Google vocabulary.
+- [[monitoring-topology-sharding]] — the scraper / DC aggregator / global aggregator hierarchy that scales Borgmon past a single instance's capacity; Prometheus federation implements the same pattern.
+- [[prometheus-connection]] — the explicit genealogy, naming what transferred intact from Borgmon to the open-source ecosystem.
+
+Chapter 10's central claim — that treating time-series as the first-class data source and centralising rule evaluation makes monitoring **scale sublinearly with service size** — is the operational argument behind the Newman/Burns observability-toolbox recommendations.
+
 ## Related pages
 
+- [[sre-monitoring-outputs]]
+- [[four-golden-signals]]
+- [[symptoms-vs-causes]]
+- [[black-box-vs-white-box-monitoring]]
+- [[alert-philosophy]]
+- [[long-tail-latency]]
+- [[monitoring-resolution]]
+- [[monitoring-simplicity]]
 - [[log-aggregation]]
 - [[correlation-ids]]
 - [[distributed-tracing]]
@@ -99,3 +145,11 @@ A [[service-mesh]] supplies the cross-cutting HTTP/gRPC telemetry for free; adap
 - [[adapter-pattern]]
 - [[unified-monitoring-interface]]
 - [[health-check-adapter]]
+- [[borgmon]]
+- [[varz-endpoints]]
+- [[time-series-arena]]
+- [[borgmon-rules]]
+- [[alertmanager]]
+- [[prober]]
+- [[monitoring-topology-sharding]]
+- [[prometheus-connection]]

@@ -2,7 +2,7 @@
 
 **Summary**: The category of purpose-built software that controls **container and VM deployment, resource allocation, and orchestration** on underlying compute resources. Kubernetes, Docker Engine, Mesos Marathon, Amazon ECS, and Nomad are the canonical examples. A CMS is one of the two largest line items in the [[microservice-tax]] for any non-trivial microservice platform.
 
-**Sources**: `raw/building-event-driven-microservices/chapter-02-event-driven-microservice-fundamentals.md`, `raw/building-event-driven-microservices/chapter-14-supportive-tooling.md`
+**Sources**: `raw/building-event-driven-microservices/chapter-02-event-driven-microservice-fundamentals.md`, `raw/building-event-driven-microservices/chapter-14-supportive-tooling.md`, `raw/site-reliability-engineering/chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md`
 
 **Last updated**: 2026-04-17
 
@@ -49,8 +49,13 @@ Bellemare recommends the CMS expose certain controls **self-serve** to microserv
 
 Cluster bringup itself is a separate tool — see [[cluster-creation-and-management]].
 
+## Google's internal ancestor: Borg
+
+[[borg|Borg]] is Google's distributed cluster operating system and the direct ancestor of Kubernetes. The SRE book describes it as a cluster-level job manager similar to Apache Mesos, open-sourced as Kubernetes in 2014 (source: site-reliability-engineering, chapter 2). Borg is the internal reference system behind the CMS category — Bellemare's framing and Burns's patterns (sidecar, pod, operator) are both descended from what Borg pioneered inside Google: fluid task placement, failure-domain-aware binpacking, declarative resource budgets, automatic restart, and [[bns|BNS]]-based indirection for addressing.
+
 ## Relationship to existing wiki coverage
 
+- **[[borg]]** — the Google-internal ancestor; Kubernetes is its open-source descendant.
 - **[[pod]]** — the Kubernetes multi-container primitive Bellemare points to as a typical CMS unit.
 - **[[desired-state-management]]** — Newman's name for the declarative-spec-plus-reconciliation operational pattern, which is the defining operating mode of modern CMSes like Kubernetes.
 - **[[running-too-many-things]]** — Newman's observation that manual deployment doesn't scale past a certain service count; a CMS is the usual answer.
@@ -59,6 +64,7 @@ Cluster bringup itself is a separate tool — see [[cluster-creation-and-managem
 
 ## Related pages
 
+- [[borg]]
 - [[pod]]
 - [[desired-state-management]]
 - [[running-too-many-things]]

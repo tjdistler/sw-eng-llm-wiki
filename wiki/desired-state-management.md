@@ -2,9 +2,9 @@
 
 **Summary**: Specifying the number and location of service instances you require, and having the platform continuously maintain that state. Manual or script-based deployment doesn't scale to tens or hundreds of services with different desired states; Kubernetes and serverless platforms exist largely to solve this.
 
-**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md`, `raw/designing-distributed-systems/chapter-08-functions-and-event-driven-processing.md`, `raw/designing-distributed-systems/chapter-09-ownership-election.md`
+**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md`, `raw/designing-distributed-systems/chapter-08-functions-and-event-driven-processing.md`, `raw/designing-distributed-systems/chapter-09-ownership-election.md`, `raw/site-reliability-engineering/chapter-07-the-evolution-of-automation-at-google.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -60,6 +60,18 @@ Newman closes the section with the same warning he applies to microservices them
 
 Wait until your existing approach is genuinely straining. Adopting Kubernetes "for the future" before you have the present problem it solves is a way to inherit operational complexity you didn't need.
 
+## The Borg origin (SRE Chapter 7)
+
+Chapter 7 of the SRE book tells the pre-history that Newman assumes. Google's clusters started as racks of machines with specific purposes, administered by SSHing into a "master" machine with golden binaries. Automation grew from Python scripts to a machine-state database to **[[borg|Borg]]** — the first system in which "cluster management" was an entity with an API that could be called, as opposed to a convention carried out by scripts (source: chapter-07-the-evolution-of-automation-at-google.md).
+
+Treynor Sloss's phrasing from the chapter:
+
+> By taking the approach that this was a software problem, the initial automation bought us enough time to turn cluster management into something *autonomous*, as opposed to *automated*.
+
+Borg is the progenitor level-5 [[autonomous-systems|autonomous system]]. Declarative desired-state APIs, continuous reconciliation, failure-domain-aware bin-packing, and fluid task movement are all features of Borg that Kubernetes inherited directly. Newman's "desired state management" is the open-source-era shape of the property Borg already had.
+
+The SRE framing adds a useful perspective Newman doesn't dwell on: the main reason to push into declarative desired-state management is that *humans can't react fast enough*. Rescheduling a task between machines in milliseconds is not something you automate after the fact — it has to be an intrinsic system feature. Desired-state management is the API surface that lets you treat "what should be running where" as data and delegate the rest to a reconciliation loop.
+
 ## Application-specific desired state: the operator pattern
 
 Burns's Chapter 9 worked deployment introduces a narrower specialisation: the [[operator-pattern]]. An operator is itself a container running in the orchestrator whose sole job is to manage one specific application — etcd in the chapter's example — via a custom desired-state API. Users create declarative `Cluster` objects and the operator reconciles the pods, services, and volumes required to make the stated cluster real (source: raw/designing-distributed-systems/chapter-09-ownership-election.md). The operator is a bet that the operational knowledge for a given application is complicated enough to warrant its own reconciliation loop rather than expecting users to compose raw primitives.
@@ -83,3 +95,6 @@ Burns's Chapter 9 worked deployment introduces a narrower specialisation: the [[
 - [[operator-pattern]]
 - [[ownership-election-pattern]]
 - [[singleton-pattern]]
+- [[borg]]
+- [[autonomous-systems]]
+- [[automation-at-google]]

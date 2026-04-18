@@ -2,9 +2,9 @@
 
 **Summary**: Tools that capture per-segment timing for a chain of calls across services, so you can answer "where did the time go?" Log aggregation can show you what happened; distributed tracing shows you when and how long each part took.
 
-**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md`
+**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md`, `raw/site-reliability-engineering/chapter-12-effective-troubleshooting.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -34,6 +34,16 @@ A [[service-mesh]] handles inbound and outbound tracing for you automatically �
 
 A typical Jaeger-style view: a horizontal time axis with each span as a coloured bar, nested to show parent-child call relationships. You can see at a glance which span is the long pole, where the gaps are (often serial calls that could parallelise), and which downstream service caused a regression after a release.
 
+## Dapper and the Google SRE view (Chapter 12)
+
+Google's internal tracing system — published as the **Dapper** paper [Sig10] — predates Jaeger and is the reference implementation of the same pattern (source: chapter-12-effective-troubleshooting.md). Chapter 12's Examine phase names Dapper explicitly as the tool of choice when you need to understand how a distributed system is behaving across many services.
+
+> Tracing requests through the whole stack using tools such as Dapper provides a very powerful way to understand how a distributed system is working, though varying use cases imply significantly different tracing designs.
+
+The chapter's App Engine case study uses Dapper to investigate which properties an application's requests were sending to the datastore — without which the team could not have seen the inside of individual HTTP handlers. Dapper also became the tool that *ruled out* an initial theory in that case: tracing showed that static-asset requests were slow *without* making datastore RPCs, which disconfirmed the merge-join hypothesis the team had latched onto.
+
+Distributed tracing is therefore one of the highest-leverage pieces of [[making-troubleshooting-easier|troubleshooting-easier infrastructure]] — it enables [[divide-and-conquer-debugging|divide-and-conquer]] on a request that crosses many services, and it surfaces time spent in regions of code that aren't doing RPCs at all (the App Engine case's mysterious 250 ms gap).
+
 ## Related pages
 
 - [[monitoring-and-observability]]
@@ -41,3 +51,6 @@ A typical Jaeger-style view: a horizontal time axis with each span as a coloured
 - [[correlation-ids]]
 - [[service-mesh]]
 - [[response-time-percentiles]]
+- [[troubleshooting-model]]
+- [[divide-and-conquer-debugging]]
+- [[making-troubleshooting-easier]]

@@ -2,9 +2,9 @@
 
 **Summary**: The process of promoting a follower to leader when the current leader fails — conceptually simple, but rife with edge cases that can corrupt data or leave the system in an inconsistent state.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-05-replication.md`, `raw/designing-data-intensive-applications/chapter-08-the-trouble-with-distributed-systems.md`, `raw/designing-data-intensive-applications/chapter-09-consistency-and-consensus.md`, `raw/designing-distributed-systems/chapter-09-ownership-election.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-05-replication.md`, `raw/designing-data-intensive-applications/chapter-08-the-trouble-with-distributed-systems.md`, `raw/designing-data-intensive-applications/chapter-09-consistency-and-consensus.md`, `raw/designing-distributed-systems/chapter-09-ownership-election.md`, `raw/site-reliability-engineering/chapter-22-addressing-cascading-failures.md`, `raw/site-reliability-engineering/chapter-23-managing-critical-state-distributed-consensus-for-reliability.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -25,6 +25,8 @@ Failover can be **manual** (an operator performs the steps) or **automatic** (th
 *Example from production*: GitHub promoted an out-of-date MySQL follower to leader. Its autoincrement counter had lagged, so it reused primary key values the old leader had already issued. Those keys were also used in Redis. The resulting inconsistency leaked private data to the wrong users.
 
 **Split brain**: if the old leader comes back before realizing it has been replaced, two nodes may both believe they are the leader. If both accept writes without a conflict resolution mechanism, data is lost or corrupted. Systems use **fencing** (also called STONITH — *Shoot The Other Node In The Head*) to forcibly shut down the old leader, but if fencing is misconfigured, both nodes can be shut down.
+
+SRE Chapter 23 (Laura Nolan) is specifically pointed about STONITH-based split-brain avoidance being **conceptually unsound** when implemented on top of heartbeats alone: a slow or lossy network makes both nodes exceed their heartbeat timeouts, both send STONITH commands, and the pair ends in either data corruption (both active) or total unavailability (both shot). The Chapter 23 [[consensus-coordination-failures|case study 1]] is a real-world example of this pattern producing outages. Nolan's rule: leader election is a reformulation of the asynchronous [[consensus|consensus problem]] and cannot be solved correctly with heartbeats (source: chapter-23-managing-critical-state-distributed-consensus-for-reliability.md). See [[consensus-coordination-failures]].
 
 **Timeout tuning**: a timeout that's too long means a long recovery window when the leader genuinely fails. A timeout that's too short causes spurious failovers during temporary load spikes or network hiccups — and an unnecessary failover during an already-stressed period makes things worse.
 
@@ -67,6 +69,14 @@ Burns's *Designing Distributed Systems* Chapter 9 covers failover in the specifi
 
 Burns's named alternative to failover — the [[singleton-pattern]] — is worth surfacing because it is rarely treated as a serious option in the replication literature. The book argues explicitly that "distributed" is not always the right answer, and for background asynchronous work, a single orchestrated replica is simpler, cheaper, and probably good enough. See [[ownership-election-pattern]] for the full pattern.
 
+## Failover as cascading-failure trigger (SRE Chapter 22)
+
+SRE Chapter 22's [[intra-layer-communication]] section specifically warns about *primary-to-secondary proxying*: a design where the primary backend, under load, forwards requests to a hot standby instead of failing the request (source: chapter-22-addressing-cascading-failures.md). Under normal conditions this mechanism is rare and inexpensive; under heavy load it kicks in on many requests simultaneously, and the primary pays the cost of parsing, forwarding, and waiting on the secondary — adding work precisely when capacity is already stretched. The chapter's prescription is to have the client (not the primary) discover the secondary and retry there.
+
+Chapter 22 also lists failover-adjacent triggers in its [[cascading-failure-triggers|triggering conditions]] catalogue: draining a multihomed service shifts traffic to surviving clusters, which may then also be overloaded; process death reduces available capacity enough to tip a near-the-edge service into cascade. Failover is rarely the sole cause, but it is frequently the accelerant.
+
+The broader point complements Kleppmann's [[failover]] warnings: failover mechanisms assume the failing node is gone and its traffic can be absorbed elsewhere. Under cascading-failure conditions, both assumptions can be false — the node is wedged not dead, and its traffic cannot be absorbed because peers are also struggling. [[addressing-ongoing-cascading-failure|Addressing an ongoing cascade]] sometimes includes *disabling* automatic failover to stop the death-loop.
+
 ## Related pages
 
 - [[leader-based-replication]]
@@ -83,3 +93,9 @@ Burns's named alternative to failover — the [[singleton-pattern]] — is worth
 - [[ownership-election-pattern]]
 - [[singleton-pattern]]
 - [[renewable-leases]]
+- [[cascading-failure]]
+- [[intra-layer-communication]]
+- [[cascading-failure-triggers]]
+- [[addressing-ongoing-cascading-failure]]
+- [[consensus-coordination-failures]]
+- [[managing-critical-state]]

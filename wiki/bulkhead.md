@@ -2,9 +2,9 @@
 
 **Summary**: A stability pattern (Michael Nygard, *Release It!*) that partitions resources — thread pools, connection pools, instances, whole services — so that a failure or exhaustion in one partition cannot consume resources belonging to another. Named after a ship's bulkheads, which compartmentalise the hull so a single breach does not sink the vessel.
 
-**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md` (for the broader "isolate services" principle and the pointer to *Release It!*; the word *bulkhead* itself does not appear in any file under `raw/`).
+**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md` (for the broader "isolate services" principle and the pointer to *Release It!*; the word *bulkhead* itself does not appear in any file under `raw/`), `raw/site-reliability-engineering/chapter-21-handling-overload.md` (for the per-customer-quotas-as-logical-bulkhead and batch-proxy-as-fuse realisations), `raw/site-reliability-engineering/chapter-22-addressing-cascading-failures.md` (for the distributed-deadlock and per-keyspace concurrency limit framings).
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -104,6 +104,26 @@ Isolation — the category bulkheads fall into — sits firmly on the **robustne
 
 [[service-mesh]] data planes (Envoy, Linkerd-proxy) typically implement per-upstream connection-pool limits as part of their default configuration — the outbound sidecar is a natural place to enforce a bulkhead because every outbound call already passes through it. Control-plane policy can set different limits per upstream service.
 
+### Logical bulkheads: per-customer quotas
+
+SRE Chapter 21 introduces a bulkhead realisation that isn't a physical resource partition but a **logical budget**: [[per-customer-quotas]] allocate CPU-second-per-second budgets to each customer of a backend service. A customer's over-use cannot consume another customer's share because the backend rejects requests from over-budget customers with out-of-quota errors. The "water" being compartmented here is CPU time; the "bulkhead" is a counter rather than a pool.
+
+Chapter 21 (source: chapter-21-handling-overload.md) also describes **[[request-criticality]]** as a soft bulkhead across priority classes within a shared resource: under load the service preferentially serves high-criticality traffic, so a flood of `SHEDDABLE` traffic cannot starve `CRITICAL_PLUS` traffic even though both share the same physical capacity. Unlike a hard thread-pool bulkhead, the partition is probabilistic and per-request, trading rigidity for utilisation — the service doesn't need separate deployments per priority class when they rarely peak together.
+
+### Physical bulkheads: the batch-proxy fuse
+
+The [[connection-level-load|batch proxy pattern]] from Chapter 21 is a textbook physical bulkhead: a separate proxy fleet absorbs the connection-storm impact of a batch job spawning thousands of workers, so interactive clients and the real backend are unaffected. The proxy acts as a *fuse* — if the batch workload overloads anything, it overloads the proxy fleet, which can be scaled or restarted independently without touching the production serving path.
+
+The pattern generalises: any time a workload class has a fundamentally different traffic shape (bursty, high connection-count, high fan-in) from the rest of the traffic, a dedicated proxy tier bulkheads that workload's blast radius without requiring separate backend fleets.
+
+### Per-keyspace bulkheads (Chapter 22's bimodal-latency defence)
+
+Chapter 22's [[bimodal-latency]] analysis ends with an explicit bulkhead prescription: when a shared resource can be exhausted by one keyspace (tenant, customer, partition), limit concurrent in-flight requests per keyspace rather than letting any single keyspace consume the whole thread pool (source: chapter-22-addressing-cascading-failures.md). The chapter's example of "only allow 25% of your threads to be occupied by any one client" is a concurrency-limit bulkhead across clients sharing a service — different from the usual thread-pool-per-dependency bulkhead, and specifically protective against the bimodal-latency failure mode where stuck requests (for one unavailable keyspace) consume all threads.
+
+### Intra-layer communication as bulkhead failure (Chapter 22)
+
+Chapter 22's [[intra-layer-communication]] section describes a specific bulkhead violation: when backends proxy to each other from the same thread pool they use to serve incoming requests, the outgoing-call threads and incoming-request threads are sharing a pool — so a slow peer can consume all of a backend's threads while it waits, leaving no capacity for the incoming requests that backend is responsible for serving (source: chapter-22-addressing-cascading-failures.md). The Chapter 22 prescription ("have the client do the communication") is a structural fix; a per-dependency thread-pool bulkhead is a narrower fix that preserves some ability to call peers but caps the blast radius.
+
 ### And the pod boundary
 
 The [[pod]] itself is a lightweight bulkhead: a container's resource limits cap how much CPU, memory, and file-descriptors it can consume, so a pod running away does not starve other pods on the same node. Node-level isolation (evictions, taints, limits) is the operating-system-layer version of the pattern.
@@ -131,3 +151,10 @@ As with [[circuit-breaker]], mesh-based bulkheads move the policy out of applica
 - [[pod]]
 - [[fault-tolerance]]
 - [[partial-failures]]
+- [[per-customer-quotas]]
+- [[request-criticality]]
+- [[connection-level-load]]
+- [[handling-overload]]
+- [[cascading-failure]]
+- [[intra-layer-communication]]
+- [[bimodal-latency]]

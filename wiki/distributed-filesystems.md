@@ -2,9 +2,9 @@
 
 **Summary**: A distributed filesystem spreads file storage across many machines in a shared-nothing cluster, providing a single logical filesystem with fault tolerance through replication or erasure coding. HDFS is the dominant open-source implementation.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-10-batch-processing.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-10-batch-processing.md`, `raw/site-reliability-engineering/chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-17
 
 ---
 
@@ -35,6 +35,15 @@ The largest HDFS deployments run on tens of thousands of machines with combined 
 
 The MapReduce scheduler tries to run map tasks on machines that store replicas of their input files — **putting computation near the data**. This saves network bandwidth. However, if erasure coding is used instead of replication, the locality advantage is lost because data from multiple machines must be combined to reconstruct the original file (source: designing-data-intensive-applications, chapter 10).
 
+## Google's stack: D + Colossus
+
+Google's internal cluster storage is the direct ancestor of this family. The SRE book's Chapter 2 describes a two-layer split (source: site-reliability-engineering, chapter 2):
+
+- **D** — a fileserver running on almost every machine in a cluster, exposing its local spinning and flash disks.
+- **[[colossus]]** — a cluster-wide filesystem layered over all D instances, offering normal filesystem semantics plus replication and encryption. Colossus is the successor to **GFS**, the Google File System described in the 2003 SOSP paper.
+
+HDFS is an open-source reimplementation of GFS, so the Hadoop ecosystem and Google's internal stack are siblings descending from the same design. Bigtable, Spanner, and Blobstore all sit on top of Colossus, the same way HBase and Impala sit on top of HDFS.
+
 ## Other distributed filesystems
 
 Besides HDFS, alternatives include GlusterFS and the Quantcast File System (QFS). Object storage services (Amazon S3, Azure Blob Storage, OpenStack Swift) are similar in many ways, though they typically separate storage from computation, while HDFS co-locates them (source: designing-data-intensive-applications, chapter 10).
@@ -64,3 +73,4 @@ This diversity of processing models on a shared filesystem is a key advantage ov
 - [[replication]]
 - [[hadoop-vs-mpp-databases]]
 - [[partitioning]]
+- [[colossus]]

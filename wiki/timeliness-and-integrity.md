@@ -2,9 +2,9 @@
 
 **Summary**: Two distinct requirements commonly conflated under "consistency" -- timeliness (users see up-to-date state) and integrity (no data corruption or contradiction) -- which can be decoupled in event-based systems to achieve scalable correctness without distributed transactions.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/site-reliability-engineering/chapter-26-data-integrity-what-you-read-is-what-you-wrote.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-17
 
 ---
 
@@ -59,6 +59,21 @@ Many real applications can accept **weaker constraint enforcement** than strict 
 
 The cost of apology varies but is often low. If the cost is acceptable, checking constraints before writing is unnecessarily restrictive -- you can write optimistically and check after the fact. These applications require integrity (no lost reservations, no mismatched debits/credits) but not timeliness on constraint enforcement. See [[coordination-avoidance]] (source: chapter-12-the-future-of-data-systems.md).
 
+## The SRE reframing: availability as part of integrity
+
+SRE Chapter 26 operates at the level above Kleppmann's timeliness/integrity split. Even perfect Kleppmann-integrity (no corruption, no contradiction) is insufficient if users can't *access* the preserved data (source: chapter-26-data-integrity-what-you-read-is-what-you-wrote.md):
+
+> From the user's point of view, data integrity without expected and regular data availability is effectively the same as having no data at all.
+
+Chapter 26's revised operational definition folds access into the integrity guarantee: **data integrity means that services in the cloud remain accessible to users, and user access to data is especially important**. From the end user's perspective, data loss, data corruption, and extended unavailability are indistinguishable.
+
+The two framings compose:
+
+- **Kleppmann**: integrity violations are "perpetual inconsistency" — they won't self-heal; explicit checking and repair is required.
+- **SRE Ch 26**: integrity plus extended unavailability is no better than no integrity at all, in the user's observation.
+
+Both agree that integrity is non-negotiable. SRE adds that **integrity-preserved-but-unreachable** data still fails the user. This drives Ch 26's whole architecture — [[soft-deletion]], [[tiered-backup-strategy|backups]], [[data-validation-pipelines|validators]], and [[recovery-testing|continuously-tested recovery]] — toward availability of integrity-preserved data as a first-class goal. See [[data-integrity-sre]] for the hub and [[data-availability-vs-integrity]] for the distinction.
+
 ## Related pages
 
 - [[coordination-avoidance]]
@@ -71,3 +86,6 @@ The cost of apology varies but is often low. If the cost is acceptable, checking
 - [[distributed-transactions]]
 - [[event-sourcing]]
 - [[transactions]]
+- [[data-integrity-sre]]
+- [[data-availability-vs-integrity]]
+- [[defense-in-depth-data]]

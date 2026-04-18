@@ -2,7 +2,7 @@
 
 **Summary**: The degree to which changing one part of a system requires changing another. Newman identifies four types relevant to microservices — implementation, temporal, deployment, and domain — each with different remedies. Reducing coupling is the central design pressure that shapes service boundaries.
 
-**Sources**: `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`, `raw/fundamentals-of-software-architecture/chapter-03-modularity.md`, `raw/building-event-driven-microservices/chapter-01-why-event-driven-microservices.md`
+**Sources**: `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`, `raw/fundamentals-of-software-architecture/chapter-03-modularity.md`, `raw/building-event-driven-microservices/chapter-01-why-event-driven-microservices.md`, `raw/site-reliability-engineering/chapter-09-simplicity.md`
 
 **Last updated**: 2026-04-17
 
@@ -83,6 +83,18 @@ This is the coupling reframing behind [[event-driven-microservices]]: by pushing
 
 Coupling and [[cohesion]] are linked — they are the two halves of Constantine's law. Tightly coupled code tends to have low cohesion (related functionality spread across boundaries); high cohesion tends to reduce coupling (related code grouped together). The microservice movement is at heart a return to modular software design — modules that communicate via networks and can be independently deployed (source: chapter-01-just-enough-microservices.md).
 
+## Loose coupling as a simplicity pattern (SRE Ch 9)
+
+Chapter 9 of *Site Reliability Engineering* adopts the same framing under its simplicity banner (source: chapter-09-simplicity.md):
+
+> Loose coupling between binaries, or between binaries and configuration, is a simplicity pattern that simultaneously promotes developer agility and system stability. If a bug is discovered in one program that is a component of a larger system, that bug can be fixed and pushed to production independent of the rest of the system.
+
+The SRE contribution is to name loose coupling as the structural enabler of **independent fixability**, not just independent deployability. When a component can be fixed and released without rebuilding the rest, the mean-time-to-repair shrinks for the whole system — the individual MTTR of each binary is decoupled from the aggregate deploy scope.
+
+Chapter 9 also extends the framing to configuration: code-to-config coupling is coupling too. A binary that has to be rebuilt for every config change has coupled two things that should be separable. See [[configuration-management-sre]] for Google's four models for decoupling configuration from binaries.
+
+See [[simplicity-sre]] for the full Chapter 9 treatment.
+
 ## Related pages
 
 - [[cohesion]]
@@ -100,3 +112,5 @@ Coupling and [[cohesion]] are linked — they are the two halves of Constantine'
 - [[synchronous-microservices]]
 - [[event-streams]]
 - [[communication-structures]]
+- [[simplicity-sre]]
+- [[configuration-management-sre]]

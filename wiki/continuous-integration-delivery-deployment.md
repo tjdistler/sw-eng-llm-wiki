@@ -2,7 +2,7 @@
 
 **Summary**: Three related-but-distinct CI/CD stages for getting code changes into production. **Continuous integration** automates build and test on every merge. **Continuous delivery** keeps the codebase deployable but leaves the deploy step manual. **Continuous deployment** fully automates release. Bellemare treats the first two as essential [[microservice-tax]] for any EDM platform and warns that the third is much harder for stateful services.
 
-**Sources**: `raw/building-event-driven-microservices/chapter-16-deploying-event-driven-microservices.md`
+**Sources**: `raw/building-event-driven-microservices/chapter-16-deploying-event-driven-microservices.md`, `raw/site-reliability-engineering/chapter-08-release-engineering.md`
 
 **Last updated**: 2026-04-17
 
@@ -47,6 +47,16 @@ Beyond the usual unit/integration tests, Bellemare calls out two checks that bel
 
 Bellemare recommends **independent integration testing environments** per service (source: chapter-16-deploying-event-driven-microservices.md). A long-running shared test cluster suffers from multitenancy — one team's test data corrupts another team's assertions. The CI pipeline should be able to spin up a transient, isolated environment for each run (see the [[edm-supportive-tooling|supportive tooling]] section on integration testing).
 
+## The SRE framing: release engineering as a discipline
+
+Chapter 8 of *Site Reliability Engineering* approaches the same territory from a different direction: rather than describing it as a pipeline stack to be built around each service, it describes it as a **named engineering discipline** with its own job function and its own guiding principles (source: chapter-08-release-engineering.md). See [[release-engineering]] for the full framing; the four guiding principles ([[release-engineering-principles]]) are self-service, [[high-release-velocity|high velocity]], [[hermetic-builds]], and [[release-policy-enforcement]].
+
+Three ways the SRE framing sharpens the Bellemare picture:
+
+- **Hermetic builds.** Bellemare's CI produces a "ready-to-deploy container or VM image." SRE insists that the build is *byte-identical* across machines and that build tools themselves are versioned in the repo. This is what makes cherry-picking onto old branches safe — something most CI pipelines do not preserve. See [[hermetic-builds]].
+- **Continuous deployment at scale.** Bellemare warns that continuous deployment is difficult in practice, especially for stateful services. SRE Chapter 8 describes teams that do it anyway, via [[push-on-green]], and lists the supporting machinery: [[rapid-release-system|Rapid]] workflows, [[midas-package-manager|MPM]] movable labels, [[sisyphus]] risk-matched rollouts, and [[change-management-sre|progressive rollout plus detection plus rollback]]. The "how to actually ship continuous deployment" answer is *build the whole release-engineering stack*.
+- **Configuration management as a first-class concern.** Bellemare focuses on event and schema compatibility; SRE adds the parallel discipline of [[configuration-management-sre|four patterns for distributing configuration]] through the same release pipeline, with the same strict code review. Configuration is the silent cause of many outages and deserves the same discipline as code.
+
 ## Relationship to existing wiki coverage
 
 - **[[microservice-tax]]** — CI/CD is one of the line items Bellemare enumerates.
@@ -66,3 +76,8 @@ Bellemare recommends **independent integration testing environments** per servic
 - [[edm-deployment-principles]]
 - [[edm-supportive-tooling]]
 - [[basic-full-stop-deployment]]
+- [[release-engineering]]
+- [[release-engineering-principles]]
+- [[hermetic-builds]]
+- [[push-on-green]]
+- [[configuration-management-sre]]

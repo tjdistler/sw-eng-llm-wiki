@@ -2,9 +2,9 @@
 
 **Summary**: A technique originally designed for distributing load across internet-wide caches (CDNs) by using randomly chosen partition boundaries, avoiding the need for central control or distributed consensus. In practice, the term is misleading in a database context and "hash partitioning" is preferred.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-06-partitioning.md`, `raw/designing-distributed-systems/chapter-03-ambassadors.md`, `raw/designing-distributed-systems/chapter-05-replicated-load-balanced-services.md`, `raw/designing-distributed-systems/chapter-06-sharded-services.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-06-partitioning.md`, `raw/designing-distributed-systems/chapter-03-ambassadors.md`, `raw/designing-distributed-systems/chapter-05-replicated-load-balanced-services.md`, `raw/designing-distributed-systems/chapter-06-sharded-services.md`, `raw/site-reliability-engineering/chapter-19-load-balancing-at-the-frontend.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -53,6 +53,19 @@ upstream backend {
 
 The `hash ... consistent` directive configures nginx's consistent-hashing module. `$request_uri` is the shard key — the full path plus query string plus fragment (see [[shard-key-selection]] for why this key is chosen). Adding a fourth backend remaps only ~25% of URLs rather than all of them.
 
+## Consistent hashing in packet-level load balancers
+
+SRE Chapter 19 (source: chapter-19-load-balancing-at-the-frontend.md) applies consistent hashing to a different shape of the same problem: a [[network-load-balancer]] sitting in front of a [[virtual-ip-address|VIP]], picking a backend for each incoming TCP connection without keeping per-connection state.
+
+The naive stateless approach is `hash(connection_tuple) mod N` where `N` is the backend count. It's stable within a connection but catastrophic when `N` changes: adding or removing a backend remaps *almost every* connection to a different backend, forcing mass resets.
+
+Consistent hashing keeps the mass-reset disruption down to roughly `#connections / #backends` when the backend set changes — exactly the CDN mathematics applied to live TCP connections rather than cache keys. Chapter 19's specific pattern:
+
+- **Connection tracking in the common case.** The balancer remembers which backend got each connection and routes subsequent packets accordingly. No hash needed.
+- **Consistent-hashing fallback under pressure.** If the tracking table fills up — typically during a denial-of-service attack — fall back to consistent hashing so existing connections continue to land on their original backend.
+
+This gives a best-of-both-worlds balancer: stable under normal conditions (connection tracking), resilient to DoS (stateless consistent-hash fallback without killing legitimate connections). It is what makes the Maglev-style [[packet-encapsulation-load-balancer]] practical at Google scale. See [[frontend-load-balancing]] for the full layered story.
+
 ## Consistent hashing for session affinity
 
 The same minimum-remapping property is what makes consistent hashing the default choice for session stickiness in a [[replicated-load-balanced-service]]. When a load balancer assigns users to replicas via `hash(user) % N`, any change in `N` (adding or removing a replica) re-hashes almost every user, invalidating all in-memory caches and long-running sessions. A consistent-hashing scheme remaps only a small fraction of users, so warm caches and sessions largely survive scaling events (source: raw/designing-distributed-systems/chapter-05-replicated-load-balanced-services.md). This is conceptually the same CDN use case Karger et al. defined — users as "keys," replicas as "nodes" — rather than anything database-specific. See [[session-tracked-services]] for the full treatment and the caveats around IP hash vs cookie/header hash.
@@ -70,3 +83,7 @@ The same minimum-remapping property is what makes consistent hashing the default
 - [[sharded-service-pattern]]
 - [[shard-key-selection]]
 - [[sharded-cache]]
+- [[network-load-balancer]]
+- [[virtual-ip-address]]
+- [[packet-encapsulation-load-balancer]]
+- [[frontend-load-balancing]]

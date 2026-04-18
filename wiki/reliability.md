@@ -2,9 +2,9 @@
 
 **Summary**: Reliability means a system continues to perform its correct function, at the desired level of performance, even in the face of hardware faults, software bugs, and human error.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-01-reliable-scalable-and-maintainable-applications.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-01-reliable-scalable-and-maintainable-applications.md`, `raw/site-reliability-engineering/chapter-01-introduction.md`, `raw/site-reliability-engineering/chapter-03-embracing-risk.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-17
 
 ---
 
@@ -64,8 +64,31 @@ Counterintuitively, deliberately inducing faults increases confidence in fault-t
 
 For most fault types, tolerating faults is preferable to preventing them. Security is an exception: if an attacker has accessed sensitive data, that event cannot be undone — prevention is the only option.
 
+## The organisational side: SRE
+
+Kleppmann's Chapter 1 covers reliability as a *technical* property of the system: faults, fault-tolerance, redundancy. The Google SRE book covers the *organisational* counterpart — how a team is structured and held accountable for reliability in production.
+
+SRE's key additions to the technical picture (source: raw/site-reliability-engineering/chapter-01-introduction.md):
+
+- **100% is the wrong reliability target** for basically everything. The right target is a [[service-level-objective|SLO]] chosen as a product decision, not a technical one. See [[service-level-objective]].
+- The complement of the SLO is an [[error-budget]] — a resource the team spends on velocity (launches, experiments, changes). This dissolves the [[sysadmin-approach|dev-vs-ops conflict]] that otherwise plays out as trench warfare over release gates.
+- Reliability is `MTTF / (MTTF + MTTR)`. Lowering [[mttr-and-mttf|MTTR]] by taking humans out of the loop often beats lowering failure frequency. See [[emergency-response]].
+- **70% of outages come from change**; the answer is not to stop changing but to wrap change in [[change-management-sre|progressive rollouts, fast detection, and safe rollback]].
+- The team accountable for reliability should be staffed with software engineers who can replace manual work with code, not with a separate sysadmin pool. See [[sre-discipline]].
+
+Chapter 3 sharpens these into the explicit **[[risk-management-sre|risk-management]]** framing: reliability is a cost-bearing continuum, cost scales nonlinearly (each additional nine can cost 100x the last), and the appropriate target for a given service is discovered via the **[[risk-tolerance]]** process — working with product owners on consumer services, and partitioning by service tier on infrastructure services. The availability target functions as **both a minimum and a maximum**; exceeding it significantly is a signal that engineering effort has been wasted on reliability the business did not need (source: raw/site-reliability-engineering/chapter-03-embracing-risk.md).
+
 ## Related pages
 
 - [[fault-tolerance]]
 - [[scalability]]
 - [[maintainability]]
+- [[site-reliability-engineering]]
+- [[sre-discipline]]
+- [[error-budget]]
+- [[service-level-objective]]
+- [[risk-management-sre]]
+- [[risk-tolerance]]
+- [[availability-measurement]]
+- [[emergency-response]]
+- [[change-management-sre]]

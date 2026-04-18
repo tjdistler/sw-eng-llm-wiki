@@ -2,9 +2,9 @@
 
 **Summary**: The primary mechanism for detecting faults in distributed systems, but choosing the right timeout value is a fundamental tradeoff between fast fault detection and the risk of falsely declaring healthy nodes dead.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-08-the-trouble-with-distributed-systems.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-08-the-trouble-with-distributed-systems.md`, `raw/site-reliability-engineering/chapter-22-addressing-cascading-failures.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-17
 
 ---
 
@@ -38,6 +38,17 @@ The **Phi Accrual failure detector** is one such approach, used in Akka and Cass
 
 In practice, timeouts should be determined experimentally by measuring the distribution of network round-trip times over an extended period across many machines, then choosing a tradeoff between detection delay and premature-timeout risk appropriate for the application. (source: designing-data-intensive-applications, chapter 8)
 
+## Deadlines: the server-side counterpart
+
+SRE Chapter 22 develops the complementary notion of an RPC **deadline** (source: chapter-22-addressing-cascading-failures.md): an absolute wall-clock time by which the request must be answered, propagated from the top of the request tree through every downstream call. Where a timeout is the client's maximum wait, a deadline is the collective budget the whole call tree shares.
+
+Deadline-based frameworks (gRPC, Stubby) have two advantages over timeout-based frameworks for cascading-failure prevention:
+
+- **Propagation.** The deadline flows through every RPC in the subtree. A deep backend with a 19-second remaining budget knows exactly how long it has, so it can short-circuit work that won't complete in time.
+- **Cancellation.** When any call in the tree is cancelled (by deadline expiry or client disconnect), the cancellation propagates across the tree, stopping in-flight work that would otherwise continue until its own local deadline.
+
+Chapter 22 treats deadlines as a cascading-failure defence: servers that do work whose results are thrown away consume resources for no benefit, and under load this wasted work becomes the difference between surviving and cascading. See [[latency-and-deadlines]] for the picking-a-deadline discussion, [[deadline-propagation]] for the mechanic, and [[bimodal-latency]] for the specific failure mode where too-long deadlines amplify a small unavailability into a large one.
+
 ## Related pages
 
 - [[unreliable-networks]]
@@ -47,3 +58,7 @@ In practice, timeouts should be determined experimentally by measuring the distr
 - [[process-pauses]]
 - [[circuit-breaker]]
 - [[bulkhead]]
+- [[latency-and-deadlines]]
+- [[deadline-propagation]]
+- [[bimodal-latency]]
+- [[cascading-failure]]

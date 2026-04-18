@@ -2,9 +2,9 @@
 
 **Summary**: A property of an operation such that applying it N times has the same observable effect as applying it once. In distributed systems idempotence is the workhorse primitive that makes retry-based fault tolerance safe — it converts at-least-once delivery into effectively-once behaviour without requiring synchronous coordination.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`, `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/designing-data-intensive-applications/glossary.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`, `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/designing-data-intensive-applications/glossary.md`, `raw/site-reliability-engineering/chapter-24-distributed-periodic-scheduling-with-cron.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -133,6 +133,17 @@ The "honest" form of each idempotence technique surfaces the ID or version at th
 
 In every case, the honest form pushes the identifier to the layer that can actually tell a retry from a new intent — which, per the end-to-end argument, is almost always the application.
 
+## Where idempotence is *not* universal: scheduled jobs
+
+SRE Chapter 24's [[distributed-cron|distributed cron]] is a useful counter-example. Cron jobs span the full spectrum from naturally idempotent (garbage collection, cache refresh) to strictly non-idempotent (monthly payroll, mass email newsletter), and the scheduler cannot know which class each job belongs to (source: chapter-24-distributed-periodic-scheduling-with-cron.md). Two consequences for the idempotence framing:
+
+- **Idempotence is a job-owner property, not a scheduler property.** The scheduler cannot declare "launches are idempotent" globally because that would misrepresent the guarantees to the owners of non-idempotent jobs.
+- **Absent universal idempotency, the safe default is fail-closed.** Cron prefers skipping over double-launching because a skipped launch is usually recoverable manually by the job owner, while a double launch of a non-idempotent job (two newsletters, two payrolls) may be impossible to undo. See [[cron-idempotency-and-skip-vs-double-launch]] for the detailed framing.
+
+The distinction between this and the stream-processing story is illuminating. Kafka consumers dealing with idempotent or idempotence-wrapped writes can lean on at-least-once delivery with dedup on the consumer to achieve effectively-once semantics. Cron cannot — the "consumer" is the external world (emails, paycheques) and dedup there is often impossible. The asymmetry in cost between skip and double-launch is what flips the default to at-most-once.
+
+Chapter 24 also uses idempotence *inside* the cron service: to resolve partial failures when the launcher dies mid-launch, the system relies either on the datacenter scheduler's RPCs being idempotent or — more commonly — on precomputed names plus state lookup (which amounts to constructing idempotence externally). See [[cron-partial-failure-resolution]].
+
 ## Related pages
 
 - [[exactly-once-semantics]]
@@ -149,3 +160,6 @@ In every case, the honest form pushes the identifier to the layer that can actua
 - [[change-data-capture]]
 - [[event-sourcing]]
 - [[effectively-once-processing]]
+- [[distributed-cron]]
+- [[cron-idempotency-and-skip-vs-double-launch]]
+- [[cron-partial-failure-resolution]]

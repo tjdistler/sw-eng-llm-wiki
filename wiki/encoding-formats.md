@@ -2,7 +2,7 @@
 
 **Summary**: When data moves between processes — over a network or to disk — it must be encoded as a byte sequence. Encoding formats fall into three categories with very different tradeoffs around portability, human-readability, compactness, and schema evolution support.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`, `raw/building-event-driven-microservices/chapter-03-communication-and-data-contracts.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`, `raw/building-event-driven-microservices/chapter-03-communication-and-data-contracts.md`, `raw/site-reliability-engineering/chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md`
 
 **Last updated**: 2026-04-17
 
@@ -78,6 +78,14 @@ Adam Bellemare's Chapter 3 of *Building Event-Driven Microservices* gives a shar
 
 The force behind the recommendation is the same as the force behind [[explicit-vs-implicit-schemas|explicit schemas]]: without a typed, evolvable format, consumers end up interpreting data on their own, and the architecture drifts back toward implicit coupling.
 
+## Protocol Buffers at Google
+
+The SRE book's Chapter 2 gives a concise pitch for Protocol Buffers ("protobufs") as the universal format for RPC and storage inside Google (source: site-reliability-engineering, chapter 2):
+
+> Protocol buffers have many advantages over XML for serializing structured data: they are simpler to use, 3 to 10 times smaller, 20 to 100 times faster, and less ambiguous.
+
+Every [[stubby|Stubby]] (gRPC) call carries protobuf payloads. Protobufs are one of the three Thrift-style formats in the binary schema-driven category above; see [[protocol-buffers]] for the dedicated page.
+
 ## Related pages
 
 - [[backward-forward-compatibility]]
@@ -92,3 +100,5 @@ The force behind the recommendation is the same as the force behind [[explicit-v
 - [[schema-registry]]
 - [[explicit-vs-implicit-schemas]]
 - [[event-driven-microservices]]
+- [[protocol-buffers]]
+- [[stubby]]

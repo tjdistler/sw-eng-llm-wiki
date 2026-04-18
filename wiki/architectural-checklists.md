@@ -2,9 +2,9 @@
 
 **Summary**: Richards & Ford's treatment of checklists as a team-effectiveness tool, drawing on Atul Gawande's *The Checklist Manifesto*. Checklists work — but only for the right kind of process: infrequent, non-procedural tasks where errors of omission dominate. Three canonical checklists (code completion, unit/functional testing, software release) are the ones the authors have found worth maintaining.
 
-**Sources**: `raw/fundamentals-of-software-architecture/chapter-22-making-teams-effective.md`
+**Sources**: `raw/fundamentals-of-software-architecture/chapter-22-making-teams-effective.md`, `raw/site-reliability-engineering/chapter-27-reliable-product-launches-at-scale.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-17
 
 ---
 
@@ -80,6 +80,16 @@ When people know they are being observed or monitored, their behaviour changes �
 
 Applied to checklists: tell the team that every checklist will be verified, then **spot-check occasionally**. Developers behave as if every item is being checked, and the omission rate drops sharply. The deception is mild and the payoff is real — but the first two tactics (buy-in via the book; collaboration on contents) should be tried before this one.
 
+## The SRE launch-checklist counterpart
+
+Google SRE's [[launch-checklist|launch checklist]] is a sustained-scale instance of the same pattern (source: chapter-27-reliable-product-launches-at-scale.md). A [[launch-coordination-engineering|dedicated LCE team]] curates the checklist across hundreds of launches per year. Three specific disciplines from that experience align with Richards & Ford's framing and sharpen it:
+
+- **Every question must be substantiated — ideally by a previous launch disaster.** Items earn a place by having already caused a problem that is worth preventing next time. This is the operational form of "the case backlog grows the checklist" that Richards & Ford describe for the release checklist.
+- **Every instruction must be concrete, practical, and reasonable for developers to accomplish.** The question/action-item/pointer-to-infrastructure shape gives developers an explicit next step.
+- **Continuous curation with a full review 1-2 times per year.** Items deprecate as systems are replaced and new policies land; an uncurated checklist drifts into irrelevance and then into disuse.
+
+Chapter 27 also names the **law of diminishing returns** that Richards & Ford warn about, from the same operational angle: at one point, adding a new question to the checklist required VP approval. The shared rule: developers sidestep processes they view as too burdensome, especially under deadline pressure. LCE's answer is aggressive use of **fast common paths** (low-risk launches get a nearly trivial checklist) and **convergence on shared infrastructure** (one line "use X for rate limiting" replaces pages of rate-limiting requirements) to keep the cost per item low.
+
 ## Relationship to fitness functions
 
 Checklists and [[architecture-fitness-function|fitness functions]] are complementary tools for the same underlying problem: ensuring expert work doesn't drop important details. The split is automation:
@@ -97,3 +107,6 @@ The discipline is to continuously move items *from* the checklist *to* the fitne
 - [[architecture-governance]]
 - [[architecture-decisions-vs-design-principles]]
 - [[fundamentals-of-software-architecture]]
+- [[launch-checklist]]
+- [[launch-coordination-engineering]]
+- [[reliable-product-launches]]
