@@ -121,7 +121,7 @@ A [[circuit-breaker]] is the alternative to retry budgets for capping retry ampl
 
 Retries are only safe for [[idempotence|idempotent]] operations. Applications with non-idempotent RPCs (bank transfers, order placement) need explicit duplicate-detection (e.g., operation IDs) before retrying. Chapter 22's retry guidelines assume idempotence; pairing them with the right application-level discipline is on the caller.
 
-### Retry amplification and [[thundering-herd]]
+### Retry amplification and thundering herd
 
 A thundering herd is retry amplification with an additional temporal synchronisation: a cache expiry, a service restart, or a deployment causes many clients to retry *at the same moment*, producing a spike that overwhelms even a healthy backend. Randomised exponential backoff is the defence against both the steady-state retry storm (Chapter 22's primary concern) and the synchronised spike.
 

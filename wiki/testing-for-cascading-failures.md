@@ -137,7 +137,7 @@ Load testing is explicitly a [[capacity-planning]] input. The chapter calls this
 
 A capacity plan without measured breaking-point data is a guess; one with breaking-point data is a calibration.
 
-### Testing for cascading failures and [[dirt|DiRT exercises]]
+### Testing for cascading failures and [[testing-disaster-recovery|DiRT exercises]]
 
 Google's DiRT (Disaster Recovery Testing) exercises are the cross-organisational form of Chapter 22's production-testing directives: deliberately fail a datacenter, a network, or a service, and observe whether the rest of the system degrades gracefully. DiRT extends the single-service testing discipline into cross-team readiness.
 

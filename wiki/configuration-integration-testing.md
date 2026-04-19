@@ -63,7 +63,7 @@ The `/etc/passwd` example: a half-parsed user list leaves the machine apparently
 - [[configuration-management-sre]] (Ch 8) — the four distribution models; config integration testing is what makes those models safe at load time
 - [[encoding-formats]] (Kleppmann / Bellemare) — protocol buffers sit in the binary-schema-driven category alongside Thrift and Avro; this chapter surfaces the reliability-side argument for that family
 - [[data-contract]] (Bellemare) — the schema-first discipline applied to events is directly analogous to schema-first configuration
-- [[defensive-programming]] (industry practice) — the "report the problem, don't try to fix it" rule is defensive programming for operational tools
+- Defensive programming (industry practice) — the "report the problem, don't try to fix it" rule is defensive programming for operational tools
 
 ## Related pages
 

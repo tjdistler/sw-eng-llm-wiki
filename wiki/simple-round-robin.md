@@ -79,7 +79,7 @@ Burns's [[replicated-load-balanced-service]] mentions round-robin as the default
 
 The Google Compute Unit (GCU) is mentioned only in this subsection of Chapter 20 and a few other places in the SRE book. It is an infrastructure detail: a virtual CPU-rate unit used for capacity accounting across heterogeneous machines. See [[capacity-planning]] and [[auxon]] for where GCU lives in the broader plan.
 
-### Simple Round Robin and [[queueing-theory]]-style policies
+### Simple Round Robin and queueing-theory-style policies
 
 There is a large academic literature on richer policies (join-the-shortest-queue, power-of-two-choices, least-response-time). Chapter 20 does not engage with it directly; its pragmatic stance is that active-request count plus backend-reported utilisation captures most of the benefit at a fraction of the implementation cost.
 

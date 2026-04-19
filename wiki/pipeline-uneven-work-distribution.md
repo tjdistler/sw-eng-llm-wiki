@@ -63,7 +63,7 @@ Two further amplifiers come from the operational layer:
 
 - [[bimodal-latency]] (SRE Ch 22) — the same general phenomenon at the request-handling layer: a small fraction of unservable work consumes resources for a long time and starves the rest. The hanging chunk is a stuck-work problem; bimodal latency is a stuck-request problem; both require visibility into the *distribution* of completion times rather than the mean
 - [[hot-spots]] (Kleppmann) — Kleppmann's hot-spot mitigations (key salting, dynamic splitting) are the database-level analogue of fixing uneven chunks at the partitioning layer
-- [[straggler-mitigation]] in MapReduce (Kleppmann Ch 10) — Hadoop's speculative-execution feature launches duplicate copies of straggler tasks; partial answer to the hanging chunk problem at the framework level
+- Straggler mitigation in MapReduce (Kleppmann Ch 10) — Hadoop's speculative-execution feature launches duplicate copies of straggler tasks; partial answer to the hanging chunk problem at the framework level
 - [[work-queue-pattern]] (Burns) — Burns's batch pattern explicitly relies on Kubernetes Jobs as the durable per-item state, which gives natural per-chunk recovery; the periodic-pipeline pattern Chapter 25 critiques is what you get when this discipline is absent
 
 ## Related pages

@@ -38,7 +38,7 @@ The Chapter 14 best practices include "**Change it around** — Were you inciden
 
 ## Cross-book connection
 
-- The IC role is the human-side analogue of an [[orchestrator|orchestrator]] in workflow systems: a single point that holds state about a multi-step distributed process and dispatches work to participants.
+- The IC role is the human-side analogue of an orchestrator in workflow systems: a single point that holds state about a multi-step distributed process and dispatches work to participants.
 - Pulling-people-in-when-overwhelmed is the explicit form of escalation that [[incident-response-mindset]] argues for as a structural pressure-relief valve.
 
 ## Related pages

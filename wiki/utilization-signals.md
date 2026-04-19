@@ -92,7 +92,7 @@ They are complementary: Weighted Round Robin tries to keep utilisation even acro
 
 **Saturation** is one of the four golden signals from Chapter 6. Chapter 21's utilisation signal is saturation operationalised: a numeric measure of "how full is the service right now" used not just for monitoring but for active request-admission control. Saturation monitoring alerts humans; utilisation signals drive automated per-request shedding. The two live on top of the same measurement.
 
-### Utilisation signals and [[executor-load-average]]
+### Utilisation signals and executor-load-average
 
 The executor load average is specifically Google's preferred implementation of the general "how loaded is this process" idea. It is to a process what Unix's `loadavg` is to a machine: a smoothed count of ready-to-run threads relative to CPU capacity. The design lesson travels: if you need a process-local saturation signal, count ready threads and smooth.
 

@@ -117,7 +117,7 @@ An alerting rule produces a boolean time-series. When true for at least some min
 Two parts of this deserve attention:
 
 - The **`for 2m`** clause is the **flap-prevention** window. Alerts can toggle state rapidly (flap); requiring the condition to hold for at least two rule-evaluation cycles avoids triggering on a single missed collection. Chapter 10's minimum: two evaluation cycles.
-- The alert carries a **template-filled detail string** (`[[trigger_value]]`) so the page contains the triggering numbers, not just the rule name.
+- The alert carries a **template-filled detail string** (the `trigger_value` variable shown above is substituted at alert time) so the page contains the triggering numbers, not just the rule name.
 
 ## Costs and debuggability
 

@@ -46,7 +46,7 @@ For Workflow's Task Master these are acceptable trade-offs because the access pa
 
 The pattern is conceptually identical to several systems that emerged later:
 
-- **[[redis|Redis]] AOF persistence** — in-memory key-value store with append-only file journaling and periodic RDB snapshots.
+- **Redis AOF persistence** — in-memory key-value store with append-only file journaling and periodic RDB snapshots.
 - **[[event-sourcing|Event-sourced]] applications** — Kleppmann's name for the same shape applied at the application architecture level: state is derived by folding over an immutable command/event log.
 - **In-memory databases with WAL** — VoltDB, MemSQL, Hekaton; commercial packagings of the same idea with SQL surfaces.
 - **[[actual-serial-execution|Single-threaded transaction execution]]** (DDIA) — Kleppmann's discussion of VoltDB-style serial execution depends on the same in-memory + WAL substrate.
@@ -59,7 +59,7 @@ The Workflow chapter notes the pattern by reference rather than developing it in
 - [[google-workflow]] — the system the pattern enables
 - [[event-sourcing]] (Kleppmann) — the modern packaging of the same idea at the application level
 - [[actual-serial-execution]] (Kleppmann) — VoltDB-style serial execution, which depends on the same in-memory + journal substrate
-- [[redis|Redis]] — the canonical open-source instance (named in the wiki's caching-layer page); AOF persistence is system prevalence by another name
+- Redis — the canonical open-source instance (named in the wiki's caching-layer page); AOF persistence is system prevalence by another name
 - [[mvcc]] (Kleppmann) — the alternative pattern: keep multiple versions in a database, allow concurrent reads. System prevalence chooses single-writer + RAM speed over MVCC's multi-version concurrency
 
 ## Related pages

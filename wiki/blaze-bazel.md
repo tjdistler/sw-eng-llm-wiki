@@ -40,7 +40,7 @@ Blaze also lets [[midas-package-manager|MPM]] work: MPM assembles packages based
 
 ## Cross-book connections
 
-- [[monorepo]]-friendly tooling is a category Bazel essentially defined; [[google-monorepo]] presupposes a build tool with Bazel's properties
+- [[google-monorepo|monorepo]]-friendly tooling is a category Bazel essentially defined; [[google-monorepo]] presupposes a build tool with Bazel's properties
 - [[desired-state-management]] (Newman) — a `BUILD` file is a declarative spec of what a target *should* contain; Blaze reconciles actual build outputs against it
 - [[unix-philosophy]] (Kleppmann) — Blaze is the opposite of Make's shell-plumbing approach: explicit graph, no implicit filesystem state, hermetic
 

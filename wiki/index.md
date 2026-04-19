@@ -516,7 +516,7 @@ The ninth Part II style — microservices — is catalogued in *Microservices fu
 | [[data-integrity-sre]] | SRE Ch 26 hub — user-perspective definition; the 24-hour "too long" threshold; 99.99% good bytes is catastrophic; three-layer defence; two case studies; five closing principles |
 | [[data-availability-vs-integrity]] | Ch 26 — data integrity is the means, data availability is the goal; users can't distinguish loss, corruption, and extended unavailability |
 | [[data-integrity-failure-modes]] | Ch 26 — the 24 combinations: root cause × scope × rate; Google's empirical finding that app-bug creeping loss dominates; point-in-time recovery |
-| [[defense-in-depth-data]] | Ch 26 — the three-layer architecture ([[soft-deletion]] + [[tiered-backup-strategy|backups]] + [[data-validation-pipelines|validators]]); replication as overarching optimisation, never a substitute |
+| [[defense-in-depth-data]] | Ch 26 — the three-layer architecture (soft deletion + backups + validators); replication as overarching optimisation, never a substitute |
 | [[soft-deletion]] | Ch 26 layer 1 — trash folder / admin undelete / developer lazy deletion; 15-60 day retention windows; Blobstore's default tombstones |
 | [[backups-vs-archives]] | Ch 26 — the distinction (backups are loadable, archives aren't); the "nobody wants backups, they want restores" maxim; designing backward from the recovery requirement |
 | [[tiered-backup-strategy]] | Ch 26 layer 2 — local snapshots + distributed-filesystem + offsite tape; retention and restore-time trade-offs; point-in-time recovery; the 1T vs 1E scale argument (trust points, horizontal sharding); redundancy codes and media isolation |
@@ -782,7 +782,7 @@ The ninth Part II style — microservices — is catalogued in *Microservices fu
 | [[varz-endpoints]] | Ch 10 — Google's standardised `/varz` HTTP metrics exposition format; plain-text key/value pairs, mapped variables for labels; auto-registered in every Google binary; the interface Prometheus inherited essentially unchanged |
 | [[time-series-arena]] | Ch 10 — Borgmon's in-memory store of `(timestamp, value)` tuples indexed by labelset; horizon, ~24 bytes per point, ~12 hours typical sizing; older data archived to an external TSDB |
 | [[borgmon-rules]] | Ch 10 — Borgmon's algebraic rule language; counters over gauges; sum-of-rates-not-rate-of-sums; aggregation as the cornerstone; the `agg:var:op` naming convention; unit-tested and CI-shipped rule config |
-| [[alertmanager]] | Ch 10 — centrally-run alert routing service; deduplicates, inhibits, groups, fans in/out; realises the [[sre-monitoring-outputs]] three-bucket routing; name and design inherited by Prometheus |
+| [[alertmanager]] | Ch 10 — centrally-run alert routing service; deduplicates, inhibits, groups, fans in/out; realises the sre-monitoring-outputs three-bucket routing; name and design inherited by Prometheus |
 | [[prober]] | Ch 10 — Google's black-box monitoring tool; protocol checks with payload validation; alerts directly or via its own `/varz`; probes both in front of and behind the load balancer to distinguish localised vs user-visible failure |
 | [[monitoring-topology-sharding]] | Ch 10 — the Borgmon hierarchy (scraper shards / DC aggregators / global aggregators); streaming protocol between tiers; filtered pull-up; why two global replicas |
 | [[prometheus-connection]] | Ch 10 — explicit genealogy from Borgmon to Prometheus and friends (Riemann, Heka, Bosun); what carried over (pull model, rule language, Alertmanager, federation) and what didn't (BNS, auto-varz, internal CI) |

@@ -100,7 +100,7 @@ The trade-off: Workflow's approach requires the substrate to enforce all four gu
 - [[stream-processing-fault-tolerance]] (Kleppmann) — the modern open-source family of mechanisms with the same goal
 - [[effectively-once-processing]] (Bellemare) — Bellemare's preferred terminology for the same property
 - [[fencing-tokens]] (Kleppmann / SRE Ch 23) — Workflow's task versioning is structurally similar to fencing tokens: monotonically-increasing IDs that let downstream operations reject stale work. The combination of "configuration task ID" + "task version" + "lease ID" is a multi-dimensional fencing system
-- [[atomic-rename]] / safe file replacement — the Unix idiom Guarantee 3 generalises
+- Atomic rename / safe file replacement — the Unix idiom Guarantee 3 generalises
 
 ## Related pages
 

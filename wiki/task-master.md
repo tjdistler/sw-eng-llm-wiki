@@ -23,7 +23,7 @@ Holding all of this in RAM is what makes the Task Master fast — workers can le
 
 The Task Master uses the [[system-prevalence-pattern|system prevalence pattern]]: state lives in RAM for read access; mutations are **synchronously journaled to persistent disk** before being applied. This gives the durability of a database without the per-operation transaction-log cost — the mutation log is append-only and naturally batched.
 
-On Task Master restart, state is rebuilt by replaying the journal (typically with periodic snapshots to bound recovery time). This is the same pattern as [[redis|Redis]] AOF persistence, [[event-sourcing|event-sourced]] applications, and the in-memory-database literature generally — it predates them all conceptually but they are the modern packaging.
+On Task Master restart, state is rebuilt by replaying the journal (typically with periodic snapshots to bound recovery time). This is the same pattern as Redis AOF persistence, [[event-sourcing|event-sourced]] applications, and the in-memory-database literature generally — it predates them all conceptually but they are the modern packaging.
 
 ## Why a Task Master and not a database
 
@@ -67,7 +67,7 @@ For business continuity, what fails over is the Task Master, not the workers. Wo
 - [[spanner]] (SRE Ch 2) — the globally-consistent substrate Workflow's business-continuity layer journals to
 - [[chubby]] (SRE Ch 2) — the lock service that elects which Task Master is authoritative
 - [[event-sourcing]] (Kleppmann) — the modern packaging of the same in-memory-state-with-journaling pattern; Task Master predates the term
-- [[task-group]] — Workflow's terminology for what corresponds to a pipeline stage; the unit of work the Task Master subdivides processing into
+- Task-group — Workflow's terminology for what corresponds to a pipeline stage; the unit of work the Task Master subdivides processing into
 - [[stream-processing-cluster]] (Bellemare) — Flink/Spark's JobManager is the open-source structural equivalent of Task Master; both hold per-job topology and progress as a long-lived in-memory model
 
 ## Related pages

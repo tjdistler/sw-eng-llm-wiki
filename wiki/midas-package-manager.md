@@ -48,7 +48,7 @@ MPM also hosts **configuration packages** — a separate MPM package containing 
 - [[deployment-vs-release]] (Newman) — MPM's separation of package existence from label state is the same distinction at the artefact layer
 - [[feature-toggle]] (Newman) — configuration packages are effectively feature-toggle carriers; the `cherry pick config + rebuild config package + redeploy` flow is a toggle-update flow that doesn't touch the binary
 - [[hot-sharding]] / [[rolling-update-pattern]] (Burns / Bellemare) — label moves are the promotion primitive that rolling deploys build on top of
-- [[content-addressed-storage]] ideas — unique-hash versioning is content addressing applied to release artefacts
+- Content-addressed storage ideas — unique-hash versioning is content addressing applied to release artefacts
 
 ## Related pages
 

@@ -86,7 +86,7 @@ Kleppmann's [[process-pauses|Chapter 8 process-pauses discussion]] treats GC pau
 
 Stateful stream processors with large in-memory state stores are particularly vulnerable to GC death spirals because state growth is unbounded — the processor accumulates keys over time, each holding state. Spiking input rate plus a tenured generation full of long-lived state objects is the classic Flink/Kafka Streams death-spiral trigger.
 
-### GC death spiral and [[restart-to-recover]]
+### GC death spiral and restart-as-recovery
 
 The restart-as-recovery response captured in Chapter 22 is an industry-wide operational pattern with no good name. The SRE-book's explicit acknowledgement that "wedged" is a distinct failure mode requiring a distinct response is one of the most useful additions to the fault-tolerance vocabulary — before this naming, wedged processes were often diagnosed as "slow" or "buggy" and debugged individually rather than treated as a named failure class with a known remedy.
 
