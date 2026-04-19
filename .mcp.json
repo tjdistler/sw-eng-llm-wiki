@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "wiki-mcp": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--project",
+        "wiki-mcp",
+        "python",
+        "-m",
+        "wiki_mcp.server"
+      ]
+    }
+  }
+}
