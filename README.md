@@ -4,28 +4,35 @@ A personal, Claude-maintained knowledge base for software engineering design and
 
 The wiki is a plain folder of markdown files with `[[wiki-link]]` syntax, so it works as an [Obsidian](https://obsidian.md) vault.
 
+Currently ~990 interlinked pages distilled from eight books (see **Sources** below).
+
 ## Layout
 
 ```
 raw/                     source documents — immutable, never edited by Claude
 raw/<book-name>/         per-chapter markdown extracted from a PDF book
-wiki/                    Claude-maintained pages
+wiki/                    Claude-maintained pages (~990 markdown files)
 wiki/index.md            table of contents
 wiki/log.md              append-only record of ingests and edits
 pdf-extractor/           uv project that converts PDFs to per-chapter markdown
 wiki-linter/             uv project that lints the wiki for structural issues
+wiki-mcp/                uv project exposing a read-only MCP server over wiki/
+.mcp.json                wires wiki-mcp into Claude Code automatically
 .claude/skills/          Claude Code skills that drive the workflows below
+.claude/settings.json    project-scoped Claude Code settings
+.obsidian/               Obsidian vault config (so the repo opens as a vault)
 CLAUDE.md                full instructions Claude follows in this repo
 ```
 
 ## Workflows
 
-Both are implemented as Claude Code skills under `.claude/skills/`:
+The first two are implemented as Claude Code skills under `.claude/skills/`:
 
 - **convert-pdf** — run the extractor on a PDF in `raw/`, producing per-chapter markdown.
-- **ingest-book** — read a source in `raw/`, discuss takeaways, then create/update wiki pages, update `wiki/index.md`, and append to `wiki/log.md`.
+- **ingest-book** — read a source (or a chapter) in `raw/`, discuss takeaways, then create/update wiki pages, update `wiki/index.md`, and append to `wiki/log.md`.
+- **lint** — ask Claude to "lint the wiki" and it runs `wiki-linter` and offers to fix anything it flags. Read-only structural checks only; semantic review stays with the human.
 
-A single source typically touches 10–15 wiki pages.
+A single source typically touches 10–15 wiki pages; a full book runs into the hundreds.
 
 ## pdf-extractor
 
@@ -55,7 +62,20 @@ Emits a numbered markdown report. Semantic judgements (contradictions, outdated 
 
 - Open the repo as an Obsidian vault, or browse `wiki/index.md` on GitHub.
 - Ask Claude questions — it reads `wiki/index.md` first, synthesizes an answer from the relevant pages, and offers to file valuable answers back as new pages.
-- Ask Claude to lint the wiki to surface contradictions, orphan pages, missing concepts, or stale claims.
+- Ask Claude to lint the wiki to surface broken wikilinks, orphan pages, malformed pages, missing citations, and index drift.
+
+## Sources
+
+Ingested books, each with its own summary page under `wiki/`:
+
+- [*Designing Data-Intensive Applications*](wiki/designing-data-intensive-applications.md) — Martin Kleppmann
+- [*Monolith to Microservices*](wiki/monolith-to-microservices.md) — Sam Newman
+- [*Designing Distributed Systems*](wiki/designing-distributed-systems.md) — Brendan Burns
+- [*Fundamentals of Software Architecture*](wiki/fundamentals-of-software-architecture.md) — Mark Richards & Neal Ford
+- [*Building Event-Driven Microservices*](wiki/building-event-driven-microservices.md) — Adam Bellemare
+- [*Site Reliability Engineering*](wiki/site-reliability-engineering.md) — Beyer, Jones, Petoff & Murphy (eds.)
+- [*Fundamentals of Data Engineering*](wiki/fundamentals-of-data-engineering.md) — Joe Reis & Matt Housley
+- [*Software Architecture: The Hard Parts*](wiki/software-architecture-the-hard-parts.md) — Ford, Richards, Sadalage & Dehghani
 
 ## Conventions
 
