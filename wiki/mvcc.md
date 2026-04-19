@@ -2,9 +2,9 @@
 
 **Summary**: A technique where the database maintains multiple committed versions of each object side by side, allowing [[transactions]] at different points in time to each see a consistent snapshot without blocking concurrent writers.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-07-transactions.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-07-transactions.md`, `raw/fundamentals-of-data-engineering/chapter-06-storage.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-18
 
 ---
 
@@ -47,6 +47,17 @@ Handling indexes in a multi-version database involves trade-offs:
 
 [[serializable-snapshot-isolation]] builds on MVCC by tracking when a transaction reads data that was ignored due to MVCC visibility rules (i.e., an uncommitted write existed at read time that later commits). If the ignored write commits before the reading transaction commits, the database detects that the read was stale and may abort the transaction. (source: chapter-07-transactions.md)
 
+## MVCC in lakehouse table formats
+
+[[lakehouse-table-formats|Delta Lake, Apache Iceberg, and Apache Hudi]] implement MVCC against [[object-storage]] rather than against a block device (source: raw/fundamentals-of-data-engineering/chapter-06-storage.md). The mechanism Chapter 6 describes for lakehouses — "table history and rollback [...] accomplished by retaining old versions of files and metadata" — is MVCC at the table-file level:
+
+- Each transaction writes new object-storage files containing the modified rows.
+- A transaction log records which files constitute each table version.
+- Concurrent readers reference a specific log version and see a consistent snapshot.
+- Old files are retained until a `VACUUM` or retention policy cleans them up.
+
+This generalises the same MVCC idea Postgres uses per-row, to whole-file granularity across an eventually-consistent object store. **Time travel** queries — reading the table as it was at an earlier version — are a direct consequence of keeping the old files and log entries around.
+
 ## Related pages
 
 - [[snapshot-isolation]]
@@ -55,3 +66,7 @@ Handling indexes in a multi-version database involves trade-offs:
 - [[b-trees]]
 - [[transactions]]
 - [[indexes]]
+- [[lakehouse-table-formats]]
+- [[data-lakehouse]]
+- [[object-storage]]
+- [[tombstone]]

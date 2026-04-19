@@ -2,9 +2,9 @@
 
 **Summary**: Stream processing is the continuous, incremental processing of unbounded data as it arrives, in contrast to [[batch-processing]] which operates on fixed-size, bounded inputs. It occupies the "near-real-time" space between online services and batch jobs.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/site-reliability-engineering/chapter-25-data-processing-pipelines.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/site-reliability-engineering/chapter-25-data-processing-pipelines.md`, `raw/fundamentals-of-data-engineering/chapter-02-the-data-engineering-lifecycle.md`, `raw/fundamentals-of-data-engineering/chapter-11-the-future-of-data-engineering.md`
 
-**Last updated**: 2026-04-17
+**Last updated**: 2026-04-18
 
 ---
 
@@ -95,6 +95,29 @@ The mapping to modern terminology:
 
 The Kleppmann text on stream processing is the contemporary public packaging of architectural intuitions Workflow developed in production a decade earlier. The SRE Ch 25 chapter is also the operational counterpart to this page's optimistic framing: it names the **failure modes of periodic batch pipelines** that motivated the move to continuous processing in the first place — see [[periodic-pipeline]] and the subordinate failure-mode pages ([[pipeline-uneven-work-distribution]], [[pipeline-thundering-herd]], [[moire-load-pattern]]).
 
+## FoDE perspective — streaming at the ingestion stage
+
+Reis and Housley's Chapter 2 takes a pragmatic stance on streaming vs batch at the [[data-ingestion|ingestion]] stage (source: raw/fundamentals-of-data-engineering/chapter-02-the-data-engineering-lifecycle.md):
+
+- **Framing.** Virtually all data is inherently streaming; batch is a specialisation. See [[batch-processing]] for the FoDE section on that framing.
+- **Streaming-first is attractive but not free.** They push back on the tempting default: extra cost and complexity. Their checklist before going streaming asks about downstream rate-handling, latency need (milliseconds vs microbatched minutes), business benefit specific to real-time, reliability/redundancy, and operator availability.
+- **Streaming lets source systems push.** "With streaming ingestion, data bypasses a backend database and is pushed directly to an endpoint, typically with data buffered by an event-streaming platform" — useful for IoT fleets and "growing in popularity in software applications as it simplifies real-time processing."
+- **Streaming transformations can happen in flight.** Chapter 2 predicts streaming transformation may "entirely replace batch processing in certain domains" given the growing ubiquity of stream-processing platforms — while still recommending batch as the practical default for many analytics and ML use cases today.
+
+Chapter 2 also notes the harder **software-engineering** story of streaming: joins, windowing for trailing statistics, and framework choice (function platforms like OpenFaaS/Lambda vs dedicated stream processors like Flink, Spark, Beam, Pulsar). See [[software-engineering-for-data]] and [[windowing]].
+
+## Chapter 11 — streaming as the default
+
+Chapter 11's [[live-data-stack]] prediction elevates streaming from "the harder path" to the default mode of data processing (source: raw/fundamentals-of-data-engineering/chapter-11-the-future-of-data-engineering.md):
+
+- **Streaming pipelines and [[real-time-olap|real-time OLAP]]** are the two core technologies of the live data stack.
+- **Batch ingestion becomes the exception.** Reis and Housley predict "we'll eventually look at batch ingestion the same way we now look at dial-up modems."
+- **[[stream-transform-load|STL replaces ELT]]** as the transformation idiom.
+- **New orchestration for streams.** Tools like Apache Pulsar point toward deployable streaming DAGs; a new generation of orchestrators will stitch managed stream processors (Kinesis Data Analytics, Google Cloud Dataflow) together and monitor them.
+- **Data modeling must catch up.** Traditional batch-oriented [[data-modeling]] techniques don't fit streaming; modeling moves upstream to the source application.
+
+The chapter explicitly hedges: this could stall, with most companies continuing to focus on basic batch processing. But the direction is clear.
+
 ## Related pages
 
 - [[event-streams]]
@@ -118,3 +141,10 @@ The Kleppmann text on stream processing is the contemporary public packaging of 
 - [[continuous-data-processing]]
 - [[periodic-pipeline]]
 - [[data-processing-pipelines]]
+- [[data-ingestion]]
+- [[data-transformation]]
+- [[software-engineering-for-data]]
+- [[live-data-stack]]
+- [[real-time-olap]]
+- [[stream-transform-load]]
+- [[future-of-data-engineering]]

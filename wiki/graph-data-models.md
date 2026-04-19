@@ -2,9 +2,9 @@
 
 **Summary**: Graph databases model data as vertices and edges, making highly interconnected data natural to represent and traverse — where the relational model becomes awkward and the document model breaks down entirely.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-02-data-models-and-query-languages.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-02-data-models-and-query-languages.md`, `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-18
 
 ---
 
@@ -106,6 +106,16 @@ Graph databases are not CODASYL in disguise. (source: chapter-02-data-models-and
 
 Beyond OLTP-style graph queries, graphs can be analyzed in batch using offline algorithms like PageRank. The Pregel/BSP (Bulk Synchronous Parallel) model provides an efficient vertex-centric abstraction where vertices exchange messages in synchronized rounds. Implementations include Apache Giraph, Spark's GraphX, and Flink's Gelly. See [[graph-batch-processing]] for details (source: designing-data-intensive-applications, chapter 10).
 
+## As a source system (Reis & Housley)
+
+From the data engineer's perspective, a graph database introduces a modelling gap: most downstream analytics tooling assumes rows-and-columns or nested-JSON data, not vertices and edges. Reis and Housley's Chapter 5 of *Fundamentals of Data Engineering* names three choices when a graph database is a source (source: raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md):
+
+- **Map the graph into an existing paradigm.** Flatten vertices into rows; encode edges in a join table. Works for many analytics use cases but loses the traversal-native advantages of the source.
+- **Analyze inside the source.** Run analytics in the graph database directly, either on the OLTP store (risky — may impact production) or on a purpose-built graph-analytics engine.
+- **Adopt graph-specific analytics tools.** Use a tool that speaks SPARQL / Cypher / GQL natively and meets graph queries on their own terms.
+
+Reis and Housley anticipate rapid growth in graph-database adoption outside tech companies, so the data engineer's job increasingly includes building extraction and modelling paths for graph sources (source: raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md).
+
 ## Related pages
 
 - [[data-models]]
@@ -114,3 +124,5 @@ Beyond OLTP-style graph queries, graphs can be analyzed in batch using offline a
 - [[declarative-vs-imperative-queries]]
 - [[graph-batch-processing]]
 - [[batch-processing]]
+- [[source-systems]]
+- [[nosql]]

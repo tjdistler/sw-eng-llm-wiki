@@ -2,9 +2,9 @@
 
 **Summary**: The weakest useful replication consistency guarantee: if writes to a replicated system stop, all replicas will *eventually* converge to the same value — but with no bound on when, and no guarantees about intermediate states.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-05-replication.md`, `raw/designing-data-intensive-applications/chapter-08-the-trouble-with-distributed-systems.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/site-reliability-engineering/chapter-23-managing-critical-state-distributed-consensus-for-reliability.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-05-replication.md`, `raw/designing-data-intensive-applications/chapter-08-the-trouble-with-distributed-systems.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/site-reliability-engineering/chapter-23-managing-critical-state-distributed-consensus-for-reliability.md`, `raw/fundamentals-of-data-engineering/chapter-06-storage.md`
 
-**Last updated**: 2026-04-17
+**Last updated**: 2026-04-18
 
 ---
 
@@ -75,6 +75,36 @@ Kyle Kingsbury's Jepsen series is cited as the canonical body of evidence for wh
 
 Chapter 12 clarifies the relationship between eventual consistency and [[timeliness-and-integrity|integrity]]. Violations of timeliness are "eventual consistency" -- temporary and self-healing. Violations of integrity are "perpetual inconsistency" -- permanent and requiring explicit repair. In most applications, integrity is far more important than timeliness. Event-based dataflow systems decouple the two, providing strong integrity guarantees (via [[exactly-once-semantics|idempotent processing]]) while accepting weak timeliness (asynchronous updates). This enables [[coordination-avoidance|coordination-avoiding systems]] that scale better than systems requiring [[linearizability]] (source: chapter-12-the-future-of-data-systems.md).
 
+## FoDE Ch 6 — BASE and object storage
+
+Chapter 6 of *Fundamentals of Data Engineering* gives the engineering view of BASE/eventual-consistency trade-offs in distributed storage (source: raw/fundamentals-of-data-engineering/chapter-06-storage.md):
+
+> BASE stands for basically available, soft-state, eventual consistency. Think of it as the opposite of ACID.
+>
+> - **Basically available** — consistency is not guaranteed, but efforts at database reads and writes are made on a best-effort basis.
+> - **Soft-state** — the state of the transaction is fuzzy, and it's uncertain whether the transaction is committed or uncommitted.
+> - **Eventual consistency** — at some point, reading data will return consistent values.
+
+Chapter 6 also gives a worked example: **Amazon S3 was eventually consistent until recently**. "After a new version of an object was written under the same key, the object store might sometimes return the old version of the object. The eventual part of eventual consistency means that after enough time has passed, the storage cluster reaches a state such that only the latest version of the object will be returned" (source: raw/fundamentals-of-data-engineering/chapter-06-storage.md). AWS made S3 strongly consistent for read-after-write and list operations in December 2020.
+
+The practical recipe Chapter 6 describes for layering strong consistency on top of an eventually-consistent object store:
+
+1. Write the object.
+2. Write the returned object-version metadata (hash or timestamp + key) to a **strongly consistent database** (e.g. PostgreSQL).
+3. To read: fetch the latest metadata, query the object by (key, version), retry if mismatch.
+
+This is essentially what [[lakehouse-table-formats|Delta Lake, Iceberg, and Hudi]] do to get ACID transactions over eventually-consistent object storage.
+
+## Three places to make consistency decisions
+
+Chapter 6 crystallises the design space into three choice points data engineers actually have (source: raw/fundamentals-of-data-engineering/chapter-06-storage.md):
+
+1. **The database technology itself** sets the consistency ceiling.
+2. **Configuration parameters** tune within that ceiling.
+3. **Per-query consistency options.** Example: DynamoDB supports eventually-consistent reads and strongly-consistent reads as per-request flags. Strong reads are slower and cost more; use them sparingly, but use them when correctness demands it.
+
+The framing matters for ingestion and CDC: the engineer must know which mode a source system operates in, because the consistency mode determines what invariants hold across a snapshot scan or a streamed change feed.
+
 ## Related pages
 
 - [[replication]]
@@ -97,3 +127,6 @@ Chapter 12 clarifies the relationship between eventual consistency and [[timelin
 - [[database-decomposition]]
 - [[consensus]]
 - [[managing-critical-state]]
+- [[object-storage]]
+- [[lakehouse-table-formats]]
+- [[acid]]

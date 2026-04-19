@@ -2,9 +2,9 @@
 
 **Summary**: Column-oriented storage keeps all values for each column together on disk rather than all values for each row. This dramatically reduces the data read for analytic queries that access only a few columns across millions of rows.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-03-storage-and-retrieval.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-03-storage-and-retrieval.md`, `raw/fundamentals-of-data-engineering/chapter-06-storage.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-18
 
 ---
 
@@ -81,6 +81,34 @@ Real fact tables have many more dimensions (date, product, store, promotion, cus
 
 The structured file formats commonly used in the Hadoop ecosystem — Avro for row-oriented encoding and Parquet for columnar encoding — replace the ad hoc text parsing required by Unix tools, while supporting [[schema-evolution]] (source: designing-data-intensive-applications, chapter 10).
 
+## FoDE framing: columnar as the analytics default
+
+Chapter 6 of *Fundamentals of Data Engineering* treats columnar serialization as the standard for analytics-oriented storage (source: raw/fundamentals-of-data-engineering/chapter-06-storage.md):
+
+- Scans read only the columns the query needs, dramatically cutting disk I/O.
+- "Arranging data by column packs similar values next to each other, yielding high-compression ratios with minimal compression overhead" — and compressed data scans faster over both disk and network.
+- Columnar databases are poor for transactional row-at-a-time lookups.
+- Early columnar databases performed poorly on joins, pushing advice toward **denormalization, wide schemas, arrays, and nested data**. Join performance has since improved, but denormalization is still often faster; see [[normalization]].
+
+Chapter 6 also positions columnar storage as the move **away from indexes** in analytics: where OLTP systems rely on indexes to cut the working set, columnar systems rely on fast sequential scans made cheap by columnar encoding and compression.
+
+## FoDE framing: partitions and clusters on top of columns
+
+Even with columnar scans, reducing scanned data is still worthwhile. Two techniques on top of columnar storage (source: raw/fundamentals-of-data-engineering/chapter-06-storage.md):
+
+- **[[partitioning|Partitioning]]** splits the table into subtables by a field. Time-based partitioning (by date or hour) is especially common in analytics because queries routinely scan time ranges.
+- **Clustering** applies sort ordering *within* partitions. Sorting by one or a few fields colocates similar values, which speeds filters, sorts, and joins on those fields and compresses better via run-length encoding.
+
+## FoDE framing: Snowflake micro-partitioning
+
+Chapter 6 uses Snowflake as the canonical next-generation example (source: raw/fundamentals-of-data-engineering/chapter-06-storage.md):
+
+- **Micro-partitions** — 50–500 MB uncompressed groups of rows.
+- Snowflake *algorithmically* clusters micro-partitions by repeated values across many rows, rather than the naive "partition by a single date column" scheme.
+- **Overlapping micro-partitions** allow effective partitioning on multiple fields.
+- A **metadata database** stores the value ranges and row counts for each micro-partition. At each query stage, Snowflake analyses the metadata to determine which micro-partitions actually need to be scanned — functionally playing the role of an index.
+- Snowflake calls this **hybrid columnar storage**: storage is columnar, but it is broken into small row groups, blurring the pure-columnar vs row-store line.
+
 ## Related pages
 
 - [[storage-engines]]
@@ -88,6 +116,9 @@ The structured file formats commonly used in the Hadoop ecosystem — Avro for r
 - [[data-warehousing]]
 - [[sstables-and-lsm-trees]]
 - [[indexes]]
+- [[partitioning]]
 - [[dataflow-engines]]
 - [[batch-processing]]
 - [[encoding-formats]]
+- [[compression-algorithms]]
+- [[lakehouse-table-formats]]

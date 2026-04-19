@@ -2,9 +2,9 @@
 
 **Summary**: An event stream is a sequence of immutable, timestamped records (events) that are incrementally produced over time and consumed by one or more subscribers. Events are the fundamental unit of data in [[stream-processing]] systems.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/designing-distributed-systems/chapter-08-functions-and-event-driven-processing.md`, `raw/fundamentals-of-software-architecture/chapter-14-event-driven-architecture-style.md`, `raw/building-event-driven-microservices/chapter-01-why-event-driven-microservices.md`, `raw/building-event-driven-microservices/chapter-02-event-driven-microservice-fundamentals.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/designing-distributed-systems/chapter-08-functions-and-event-driven-processing.md`, `raw/fundamentals-of-software-architecture/chapter-14-event-driven-architecture-style.md`, `raw/building-event-driven-microservices/chapter-01-why-event-driven-microservices.md`, `raw/building-event-driven-microservices/chapter-02-event-driven-microservice-fundamentals.md`, `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`
 
-**Last updated**: 2026-04-17
+**Last updated**: 2026-04-18
 
 ---
 
@@ -114,6 +114,36 @@ Bellemare classifies events by their key/value shape into three types (source: r
 - **[[keyed-event]]** — keyed but not an entity description; used primarily for [[partitioning]] locality and per-key ordering, often aggregated downstream into an entity event.
 
 See [[event-structure]] for the shape rules and [[table-stream-duality]] for how entity events become queryable local state inside a microservice.
+
+## Streams vs message queues (Reis & Housley)
+
+Reis and Housley's Chapter 5 of *Fundamentals of Data Engineering* draws the **message queue vs event stream** distinction sharply in the context of source systems (source: raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md):
+
+- **A message** is a raw data unit passed from System A to System B. Once delivered and acknowledged, it is removed from the queue. Messages are "discrete and singular signals" (e.g., an IoT temperature reading that triggers a furnace controller then goes away).
+- **A stream** is an **append-only log of event records**. Events accumulate in an ordered sequence over a long retention window (often weeks or months). The stream is where "you care about what happened over many events" — aggregations across events, replay to any past point, complex multi-event analyses.
+
+A streaming platform *can* move single messages (and is often used to) but a message queue *cannot* serve as a long-retention replayable log. This mirrors the Bellemare [[message-brokers|message broker]] vs [[event-broker|event broker]] distinction from a different angle — here framed for the lifecycle generation stage rather than the EDM substrate.
+
+## Topics, partitions, and hotspotting (Reis & Housley)
+
+Chapter 5's Kafka-lens treatment adds three concrete mechanics (source: raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md):
+
+- **Topic.** A collection of related events. A producer streams events to a topic; zero, one, or many consumers read from it. An event in an order-processing system might go to a topic like `web-orders`, read by one `fulfillment` subscriber and one `marketing` subscriber — the same stream serves operational and analytics consumers simultaneously.
+- **Stream partitions.** A topic is split into parallel substreams, each owned by one consumer at a time. The key lever is **parallelism**: more partitions → higher throughput. Messages with the same partition key always land on the same partition, giving per-key ordering.
+- **Hotspotting.** A poorly-chosen partition key creates an unbalanced distribution — Reis and Housley's canonical example is partitioning IoT messages by US state, where California, Texas, Florida, and New York overwhelm their partitions while Wyoming is idle. The engineer must design the key to distribute load uniformly.
+
+The partition-key hotspotting warning applies to every keyed stream. See [[partitioning-strategies]] for the broader topic and [[wide-column-database]] for the same problem at the row-key layer.
+
+## Types of time in a stream (Reis & Housley)
+
+Time is subtle in streaming. Chapter 5 names four distinct timestamps that arise for a single event (source: raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md):
+
+- **Event time** — when the event was generated at the source.
+- **Ingestion time** — when the event was accepted by the ingestion system (queue, store, database).
+- **Process time** — when the consumer began processing the event.
+- **Processing time** — how long processing took.
+
+The Reis-and-Housley advice: log timestamps at each stage so the movement of data through the pipeline can be reconstructed after the fact. Bellemare's [[event-timestamps]] page gives the deeper treatment of why only two of these (event time, broker ingestion time) can anchor deterministic processing.
 
 ## FaaS as an event consumer
 

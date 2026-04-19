@@ -2,9 +2,9 @@
 
 **Summary**: The four safety guarantees of database [[transactions]] -- Atomicity, Consistency, Isolation, and Durability -- coined in 1983 by Theo Harder and Andreas Reuter, though in practice the meaning varies significantly between database implementations.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-07-transactions.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-07-transactions.md`, `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`, `raw/fundamentals-of-data-engineering/chapter-06-storage.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-18
 
 ---
 
@@ -48,6 +48,28 @@ Implementation varies by context:
 
 Perfect durability does not exist. Risks include correlated faults (power outages affecting all replicas), SSD firmware bugs, gradual data corruption, and storage media degradation. In practice, durability is achieved through a combination of writing to disk, replicating to remote machines, and backups. (source: chapter-07-transactions.md)
 
+## FoDE framing: relaxing ACID at the source
+
+Reis and Housley's Chapter 5 of *Fundamentals of Data Engineering* emphasises an operational consequence of the DDIA framing above: ACID properties "are not required to support application backends, and relaxing these constraints can be a considerable boon to performance and scale" — but ACID compliance "dramatically [simplifies] the app developer's task" by maintaining a consistent picture of the world (source: raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md).
+
+The data-engineer implication: every [[source-systems|source system]] has an *ACID posture* — fully ACID, relaxed in specific ways, or [[eventual-consistency|eventually consistent]]. The engineer must know which, because the posture affects:
+
+- **Extraction correctness.** A non-ACID source may present inconsistent rows during a snapshot scan — half-updated joins, missing foreign keys, ghost rows that get rolled back.
+- **CDC semantics.** [[change-data-capture|Log-based CDC]] on an ACID source gives a causally consistent event stream; on a non-ACID distributed store (e.g. many NoSQL stores) the stream may be ordered within but not across partitions.
+- **Query behaviour.** Distributed NoSQL stores offer optional consistency modes (strong-consistency reads, quorum reads). The engineer must pick the right one for the workload.
+
+Reis and Housley: "all engineers (data or otherwise) must understand operating with and without ACID. Understanding the consistency model you're working with helps you prevent disasters" (source: raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md).
+
+## FoDE Ch 6 — ACID on object storage via the lakehouse
+
+Chapter 6 treats ACID as the feature that makes [[data-lakehouse|lakehouses]] meaningfully different from classic [[data-lake|data lakes]] (source: raw/fundamentals-of-data-engineering/chapter-06-storage.md):
+
+> The lakehouse [...] supports atomicity, consistency, isolation, and durability (ACID) transactions, a big departure from the original data lake.
+
+Mechanically, lakehouse [[lakehouse-table-formats|table formats]] (Delta Lake, Iceberg, Hudi) achieve ACID over [[eventual-consistency|eventually-consistent]] [[object-storage]] by layering a transaction log — a strongly-ordered sequence of commit metadata — on top of the Parquet files. Readers consult the log to determine which files belong to a given table version; writes append a new log entry atomically. This is the same **strongly-consistent-database-over-weaker-store** recipe described in [[eventual-consistency|Chapter 6's consistency discussion]]. [[mvcc|MVCC]] underlies the isolation story: old file versions are retained until garbage-collected, so concurrent readers see consistent snapshots.
+
+Cloud warehouses like Snowflake and BigQuery provide the same ACID guarantees internally; the open lakehouse formats provide them portably across engines.
+
 ## Related pages
 
 - [[transactions]]
@@ -56,3 +78,10 @@ Perfect durability does not exist. Risks include correlated faults (power outage
 - [[reliability]]
 - [[fault-tolerance]]
 - [[replication]]
+- [[eventual-consistency]]
+- [[source-systems]]
+- [[application-database-as-source]]
+- [[data-lakehouse]]
+- [[lakehouse-table-formats]]
+- [[mvcc]]
+- [[object-storage]]

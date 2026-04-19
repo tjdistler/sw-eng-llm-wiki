@@ -2,9 +2,9 @@
 
 **Summary**: Newman's signature migration pattern, named after the strangler fig vine that envelops a host tree. A new microservice grows alongside the [[monolith]], intercepting calls at the perimeter and gradually replacing functionality, while the original system keeps running until each slice is migrated.
 
-**Sources**: `raw/monolith-to-microservices/chapter-03-splitting-the-monolith.md`, `raw/fundamentals-of-software-architecture/chapter-01-introduction.md`
+**Sources**: `raw/monolith-to-microservices/chapter-03-splitting-the-monolith.md`, `raw/fundamentals-of-software-architecture/chapter-01-introduction.md`, `raw/fundamentals-of-data-engineering/chapter-03-designing-good-data-architecture.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-18
 
 ---
 
@@ -82,8 +82,18 @@ The strangler fig elegantly handles code migration but not data. If the new serv
 
 Richards and Ford call out the strangler fig (alongside [[feature-toggle]]s) as a restructuring technique that Agile methodologies enable: "Agile methodologies support these kinds of changes better than planning-heavy processes because of the tight feedback loop and encouragement of techniques like the Strangler Pattern and feature toggles" (source: chapter-01-introduction.md). The pattern's step-by-step reversibility assumes that each step can be deployed, observed, and reverted quickly — a short-feedback-loop delivery pipeline is the substrate. On a Waterfall cadence the pattern's main advantage evaporates.
 
+## In data architecture ([[brownfield-vs-greenfield|brownfield]] data projects)
+
+Reis and Housley's Chapter 3 of *Fundamentals of Data Engineering* picks up the strangler pattern as the preferred tool for **brownfield data-architecture projects** — replacing a legacy data architecture with a new one (source: raw/fundamentals-of-data-engineering/chapter-03-designing-good-data-architecture.md). The book contrasts it with big-bang overhauls, which they explicitly warn against: big-bang rewrites "often lead to disaster, with many irreversible and costly decisions."
+
+The strangler pattern's attractions in a data setting are the same as in the original microservices setting: targeted surgical replacement; each step flexibly reversible; you can assess the impact of deprecating each old component on dependent systems before committing.
+
+The caveat Chapter 3 adds: deprecation is sometimes impossible in practice — "legacy is a condescending way to describe something that makes money." When it *is* possible, demonstrate value on the new platform first, grow maturity gradually, then follow a planned exit.
+
 ## Related pages
 
+- [[brownfield-vs-greenfield]]
+- [[data-architecture]]
 - [[incremental-migration]]
 - [[deployment-vs-release]]
 - [[parallel-run-pattern]]

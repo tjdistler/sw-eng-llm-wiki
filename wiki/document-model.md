@@ -2,9 +2,9 @@
 
 **Summary**: Document databases store self-contained records (typically JSON) that map naturally to application objects and load efficiently as a unit — at the cost of weak support for joins and many-to-many relationships.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-02-data-models-and-query-languages.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-02-data-models-and-query-languages.md`, `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-18
 
 ---
 
@@ -60,6 +60,16 @@ The right choice depends on the *relationship patterns* in your data, not just p
 
 RethinkDB supports relational-like joins. MongoDB added an aggregation pipeline for declarative queries. PostgreSQL, MySQL, and DB2 support native JSON storage and querying. The models are merging. (source: chapter-02-data-models-and-query-languages.md)
 
+## As a source system (Reis & Housley)
+
+Reis and Housley's Chapter 5 of *Fundamentals of Data Engineering* adds a data-engineer-shaped caveat to the DDIA strengths above. From the **source-system** perspective (source: raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md):
+
+- **Collections map to tables.** Terminology bridge — a collection in a document database is roughly a table; a document is roughly a row.
+- **Usually not ACID.** Unlike relational databases, document stores are "generally not ACID compliant." Many are eventually consistent; writes to different documents in different partitions may not be durable under the same semantics a relational app developer expects. The engineer "needs technical expertise in a particular document store" to reason about tuning, writes, consistency, and durability — one store's behaviour is not another's.
+- **Schema flexibility is a double-edged sword.** A flexible schema lets the app evolve quickly, but "we've seen document databases become absolute nightmares to manage and query." If schema evolution is not communicated before deployment, pipelines silently break.
+- **Analytics extraction is expensive.** To run analytics on a document store, engineers "generally must run a full scan to extract all data from a collection or employ a [[change-data-capture|CDC]] strategy to send events to a target stream." Full scans slow the source and, for many serverless cloud document stores, "charge a significant fee for each full scan." Indexes help, but only for lookup, not for bulk extraction.
+- **Joins are not native.** "Data cannot be easily normalized... Applications can still join manually. Code can look up a document, extract a property, and then retrieve another document." The engineer extracting from a document source must either denormalize in the pipeline or accept slow programmatic joins.
+
 ## Related pages
 
 - [[data-models]]
@@ -69,3 +79,5 @@ RethinkDB supports relational-like joins. MongoDB added an aggregation pipeline 
 - [[object-relational-mismatch]]
 - [[normalization]]
 - [[nosql]]
+- [[source-systems]]
+- [[change-data-capture]]

@@ -2,9 +2,9 @@
 
 **Summary**: Change data capture (CDC) is the process of observing all data changes written to a database and extracting them as a stream that can be replicated to other systems -- making one database the leader and turning derived systems (search indexes, caches, warehouses) into followers.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/monolith-to-microservices/chapter-03-splitting-the-monolith.md`, `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/building-event-driven-microservices/chapter-04-integrating-event-driven-architectures-with-existing-systems.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/monolith-to-microservices/chapter-03-splitting-the-monolith.md`, `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/building-event-driven-microservices/chapter-04-integrating-event-driven-architectures-with-existing-systems.md`, `raw/fundamentals-of-data-engineering/chapter-02-the-data-engineering-lifecycle.md`, `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`, `raw/fundamentals-of-data-engineering/chapter-07-ingestion.md`
 
-**Last updated**: 2026-04-17
+**Last updated**: 2026-04-18
 
 ---
 
@@ -139,6 +139,64 @@ Newman returns to CDC repeatedly in his database-decomposition chapter. Beyond t
 
 The recurring theme: CDC turns the monolith's database into a source of events for everyone else, without requiring the monolith to know it's happening.
 
+## CDC in the FoDE push/pull framing
+
+Chapter 2 of *Fundamentals of Data Engineering* slots CDC into its [[data-ingestion|ingestion]] taxonomy along the **push vs pull** axis. CDC can be either (source: raw/fundamentals-of-data-engineering/chapter-02-the-data-engineering-lifecycle.md):
+
+| Flavour | Push/pull | Mechanism |
+|---|---|---|
+| Trigger-based continuous CDC | Push | Row-change trigger fires; message is pushed to a queue; ingestion system reads |
+| Log-based continuous CDC | Push (from the DB's side) | DB appends to its binlog/WAL; ingestion system reads the log without extra DB load |
+| Timestamp-based batch CDC | Pull | Ingestion system periodically queries for rows changed since the last poll (e.g., `updated_at >= ?`) |
+
+Chapter 2 specifically highlights the log-based form's appeal: "the database pushes to its logs. The ingestion system reads the logs but doesn't directly interact with the database otherwise. This adds little to no additional load to the source database" — matching what DDIA, Newman, and Bellemare all emphasise above (source: raw/fundamentals-of-data-engineering/chapter-02-the-data-engineering-lifecycle.md).
+
+CDC also appears in Chapter 2's **source-systems** evaluation questions as a central choice: "For stateful systems (e.g., a database tracking customer account information), is data provided as periodic snapshots or update events from change data capture (CDC)? What's the logic for how changes are performed, and how are these tracked in the source database?" (source: raw/fundamentals-of-data-engineering/chapter-02-the-data-engineering-lifecycle.md). The data engineer must know — at the [[source-systems]] stage — how any stateful source exposes its changes.
+
+### Chapter 5 adds: CDC is database-specific
+
+Chapter 5 of *Fundamentals of Data Engineering* returns to CDC with two additional framings (source: raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md):
+
+- **Handled differently per database.** Relational databases generate an event log stored directly on the database server that can be processed into a stream. Many cloud NoSQL databases (DynamoDB, Cosmos DB, Firestore) "can send a log or event stream to a target storage location" as a first-class feature. The engineer can expect a CDC on-ramp from most modern sources; the implementation varies per vendor.
+- **The alternative to CRUD information loss.** Chapter 5 explicitly names CDC as the answer to the history-losing property of [[crud|CRUD]]: "snapshot-based extraction... [gives] data from a database where our application applies CRUD operations. On the other hand, event extraction with CDC gives us a complete history of operations and potentially allows for near real-time analytics." The engineering trade-off is complexity (operating CDC tooling) for completeness (full change history) and latency (near-real-time rather than scheduled batch).
+
+## FoDE Ch 7 — batch-oriented vs continuous CDC as ingestion patterns
+
+Chapter 7 of *Fundamentals of Data Engineering* frames CDC from the ingestion-stage perspective. Two explicit flavours (source: raw/fundamentals-of-data-engineering/chapter-07-ingestion.md):
+
+### Batch-oriented CDC
+
+Query the source periodically for rows changed since the last read, typically filtered by an `updated_at` timestamp. Set the filter based on when changes were last captured, and differentially update the target (see [[snapshot-vs-differential-ingestion]]).
+
+**Key limitation Ch 7 highlights.** Batch CDC tells you which rows have changed since a point in time — but it does **not** give you all intermediate changes. Their bank-account example: a customer makes five debit-card withdrawals in 24 hours; a 24-hour batch CDC query returns only the **last** recorded balance. The other four events are invisible. Mitigation: make the source [[insert-only]] so every transaction is its own row (source: raw/fundamentals-of-data-engineering/chapter-07-ingestion.md).
+
+### Continuous CDC
+
+"Continuous CDC captures all table history and can support near real-time data ingestion, either for real-time database replication or to feed real-time streaming analytics. Rather than running periodic queries to get a batch of table changes, continuous CDC treats each write to the database as an event" (source: raw/fundamentals-of-data-engineering/chapter-07-ingestion.md).
+
+Two common implementations:
+
+- **Log-based CDC** — transactional databases like PostgreSQL record every change in the binary log sequentially; a tool like Debezium reads the log and sends events to Kafka.
+- **Managed paradigms** — many cloud-hosted databases can trigger a serverless function or write to an event stream directly on each change, freeing engineers from log-parsing details.
+
+### CDC vs native synchronous replication
+
+Ch 7 draws an explicit contrast with [[replication|native synchronous replication]] (source: raw/fundamentals-of-data-engineering/chapter-07-ingestion.md):
+
+| | CDC replication | Synchronous native replication |
+|---|---|---|
+| Coupling | Loose — events buffered into a stream, written asynchronously into a second DB | Tight — replica fully in sync with primary |
+| Target database types | Heterogeneous (e.g., Postgres → Snowflake) | Typically the same (Postgres → Postgres) |
+| Read-offloading | Analytics-scale scans on the CDC consumer | Read replicas serve live queries with identical results |
+| Failover | Not automatic | Application can failover with no data loss |
+| Flexibility | Events can fan out to many targets (object storage + streaming processor + analytics) | Single replication topology |
+
+The trade: synchronous replication is simpler and lossless at failover, but only within one DB family. CDC is the loosely-coupled option that scales to many targets and heterogeneous systems.
+
+### CDC consumes resources on the source
+
+Ch 7's operational caution: "CDC consumes various database resources, such as memory, disk bandwidth, storage, CPU time, and network bandwidth. Engineers should work with production teams and run tests before turning on CDC on production systems to avoid operational problems" (source: raw/fundamentals-of-data-engineering/chapter-07-ingestion.md). For batch CDC specifically: run at off-hours, or use a [[replication|read replica]] to avoid loading the primary.
+
 ## Related pages
 
 - [[stream-processing]]
@@ -166,3 +224,8 @@ The recurring theme: CDC turns the monolith's database into a source of events f
 - [[data-liberation-framework]]
 - [[event-sinking]]
 - [[eventification]]
+- [[data-ingestion]]
+- [[source-systems]]
+- [[snapshot-vs-differential-ingestion]]
+- [[insert-only]]
+- [[push-vs-pull-vs-poll]]

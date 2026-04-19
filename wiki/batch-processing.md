@@ -2,9 +2,9 @@
 
 **Summary**: Batch processing systems take a large, bounded dataset as input, run a computation over it, and produce output data. They prioritize throughput over latency, and their design philosophy of immutable inputs and deterministic outputs enables fault tolerance and easy reasoning.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-10-batch-processing.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/designing-distributed-systems/chapter-10-work-queue-systems.md`, `raw/designing-distributed-systems/chapter-11-event-driven-batch-processing.md`, `raw/designing-distributed-systems/chapter-12-coordinated-batch-processing.md`, `raw/site-reliability-engineering/chapter-25-data-processing-pipelines.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-10-batch-processing.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/designing-distributed-systems/chapter-10-work-queue-systems.md`, `raw/designing-distributed-systems/chapter-11-event-driven-batch-processing.md`, `raw/designing-distributed-systems/chapter-12-coordinated-batch-processing.md`, `raw/site-reliability-engineering/chapter-25-data-processing-pipelines.md`, `raw/fundamentals-of-data-engineering/chapter-02-the-data-engineering-lifecycle.md`
 
-**Last updated**: 2026-04-17
+**Last updated**: 2026-04-18
 ---
 
 ## Three types of systems
@@ -94,6 +94,18 @@ Burns's Chapter 11 — the [[event-driven-batch-pattern]] — chains these work 
 
 Chapter 12 closes Burns's batch trilogy with [[coordinated-batch-pattern|coordinated batch processing]] (source: raw/designing-distributed-systems/chapter-12-coordinated-batch-processing.md): pulling parallel workflow outputs back together into a single aggregate result. Two primitives do that work — the [[join-pattern|join]] (barrier synchronization, waits for every upstream worker) and the [[reduce-pattern|reduce]] (associative pairwise combine, pipelines with upstream work). Burns's framing makes the identity with [[mapreduce|MapReduce]] explicit: map = [[sharder-pattern|sharder]], reduce = reduce-pattern, the MapReduce "wait for all mappers" barrier = join-pattern. This names at container granularity the same structural choices that [[dataflow-engines]] expose at operator granularity when they decide to pipeline through a reduce or to materialise for a barrier.
 
+## FoDE framing — batch is a specialisation of streaming
+
+Reis and Housley invert the usual batch-vs-streaming framing. In Chapter 2 of *Fundamentals of Data Engineering* they argue that **virtually all data is inherently streaming**: data is nearly always produced and updated continually at its source. Batch ingestion is "simply a specialized and convenient way of processing this stream in large chunks — for example, handling a full day's worth of data in a single batch" (source: raw/fundamentals-of-data-engineering/chapter-02-the-data-engineering-lifecycle.md).
+
+This is the same insight Kleppmann develops technically in DDIA Ch 11 (every database write is an event; batch and stream differ only in where the file boundary is drawn), but Reis and Housley turn it into a **decision heuristic** for the data engineer at the [[data-ingestion|ingestion]] stage: treat streaming as the default framing, then choose batch as a deliberate specialisation when its trade-offs favour you.
+
+Their recommendation (source: raw/fundamentals-of-data-engineering/chapter-02-the-data-engineering-lifecycle.md):
+
+> We think batch is an excellent approach for many common use cases, such as model training and weekly reporting. Adopt true real-time streaming only after identifying a business use case that justifies the trade-offs against using batch.
+
+See [[data-ingestion]] for the streaming-first checklist they offer.
+
 ## Operational pathology of large periodic batch chains (SRE Ch 25)
 
 Kleppmann and Burns describe the algorithmic and container-level shape of batch processing; SRE Chapter 25 (Dan Dennison) is the **operational** complement that names what goes wrong at large scale. The chapter develops two contrasts (source: raw/site-reliability-engineering/chapter-25-data-processing-pipelines.md):
@@ -144,3 +156,5 @@ The chapter's recommendation: if the data processing problem is continuous or wi
 - [[coordinated-batch-pattern]]
 - [[join-pattern]]
 - [[reduce-pattern]]
+- [[data-ingestion]]
+- [[data-transformation]]

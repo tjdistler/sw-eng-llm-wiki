@@ -2,9 +2,9 @@
 
 **Summary**: Schema evolution is the set of rules a binary encoding format provides for safely changing a schema over time — adding fields, removing fields, changing types — without breaking [[backward-forward-compatibility]].
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`, `raw/building-event-driven-microservices/chapter-03-communication-and-data-contracts.md`, `raw/building-event-driven-microservices/chapter-15-testing-event-driven-microservices.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`, `raw/building-event-driven-microservices/chapter-03-communication-and-data-contracts.md`, `raw/building-event-driven-microservices/chapter-15-testing-event-driven-microservices.md`, `raw/fundamentals-of-data-engineering/chapter-02-the-data-engineering-lifecycle.md`, `raw/fundamentals-of-data-engineering/chapter-07-ingestion.md`
 
-**Last updated**: 2026-04-17
+**Last updated**: 2026-04-18
 
 ---
 
@@ -118,6 +118,48 @@ The format you pick directly determines what evolution rules are available. Bell
 
 A [[schema-registry]] is the enforcement point — it evaluates proposed schema changes against the configured compatibility mode and rejects registrations that would break the rule, before the producer can deploy.
 
+## FoDE framing — schema evolution across the lifecycle
+
+Reis and Housley's Chapter 2 treats schema evolution as a cross-cutting problem the data engineer must plan for at every lifecycle stage (source: raw/fundamentals-of-data-engineering/chapter-02-the-data-engineering-lifecycle.md):
+
+- **At source systems.** "One of the most challenging nuances of source data is the schema." Chapter 2 calls out **Agile's encouragement of schema evolution** as a direct cause of pain downstream: "a key part of the data engineer's job is taking raw data input in the source system schema and transforming this into valuable output for analytics. This job becomes more challenging as the source schema evolves." The source-system evaluation questions include "If schema changes (say, a new column is added), how is this dealt with and communicated to downstream stakeholders?" See [[source-systems]].
+- **At storage.** The evaluation of a storage system includes "Are you capturing metadata about schema evolution, data flows, data lineage, and so forth?" — schema change is operational metadata that belongs in the [[data-catalog|catalog]]. See [[data-storage-stage]].
+- **As technical metadata.** Schema is one of the three key technical-metadata examples Chapter 2 calls out (alongside pipeline metadata and data lineage). See [[metadata]].
+
+The FoDE take is not adding technical mechanism beyond what DDIA and Bellemare already describe; it's positioning schema evolution as a **communication and governance problem** that extends from source-system owners, through ingestion, into the catalog, and out to downstream analysts.
+
+## FoDE Ch 7 — ingestion-layer automation and the three-part defense
+
+Chapter 7 of *Fundamentals of Data Engineering* treats schema evolution as a first-class [[data-ingestion|ingestion]] concern. Two Ch 7 additions to the picture:
+
+### Automation is a mixed blessing
+
+"It's becoming increasingly common for ingestion tools to automate the detection of schema changes and even auto-update target tables. Ultimately, this is something of a mixed blessing. Schema changes can still break pipelines downstream of staging and ingestion" (source: raw/fundamentals-of-data-engineering/chapter-07-ingestion.md).
+
+Even when ingestion auto-accommodates a change:
+
+- Pipelines further downstream may still break.
+- The new schema may silently degrade report or model performance.
+- Analysts and data scientists relying on the data "should be informed of the schema changes that violate existing assumptions."
+
+**Communication remains essential** regardless of automation — the human channel is not replaceable by a tool.
+
+### Three-part defense
+
+Ch 7 prescribes three mechanisms against schema-evolution damage during stream ingestion (source: raw/fundamentals-of-data-engineering/chapter-07-ingestion.md):
+
+1. **[[schema-registry|Schema registry]]** — version schema changes at the platform level.
+2. **[[dead-letter-queue|Dead-letter queue]]** — investigate events that are not properly handled because of an unexpected schema.
+3. **Upstream communication** — "the low-fidelity route (and the most effective): regularly communicating with upstream stakeholders about potential schema changes and proactively addressing schema changes with the teams introducing these changes instead of reacting to the receiving end of breaking changes."
+
+The third is the one Ch 7 specifically calls out as most effective — a direct application of the broader FoDE thesis that the data engineer's communication with upstream software engineers is a high-leverage investment.
+
+### Git-style branching for schema change (DataOps undercurrent)
+
+Ch 7's undercurrent section floats a forward-looking idea: cloud storage is cheap enough that an organization could maintain multiple versions of a table with different schemas in orchestration tools like Airflow. Schema changes, upstream transformations, and code changes could appear in "development" versions of the table before being merged into the main one — modeled on Git's branching approach to concurrent versioning. "A few years ago, such an approach to data was unthinkable. On-premises MPP systems are typically operated at close to maximum storage capacity" (source: raw/fundamentals-of-data-engineering/chapter-07-ingestion.md).
+
+This is not a concrete pattern yet but a direction; Reis and Housley describe it as an approach they "have meditated on for a while" as a possible resolution to the command-and-control-review vs auto-rewrite-everything extremes.
+
 ## Testing compatibility at code-submission time
 
 Chapter 15 recommends moving the compatibility check *earlier* than deployment: pull the registered schemas from the [[schema-registry]] and run evolutionary-rule checking as part of the code-submission/CI pipeline (source: chapter-15-testing-event-driven-microservices.md). For stacks that auto-generate schemas from class/struct definitions at compile time, this becomes a mechanical diff between the previous registered schema and the new compile-time-generated one — a failing check blocks the PR rather than the deploy. Good candidate for a [[architecture-fitness-function]].
@@ -133,3 +175,9 @@ Chapter 15 recommends moving the compatibility check *earlier* than deployment: 
 - [[code-generation]]
 - [[breaking-changes]]
 - [[event-driven-microservices]]
+- [[source-systems]]
+- [[metadata]]
+- [[data-catalog]]
+- [[data-ingestion]]
+- [[ingestion-payload]]
+- [[dead-letter-queue]]

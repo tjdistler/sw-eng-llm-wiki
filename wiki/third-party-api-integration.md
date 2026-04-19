@@ -2,9 +2,9 @@
 
 **Summary**: Calling a synchronous request-response API from inside an event-driven workflow. The microservice consumes an input event, composes an HTTP request, blocks for the reply, parses it into an event, and produces it to an output stream. Simple in shape but loaded with non-obvious hazards: nondeterminism on reprocessing, brittle external contracts, and surge-induced rate-limit collisions.
 
-**Sources**: `raw/building-event-driven-microservices/chapter-13-integrating-event-driven-and-request-response-microservices.md`
+**Sources**: `raw/building-event-driven-microservices/chapter-13-integrating-event-driven-and-request-response-microservices.md`, `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`
 
-**Last updated**: 2026-04-17
+**Last updated**: 2026-04-18
 
 ---
 
@@ -62,6 +62,24 @@ Mitigations:
 - **Client-side throttling** at the microservice. This is often your responsibility when the external API does not enforce it cleanly, particularly for services that burst but charge disproportionately above baseline (some logging and metrics providers fit this profile).
 - Being aware of the cost math before hitting "replay" on a large topic.
 
+## FoDE framing: APIs as a source-system category
+
+Reis and Housley's Chapter 5 of *Fundamentals of Data Engineering* frames APIs not as the EDM-shaped outbound call Bellemare focuses on, but as a **source-system category** — a way the data engineer **receives** data from somebody else's system (source: raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md). "APIs are now a standard and pervasive way of exchanging data in the cloud, for SaaS platforms, and between internal company systems." The chapter catalogues the HTTP-based paradigms a data engineer meets:
+
+- **REST.** The dominant paradigm, built around HTTP verbs and stateless interactions. Critics point out REST "is in no way a full specification" — the data engineer must acquire significant domain knowledge per API. The variation in API abstraction is wide: some APIs are thin wrappers that barely protect the internals; others are "masterpieces of engineering" that prepare data for analytics use cases (source: raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md). See [[rpc]] for the DDIA treatment.
+- **[[graphql|GraphQL]].** Facebook's alternative; multiple data models per request; client-specified query shapes. Encountered often, but with worse caching characteristics than REST.
+- **[[rpc|gRPC]].** HTTP/2-based, Protocol-Buffers-encoded, efficient bidirectional. "Many Google services... offer gRPC APIs." Common inside organizations; rare across company boundaries.
+- **[[webhooks|Webhooks]].** The reverse direction — source pushes to consumer. Often used alongside a message queue to make delivery durable.
+
+### Operational practices that reduce API plumbing
+
+Reis and Housley point to two developments that have simplified API-shaped ingestion (source: raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md):
+
+- **Client libraries** — many API providers ship language-specific client libraries (especially Python) that handle authentication, pagination, retries, and error-mapping. The engineer's undifferentiated plumbing work drops.
+- **Off-the-shelf SaaS/OSS connectors** — services and open-source libraries that manage data synchronization for common APIs. "Engineers would do well to reduce undifferentiated heavy lifting by using off-the-shelf tools."
+
+But: "there are numerous data APIs without client libraries or out-of-the-box connector support." At large companies, the engineer will still write custom code for long-tail APIs — understanding their data structure, extraction logic, and synchronization strategy from first principles.
+
 ## Related pages
 
 - [[event-driven-request-response-integration]]
@@ -73,3 +91,7 @@ Mitigations:
 - [[bulkhead]]
 - [[idempotence]]
 - [[effectively-once-processing]]
+- [[graphql]]
+- [[webhooks]]
+- [[source-systems]]
+- [[data-sharing]]

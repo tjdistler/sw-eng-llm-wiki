@@ -2,9 +2,9 @@
 
 **Summary**: Message brokers sit between services, storing messages temporarily and delivering them asynchronously. They decouple producers from consumers in time, space, and identity — providing reliability, buffering, and fan-out that direct [[rpc|RPC]] calls cannot. The actor model extends this pattern to concurrency within and across nodes.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`, `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/designing-distributed-systems/chapter-08-functions-and-event-driven-processing.md`, `raw/designing-distributed-systems/chapter-10-work-queue-systems.md`, `raw/designing-distributed-systems/chapter-11-event-driven-batch-processing.md`, `raw/fundamentals-of-software-architecture/chapter-14-event-driven-architecture-style.md`, `raw/building-event-driven-microservices/chapter-02-event-driven-microservice-fundamentals.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`, `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/designing-distributed-systems/chapter-08-functions-and-event-driven-processing.md`, `raw/designing-distributed-systems/chapter-10-work-queue-systems.md`, `raw/designing-distributed-systems/chapter-11-event-driven-batch-processing.md`, `raw/fundamentals-of-software-architecture/chapter-14-event-driven-architecture-style.md`, `raw/building-event-driven-microservices/chapter-02-event-driven-microservice-fundamentals.md`, `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`
 
-**Last updated**: 2026-04-17
+**Last updated**: 2026-04-18
 
 ---
 
@@ -101,6 +101,18 @@ This is a natural fit for distributed systems: the same message-passing mechanis
 | **Erlang OTP** | Native term format | Rolling upgrades are possible but require careful planning |
 
 All three can support rolling upgrades with the right encoding, but it requires explicit attention — the framework doesn't do it for you.
+
+## Message queues as source systems (Reis & Housley)
+
+Reis and Housley's Chapter 5 of *Fundamentals of Data Engineering* treats a message queue as a **first-class source system** for the generation stage of the data lifecycle. The core framing: a message queue is "a mechanism to asynchronously send data (usually as small individual messages, in the kilobytes) between discrete systems using a publish and subscribe model" (source: raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md). It decouples systems, buffers load spikes, and makes messages durable through replication.
+
+Three operational concerns the engineer should understand when a queue is a source:
+
+- **Frequency of delivery.** Exactly-once vs at-least-once; the latter is the default in most horizontally-scalable queues. At-least-once means consumers must be **idempotent** (see [[idempotence]]): processing a message once must yield the same result as processing it multiple times. Reis and Housley stress this even if the broker claims exactly-once: "a consumer might fully process a message but fail right before acknowledging processing. The message will effectively be processed twice, but an idempotent system handles this scenario gracefully" (source: raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md).
+- **Message ordering.** Strict FIFO is hard at scale. Most queues offer best-effort ordering. Amazon SQS standard queues approximate ordering; SQS FIFO queues guarantee it at extra cost. "In general, don't assume that your messages will be delivered in order unless your message queue technology guarantees it. You typically need to design for out-of-order message delivery" (source: raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md).
+- **Scalability.** Modern queues run horizontally across many servers, dynamically scaling to buffer during downstream slowdowns and durably storing messages. The same horizontal scale is what introduces the out-of-order and multiple-delivery hazards above.
+
+For the stream-shaped alternative — append-only log, long retention, replay — see [[event-streams]] and [[log-based-message-brokers]]. The key property distinguishing the two: a message queue deletes after acknowledge; a stream retains.
 
 ## Brokers as a work-queue source
 

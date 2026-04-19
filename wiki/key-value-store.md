@@ -1,0 +1,50 @@
+# Key-Value Store
+
+**Summary**: A [[nosql]] database that retrieves records by a single key, functioning as a large-scale, persistent hash map. Key-value stores are the simplest of the NoSQL families — they trade join support, secondary indexing, and query expressiveness for operational simplicity and extreme scale.
+
+**Sources**: `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`
+
+**Last updated**: 2026-04-18
+
+---
+
+## The shape
+
+A key-value database "retrieves records using a key that uniquely identifies each record. This is similar to hash map or dictionary data structures presented in many programming languages but potentially more scalable" (source: raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md).
+
+Two broad deployment shapes:
+
+- **In-memory.** Redis, Memcached. Extremely fast; storage is typically temporary — "if the database shuts down, the data disappears." Popular for caching session data and for web/mobile applications needing "ultra-fast lookup and high concurrency" (source: raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md).
+- **Persistent, disk-backed.** DynamoDB, FoundationDB, Riak, Aerospike. Durable across restarts, replicated across nodes, suitable for application state that must survive.
+
+Reis and Housley's canonical example of a persistent KV use case: an ecommerce application where every user click, cart change, and checkout must be durably stored and retrievable (source: raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md).
+
+## As an umbrella
+
+"Key-value stores encompass several NoSQL database types — for example, document stores and wide column databases" (source: raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md). In that sense [[document-model|document databases]] and [[wide-column-database|wide-column databases]] are specialised descendants of the KV pattern with extra structure on the value side.
+
+## Source-system implications
+
+For a data engineer pulling from a key-value store as a source:
+
+- **No query engine.** There are no joins, no secondary indexes by default. Extraction typically means scanning the full key space or tailing a [[change-data-capture|change-data stream]].
+- **Change streams are often first-class.** DynamoDB Streams, Redis Pub/Sub, Aerospike XDR — these change-data interfaces are the recommended extraction path.
+- **Consistency varies.** In-memory caches are often eventually consistent or best-effort; durable KV stores may offer strong consistency per-key (DynamoDB) or eventual consistency across replicas (Riak, Cassandra's KV shape).
+- **Hot keys are dangerous.** A key-value store partitions by key, so a disproportionately-accessed key creates a hotspot. Both the application and the extractor must avoid hammering a single key.
+
+## Cross-book connections
+
+- [[hash-indexes]] (DDIA) — the in-memory-hash implementation strategy underlies many KV stores.
+- [[bigtable]] (SRE book / DDIA) — Google Bigtable is the archetypal wide-column KV descendant.
+- [[distributed-locks-on-kv-stores]] — KV stores are a common substrate for distributed locking.
+- [[document-model]] / [[wide-column-database]] — the two structured variants on the value side.
+
+## Related pages
+
+- [[nosql]]
+- [[document-model]]
+- [[wide-column-database]]
+- [[hash-indexes]]
+- [[bigtable]]
+- [[source-systems]]
+- [[change-data-capture]]

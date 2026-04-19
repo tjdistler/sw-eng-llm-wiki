@@ -1,10 +1,10 @@
 # Data Warehousing
 
-**Summary**: A data warehouse is a separate read-optimized database that holds a copy of data from all OLTP systems in an organization, enabling analysts to run expensive queries without impacting production databases.
+**Summary**: A data warehouse is a separate read-optimized database that holds a copy of data from all OLTP systems in an organization, enabling analysts to run expensive queries without impacting production databases. Reis and Housley give it pride of place among data architecture patterns — "among the oldest and most well-established" — and distinguish its **organisational** architecture (business structure around the warehouse) from its **technical** architecture (MPP, columnar, cloud).
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-03-storage-and-retrieval.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-03-storage-and-retrieval.md`, `raw/fundamentals-of-data-engineering/chapter-03-designing-good-data-architecture.md`, `raw/fundamentals-of-data-engineering/chapter-06-storage.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-18
 
 ---
 
@@ -76,6 +76,75 @@ Hadoop has often been used for ETL: data from OLTP systems is dumped in raw form
 
 This pattern is sometimes called a **data lake** or **enterprise data hub**. It follows the "sushi principle" — raw data is better — and uses a schema-on-read approach where the consumer of data, not the producer, decides how to interpret it. See [[hadoop-vs-mpp-databases]] for how Hadoop and MPP warehouses compare (source: designing-data-intensive-applications, chapter 10).
 
+## Chapter 3: Inmon's original definition
+
+Chapter 3 of *Fundamentals of Data Engineering* traces the warehouse to Bill Inmon's 1990 definition (source: raw/fundamentals-of-data-engineering/chapter-03-designing-good-data-architecture.md):
+
+> A subject-oriented, integrated, nonvolatile, and time-variant collection of data in support of management's decisions.
+
+Reis and Housley argue this definition has held up despite decades of technical evolution. What has changed is affordability: on-prem warehouses used to cost millions and require dedicated teams; cloud pay-as-you-go made the pattern accessible to tiny companies.
+
+## Chapter 3: organisational vs technical architecture
+
+Chapter 3 draws a distinction the DDIA treatment does not (source: raw/fundamentals-of-data-engineering/chapter-03-designing-good-data-architecture.md):
+
+- **Organisational data warehouse architecture** — how data is organised around business team structures and processes. Two defining properties: (1) analytics (OLAP) separated from production (OLTP); (2) data centralised and organised, traditionally via ETL into tightly-modelled form. DBA and ETL developer teams implement business leaders' direction so that reporting corresponds to business processes.
+- **Technical data warehouse architecture** — MPP, columnar, cloud-specific implementation details. A company can have a warehouse without MPP, or run an MPP system that isn't organised as a warehouse. In practice the two have existed in a virtuous cycle.
+
+## Chapter 3: the cloud data warehouse
+
+Chapter 3 treats cloud warehouses as a **significant evolution** (source: raw/fundamentals-of-data-engineering/chapter-03-designing-good-data-architecture.md):
+
+- **Amazon Redshift** kicked off the cloud data warehouse revolution — on-demand clusters, no multimillion-dollar upfront contract
+- **Google BigQuery and Snowflake** popularised **separating compute from storage**: data lives in object storage (virtually limitless), compute spins up on demand
+- Cloud warehouses now process petabytes in a single query, store tens of megabytes of raw text per row, and handle rich JSON
+- The line between warehouse and [[data-lake|lake]] is **blurring**; see the [[data-lakehouse]]
+
+Chapter 3 goes as far as suggesting the term "data warehouse" itself might be jettisoned as these services evolve into broader **data platforms**.
+
+## Chapter 3: ELT and ELT-on-lake
+
+Chapter 3 adds two flavour notes on the [[etl-vs-elt|ETL/ELT]] distinction (source: raw/fundamentals-of-data-engineering/chapter-03-designing-good-data-architecture.md):
+
+- **ELT in a cloud warehouse**: data moves more or less directly from production into a **staging area** (raw form), then transforms happen directly in the warehouse using its computational power. Popular in streaming arrangements — CDC-sourced events land in staging, then transform inside the warehouse.
+- **Transform-on-read ELT** — popularised during the Hadoop era; the [[data-lake]]'s native pattern. Chapter 3 distinguishes it from warehouse-side ELT.
+
+## Chapter 3: MPP
+
+Chapter 3 sketches the technical trajectory (source: raw/fundamentals-of-data-engineering/chapter-03-designing-good-data-architecture.md):
+
+- First **MPP (massively parallel processing)** systems emerged in the late 1970s, popular in the 1980s
+- Same SQL semantics as relational application databases, but optimised to scan massive data in parallel for aggregation and statistics
+- MPPs have shifted from row-based to **[[column-oriented-storage|columnar]]** architecture in recent years, especially in cloud warehouses
+- MPPs are indispensable for performant queries as enterprise data and reporting grow
+
+## Ch 6 — the warehouse as storage abstraction
+
+Chapter 6 frames the data warehouse as one of four **data-engineering storage abstractions** alongside [[data-lake]], [[data-lakehouse]], and [[data-platform|data platform]] (source: raw/fundamentals-of-data-engineering/chapter-06-storage.md). The trajectory stated plainly:
+
+> We've evolved from building data warehouses atop conventional transactional databases, row-based MPP systems (e.g., Teradata and IBM Netezza), and columnar MPP systems (e.g., Vertica and Teradata Columnar) to cloud data warehouses and data platforms.
+
+Two practical Chapter 6 points worth noting:
+
+- **Cloud DWs as lake-host.** "Cloud data warehouses are often used to organize data into a data lake." They can store massive raw text and complex JSON, but not true unstructured data (images, video, audio) — those belong in [[object-storage]]. A common pattern is **warehouse + object storage** as a coupled solution.
+- **Convergence with lakes.** "The popularity of separating storage from compute means the lines between OLAP databases and data lakes are increasingly blurring. Major cloud data warehouses and data lakes are on a collision course. In the future, the differences between these two may be in name only since they might functionally and technically be very similar under the hood" (source: raw/fundamentals-of-data-engineering/chapter-06-storage.md). See [[storage-compute-separation]] and [[data-lakehouse]].
+
+## Ch 6 — micro-partitioning (Snowflake)
+
+Chapter 6 calls out **Snowflake's micro-partitioning** as a representative evolution of columnar storage (source: raw/fundamentals-of-data-engineering/chapter-06-storage.md):
+
+- Rows are grouped into **micro-partitions of 50–500 MB uncompressed**.
+- Snowflake algorithmically clusters similar rows together rather than partitioning on a single designated field.
+- A metadata database stores per-micro-partition statistics (row count, value ranges per field).
+- At query time, Snowflake **prunes** micro-partitions whose value ranges don't match the predicate — e.g. a `WHERE created_date='2017-01-02'` query skips every micro-partition whose date range excludes that value.
+- Snowflake calls this **hybrid columnar storage** — storage is columnar, but rows are grouped into small units; the metadata plays the role of an index in a traditional RDBMS.
+
+See [[partitioning]] for the broader context of analytics partitioning and clustering.
+
+## Data marts
+
+See [[data-mart]]. Chapter 3 introduces the mart as the refined subset of a warehouse tailored to a single department — providing accessibility for analysts and a second transformation stage for performance on complex joins and aggregations.
+
 ## Related pages
 
 - [[oltp-vs-olap]]
@@ -84,3 +153,13 @@ This pattern is sometimes called a **data lake** or **enterprise data hub**. It 
 - [[hadoop-vs-mpp-databases]]
 - [[batch-processing]]
 - [[distributed-filesystems]]
+- [[data-lake]]
+- [[data-lakehouse]]
+- [[data-platform]]
+- [[data-mart]]
+- [[modern-data-stack]]
+- [[etl-vs-elt]]
+- [[data-architecture]]
+- [[storage-compute-separation]]
+- [[object-storage]]
+- [[partitioning]]

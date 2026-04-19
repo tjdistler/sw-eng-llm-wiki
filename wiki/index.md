@@ -10,6 +10,133 @@
 | [[fundamentals-of-software-architecture]] | Book by Mark Richards & Neal Ford — concepts, organization, and ingestion status |
 | [[building-event-driven-microservices]] | Book by Adam Bellemare — concepts, organization, and ingestion status |
 | [[site-reliability-engineering]] | Book edited by Beyer, Jones, Petoff & Murphy — concepts, organization, and ingestion status |
+| [[fundamentals-of-data-engineering]] | Book by Joe Reis & Matt Housley — concepts, organization, and ingestion status |
+
+## Data engineering discipline
+
+| Page | Description |
+|---|---|
+| [[data-engineer]] | The role definition: responsibilities, languages, balancing act, internal vs external facing |
+| [[data-engineering-lifecycle]] | Five stages (generation, storage, ingestion, transformation, serving) plus six undercurrents |
+| [[data-maturity]] | Three-stage model (starting / scaling / leading with data) and how it shapes the engineer's job |
+| [[dataops]] | Agile + DevOps + statistical process control applied to data pipelines; a cultural undercurrent |
+| [[type-a-vs-type-b-data-engineers]] | Abstraction-focused vs build-focused engineers; why hiring unicorns fails |
+| [[data-engineering-history]] | Four-era sketch from 1980s warehousing to the 2020s modern data stack |
+| [[data-engineer-stakeholders]] | Upstream (architects, SWEs, DevOps/SRE) and downstream (scientists, analysts, ML, C-suite) collaborators |
+| [[data-science-hierarchy-of-needs]] | Rogati's pyramid: why data engineering is upstream of, and equal to, data science |
+
+## Data engineering lifecycle stages
+
+| Page | Description |
+|---|---|
+| [[source-systems]] | Generation stage; evaluation questions for any source the engineer consumes from |
+| [[data-storage-stage]] | Storage stage; why it underpins every other stage; evaluation questions |
+| [[data-temperature]] | Hot / lukewarm / cold tiers and cloud archival economics |
+| [[data-ingestion]] | Ingestion stage; batch vs streaming, push vs pull, streaming-first checklist |
+| [[data-transformation]] | Transformation stage; basic → complex; business logic as driver |
+| [[data-serving]] | Serving stage; analytics / ML / reverse ETL; data vanity projects |
+| [[analytics]] | BI vs operational vs embedded / customer-facing; self-service; multi-tenancy |
+| [[reverse-etl]] | Warehouse-to-source feedback; Hightouch/Census productisation |
+| [[etl-vs-elt]] | Transform before load vs after; why ELT rose with cloud warehouses |
+| [[data-lake]] | Raw-first schema-on-read storage; archival and destruction problem |
+| [[data-lakehouse]] | Lake foundation + warehouse guarantees; Delta Lake, Iceberg, Hudi |
+| [[feature-store]] | Data-engineering × ML-engineering tool; feature history, sharing, backfill |
+
+## Source systems (FoDE Ch 5)
+
+| Page | Description |
+|---|---|
+| [[source-system-considerations]] | Expanded Chapter 5 checklist — DBMS, shape, cadence, reliability, ownership, per-undercurrent concerns |
+| [[application-database-as-source]] | OLTP-backend producer/consumer tension; extraction patterns; the data-application hybrid |
+| [[file-sources]] | Excel, CSV, JSON, XML, TXT as the ubiquitous messy source-system category |
+| [[crud]] | Create/Read/Update/Delete; the pattern that loses history at the source |
+| [[insert-only]] | Append-only table design that keeps history inside the source |
+| [[webhooks]] | Reverse APIs; source pushes to consumer endpoint |
+| [[graphql]] | Facebook's query-shaped REST alternative; one API paradigm among four |
+| [[data-sharing]] | Cloud-native multitenant data access; data marketplaces; the infrastructure under data-mesh |
+| [[key-value-store]] | Simplest NoSQL; cache, session, high-volume KV |
+| [[wide-column-database]] | Single-index row-key-partitioned; Bigtable, Cassandra |
+| [[search-database]] | Elasticsearch/Solr; text search and log analysis workloads |
+| [[time-series-database]] | IoT, metrics, ad-tech; write-heavy, time-ordered storage |
+
+## Data engineering undercurrents
+
+| Page | Description |
+|---|---|
+| [[data-security]] | Security as undercurrent; people-as-biggest-vulnerability; multi-tenant blast radius |
+| [[least-privilege]] | Access-control principle at the heart of the security undercurrent |
+| [[data-management]] | Umbrella discipline; DAMA DMBOK definition; the facets |
+| [[data-governance]] | Three core categories: discoverability, security, accountability |
+| [[metadata]] | Four DMBOK categories: business, technical, operational, reference |
+| [[data-quality]] | Accuracy, completeness, timeliness; human + technical problem |
+| [[master-data-management]] | Golden records across the organisation |
+| [[data-modeling]] | Kimball/Inmon/data vault; avoiding the WORN / data-swamp trap |
+| [[data-lifecycle-management]] | Archival, destruction, and GDPR/CCPA compliance |
+| [[data-architecture]] | Subset of enterprise architecture; Chapter 3's working definition; operational vs technical |
+| [[orchestration]] | DAG-aware scheduling; Airflow and successors; strictly batch |
+| [[software-engineering-for-data]] | Core processing code, streaming, IaC, pipelines-as-code |
+| [[infrastructure-as-code]] | Declarative infra as version-controlled code |
+| [[data-observability]] | DODD; SPC; "data is a silent killer" |
+| [[data-catalog]] | Where metadata lives and serves discoverability |
+
+## Data architecture principles
+
+| Page | Description |
+|---|---|
+| [[principles-of-good-data-architecture]] | Reis & Housley's nine principles for evaluating data-architecture decisions |
+| [[well-architected-framework]] | AWS's six pillars; one of two external frameworks behind the nine principles |
+| [[cloud-native-principles]] | Google Cloud's five cloud-native principles; the other inspiration |
+| [[data-architect]] | The role; technical + business; *Architectus Oryzus* |
+| [[loose-coupling]] | Four technical properties; Bezos API Mandate; organisational translation |
+| [[finops]] | Cloud cost as architectural signal; cost attacks; graceful spending limits |
+| [[zero-trust-security]] | Cloud-native replacement for the hardened perimeter |
+| [[shared-responsibility-model]] | Security *of* the cloud vs security *in* the cloud |
+| [[elasticity]] | Dynamic and automatic scaling; scale-to-zero; over-scaling pitfalls |
+| [[brownfield-vs-greenfield]] | Two project types; strangler vs big-bang; shiny-object syndrome |
+
+## Data architecture patterns
+
+| Page | Description |
+|---|---|
+| [[data-warehousing]] | Warehouse: OLAP-dedicated DB; Inmon's definition; organisational vs technical; cloud DW |
+| [[data-mart]] | Refined warehouse subset per department |
+| [[data-lake]] | Raw-first schema-on-read; "data lake 1.0" failures; convergence |
+| [[data-lakehouse]] | Lake foundation + warehouse guarantees; converged data platforms |
+| [[modern-data-stack]] | Cloud plug-and-play modular components; self-serve; clear pricing |
+| [[lambda-architecture]] | Batch + speed + serving; historical influence, practical headache |
+| [[kappa-architecture]] | Kreps's 2014 stream-only alternative to Lambda |
+| [[dataflow-model]] | Google/Beam "batch as a special case of streaming" |
+| [[iot-architecture]] | Devices, gateways, constrained-network ingestion, reverse-ETL control loops |
+| [[data-mesh]] | Dehghani's four principles: domain ownership, data as product, self-serve platform, federated governance |
+| [[data-as-a-product]] | The organisational stance inside data mesh |
+
+## Technology selection
+
+| Page | Description |
+|---|---|
+| [[technology-selection]] | Reis & Housley's ten criteria; architecture first, technology second |
+| [[speed-to-market]] | "Perfect is the enemy of good"; slow decisions kill data teams |
+| [[interoperability]] | JDBC/ODBC work; REST is quirks all the way down; modularity's prerequisite |
+| [[total-cost-of-ownership]] | Direct and indirect costs; capex vs opex |
+| [[total-opportunity-cost-of-ownership]] | The cost of lost options; the "bear trap" warning |
+| [[opex-vs-capex]] | Why the cloud pushed data engineering opex-first |
+| [[immutable-vs-transitory-technologies]] | Lindy effect; build transitory around immutable; two-year re-evaluation |
+| [[cloud]] | IaaS/PaaS/SaaS; cloud economics; "Cloud ≠ On Premises" |
+| [[on-premises]] | Still the default for established companies; modern on-prem ≠ legacy |
+| [[hybrid-cloud]] | Analytics-in-the-cloud pattern minimising egress |
+| [[multicloud]] | Motivations, disadvantages, "cloud of clouds" |
+| [[cloud-repatriation]] | "You are not Dropbox, nor are you Cloudflare" |
+| [[data-gravity]] | Why egress fees make cloud decisions sticky |
+| [[build-vs-buy]] | Tire analogy; build where you have competitive advantage |
+| [[open-source-software]] | Community-managed OSS evaluation factors |
+| [[commercial-oss]] | Databricks/Confluent/dbt Labs pattern; COSS evaluation |
+| [[proprietary-walled-garden]] | Independent vendors and cloud proprietary services |
+| [[monolith-vs-modular-data]] | Data-stack version of the monolith/modular debate |
+| [[distributed-monolith]] | The anti-pattern; Hadoop and Python orchestration; container mitigation |
+| [[serverless-vs-servers]] | Serverless first; containers next; owned servers last |
+| [[containers]] | Lightweight virtualisation; the middle path; security caveats |
+| [[benchmark-wars]] | The 787-vs-Tesla analogy; vendor benchmark tricks |
+| [[cargo-cult-engineering]] | Copying big-tech without the context |
 
 ## Architecture fundamentals
 
@@ -341,6 +468,147 @@ The ninth Part II style — microservices — is catalogued in *Microservices fu
 | [[oltp-vs-olap]] | OLTP (many small key lookups) vs OLAP (few huge scans for aggregates) |
 | [[data-warehousing]] | ETL, star/snowflake schemas, fact and dimension tables |
 | [[column-oriented-storage]] | Store by column not row; compression, vectorized processing, OLAP cubes |
+
+## Storage systems (FoDE Ch 6)
+
+| Page | Description |
+|---|---|
+| [[storage-raw-ingredients]] | HDD/SSD/RAM, networking, CPU, serialization, compression, caching hierarchy |
+| [[object-storage]] | S3/GCS/Azure Blob; immutable key-value; consistency, versioning, storage classes |
+| [[block-storage]] | Raw blocks, RAID, SAN, EBS, instance volumes |
+| [[file-storage]] | Local filesystems, NAS, cloud filesystem services; the three file properties |
+| [[compression-algorithms]] | gzip, bzip2, snappy, LZ4, LZMA, zstd; the speed/ratio trade |
+| [[cache-memory-storage]] | Memcached and Redis as RAM-tier stores |
+| [[streaming-storage]] | Kafka/Pulsar/Kinesis/Pub-Sub as long-retention storage with tiered offload |
+| [[stream-to-batch-storage]] | Stream fan-out to batch storage; relationship to Lambda |
+| [[storage-compute-separation]] | Object storage + ephemeral compute; multitier caching; hybrid object storage |
+| [[lakehouse-table-formats]] | Delta Lake, Iceberg, Hudi — ACID + history over object storage |
+| [[data-retention]] | Value, time, compliance, cost; lifecycle automation |
+| [[data-platform]] | Vendor-curated ecosystem around a storage core; walled-garden trade-offs |
+
+## Ingestion (FoDE Ch 7)
+
+| Page | Description |
+|---|---|
+| [[data-pipeline]] | Reis & Housley's fluid definition; modern pipelines include ETL, ELT, reverse ETL, and data sharing together |
+| [[ingestion-frequency]] | Batch, micro-batch, real-time; why "real-time" is always near-real-time; batch as downstream bottleneck |
+| [[push-vs-pull-vs-poll]] | Three directional patterns; who initiates; where each fits; why the lines blur |
+| [[ingestion-payload]] | Five payload characteristics: kind, shape, size, schema/types, metadata |
+| [[snapshot-vs-differential-ingestion]] | Full-snapshot vs incremental; the "missing intermediate changes" pitfall; link to CDC patterns |
+| [[file-based-ingestion]] | Push-style file export; object storage / SFTP / SCP; CSV vs Parquet/Avro/ORC |
+| [[data-migration]] | One-time bulk moves; schema subtleties; pipeline-connection cut-over as the hard part |
+| [[managed-connector]] | Fivetran/Airbyte/Matillion/Stitch; outsource undifferentiated plumbing |
+| [[dead-letter-queue]] | Error-segregation topic; three schema-evolution defenses; poison-message containment |
+| [[edi]] | Archaic email/flash-drive transport; automate around it |
+| [[web-scraping]] | Legal/ethical caution; HTML-structure churn; downstream architecture implications |
+| [[transfer-appliance]] | Physical box of hard drives; Snowball, Snowmobile; 100+ TB one-time migration |
+
+## Queries and query performance (FoDE Ch 8)
+
+| Page | Description |
+|---|---|
+| [[life-of-a-query]] | Parse, compile to bytecode, optimize, execute; what happens when you press Execute |
+| [[query-optimizer]] | Reorders steps and picks join strategies; EXPLAIN as the lever; matches queries to materialized views |
+| [[query-performance-tuning]] | Scan less data, pick the right join, avoid row explosion, use CTEs, cache, vacuum, batch over single-row inserts |
+| [[broadcast-join]] | Small side shipped to every node; joins local slice of the large side; the cheap case |
+| [[shuffle-hash-join]] | Both sides repartitioned by hash of join key; the expensive default |
+| [[common-table-expression]] | `WITH ... AS`; preferred over nested subqueries and temp tables; enables SQL DAGs |
+| [[window-functions]] | `OVER (PARTITION BY ... ORDER BY ...)`; declarative analytics the optimizer can push down |
+| [[user-defined-function]] | Extending the engine with custom code; deterministic vs not; JS/Python UDF performance trap |
+| [[nested-data]] | Structs, arrays, maps as first-class column types; the semistructured escape hatch |
+| [[streaming-queries]] | Fast-follower CDC, Kappa queries, data-triggered computation; windows and triggers |
+
+## Data modeling paradigms (FoDE Ch 8)
+
+| Page | Description |
+|---|---|
+| [[conceptual-logical-physical-models]] | Three-step continuum from business abstraction to database implementation; the grain rule |
+| [[normalization-levels]] | Denormalized → 1NF → 2NF → 3NF; partial and transitive dependencies |
+| [[inmon-model]] | Top-down 3NF integration; department marts downstream; integration as primary virtue |
+| [[kimball-model]] | Bottom-up facts + dimensions in star schemas directly in the warehouse |
+| [[star-schema]] | Fact table centre, dimensions radiating out; fewer joins than 3NF; analyst-legible |
+| [[snowflake-schema]] | Normalized star variant; less common in practice than the plain star |
+| [[fact-table]] | Immutable append-only numeric events; narrow and long; lowest-grain rule |
+| [[dimension-table]] | Descriptive attributes; wide and short; surrogate keys; conformed dimensions |
+| [[slowly-changing-dimensions]] | Type 0/1/2/3 patterns; Type 2 is standard; determinism technique for stream-table joins |
+| [[data-vault]] | Linstedt's hubs + links + satellites; insert-only, schema-stable; agile under change |
+| [[wide-denormalized-table]] | One very wide table with nested fields; works because columnar storage makes nulls free |
+| [[one-big-table]] | The no-modeling extreme; fast to start, trust-erosive |
+| [[streaming-data-modeling]] | Flexible schemas, nested columns, trust source-system definitions; the unsettled frontier |
+
+## Transformation stage (FoDE Ch 8)
+
+| Page | Description |
+|---|---|
+| [[update-patterns]] | Truncate-and-reload, insert-only, delete, upsert/merge, schema update; copy-on-write cost |
+| [[upsert]] | Update-on-match, insert-on-no-match; designed for row-based, painful in columnar; the CDC-merge anti-pattern |
+| [[materialized-view]] | Precomputed view refreshed on source change; optimizer rewrites; live-table composition |
+| [[federated-query]] | Query external sources as if local; Snowflake external tables; can become materialized views |
+| [[data-virtualization]] | Trino/Presto; storage-less query engines; query pushdown; data-mesh enabler |
+| [[dbt]] | Git-managed templated SQL compiled to warehouse DAGs; analytics-engineering-as-code |
+| [[feature-engineering]] | ML-targeted transformation; data scientists design, data engineers automate |
+| [[data-wrangling]] | IDEs for malformed data; Reis & Housley push back against dismissing no-code tools |
+| [[metrics-layer]] | Authoritative business-logic definitions independent of transformations |
+
+## Serving — general considerations (FoDE Ch 9)
+
+| Page | Description |
+|---|---|
+| [[trust-in-data]] | Root consideration of serving; two dimensions (quality, SLA); silent death knell when lost |
+| [[data-product]] | DJ Patil's definition; jobs-to-be-done; positive feedback loops; three build-time questions |
+| [[self-service-analytics]] | Mostly aspirational; succeeds only with the right audience; three classic blockers |
+| [[data-definitions-and-logic]] | Meaning vs derivation rules; tribal-knowledge failure; catalog + semantic layer as fix |
+
+## Serving — analytics sub-varieties (FoDE Ch 9)
+
+| Page | Description |
+|---|---|
+| [[business-analytics]] | Strategic decisions; dashboards, reports, ad-hoc; the running-shorts case |
+| [[operational-analytics]] | Immediate action; real-time monitoring; streaming-supplants-batch 10-year forecast |
+| [[embedded-analytics]] | Customer-facing; three hard requirements (latency, performance, concurrency); scaling arc |
+
+## Serving — ML fundamentals for DEs (FoDE Ch 9)
+
+| Page | Description |
+|---|---|
+| [[model-drift]] | Why models degrade; DE's role in drift observability |
+| [[training-test-sets]] | Train/test/validation splits; point-in-time correctness; the leakage trap |
+
+## Serving — mechanisms (FoDE Ch 9)
+
+| Page | Description |
+|---|---|
+| [[semantic-layer]] | Authoritative business definitions; query quality vs data quality; Looker/dbt examples |
+| [[file-exchange-serving]] | Ad-hoc file hand-off; five considerations; when to use / when to migrate to data sharing |
+| [[serving-in-notebooks]] | Jupyter as a serving target; credential hygiene; scaling off the laptop |
+
+## Security and privacy (FoDE Ch 10)
+
+| Page | Description |
+|---|---|
+| [[security-theater]] | Compliance-as-performance antipattern; 200-page unread policies; the habit antidote |
+| [[active-security]] | Research real attacks, not just checklist items; every engineer involved in their systems' security |
+| [[threat-modeling]] | The habit beneath active security; negative thinking; minimise data; enumerate attack scenarios |
+| [[encryption-at-rest]] | Baseline for devices, servers, DBs, object storage, backups; useless against credential breach |
+| [[encryption-in-transit]] | HTTPS as default; FTP as anti-example; keys and bucket permissions as common undoings |
+| [[secrets-management]] | Credentials as configuration; SSO + MFA; secrets managers; never in code |
+| [[security-monitoring]] | Access, resource, billing, and excess-permission anomalies; team dashboard |
+| [[network-access-security]] | IP allowlists, VPCs, VPN, bastion hosts; the public-S3 / open-SSH catalogue |
+| [[security-policy]] | Short, practical, habitual example policy — credentials, devices, software updates |
+
+## Future of data engineering (FoDE Ch 11)
+
+| Page | Description |
+|---|---|
+| [[future-of-data-engineering]] | Chapter 11 hub — seven predictions about where data engineering is going |
+| [[live-data-stack]] | Streaming-first successor to the modern data stack; fuses apps, analytics, ML in real time |
+| [[real-time-olap]] | Druid, ClickHouse, Rockset, Firebolt — purpose-built backends for streaming OLAP |
+| [[stream-transform-load]] | STL: the streaming-era successor to ELT; transformation happens in the stream |
+| [[data-application-fusion]] | Application stacks become data stacks; tight ML feedback loops; throw-it-over-the-wall dies |
+| [[cloud-data-os]] | Standardised APIs, formats, catalogs, data-aware orchestration — the cloud as a distributed data OS |
+| [[enterprisey-data-engineering]] | Governance, quality, operations trickling down from big-enterprise to every-size company |
+| [[titles-will-morph]] | DE/SWE/DS/MLE boundaries blur; new ML-focused engineer between DE and MLE |
+| [[spreadsheets-as-data-platform]] | Dark-matter prediction: 700M–2B users; spreadsheet interactivity + cloud OLAP backend |
 
 ## Encoding and compatibility
 

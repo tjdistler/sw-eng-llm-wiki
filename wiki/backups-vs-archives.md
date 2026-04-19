@@ -2,9 +2,9 @@
 
 **Summary**: Chapter 26's framing: archives safekeep data for compliance and discovery over long time windows; backups exist to restore service after data loss. **The most important difference is that backups can be loaded back into an application, while archives cannot**. Confusing the two is the most common cause of the classic failure mode: "we have backups" turns out to mean "we have archives that can't restore service within the uptime window."
 
-**Sources**: `raw/site-reliability-engineering/chapter-26-data-integrity-what-you-read-is-what-you-wrote.md`
+**Sources**: `raw/site-reliability-engineering/chapter-26-data-integrity-what-you-read-is-what-you-wrote.md`, `raw/fundamentals-of-data-engineering/chapter-10-security-and-privacy.md`
 
-**Last updated**: 2026-04-17
+**Last updated**: 2026-04-18
 
 ---
 
@@ -80,6 +80,20 @@ See [[tiered-backup-strategy]] for how Google layers multiple backup tiers to an
 ## Backups must also be tested
 
 A backup that can't be restored is an archive in disguise. The only way to know a backup is a backup is to restore from it, repeatedly. See [[recovery-testing]] — the continuous, automated, end-to-end test of the restore pipeline is the discipline that keeps archives from silently replacing backups.
+
+## Ransomware: backups as a security control (FoDE Ch 10)
+
+Reis & Housley add a dimension the SRE chapter doesn't emphasise: backups as a **security** control, not just a reliability control (source: raw/fundamentals-of-data-engineering/chapter-10-security-and-privacy.md):
+
+> A bad actor can also lock away data. Ransomware attacks are widespread these days. Some insurance companies are reducing payouts in the event of an attack, leaving you on the hook both to recover your data and pay the bad actor who's holding it hostage. You need to back up your data regularly, both for disaster recovery and continuity of business operations, if a version of your data is compromised in a ransomware attack. Additionally, test the restoration of your data backups on a regular basis.
+
+The ransomware-era addition to Chapter 26's framing:
+
+- **Backups must be isolated from the compromised environment.** If ransomware reaches your backup store, you have no recovery. Immutable / WORM backups, air-gapped copies, and separate credential domains all matter here.
+- **Restore practice is doubly important.** Ransomware forces restores under time and adversarial pressure — a never-rehearsed restore pipeline fails at the worst possible moment.
+- **Insurance is shrinking as a fallback.** Policy payouts are contracting; the engineering discipline has to hold up on its own.
+
+Chapter 10 notes that backups "don't strictly fit under security and privacy practices; [they go] under the larger heading of disaster prevention, but [they are] adjacent to security, especially in the era of ransomware attacks."
 
 ## Cross-book framing
 

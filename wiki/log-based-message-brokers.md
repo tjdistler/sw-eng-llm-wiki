@@ -2,9 +2,9 @@
 
 **Summary**: Log-based message brokers (Apache Kafka, Amazon Kinesis, Twitter DistributedLog) combine the durable, replayable storage of databases with the low-latency notification of [[message-brokers]], using append-only partitioned logs with consumer offsets to track progress.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/building-event-driven-microservices/chapter-02-event-driven-microservice-fundamentals.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/building-event-driven-microservices/chapter-02-event-driven-microservice-fundamentals.md`, `raw/fundamentals-of-data-engineering/chapter-06-storage.md`
 
-**Last updated**: 2026-04-17
+**Last updated**: 2026-04-18
 
 ---
 
@@ -79,6 +79,21 @@ Two EDM-specific concepts layered on top:
 
 Bellemare also surfaces a consumption mode the Kleppmann treatment mostly ignores: **queue-style consumption**, where each event is marked consumed after delivery and never re-delivered. Event order is not maintained under parallel queue consumption. Apache Pulsar supports queues; Apache Kafka does not (source: raw/building-event-driven-microservices/chapter-02-event-driven-microservice-fundamentals.md). See [[event-broker]] for the EDM-centric framing of the same technology and [[message-brokers]] for why a classical queue-only broker cannot play this role.
 
+## FoDE Ch 6 — tiered storage and streaming-as-storage
+
+Chapter 6 of *Fundamentals of Data Engineering* reframes these brokers as the **streaming storage tier of the data engineering lifecycle** (source: raw/fundamentals-of-data-engineering/chapter-06-storage.md):
+
+> Streaming data has different storage requirements than nonstreaming data. In the case of message queues, stored data is temporal and expected to disappear after a certain duration. However, distributed, scalable streaming frameworks like Apache Kafka now allow extremely long-duration streaming data retention.
+
+Two Ch 6 specifics:
+
+- **Tiered storage.** "Kafka supports indefinite data retention by pushing old, infrequently accessed messages down to object storage." Recent partitions live on broker-local SSDs; old partitions are offloaded to S3/GCS/Azure Blob. Retrieval from the cold tier is transparent to consumers.
+- **Competitors with similar models.** Amazon Kinesis, Apache Pulsar, and Google Cloud Pub/Sub all support long data retention in analogous ways.
+
+**Replay** is explicitly named as the **standard retrieval mechanism** for streaming storage — not an edge-case feature. Replay can drive batch queries over a historical time range or reprocess events under corrected logic.
+
+See [[streaming-storage]] for the storage-abstraction view, and [[stream-to-batch-storage]] for the common fan-out pattern that couples a streaming topic to a batch-storage consumer.
+
 ## Related pages
 
 - [[stream-processing]]
@@ -98,3 +113,6 @@ Bellemare also surfaces a consumption mode the Kleppmann treatment mostly ignore
 - [[consumer-group]]
 - [[log-compaction]]
 - [[tombstone]]
+- [[streaming-storage]]
+- [[stream-to-batch-storage]]
+- [[object-storage]]

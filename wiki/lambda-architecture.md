@@ -2,9 +2,9 @@
 
 **Summary**: An influential data architecture that runs batch and stream processing in parallel over an immutable event log -- the batch layer produces correct results while the stream layer produces fast approximate results -- later superseded by unified batch/stream processing systems.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/fundamentals-of-data-engineering/chapter-03-designing-good-data-architecture.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-18
 
 ---
 
@@ -48,8 +48,24 @@ Apache Beam provides an API for expressing such computations, runnable on Apache
 
 Reprocessing existing data with new derivation code provides a powerful mechanism for system evolution. Without reprocessing, schema evolution is limited to simple changes (adding optional fields). With reprocessing, you can restructure a dataset into a completely different model. Derived views allow **gradual migration**: maintain old and new schemas side by side, shift users gradually, and roll back if something goes wrong -- analogous to converting railway gauges via a third rail (source: chapter-12-the-future-of-data-systems.md).
 
+## Chapter 3 (FoDE) framing
+
+Reis and Housley reinforce the DDIA framing and add historical context (source: raw/fundamentals-of-data-engineering/chapter-03-designing-good-data-architecture.md):
+
+- Lambda emerged in the early-to-mid 2010s alongside Kafka, Apache Storm, and Samza, as engineers needed to reconcile batch and streaming into a single architecture
+- The **serving layer** combines query results from the batch and speed layers
+- Chapter 3's verdict is bluntly practical: "Managing multiple systems with different codebases is as difficult as it sounds, creating error-prone systems with code and data that are extremely difficult to reconcile"
+- Lambda still dominates search results for data architecture; it still shapes how people think about batch/stream reconciliation. But Chapter 3's recommendation is **don't start here**
+
+Chapter 3 situates the successor patterns in sequence:
+
+- [[kappa-architecture]] — Jay Kreps's 2014 response: use one stream-processing backbone and replay as needed
+- [[dataflow-model]] — Google/Beam: treat batch as a special case of streaming at the programming-model level; the current default thinking
+
 ## Related pages
 
+- [[kappa-architecture]]
+- [[dataflow-model]]
 - [[data-integration]]
 - [[batch-processing]]
 - [[stream-processing]]
@@ -60,3 +76,4 @@ Reprocessing existing data with new derivation code provides a powerful mechanis
 - [[mapreduce]]
 - [[dataflow-engines]]
 - [[unbundling-databases]]
+- [[data-architecture]]

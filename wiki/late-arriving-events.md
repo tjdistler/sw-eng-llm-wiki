@@ -2,9 +2,9 @@
 
 **Summary**: A **late event** is an [[out-of-order-events|out-of-order event]] that arrives after the consumer's notion of time has already moved past it — past a [[watermarks|watermark]] `W(t)` or past the current [[stream-time|stream time]] `t`. How to handle late events is a **business decision first, engineering decision second**, and Bellemare frames three canonical strategies: drop, wait, and grace period.
 
-**Sources**: `raw/building-event-driven-microservices/chapter-06-deterministic-stream-processing.md`
+**Sources**: `raw/building-event-driven-microservices/chapter-06-deterministic-stream-processing.md`, `raw/fundamentals-of-data-engineering/chapter-07-ingestion.md`
 
-**Last updated**: 2026-04-17
+**Last updated**: 2026-04-18
 
 ---
 
@@ -62,6 +62,19 @@ This asymmetry — late during live processing, in-order during replay — is an
 
 [[windowing|Windowed operators]] (tumbling, sliding, session) are the canonical place where late handling matters, because "window closed" is exactly the deadline against which lateness is measured. Without a late policy, windowing over an unbounded stream has no defined semantics for the trailing edge (source: chapter-06-deterministic-stream-processing.md).
 
+## FoDE Ch 7 — the ingestion-layer framing
+
+Chapter 7 of *Fundamentals of Data Engineering* introduces late-arriving data as an ingestion-stage concern distinct from the stream-processor-operator concern Bellemare treats. Reis and Housley's framing is deliberately simple (source: raw/fundamentals-of-data-engineering/chapter-07-ingestion.md):
+
+- "A group of events might occur around the same time frame (similar event times), but some might arrive later than others (late ingestion times) because of various circumstances."
+- Their canonical example: an IoT device is late sending a message because of internet latency issues.
+- The critical pitfall: **confusing ingestion time with event time**. "You may get some strange results if your reports or analysis depend on an accurate portrayal of when events occur."
+- Their handling prescription: "You need to set a cutoff time for when late-arriving data will no longer be processed."
+
+Ch 7's cutoff-time rule matches Bellemare's point that waiting indefinitely is never an option: pick a tolerance, act on that, and drop anything beyond it. The drop/wait/grace-period decision above is the next level of sophistication on top of the basic cutoff.
+
+The Ch 7 framing is one engineering consideration among a suite — see [[data-ingestion]]'s message-and-stream-ingestion considerations for the context (schema evolution, replay, TTL, message size, DLQ, and so on). All of these interact: a too-short TTL can make late events fall off the log before the grace period has expired.
+
 ## Related pages
 
 - [[out-of-order-events]]
@@ -73,3 +86,6 @@ This asymmetry — late during live processing, in-order during replay — is an
 - [[reprocessing-event-streams]]
 - [[stream-processing-fault-tolerance]]
 - [[event-scheduling]]
+- [[data-ingestion]]
+- [[dead-letter-queue]]
+- [[event-timestamps]]

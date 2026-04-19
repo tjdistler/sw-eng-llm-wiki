@@ -2,9 +2,9 @@
 
 **Summary**: A distributed filesystem spreads file storage across many machines in a shared-nothing cluster, providing a single logical filesystem with fault tolerance through replication or erasure coding. HDFS is the dominant open-source implementation.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-10-batch-processing.md`, `raw/site-reliability-engineering/chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-10-batch-processing.md`, `raw/site-reliability-engineering/chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md`, `raw/fundamentals-of-data-engineering/chapter-06-storage.md`
 
-**Last updated**: 2026-04-17
+**Last updated**: 2026-04-18
 
 ---
 
@@ -64,6 +64,27 @@ HDFS serves as the uniform interface for the Hadoop ecosystem — analogous to t
 
 This diversity of processing models on a shared filesystem is a key advantage over monolithic MPP databases. See [[hadoop-vs-mpp-databases]] (source: designing-data-intensive-applications, chapter 10).
 
+## FoDE framing: Hadoop is dead, long live Hadoop
+
+Chapter 6 of *Fundamentals of Data Engineering* gives a sharper retrospective on HDFS's current status (source: raw/fundamentals-of-data-engineering/chapter-06-storage.md):
+
+- HDFS "is no longer a hot, bleeding-edge technology" — many ecosystem tools (Apache Pig, the pure MapReduce model) are legacy or on life support.
+- **HDFS still runs at scale in many places.** Organisations with thousand-node clusters and on-prem resources have little reason to migrate.
+- **HDFS still backs current big-data engines.** Amazon EMR uses it; Apache Spark commonly runs on HDFS clusters, often as part of the [[storage-compute-separation|hybrid object/HDFS pattern]] — stage data on HDFS SSDs, process locally, write results back to S3.
+- **Smaller companies should reconsider.** Running a small Hadoop cluster carries fixed operational overhead that does not amortise below serious scale; cloud [[object-storage]] + ephemeral compute is typically a better fit.
+
+The key architectural difference Chapter 6 emphasises: "Hadoop is similar to object storage, but with a key difference: Hadoop combines compute and storage on the same nodes, where object stores typically have limited support for internal processing." This is the **colocation** that once defined big data — see [[storage-compute-separation]] for why the industry moved away from it for most workloads.
+
+### HDFS mechanics recap
+
+Chapter 6's condensed view of HDFS (source: raw/fundamentals-of-data-engineering/chapter-06-storage.md):
+
+- Files are broken into **blocks** of up to a few hundred MB.
+- The **NameNode** keeps directory structure, file metadata, and block-location information.
+- **Default replication factor 3** — each block on three nodes.
+- If a node or disk fails, the NameNode instructs healthy nodes to re-replicate the under-replicated blocks back to factor 3.
+- Data loss is rare absent correlated failure (Chapter 6's colourful example: an asteroid hitting the data center).
+
 ## Related pages
 
 - [[batch-processing]]
@@ -74,3 +95,5 @@ This diversity of processing models on a shared filesystem is a key advantage ov
 - [[hadoop-vs-mpp-databases]]
 - [[partitioning]]
 - [[colossus]]
+- [[object-storage]]
+- [[storage-compute-separation]]

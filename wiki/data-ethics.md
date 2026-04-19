@@ -1,10 +1,10 @@
 # Data Ethics
 
-**Summary**: Ethical considerations for engineers building data-intensive applications, covering predictive analytics bias, surveillance, privacy, consent, and the responsibility to design systems that respect human dignity -- argued by Kleppmann as inseparable from the technical design of data systems.
+**Summary**: Ethical considerations for engineers building data-intensive applications, covering predictive analytics bias, surveillance, privacy, consent, and the responsibility to design systems that respect human dignity -- argued by Kleppmann as inseparable from the technical design of data systems. Reis and Housley place ethics and privacy inside the [[data-management]] undercurrent of the [[data-engineering-lifecycle]] and frame the data engineer as squarely on the hook for PII masking, bias tracking, and regulatory compliance (GDPR, CCPA).
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/fundamentals-of-data-engineering/chapter-02-the-data-engineering-lifecycle.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-18
 
 ---
 
@@ -66,9 +66,26 @@ Kleppmann advocates (source: chapter-12-the-future-of-data-systems.md):
 
 > "Data is the pollution problem of the information age, and protecting privacy is the environmental challenge." -- Bruce Schneier (source: chapter-12-the-future-of-data-systems.md)
 
+## FoDE perspective — ethics as a lifecycle undercurrent
+
+Reis and Housley treat ethics and privacy as a **facet of [[data-management]]** that cuts across every stage of the [[data-engineering-lifecycle]]. Their framing opens with Aldo Leopold: "Ethical behavior is doing the right thing when no one else is watching" — with their rejoinder that in data, "everyone will be watching someday" (source: raw/fundamentals-of-data-engineering/chapter-02-the-data-engineering-lifecycle.md).
+
+What Chapter 2 asks the data engineer to do (source: raw/fundamentals-of-data-engineering/chapter-02-the-data-engineering-lifecycle.md):
+
+- **Mask PII and other sensitive information** across datasets.
+- **Identify and track bias** in datasets as they are transformed.
+- **Ensure compliance** with GDPR, CCPA, and a growing regulatory stack. "Please take this seriously."
+
+The cultural hope: "more organizations will encourage a culture of good data ethics and privacy." Where Kleppmann argues from first principles for why privacy matters, Reis and Housley take that as given and focus on the **operational responsibility** of the data engineer to implement it — connecting to [[data-lifecycle-management]]'s retention and destruction requirements.
+
 ## Related pages
 
 - [[data-integration]]
 - [[derived-data]]
 - [[reliability]]
 - [[maintainability]]
+- [[data-management]]
+- [[data-governance]]
+- [[data-security]]
+- [[data-lifecycle-management]]
+- [[data-engineering-lifecycle]]

@@ -2,9 +2,9 @@
 
 **Summary**: Schema-on-write (relational) enforces structure when data is stored; schema-on-read (document) interprets structure when data is retrieved — analogous to static vs dynamic type checking, with different trade-offs for flexibility and safety.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-02-data-models-and-query-languages.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-02-data-models-and-query-languages.md`, `raw/fundamentals-of-data-engineering/chapter-06-storage.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-18
 
 ---
 
@@ -56,9 +56,42 @@ Most relational databases execute `ALTER TABLE` in milliseconds. MySQL is an exc
 - **Documentation value** — explicit schemas serve as machine-checked documentation
 - **Data quality enforcement** — the database should reject bad data, not propagate it
 
+## FoDE Ch 6 — schema at the storage layer
+
+Chapter 6 of *Fundamentals of Data Engineering* reframes the distinction for data engineers working on lakes and lakehouses (source: raw/fundamentals-of-data-engineering/chapter-06-storage.md):
+
+- **Schema on write** is "essentially the traditional data warehouse pattern: a table has an integrated schema; any writes to the table must conform." For a data lake to support schema on write, it must integrate a **schema metastore** — a central record of what schema each table has.
+- **Schema on read** is "the schema is dynamically created when data is written, and a reader must determine the schema when reading the data." Ideally the on-disk file format carries its own schema — Parquet and JSON do, CSV notoriously does not. Chapter 6 is explicit: "CSV files are notorious for schema inconsistency and are not recommended in this setting."
+
+Chapter 6's trade-off framing:
+
+- **Schema on write** enforces data standards — data is easier to consume and utilise downstream.
+- **Schema on read** prioritises flexibility — virtually any data can be written — at the cost of making future consumption harder.
+
+### The lakehouse compromise
+
+The emergence of [[data-lakehouse|data lakehouses]] and their [[lakehouse-table-formats|table formats]] (Delta Lake, Iceberg, Hudi) represents a practical merger: the underlying files are Parquet (a schema-bearing columnar format), but the metadata layer **imposes schema-on-write guarantees on tables that opt into them**, while leaving the bucket also open to schema-on-read or even unstructured files.
+
+This is why Chapter 6 describes schema as a "Rosetta stone" — the schema can be more or less strict depending on the consumer's needs, and a lakehouse lets the engineer pick per table rather than per bucket.
+
+### Schema is broader than relational
+
+Chapter 6 emphasises that schema does not mean "relational table" (source: raw/fundamentals-of-data-engineering/chapter-06-storage.md):
+
+> Schema need not be relational. Rather, data becomes more useful when we have as much information about its structure and organization. For images stored in a data lake, this schema information might explain the image format, resolution, and the way the images fit into a larger hierarchy.
+
+A lake of videos has a schema in this sense — codec, resolution, frame rate, the taxonomy of what the videos depict. The catalog records this schema even though no SQL table exists.
+
 ## Related pages
 
 - [[document-model]]
 - [[relational-model]]
 - [[data-models]]
 - [[nosql]]
+- [[data-lake]]
+- [[data-lakehouse]]
+- [[lakehouse-table-formats]]
+- [[data-catalog]]
+- [[schema-evolution]]
+- [[encoding-formats]]
+- [[column-oriented-storage]]

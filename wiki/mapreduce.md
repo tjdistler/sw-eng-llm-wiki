@@ -1,10 +1,10 @@
 # MapReduce
 
-**Summary**: MapReduce is a programming framework for processing large datasets across a distributed cluster. It provides a simple abstraction — write a mapper and a reducer — while the framework handles partitioning, sorting, data movement, and fault tolerance.
+**Summary**: MapReduce is a programming framework for processing large datasets across a distributed cluster. It provides a simple abstraction — write a mapper and a reducer — while the framework handles partitioning, sorting, data movement, and fault tolerance. Reis & Housley call it "the defining batch data transformation pattern of the big data era" — the ancestor to every modern distributed processing framework, even though data engineers rarely write raw MapReduce today.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-10-batch-processing.md`, `raw/designing-distributed-systems/chapter-12-coordinated-batch-processing.md`, `raw/site-reliability-engineering/chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-10-batch-processing.md`, `raw/designing-distributed-systems/chapter-12-coordinated-batch-processing.md`, `raw/site-reliability-engineering/chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md`, `raw/fundamentals-of-data-engineering/chapter-08-queries-modeling-and-transformation.md`
 
-**Last updated**: 2026-04-17
+**Last updated**: 2026-04-18
 
 ---
 
@@ -101,6 +101,36 @@ SRE Chapter 25 (Dan Dennison) names MapReduce as one of the two frameworks Googl
 - The [[pipeline-batch-scheduling-drawbacks|execution-frequency floor]] from running at batch priority limits how fresh MapReduce-pipeline outputs can be.
 
 The chapter's recommendation is not to fix MapReduce but to **adopt a different shape** for workloads where the failure modes matter: continuous data processing via [[google-workflow|Workflow]] with its long-running workers and exactly-once guarantees. Modern open-source [[dataflow-engines]] (Spark, Flink) sit between the two — they retain MapReduce's per-job submission model but pipeline through stages so the straggler-amplification problem is reduced, and Flink in particular offers continuous-streaming modes that approach Workflow's shape.
+
+## Chapter 8 — the post-MapReduce world
+
+Reis & Housley frame the modern landscape as a relaxation of MapReduce's rigidity rather than a replacement (source: raw/fundamentals-of-data-engineering/chapter-08-queries-modeling-and-transformation.md):
+
+> Post-MapReduce processing does not truly discard MapReduce; it still includes the elements of map, shuffle, and reduce, but it relaxes the constraints of MapReduce to allow for in-memory caching.
+
+The diagnosis is concrete: Google's original MapReduce runs numerous short-lived ephemeral tasks that read from and write to disk. No intermediate state is preserved in memory; all data transfers between tasks via disk or network. This simplifies state and workflow management and minimizes memory consumption — **but** drives high disk-bandwidth use and increases processing time.
+
+The fix: frameworks like Spark, BigQuery, and others treat data as a distributed set that lives in memory, spilling to disk only when it overflows. The disk becomes a second-class data-storage layer. **RAM is much faster than SSD/HDD in transfer and seek; persisting even a tiny amount of judiciously chosen data in memory can dramatically speed up processing and utterly crush MapReduce's performance.**
+
+The cloud accelerates this: "it is much more effective to lease memory during a specific processing job than to own it 24 hours a day" (source: raw/fundamentals-of-data-engineering/chapter-08-queries-modeling-and-transformation.md). The old MapReduce assumption — cheap disk, so throw disk at the problem — inverted once memory became rentable by the minute.
+
+## Chapter 8 — the map/shuffle/reduce worked example
+
+Chapter 8 uses a concrete SQL to illustrate (source: raw/fundamentals-of-data-engineering/chapter-08-queries-modeling-and-transformation.md):
+
+```sql
+SELECT COUNT(*), user_id
+FROM user_events
+GROUP BY user_id;
+```
+
+- The table is spread across nodes in data blocks; MapReduce creates one map task per block.
+- Each map task generates a count per user ID present in its block.
+- The **shuffle** redistributes tuples by key via a hash so that each key ends up on exactly one reducer node.
+- Reducers sum the counts per key. Key/count pairs are written to local disk on the owning node.
+- Full results are collected across nodes at the end.
+
+The map phase is a near-perfect example of **embarrassing parallelism** — data scan rate scales linearly with node count. Real-world jobs add `WHERE` clauses, three-table joins, and window functions, which expand into many stacked map + reduce stages.
 
 ## Relationship to MPP databases
 

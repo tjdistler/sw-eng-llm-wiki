@@ -40,8 +40,13 @@ This tension is a fundamental limitation of document databases for applications 
 
 Denormalization (deliberately duplicating data for read performance) is sometimes the right call — particularly for read-heavy workloads where update consistency is manageable. But it requires the application to maintain consistency across duplicated copies. See also the broader discussion in the book's Part III on caching and derived data.
 
+## Further reading
+
+For the sequence of normal forms (1NF, 2NF, 3NF) and Reis & Housley's worked example stepping `OrderDetail` from denormalized through 3NF, see [[normalization-levels]].
+
 ## Related pages
 
 - [[relational-model]]
 - [[document-model]]
 - [[data-models]]
+- [[normalization-levels]]

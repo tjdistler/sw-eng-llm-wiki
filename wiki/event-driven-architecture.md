@@ -2,9 +2,9 @@
 
 **Summary**: A distributed asynchronous architecture style built around **decoupled event processors** that react to events rather than serving synchronous requests. Richards and Ford position it as one of the most scalable and performant styles available — five stars on performance, scalability, elasticity, and fault tolerance — at the cost of simplicity and testability. Two canonical topologies: the **[[broker-topology]]** (peer-to-peer event chain, no central coordinator) and the **[[mediator-topology]]** (central event mediator coordinates a workflow). The style is the Part II architecture-style counterpart to the existing lower-level stream-processing and batch-pattern pages; it is also commonly embedded inside other styles (event-driven microservices, event-driven space-based, event-driven pipeline).
 
-**Sources**: `raw/fundamentals-of-software-architecture/chapter-14-event-driven-architecture-style.md`
+**Sources**: `raw/fundamentals-of-software-architecture/chapter-14-event-driven-architecture-style.md`, `raw/fundamentals-of-data-engineering/chapter-03-designing-good-data-architecture.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-18
 
 ---
 
@@ -146,6 +146,17 @@ Two differences in scope worth noting:
 2. Richards and Ford's **broker topology uses pub/sub events** (past-tense facts). Their **mediator topology uses point-to-point commands** (imperative instructions). Newman's saga chapter does not make this event-vs-command split as load-bearing, but the mechanics line up: choreographed sagas communicate via events on a broker, orchestrated sagas communicate via commands to named participants.
 
 See [[saga]] for Newman's framing; this page and its sub-topology pages are the Richards-and-Ford architectural-style framing.
+
+## In data architecture
+
+Chapter 3 of *Fundamentals of Data Engineering* gives a compact treatment of event-driven architecture as one of the major architecture concepts (source: raw/fundamentals-of-data-engineering/chapter-03-designing-good-data-architecture.md):
+
+- Business events (new customer, new order, order update) are rarely static; an event-driven workflow creates, updates, and asynchronously moves them across lifecycle stages
+- Three areas: **event production, routing, and consumption** — without tight coupling among producer, router, and consumer
+- **Distributing the state of an event across multiple services** is the advantage: if a service goes offline, or a node fails in a distributed system, or multiple consumers need the same event, event-driven architecture handles it
+- Anywhere you have [[loose-coupling|loosely coupled services]], event-driven architecture is a candidate
+
+Reis and Housley treat event-driven patterns as embedded inside many of the other architecture patterns they describe — [[lambda-architecture]], [[kappa-architecture]], [[iot-architecture]], [[dataflow-model]] all lean on event-driven mechanics. The book's Chapter 5 covers event-driven streaming and messaging systems in depth.
 
 ## Relationship to existing wiki pages
 

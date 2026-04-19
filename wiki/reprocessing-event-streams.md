@@ -2,9 +2,9 @@
 
 **Summary**: Because [[event-streams|event streams]] retained in a [[log-based-message-brokers|log-based broker]] are immutable and replayable, an [[event-driven-microservices|event-driven microservice]] can **rewind its consumer offsets and re-run**. Reprocessing is how bug fixes, schema changes, new business logic, and new consumers are rolled out — but it only produces correct results when the topology is [[deterministic-stream-processing|deterministic]].
 
-**Sources**: `raw/building-event-driven-microservices/chapter-06-deterministic-stream-processing.md`
+**Sources**: `raw/building-event-driven-microservices/chapter-06-deterministic-stream-processing.md`, `raw/fundamentals-of-data-engineering/chapter-07-ingestion.md`
 
-**Last updated**: 2026-04-17
+**Last updated**: 2026-04-18
 
 ---
 
@@ -48,6 +48,24 @@ A broken scheduler (e.g., a custom scheduler that uses wall-clock time) means re
 
 During live processing, a short [[event-broker]] connectivity outage at a producer makes events that arrive later look late; during reprocessing, the same events are already in-order in the stored log (source: chapter-06-deterministic-stream-processing.md). Reprocessing the historical record therefore produces more complete, more deterministic results than the original near–real-time run — one more reason it is a routine operation, not an emergency one.
 
+## FoDE Ch 7 — replay from the ingestion perspective
+
+Chapter 7 of *Fundamentals of Data Engineering* lists replay as one of the eight core considerations for message- and stream-ingestion design (source: raw/fundamentals-of-data-engineering/chapter-07-ingestion.md):
+
+> "Replay allows readers to request a range of messages from the history, allowing you to rewind your event history to a particular point in time. Replay is a key capability in many streaming ingestion platforms and is particularly useful when you need to re-ingest and reprocess data for a specific time range."
+
+The note that **not every platform supports replay** is a decision-driving point: RabbitMQ typically deletes messages after all subscribers consume them, while Kafka, Kinesis, and Pub/Sub all support event retention and replay (source: raw/fundamentals-of-data-engineering/chapter-07-ingestion.md). If your ingestion pipeline needs to recover from a downstream bug by rewinding and reprocessing, the streaming-platform choice is load-bearing.
+
+### TTL interacts with replay
+
+FoDE's ingestion considerations tie replay to [[data-retention|TTL]] (source: raw/fundamentals-of-data-engineering/chapter-07-ingestion.md):
+
+- Short TTL (seconds): messages disappear before reprocessing is feasible.
+- Long TTL (weeks or months): backlog grows; replay is possible but uses more disk.
+- Kafka's tiered-storage option ("write older messages to cloud object storage") unlocks effectively unlimited retention and replay.
+
+This is the ingestion-layer mirror of Bellemare's "design every microservice for reprocessing." At the ingestion layer the question is: *can you ingest the message again next year?*
+
 ## Related pages
 
 - [[deterministic-stream-processing]]
@@ -63,3 +81,6 @@ During live processing, a short [[event-broker]] connectivity outage at a produc
 - [[idempotence]]
 - [[exactly-once-semantics]]
 - [[event-sourcing]]
+- [[data-ingestion]]
+- [[data-retention]]
+- [[dead-letter-queue]]

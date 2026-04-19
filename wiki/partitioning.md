@@ -2,9 +2,9 @@
 
 **Summary**: Partitioning (also called sharding) splits a large dataset across multiple nodes so that data and query load can scale beyond what a single machine can handle.
 
-**Sources**: raw/designing-data-intensive-applications/chapter-06-partitioning.md, raw/designing-data-intensive-applications/chapter-11-stream-processing.md, raw/designing-distributed-systems/chapter-03-ambassadors.md, raw/designing-distributed-systems/chapter-06-sharded-services.md, raw/designing-distributed-systems/chapter-07-scattergather.md
+**Sources**: raw/designing-data-intensive-applications/chapter-06-partitioning.md, raw/designing-data-intensive-applications/chapter-11-stream-processing.md, raw/designing-distributed-systems/chapter-03-ambassadors.md, raw/designing-distributed-systems/chapter-06-sharded-services.md, raw/designing-distributed-systems/chapter-07-scattergather.md, raw/fundamentals-of-data-engineering/chapter-06-storage.md
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-18
 
 ---
 
@@ -71,6 +71,28 @@ Partitioning is central to [[batch-processing]] systems. In [[mapreduce]], the i
 Load balancing in log-based brokers works at the partition level rather than per-message: entire partitions are assigned to consumer nodes. This means the maximum parallelism is bounded by the number of partitions (unlike AMQP/JMS-style [[message-brokers]] where individual messages can be distributed). See [[log-based-message-brokers]] (source: chapter-11-stream-processing.md).
 
 Stream processing state can also be partitioned to match the event log: if events for a customer in partition 3 only require updating partition 3 of the application state, a single-threaded log consumer needs no concurrency control for writes. See [[event-sourcing]] (source: chapter-11-stream-processing.md).
+
+## Partitioning and clustering for analytics
+
+Chapter 6 of *Fundamentals of Data Engineering* frames analytics-side partitioning as the complement to [[column-oriented-storage|columnar storage]]: columnar scans the needed columns, partitioning further shrinks the scanned *rows* (source: raw/fundamentals-of-data-engineering/chapter-06-storage.md).
+
+- **Time-based partitioning** dominates. "It is quite common in analytics and data science use cases to scan over a time range, so date- and time-based partitioning is extremely common."
+- **Clustering** is the finer-grained sibling: within a partition, data is sorted by one or more fields so similar values are colocated. This speeds filters, sorts, and joins on those fields.
+- The trade-off is the same as with [[indexes]] — partitioning and clustering add write overhead and storage layout cost for better read performance.
+
+### Snowflake's micro-partitioning
+
+Chapter 6 calls out Snowflake's **micro-partitioning** as a recent evolution (source: raw/fundamentals-of-data-engineering/chapter-06-storage.md). Instead of the naive "partition on a single designated field" approach, Snowflake:
+
+- Groups rows into 50–500 MB micro-partitions.
+- Algorithmically clusters micro-partitions on repeated-value fields across many rows.
+- Supports overlapping micro-partitions, allowing effective partitioning on multiple fields.
+- Maintains a metadata database of per-micro-partition value ranges and row counts.
+- At query time, prunes micro-partitions whose metadata rules them out of the predicate — "Snowflake excludes any micro-partitions that don't include this date."
+
+Chapter 6 labels this **hybrid columnar storage**: columnar at the byte layout, but broken into small row groups governed by a metadata index. The metadata serves the same role a traditional index serves in an OLTP database.
+
+This architecture is also the shape the [[lakehouse-table-formats|Delta Lake / Iceberg / Hudi]] table formats converge toward — file-level metadata that lets the query engine skip irrelevant data.
 
 ## Client integration via ambassadors
 

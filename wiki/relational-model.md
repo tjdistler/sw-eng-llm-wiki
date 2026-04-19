@@ -2,9 +2,9 @@
 
 **Summary**: The relational model organizes data into tables of rows and columns, hides storage implementation details behind a clean interface, and has dominated data storage for over 40 years — largely because its query optimizer generalizes well across wildly different use cases.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-02-data-models-and-query-languages.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-02-data-models-and-query-languages.md`, `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-18
 
 ---
 
@@ -47,6 +47,15 @@ This made adding new features far easier: declare a new index, and all existing 
 
 The relational model defeated the hierarchical model (IMS) and network model (CODASYL) in the 1970s "great debate." It faces renewed competition from [[nosql]] stores and [[document-model]] databases, though the two are converging — most relational databases now support JSON natively. (source: chapter-02-data-models-and-query-languages.md)
 
+## As a source system (Reis & Housley)
+
+Reis and Housley's Chapter 5 of *Fundamentals of Data Engineering* frames the RDBMS as the canonical [[source-systems|source system]] backing software applications (source: raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md):
+
+- **ACID + normalization + high transaction rate.** The combination makes relational databases "ideal for storing rapidly changing application states." Most OLTP application backends are RDBMS.
+- **Challenge for the data engineer: capturing state over time.** The RDBMS will happily overwrite last year's customer address with this year's. The engineer has to decide how to preserve history — [[change-data-capture|CDC]], [[insert-only]] tables, point-in-time snapshots — at source-system design time, not after the fact.
+- **Extraction primitives.** Modern relational databases expose several: full-table scan, incremental scan by primary key or `updated_at`, read replicas, log-based CDC on the binlog or WAL. See [[application-database-as-source]] for the extraction-pattern comparison.
+- **Lineage of the LAMP stack.** The web era's RDBMS explosion (MySQL, PostgreSQL, MariaDB) produced the workload shape the engineer inherits — thousands of small OLTP databases each backing one application, expected to remain extractable without harm.
+
 ## Related pages
 
 - [[data-models]]
@@ -56,3 +65,7 @@ The relational model defeated the hierarchical model (IMS) and network model (CO
 - [[declarative-vs-imperative-queries]]
 - [[document-model]]
 - [[nosql]]
+- [[source-systems]]
+- [[application-database-as-source]]
+- [[change-data-capture]]
+- [[acid]]

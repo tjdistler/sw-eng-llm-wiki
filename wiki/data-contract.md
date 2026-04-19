@@ -2,9 +2,9 @@
 
 **Summary**: Adam Bellemare's term for the agreement between an event producer and its consumers about the shape *and* meaning of the events on a stream. A data contract has two components — the **data definition** (fields, types, structures) and the **triggering logic** (the business condition that causes an event to be produced). Both must be preserved across evolution, with special care not to break consumers.
 
-**Sources**: `raw/building-event-driven-microservices/chapter-03-communication-and-data-contracts.md`
+**Sources**: `raw/building-event-driven-microservices/chapter-03-communication-and-data-contracts.md`, `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`
 
-**Last updated**: 2026-04-17
+**Last updated**: 2026-04-18
 
 ---
 
@@ -44,6 +44,22 @@ Three mechanisms compose into a usable contract enforcement story:
 
 Together they are what [[independent-deployability|independent deployability]] looks like when the interface is data rather than a function call.
 
+## The FoDE source-system framing
+
+Reis and Housley's Chapter 5 of *Fundamentals of Data Engineering* reaches for the same concept but from the opposite end of the pipeline — not producer/consumer event-stream communication, but the **source-system extraction** contract between a data team and the upstream system that owns the data. They quote James Denmore's formulation (source: raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md):
+
+> A data contract is a written agreement between the owner of a source system and the team ingesting data from that system for use in a data pipeline. The contract should state what data is being extracted, via what method (full, incremental), how often, as well as who (person, team) are the contacts for both the source system and the ingestion.
+
+The Reis-and-Housley recommendations on how to operate it:
+
+- **Store contracts in a well-known location** — a GitHub repo or internal documentation site, so consumers can find them without asking.
+- **Use a standardized format where possible** so contracts can be integrated into the development process or queried programmatically.
+- **Pair with an [[service-level-agreement|SLA]] and [[service-level-objective|SLO]]** — a data contract states the shape of the data; the SLA/SLO states the availability and quality expectations against it.
+
+If a formal contract feels too heavy, Reis and Housley fall back to an informal requirement: verbally set expectations for source-system uptime, data quality, and anything else of importance (source: raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md).
+
+This source-system-extraction contract and Bellemare's producer-consumer event contract are not the same artefact, but they serve the same purpose — **make the interface between teams explicit so changes don't silently break downstream work**. In a mature [[data-liberation|data-liberated]] organisation, the two collapse: the source team publishes events per the same contract the data team consumes, and the extraction-side contract becomes redundant.
+
 ## Related pages
 
 - [[explicit-vs-implicit-schemas]]
@@ -56,3 +72,7 @@ Together they are what [[independent-deployability|independent deployability]] l
 - [[event-structure]]
 - [[event-driven-microservices]]
 - [[coupling]]
+- [[source-systems]]
+- [[source-system-considerations]]
+- [[service-level-agreement]]
+- [[service-level-objective]]
