@@ -151,7 +151,7 @@ Both walk the disintegrator/integrator analysis and resolve via the architect/sp
 
 ## "Microservices" vs "fine-grained" — clearing up the label
 
-Hard Parts Ch 7 reinforces the *Fundamentals* Ch 17 point on the same page where it introduces granularity metrics: a microservice is "a single-purpose, separately deployed unit of software that does one thing really well." The trouble is that "single purpose" is in the eye of the beholder. Combined with the SRP-meets-microservices framing (Robert C. Martin's [[single-responsibility-principle|Single Responsibility Principle]] applied at the service layer), the temptation to make services as small as possible is structural — and the disintegrator/integrator balance is the corrective.
+Hard Parts Ch 7 reinforces the *Fundamentals* Ch 17 point on the same page where it introduces granularity metrics: a microservice is "a single-purpose, separately deployed unit of software that does one thing really well." The trouble is that "single purpose" is in the eye of the beholder. Combined with the SRP-meets-microservices framing (Robert C. Martin's Single Responsibility Principle applied at the service layer), the temptation to make services as small as possible is structural — and the disintegrator/integrator balance is the corrective.
 
 ## Relationship to [[architectural-quantum|architectural quanta]]
 
@@ -196,6 +196,5 @@ The architect's granularity choice is therefore a choice between which *kind* of
 - [[architectural-modularity]]
 - [[trade-off-analysis]]
 - [[architecture-decision-record]]
-- [[single-responsibility-principle]]
 - [[acid]]
 - [[software-architecture-the-hard-parts]]

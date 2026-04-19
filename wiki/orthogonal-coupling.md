@@ -21,7 +21,7 @@ Most coupling discussions in distributed architecture are about parts that share
 Naming it lets architects:
 
 - **Spot it deliberately** — "is this concern orthogonal to the domain?" Yes → don't try to fold it into domain services; it will accumulate as cross-cutting cruft.
-- **Treat it differently** — orthogonal concerns deserve orthogonal mechanisms (sidecars, service meshes, [[aspect-oriented-programming]]-style decoration), not domain-style modules.
+- **Treat it differently** — orthogonal concerns deserve orthogonal mechanisms (sidecars, service meshes, aspect-oriented-programming-style decoration), not domain-style modules.
 - **Avoid false trade-offs** — "should monitoring live in each service or a shared service?" is a wrong question; the orthogonal answer is *neither*.
 
 ## The architectural answer: sidecars and service mesh

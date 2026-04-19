@@ -29,7 +29,7 @@ The Notification Service worked example: a single service that sends SMS, email,
 
 Contrast: a Customer Service that manages **profile, preferences, and website comments** — three operations on a broader scope (the customer). Cohesion is weak; the service is doing too much; this *is* a good candidate for splitting.
 
-This driver is the [[single-responsibility-principle|Single Responsibility Principle]] applied at service level. The chapter is sharp on the trap: "single responsibility" is in the eye of the beholder. *Is notifying the customer one thing, or is notifying via email one thing?* Architects who decompose on this driver alone routinely over-decompose. **Use it in combination with the other five.**
+This driver is the Single Responsibility Principle applied at service level. The chapter is sharp on the trap: "single responsibility" is in the eye of the beholder. *Is notifying the customer one thing, or is notifying via email one thing?* Architects who decompose on this driver alone routinely over-decompose. **Use it in combination with the other five.**
 
 ## 2. Code volatility
 
@@ -112,7 +112,6 @@ Many of the same forces appear at the **data** layer in [[data-decomposition-dri
 - [[granularity-integrators]]
 - [[code-volatility]]
 - [[cohesion]]
-- [[single-responsibility-principle]]
 - [[scalability]]
 - [[elasticity]]
 - [[fault-tolerance]]

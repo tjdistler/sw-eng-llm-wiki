@@ -52,7 +52,7 @@ A separate, sharper observation runs through the chapter: reuse has **two** ingr
 
 Things everyone successfully reuses (operating systems, open-source frameworks, well-versioned libraries) all share slow, predictable change cadence. Things that fail at reuse (the centralized "Customer service" that every domain in an insurance company must use, the [[orchestration-driven-soa|orchestration-driven SOA]] reuse-everything mandate) couple fast-changing internal concerns into a single brittle artifact.
 
-The Chapter 8 corollary: **never make a fast-changing internal capability the target of reuse**. If you must reuse it, hide it behind a [[platforms|platform-style API]] designed for a slow external rate of change with an aggressive internal one. This is the lens through which *Hard Parts* rehabilitates reuse — it isn't bad, it just has to be applied to the right kind of code.
+The Chapter 8 corollary: **never make a fast-changing internal capability the target of reuse**. If you must reuse it, hide it behind a platform-style API designed for a slow external rate of change with an aggressive internal one. This is the lens through which *Hard Parts* rehabilitates reuse — it isn't bad, it just has to be applied to the right kind of code.
 
 This connects back to the [[gather-common-domain-components-pattern]] from Chapter 5: that pattern *finds* domain reuse candidates inside a monolith; this chapter decides *what shape* each consolidated component should take in the distributed result.
 
@@ -86,5 +86,4 @@ Chapter 8 covers *code* reuse. Data reuse — how multiple services share read a
 - [[gather-common-domain-components-pattern]]
 - [[shared-database-antipattern]]
 - [[orchestration-driven-soa]]
-- [[platforms]]
 - [[software-architecture-the-hard-parts]]

@@ -31,7 +31,7 @@ Breaking apart the database into [[bounded-context|bounded-context]]-aligned sch
 
 ### 2. Connection management
 
-Database connections are a finite, expensive resource. A monolith with a 200-connection pool becomes, after decomposition into 50 services with 10 connections each, a **1,000-connection** system — and once services scale to 5 instances each, **1,700 connections**. No shared database supports that without connection-wait starvation, cascading timeouts, and tripped [[circuit-breaker-pattern|circuit breakers]].
+Database connections are a finite, expensive resource. A monolith with a 200-connection pool becomes, after decomposition into 50 services with 10 connections each, a **1,000-connection** system — and once services scale to 5 instances each, **1,700 connections**. No shared database supports that without connection-wait starvation, cascading timeouts, and tripped [[circuit-breaker|circuit breakers]].
 
 The book's mitigation for a still-shared database is the **connection quota**: each service gets an explicit cap, tuned by [[architecture-fitness-function|fitness functions]] that stream usage data. Quotas can be distributed evenly first (simple, wasteful) and later made variable per-service (efficient, requires data). This can buy time — but if the shape of the workload genuinely exceeds what a single connection pool can serve, splitting the database is the structural fix.
 

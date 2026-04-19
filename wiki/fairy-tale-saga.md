@@ -49,7 +49,7 @@ Chapter 12's Table 12-4 ratings (source: raw/software-architecture-the-hard-part
 
 ## Worked example (Sysops Squad)
 
-Chapter 12's illustration (Figure 12-20): ticket completion sets survey status to `NO_SURVEY` if the Survey Service is unavailable, returns success to the expert, and leaves the Ticket Orchestrator to asynchronously retry or escalate. The end user is not blocked on the error; responsiveness is preserved. This is the canonical example of Fairy Tale Saga(seo) leveraging [[saga-state-machines|saga state machines]] instead of compensating updates (source: raw/software-architecture-the-hard-parts/chapter-12-transactional-sagas.md).
+Chapter 12's illustration (Figure 12-20): ticket completion sets survey status to `NO_SURVEY` if the Survey Service is unavailable, returns success to the expert, and leaves the Ticket Orchestrator to asynchronously retry or escalate. The end user is not blocked on the error; responsiveness is preserved. This is the canonical example of Fairy Tale Saga(seo) leveraging saga state machines instead of compensating updates (source: raw/software-architecture-the-hard-parts/chapter-12-transactional-sagas.md).
 
 ## Why it's so popular
 

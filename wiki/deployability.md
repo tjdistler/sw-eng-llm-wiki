@@ -18,7 +18,7 @@ All three dimensions must be good; improving one at the expense of another does 
 
 **Ease** — the mechanical cost of a deployment. CI/CD pipelines, infrastructure-as-code, container registries, orchestration platforms all contribute.
 
-**Frequency** — how often a deployment can happen. Coupled to ease (hard deployments happen rarely) and to risk (risky deployments are gated by change-advisory boards). Deployment frequency is one of the four [[dora-metrics|DORA metrics]] of engineering organisation health.
+**Frequency** — how often a deployment can happen. Coupled to ease (hard deployments happen rarely) and to risk (risky deployments are gated by change-advisory boards). Deployment frequency is one of the four DORA metrics of engineering organisation health.
 
 **Risk** — the probability that a deployment causes an incident, plus the blast radius if it does. Reduced by small deploy units (smaller diff per release), [[progressive-delivery|progressive delivery]], and [[blue-green-deployment|blue-green]] / [[canary-test|canary]] techniques.
 

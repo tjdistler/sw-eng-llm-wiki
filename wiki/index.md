@@ -1308,13 +1308,9 @@ The ninth Part II style — microservices — is catalogued in *Microservices fu
 
 | Page | Description |
 |---|---|
-| [[trade-off-analysis]] | Core discipline — find-entangled / analyze-interactions / assess-impacts; MECE, qualitative over quantitative, iterate as context shifts |
 | [[least-worst-trade-offs]] | Don't find the best — find the least worst; architect as objective arbiter against evangelism |
 | [[mece-principle]] | Mutually exclusive, collectively exhaustive — decision-option discipline and its model-vs-reality caveats |
-| [[laws-of-software-architecture]] | "Everything is a trade-off"; "why beats how"; no silver bullets |
-| [[architecture-decision-record]] | ADRs as the documented output of the method; Consequences as the trade-off artefact; Alternatives must be MECE |
 | [[operational-vs-analytical-data]] | The first structural data lens; OLTP boundary drives decomposition decisions |
-| [[data-outlives-code]] | Berners-Lee framing; architecture in service of data, not the other way round |
 
 ## Coupling taxonomy (Hard Parts)
 
@@ -1325,7 +1321,6 @@ The ninth Part II style — microservices — is catalogued in *Microservices fu
 | [[semantic-coupling]] | Domain-concept coupling inherent in the workflow; the floor implementation can only worsen |
 | [[stamp-coupling]] | Passing whole structures when only a subset is needed; GraphQL as the counter-pattern |
 | [[orthogonal-coupling]] | Distinct-purposes-that-must-intersect; sidecars/mesh as the cleanest implementation |
-| [[connascence]] | Page-Jones taxonomy lifted to architectural scale; strictness as the connascence dial |
 
 ## Architectural modularity and granularity
 
@@ -1335,7 +1330,6 @@ The ninth Part II style — microservices — is catalogued in *Microservices fu
 | [[agility]] | Compound characteristic = maintainability + testability + deployability |
 | [[testability]] | Ease + completeness of testing; chatter failure mode; contract tests as preserver |
 | [[deployability]] | Ease + frequency + risk; Matt Stine "big ball of distributed mud" warning |
-| [[service-granularity]] | Hub — disintegrators vs integrators; "hold until disintegrators outweigh" |
 | [[granularity-disintegrators]] | Six forces pulling services apart: scope, code volatility, scalability, fault tolerance, security, extensibility |
 | [[granularity-integrators]] | Four forces keeping services together: transactions, workflow/choreography, shared code, data relationships |
 | [[code-volatility]] | Change-rate as an objective, measurable decomposition driver |
@@ -1358,7 +1352,6 @@ The ninth Part II style — microservices — is catalogued in *Microservices fu
 
 | Page | Description |
 |---|---|
-| [[database-decomposition]] | Hub — five-step pattern (domains → assign → split connections → split schemas → split servers) |
 | [[data-decomposition-drivers-and-integrators]] | Six disintegrators vs two integrators; the rubric that justifies a database split |
 | [[data-domain]] | Soccer-ball model; groups of tables forming the unit of ownership and extraction |
 | [[data-sovereignty]] | Step-3 outcome; one-owner-per-database rule |
@@ -1394,7 +1387,6 @@ The ninth Part II style — microservices — is catalogued in *Microservices fu
 | [[workflow-orchestration]] | Mediator coordinates; central state tracking; scalability ceiling |
 | [[workflow-choreography]] | Peer-to-peer events; responsive/scalable but hard to track state |
 | [[choreography]] | Top-level hub — no central coordinator; cross-links to broker-topology, saga, EDM |
-| [[saga]] | Hub — 2×2×2 taxonomy of eight sagas (communication × consistency × coordination) |
 | [[epic-saga]] | sync + atomic + orchestrated — traditional DT; rarely advisable |
 | [[phone-tag-saga]] | sync + atomic + choreographed — worst of both worlds |
 | [[fairy-tale-saga]] | sync + eventual + orchestrated — common real-world default |

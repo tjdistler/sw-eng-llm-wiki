@@ -40,7 +40,7 @@ When carving services out of a monolith, replicating something like a `Utility.c
 
 | Pro | Con |
 |---|---|
-| Preserves [[bounded-contexts\|bounded context]] perfectly — no shared dependency edge | Bug fixes must be propagated by hand to every copy |
+| Preserves [[bounded-context\|bounded context]] perfectly — no shared dependency edge | Bug fixes must be propagated by hand to every copy |
 | Zero coupling — neither static nor dynamic | Functional changes likewise — every service team has to act |
 | No versioning, no library hygiene, no runtime overhead | Drift is inevitable — over time copies diverge |
 
@@ -67,6 +67,6 @@ Code replication is the **first** option in the [[reuse-patterns]] decision matr
 - [[shared-library-pattern]]
 - [[shared-service-pattern]]
 - [[tactical-forking]]
-- [[bounded-contexts]]
+- [[bounded-context]]
 - [[gather-common-domain-components-pattern]]
 - [[software-architecture-the-hard-parts]]

@@ -62,7 +62,6 @@ In the [[database-type-selection]] matrix it occupies the "can scale horizontall
 - [[nosql]]
 - [[acid]]
 - [[partitioning]]
-- [[sharding]]
 - [[cap-theorem]]
 - [[cloud-native-database]]
 - [[database-decomposition]]

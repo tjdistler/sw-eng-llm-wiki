@@ -4,7 +4,7 @@
 
 **Sources**: `raw/fundamentals-of-software-architecture/chapter-02-architectural-thinking.md`, `raw/software-architecture-the-hard-parts/chapter-01-what-happens-when-there-are-no-best-practices.md`, `raw/software-architecture-the-hard-parts/chapter-15-build-your-own-trade-off-analysis.md`
 
-**Last updated**: 2026-04-19 (Ch 15 augmentation)
+**Last updated**: 2026-04-19
 
 ---
 
@@ -83,7 +83,7 @@ Each of these is a site where architectural thinking has already been applied an
 
 *Software Architecture: The Hard Parts* (Ford, Richards, Sadalage, Dehghani, 2021) sharpens this discipline with a deliberately tongue-in-cheek slogan: **don't look for the best design; look for the least worst combination of trade-offs** (source: raw/software-architecture-the-hard-parts/chapter-01-what-happens-when-there-are-no-best-practices.md). "Best" implies that the architect has managed to simultaneously maximize every competing factor — which never happens in practice. The honest goal is a combination where no single characteristic excels the way it would alone, but the balance of competing characteristics promotes project success.
 
-The motivating observation: for architects, **every problem is a snowflake** — the exact combination of environment, team, business, and constraints is usually unique in the world. Books, blogs, and Stack Overflow cannot supply a solution. Architects who go looking for one either fail to find it or copy a pattern whose context they don't share. Fred Brooks's 1986 "No Silver Bullet" still holds: no single development approach offers a tenfold productivity/reliability/simplicity improvement. The architect's real job is objectively assessing the trade-offs on either side of a consequential decision and resolving it as well as the current context allows. See [[least-worst-trade-offs]] for the standalone concept and [[no-silver-bullet]]-style warnings embedded in [[laws-of-software-architecture]].
+The motivating observation: for architects, **every problem is a snowflake** — the exact combination of environment, team, business, and constraints is usually unique in the world. Books, blogs, and Stack Overflow cannot supply a solution. Architects who go looking for one either fail to find it or copy a pattern whose context they don't share. Fred Brooks's 1986 "No Silver Bullet" still holds: no single development approach offers a tenfold productivity/reliability/simplicity improvement. The architect's real job is objectively assessing the trade-offs on either side of a consequential decision and resolving it as well as the current context allows. See [[least-worst-trade-offs]] for the standalone concept and the no-silver-bullet warnings embedded in [[laws-of-software-architecture]].
 
 ### The *Hard Parts* method (Ch 1 → Ch 2+)
 

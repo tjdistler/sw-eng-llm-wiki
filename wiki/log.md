@@ -724,3 +724,9 @@ Augmented:
 - wiki/laws-of-software-architecture.md (Ch 15 — First Law made operational; iteration because each choice constrains the next; anti-evangelism corollary)
 - wiki/architectural-thinking.md (Ch 15 turns aspect #3 into repeatable method)
 - wiki/software-architecture-the-hard-parts.md (Ch 15 status; book marked fully ingested; cross-links)
+
+## 2026-04-19 — Wiki lint fixes
+
+- Repaired 14 broken wikilinks across 11 pages: rewrote `bounded-contexts` → `bounded-context`, `circuit-breaker-pattern` → `circuit-breaker`; deleted dead links to non-existent pages (`dora-metrics`, `saga-state-machines`, `single-responsibility-principle`, `sharding`, `aspect-oriented-programming`, `platforms`, `no-silver-bullet`).
+- Fixed `trade-off-analysis.md` Last-updated line (linter requires bare `YYYY-MM-DD`).
+- Deduplicated 8 index entries that the Hard Parts ingest had re-added in book-specific sections; kept the original topical entries.
