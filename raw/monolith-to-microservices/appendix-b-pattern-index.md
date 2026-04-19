@@ -1,3 +1,0 @@
-### APPENDIX B
-
-# Pattern Index

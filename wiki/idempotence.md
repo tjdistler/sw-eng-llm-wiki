@@ -2,7 +2,7 @@
 
 **Summary**: A property of an operation such that applying it N times has the same observable effect as applying it once. In distributed systems idempotence is the workhorse primitive that makes retry-based fault tolerance safe — it converts at-least-once delivery into effectively-once behaviour without requiring synchronous coordination.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`, `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/designing-data-intensive-applications/glossary.md`, `raw/site-reliability-engineering/chapter-24-distributed-periodic-scheduling-with-cron.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`, `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/site-reliability-engineering/chapter-24-distributed-periodic-scheduling-with-cron.md`
 
 **Last updated**: 2026-04-17
 

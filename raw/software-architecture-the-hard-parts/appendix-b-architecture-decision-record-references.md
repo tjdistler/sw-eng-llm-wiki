@@ -1,5 +1,0 @@
-### APPENDIX B
-
-# Architecture Decision Record References
-
-Each Sysops Squad decision in this book was accompanied by a corresponding Architecture Decision Record. We consolidated all the ADRs here for easy reference: “ADR: A short noun phrase containing the architecture decision” on page 5 “ADR: Migrate Sysops Squad Application to a Distributed Architecture” on page 61 “ADR: Migration Using the Component-Based Decomposition Approach” on page 79 “ADR: Use of Document Database for Customer Survey” on page 184 “ADR: Consolidated Service for Ticket Assignment and Routing” on page 211 “ADR: Consolidated Service for Customer-Related Functionality” on page 215 “ADR: Using a Sidecar for Operational Coupling” on page 241 “ADR: Use of a Shared Library for Common Ticketing Database Logic” on page 247 “ADR: Single Table Ownership for Bounded Contexts” on page 280 “ADR: Survey Service Owns the Survey Table” on page 281 “ADR: Use of In-Memory Replicated Caching for Expert Profile Data” on page 297 “ADR: Use Orchestration for Primary Ticket Workflow” on page 321 “ADR: Loose Contract for Sysops Squad Expert Mobile Application” on page 380
