@@ -4,6 +4,19 @@ Append-only record of all operations.
 
 ---
 
+## 2026-04-19 — Wiki redesign Phase 2: MOC pilot (moc-decomposition)
+
+Added the first Map-of-Content page, `wiki/moc-decomposition.md`, covering service extraction from a monolith end-to-end: decision frame, seam-finding, extraction patterns, database decomposition, correctness across the split, organisational pressure, and the operational step-up. Sibling MOC handoffs are noted in prose (not wikilinks) pending Phases 3–7. Added a new `## Maps of Content (MOCs)` section at the top of `wiki/index.md` with the single MOC entry.
+
+Files touched:
+
+- `wiki/moc-decomposition.md` — new
+- `wiki/index.md` — new `## Maps of Content (MOCs)` section with `moc-decomposition` entry
+
+Linter: 0 errors. Warnings: `moc-decomposition.md` flagged as orphan (expected — MOCs are only linked from `index.md` which the orphan check excludes; Phase 10 updates the linter to exempt MOCs).
+
+---
+
 ## 2026-04-19 — Wiki redesign Phase 1: per-book H2 chapter renames
 
 Renamed per-book summary H2 chapter headings to `## Chapter N: <Full Chapter Title>` so `[[book-name#chapter-N-title]]` wikilink anchors resolve via the linter's slug match. Prerequisite for MOCs introduced in later phases.

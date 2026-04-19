@@ -347,7 +347,7 @@ Per-book summary pages (`wiki/<book-name>.md`) stay at current paths — only ch
 Rename each `## Chapter N concepts` → `## Chapter N: <Full Chapter Title>` (titles taken from `raw/<book>/chapter-NN-*.md`). After this, anchors like `[[monolith-to-microservices#chapter-4-decomposing-the-database]]` resolve via the current linter's slug match — no linter change needed.
 **Commit**: 1 (8 file edits). **Review**: summaries still read cleanly; `uv run python lint.py ../wiki` green. **Blocks**: every later MOC that cites raw chapters.
 
-### Phase 2 — MOC pilot: `moc-decomposition`
+### Phase 2 — MOC pilot: `moc-decomposition` ✅ Complete (2026-04-19)
 
 **Files**: `wiki/moc-decomposition.md` (new), `wiki/index.md` (add entry to keep linter happy).
 Write per §1 template with these refinements folded in:

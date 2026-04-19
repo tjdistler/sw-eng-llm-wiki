@@ -1,5 +1,13 @@
 # Wiki Index
 
+## Maps of Content (MOCs)
+
+Narrative entry points for multi-cluster questions. Read the MOC first to find the concepts that compose for a given question shape, then follow wikilinks into concept pages.
+
+| Page | Description |
+|---|---|
+| [[moc-decomposition]] | Extracting a service from a monolith — decision frame, seams, extraction patterns, DB decomposition, correctness, org pressure, operational step-up |
+
 ## Source summaries
 
 | Page | Description |
