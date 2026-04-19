@@ -2,9 +2,9 @@
 
 **Summary**: A short text file (one to two pages) capturing a single architecture decision in a fixed structure — Title, Status, Context, Decision, Consequences — so the *why* of the decision survives the team that made it. ADRs were evangelised by Michael Nygard (2011 blog post) and marked "adopt" on the ThoughtWorks Technology Radar; they are the canonical answer to the [[laws-of-software-architecture|Second Law of Software Architecture]] (why beats how) and the direct cure for the Email-Driven Architecture anti-pattern.
 
-**Sources**: `raw/fundamentals-of-software-architecture/chapter-19-architecture-decisions.md`
+**Sources**: `raw/fundamentals-of-software-architecture/chapter-19-architecture-decisions.md`, `raw/software-architecture-the-hard-parts/chapter-01-what-happens-when-there-are-no-best-practices.md`, `raw/software-architecture-the-hard-parts/chapter-15-build-your-own-trade-off-analysis.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-19
 
 ---
 
@@ -144,6 +144,26 @@ Status: Accepted, supersedes 42
 
 The history trail preserves both decisions and prevents a future architect from arguing for messaging again without first reading ADR 42's original rationale and ADR 68's reasons for overriding it.
 
+## Re-iterated in *The Hard Parts*
+
+Ford, Richards, Sadalage, and Dehghani's follow-up *Software Architecture: The Hard Parts* (2021) uses ADRs as the **canonical documentation medium for every trade-off the book works through**. Chapter 1 confirms the prior-book format — Title / Context / Decision / Consequences, with the assumption that each recorded ADR is approved — and extends the Consequences section to explicitly hold the trade-off analysis that led to the decision (source: raw/software-architecture-the-hard-parts/chapter-01-what-happens-when-there-are-no-best-practices.md).
+
+The framing is load-bearing for *Hard Parts*' method: if the goal is the [[least-worst-trade-offs|least-worst combination of trade-offs]], then the Consequences section — which names the trade-offs that were considered and the ones that were accepted — is the only durable evidence that a decision was made on the basis of trade-off analysis rather than convenience. Every distributed-architecture problem the book dissects concludes with an ADR; the book's Appendix B catalogues them.
+
+Paired with ADRs, *Hard Parts* also leans heavily on [[architecture-fitness-function|fitness functions]] as the automated governance layer that keeps decisions from eroding once made — *"documenting a decision is important for an architect, but governing the proper use of the decision is a separate topic"* (source: raw/software-architecture-the-hard-parts/chapter-01-what-happens-when-there-are-no-best-practices.md).
+
+### Chapter 15 — ADRs as the terminal step of build-your-own trade-off analysis
+
+*The Hard Parts* Chapter 15 revisits ADRs as the **terminal step** of every trade-off analysis the book teaches (source: raw/software-architecture-the-hard-parts/chapter-15-build-your-own-trade-off-analysis.md). Once the architect has (1) found what's entangled, (2) analyzed how the dimensions couple, and (3) assessed the trade-offs via iterative scenario modelling, the ADR is where the resulting decision — *and the reasoning that got the architect there* — is written down.
+
+What Ch 15 adds to the ADR framing:
+
+- **Consequences holds the qualitative comparison.** Chapter 15 argues that trade-off matrices should be qualitative rather than quantitative (two architectures always differ enough to prevent true quantitative comparison). The Consequences section should therefore record **which side of which trade-off was accepted**, not a score.
+- **The Alternatives / Context sections should be [[mece-principle|MECE]].** The candidate list documented in the ADR should be mutually exclusive (no overlapping items) and collectively exhaustive (no obvious missing option). A decision defended against a non-MECE list is less defensible.
+- **The bottom line belongs in the Decision section, not the Consequences.** Ch 15's *prefer bottom line over overwhelming evidence* advice means the architect's final framing — e.g. *"performance vs extensibility, and we chose extensibility"* — is what lands in the Decision section; the detailed matrix lives behind it.
+- **The out-of-context trap is why Context is load-bearing.** The same trade-off matrix can favour opposite answers depending on the domain context; Context is where that scope is fixed so later readers can tell whether the decision is still valid in their new context.
+- **Iterative analysis → Superseded status.** As context evolves (new capabilities, shifted business drivers, new constraints), an ADR's trade-offs can stop being optimal. The Superseded status plus paired back-links is how the iterative re-examination leaves an audit trail.
+
 ## Relation to other wiki concepts
 
 - [[laws-of-software-architecture]] — the Second Law ("why beats how") is the motivation for ADRs; the Decision section is where the *why* lives.
@@ -167,3 +187,6 @@ The history trail preserves both decisions and prevents a future architect from 
 - [[choosing-architecture-style]]
 - [[architecture-vitality]]
 - [[fundamentals-of-software-architecture]]
+- [[software-architecture-the-hard-parts]]
+- [[least-worst-trade-offs]]
+- [[mece-principle]]

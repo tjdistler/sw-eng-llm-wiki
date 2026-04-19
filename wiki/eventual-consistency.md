@@ -2,9 +2,9 @@
 
 **Summary**: The weakest useful replication consistency guarantee: if writes to a replicated system stop, all replicas will *eventually* converge to the same value — but with no bound on when, and no guarantees about intermediate states.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-05-replication.md`, `raw/designing-data-intensive-applications/chapter-08-the-trouble-with-distributed-systems.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/site-reliability-engineering/chapter-23-managing-critical-state-distributed-consensus-for-reliability.md`, `raw/fundamentals-of-data-engineering/chapter-06-storage.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-05-replication.md`, `raw/designing-data-intensive-applications/chapter-08-the-trouble-with-distributed-systems.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/site-reliability-engineering/chapter-23-managing-critical-state-distributed-consensus-for-reliability.md`, `raw/fundamentals-of-data-engineering/chapter-06-storage.md`, `raw/software-architecture-the-hard-parts/chapter-09-data-ownership-and-distributed-transactions.md`, `raw/software-architecture-the-hard-parts/chapter-12-transactional-sagas.md`
 
-**Last updated**: 2026-04-18
+**Last updated**: 2026-04-19
 
 ---
 
@@ -95,6 +95,28 @@ The practical recipe Chapter 6 describes for layering strong consistency on top 
 
 This is essentially what [[lakehouse-table-formats|Delta Lake, Iceberg, and Hudi]] do to get ACID transactions over eventually-consistent object storage.
 
+## Hard Parts Ch 9: three eventual-consistency patterns for distributed transactions
+
+*Software Architecture: The Hard Parts* Chapter 9 gives the clearest catalogue of eventual-consistency patterns an architect can reach for once a business request crosses service boundaries and [[distributed-transactions|loses ACID]]. The three main patterns (source: raw/software-architecture-the-hard-parts/chapter-09-data-ownership-and-distributed-transactions.md):
+
+1. **[[background-synchronization-pattern]]** — an external process (batch job or periodic service) reconciles data sources after the fact. Best user-visible response time; **breaks bounded contexts** because the sync process must write every participating service's tables. Appropriate only for closed heterogeneous systems, not microservices.
+
+2. **[[orchestrated-request-based-pattern]]** — an orchestrator drives the distributed transaction to completion during the user's request. Strong consistency by response time; poor responsiveness; complex error handling via [[compensating-update|compensating updates]]; "compensation of compensation fails" is a real failure mode that ends in human intervention.
+
+3. **[[event-based-consistency-pattern]]** — the primary service commits, publishes an event, and returns. Subscribers align asynchronously in parallel. Short consistency window; good decoupling; error handling via durable subscribers, retries, and dead letter queues. The book names this "one of the most popular and reliable" patterns for modern distributed architectures.
+
+The three patterns cleanly match the three trade-off axes: user-visible latency, service coupling, and data freshness. Chapter 9's default recommendation is the event-based pattern; choose others only when specific constraints demand it.
+
+The vocabulary BA + S + E — [[base-properties|BASE]] — is how the book summarises what these patterns actually deliver.
+
+## Hard Parts Ch 12: saga state machines as the eventual-consistency error-handling primitive
+
+Chapter 12 adds a specific technique for eventual-consistency sagas: **[[saga|saga state machines]]**. Rather than issue a [[compensating-update|compensating update]] on partial failure, the saga transitions to an explicit error state (the book's example: the Fairy Tale saga moves to `NO_SURVEY` when the Survey Service is unavailable) and the orchestrator retries or escalates to human operators asynchronously. The end user gets a successful response immediately; the system takes responsibility for eventual alignment (source: raw/software-architecture-the-hard-parts/chapter-12-transactional-sagas.md).
+
+State machines dominate compensating updates inside eventual-consistency sagas because they align with the consistency model: if the saga is not trying to be atomic, rolling back partially-committed state is structurally the wrong shape. Track progress, retry, converge.
+
+The full eight-pattern catalogue is at [[saga]]; the four eventual-consistency sagas are [[fairy-tale-saga]], [[time-travel-saga]], [[parallel-saga]], and [[anthology-saga]].
+
 ## Three places to make consistency decisions
 
 Chapter 6 crystallises the design space into three choice points data engineers actually have (source: raw/fundamentals-of-data-engineering/chapter-06-storage.md):
@@ -130,3 +152,14 @@ The framing matters for ingestion and CDC: the engineer must know which mode a s
 - [[object-storage]]
 - [[lakehouse-table-formats]]
 - [[acid]]
+- [[base-properties]]
+- [[background-synchronization-pattern]]
+- [[orchestrated-request-based-pattern]]
+- [[event-based-consistency-pattern]]
+- [[compensating-update]]
+- [[data-ownership]]
+- [[software-architecture-the-hard-parts]]
+- [[fairy-tale-saga]]
+- [[time-travel-saga]]
+- [[parallel-saga]]
+- [[anthology-saga]]

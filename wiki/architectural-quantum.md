@@ -2,9 +2,9 @@
 
 **Summary**: An independently deployable artifact with high functional cohesion and synchronous connascence. Coined by Neal Ford, Rebecca Parsons, and Patrick Kua in *Building Evolutionary Architectures* as the unit that finally gives [[architecture-characteristics|architecture characteristics]] a proper **scope**: instead of asking "how scalable is the system?", architects ask "how scalable is this quantum?" — and different quanta in the same architecture can legitimately have different -ilities.
 
-**Sources**: `raw/fundamentals-of-software-architecture/chapter-07-scope-of-architecture-characteristics.md`, `raw/fundamentals-of-software-architecture/chapter-08-component-based-thinking.md`
+**Sources**: `raw/fundamentals-of-software-architecture/chapter-07-scope-of-architecture-characteristics.md`, `raw/fundamentals-of-software-architecture/chapter-08-component-based-thinking.md`, `raw/software-architecture-the-hard-parts/chapter-02-discerning-coupling-in-software-architecture.md`, `raw/software-architecture-the-hard-parts/chapter-14-managing-analytical-data.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-19
 ---
 
 ## Why the unit had to be invented
@@ -105,6 +105,63 @@ The architectural quantum addresses both at once. The *quantum boundary* is the 
 
 In practice: architects should minimise connascence across quantum boundaries, prefer asynchronous connascence where cross-quantum communication is needed, and reserve synchronous cross-quantum calls for cases where the operational characteristics genuinely align.
 
+## The Hard Parts refinement: static + dynamic coupling
+
+*Software Architecture: The Hard Parts* Chapter 2 updates the definition with a more precise vocabulary (source: raw/software-architecture-the-hard-parts/chapter-02-discerning-coupling-in-software-architecture.md):
+
+> An architecture quantum is an independently deployable artifact with high functional cohesion, **high static coupling**, and **synchronous dynamic coupling**.
+
+The three parts of the original *Fundamentals* definition remain (independent deployability, high functional cohesion, synchronous connascence), but the third is now decomposed into the two orthogonal axes the later book makes load-bearing:
+
+- **[[static-coupling|High static coupling]]** — the dependencies required to *bootstrap and run* the quantum: OS, frameworks, libraries, databases, message brokers, URLs, contracts. *How services are wired together.*
+- **Synchronous [[dynamic-coupling]]** — the runtime communication characteristic that, when present across services, fuses them into one quantum. *How services call one another at runtime.*
+
+The reframe makes explicit something Chapter 7 of *Fundamentals* only hinted at: the quantum's envelope is defined by *two* kinds of coupling, not one, and they answer different questions. Static coupling asks "what must be running for this thing to function at all?" Dynamic coupling asks "what runtime calls fuse this thing's operational characteristics with another thing's?"
+
+### Worked topology enumeration
+
+Chapter 2 walks the architecture styles from *Fundamentals* and shows how the static-coupling measure assigns a quantum count to each (source: raw/software-architecture-the-hard-parts/chapter-02-discerning-coupling-in-software-architecture.md):
+
+| Architecture | Quanta | Why |
+|---|---|---|
+| Monolith (any style) | 1 | Single deployment unit; single DB |
+| [[service-based-architecture]] | 1 | Separate services but one shared relational DB |
+| Mediated [[event-driven-architecture]] | 1 | DB + request orchestrator both couple everything |
+| Broker EDA with one DB | 1 | Shared DB collapses the quantum even with async messaging |
+| Broker EDA with separate data stores, no shared static deps | Many | Each subsystem can bootstrap independently |
+| [[microservices]] with per-service DBs, decoupled UI | Many | Full independence — the archetype |
+| Microservices coupled through a monolithic UI | 1 | UI is a static coupling point across the backend |
+| Micro-frontend + microservices | Many | Each service + UI fragment forms its own quantum |
+| Two systems sharing a DB | 1 | Shared DB is a coupling point even across system boundaries |
+
+The **bootstrap test** is the sharp question: *Is this dependency necessary to bootstrap this service?* If yes, it's inside the quantum's static coupling envelope. Even in a broker EDA where some services don't directly touch the DB, if they rely on services that do, the transitive static coupling pulls them into the same quantum.
+
+### A quantum diagram is a static-coupling diagram
+
+Chapter 2 names an emerging architect technique: draw a **static quantum diagram** of a legacy system — the operational substrate wired to the services wired to the UIs — to make change-blast-radius visible (source: raw/software-architecture-the-hard-parts/chapter-02-discerning-coupling-in-software-architecture.md). The diagram is the legacy-archaeology tool; the quantum count is its headline output.
+
+### Synchronous dynamic coupling = fused quanta
+
+The Chapter 7 *Fundamentals* insight — that synchronous calls fuse operational characteristics for the length of the call — survives intact and is renamed: this is synchronous dynamic coupling. The Chapter 2 crispening: quanta are meant to be *independent*; synchronous dynamic coupling across a quantum boundary silently re-fuses them. Architects who want separate quanta must keep inter-quantum communication asynchronous (or accept that the "two" quanta are effectively one whenever the sync calls are in flight). See [[dynamic-coupling]] for the three dimensions (communication × consistency × coordination) this opens up.
+
+## Granularity is the architect's per-quantum sizing decision
+
+Chapter 7 of *The Hard Parts* makes the connection between [[architectural-modularity|modularity]], granularity, and quantum count explicit (source: raw/software-architecture-the-hard-parts/chapter-07-service-granularity.md). Modularity choices set *how many quanta* the architecture has; granularity choices set *how big each quantum is*. The [[granularity-disintegrators]] and [[granularity-integrators]] frameworks decide both — every disintegrator-justified split adds a quantum, every integrator-justified consolidation removes one.
+
+This means the quantum count is not chosen directly. It emerges from per-service trade-off analyses: split when disintegrators outweigh integrators, consolidate when integrators outweigh disintegrators. The static-coupling diagram (above) is the visualisation; the [[service-granularity|granularity analysis]] is the decision procedure that produces it.
+
+The corollary the Ch 7 framing makes sharp: **a quantum that's too small is one whose creation was justified by disintegrators while ignoring the integrators.** Those integrators don't disappear — they reappear as ACID-transaction-becomes-saga, as inter-service chatter, as shared-library lockstep deployments, as data round-trips. The quantum count grew but the *real* operational quantum count didn't, because the new quanta are still fused by integrator forces the architect didn't pay attention to.
+
+## The Hard Parts Ch 14 extension: the data product quantum
+
+Chapter 14 of *Hard Parts* extends the quantum concept to analytical data by introducing the [[data-product-quantum]] (DPQ) — the unit of a [[data-mesh]] (source: raw/software-architecture-the-hard-parts/chapter-14-managing-analytical-data.md). The DPQ is a quantum in its own right — independently deployable, functionally cohesive (serving a domain's analytical data), with its own coupling envelope. Architecturally, it sits next to a domain microservice quantum as a **cooperative quantum**:
+
+> An operationally separate quantum that communicates with its cooperator via asynchronous communication and eventual consistency, yet features tight contract coupling with its cooperator and generally looser contract coupling to the analytics quantum.
+
+The DPQ is the data-side analogue of the [[sidecar-pattern]] in a [[service-mesh]]: it handles analytical data as an [[orthogonal-coupling|orthogonal concern]] to the operational domain, without entangling the domain service's implementation. From a static-coupling view, the DPQ is part of the domain quantum's static-coupling envelope — the architecture requires it the same way it requires a message broker. From a dynamic-coupling view, the DPQ must communicate with its cooperator asynchronously and under eventual consistency ([[parallel-saga]] or [[anthology-saga]]) — a transactional requirement across the boundary would defeat the point of the separation.
+
+Ch 14 also catalogues three DPQ types — **source-aligned (native)**, **aggregate**, and **fit-for-purpose** — each a quantum with its own role in the analytical plane. See [[data-product-quantum]] for the full treatment.
+
 ## Uses of the quantum measure
 
 Richards and Ford summarise the uses of the architecture-quantum concept (source: chapter-07-scope-of-architecture-characteristics.md):
@@ -137,4 +194,13 @@ The *Going, Going, Gone* split of `BidCapture` into `BidCapture` + `AuctioneerCa
 - [[components]]
 - [[component-identification-cycle]]
 - [[technical-vs-domain-partitioning]]
+- [[static-coupling]]
+- [[dynamic-coupling]]
+- [[software-architecture-the-hard-parts]]
 - [[fundamentals-of-software-architecture]]
+- [[service-granularity]]
+- [[granularity-disintegrators]]
+- [[granularity-integrators]]
+- [[architectural-modularity]]
+- [[data-product-quantum]]
+- [[data-mesh]]

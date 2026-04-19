@@ -2,9 +2,9 @@
 
 **Summary**: Schema evolution is the set of rules a binary encoding format provides for safely changing a schema over time — adding fields, removing fields, changing types — without breaking [[backward-forward-compatibility]].
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`, `raw/building-event-driven-microservices/chapter-03-communication-and-data-contracts.md`, `raw/building-event-driven-microservices/chapter-15-testing-event-driven-microservices.md`, `raw/fundamentals-of-data-engineering/chapter-02-the-data-engineering-lifecycle.md`, `raw/fundamentals-of-data-engineering/chapter-07-ingestion.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`, `raw/building-event-driven-microservices/chapter-03-communication-and-data-contracts.md`, `raw/building-event-driven-microservices/chapter-15-testing-event-driven-microservices.md`, `raw/fundamentals-of-data-engineering/chapter-02-the-data-engineering-lifecycle.md`, `raw/fundamentals-of-data-engineering/chapter-07-ingestion.md`, `raw/software-architecture-the-hard-parts/chapter-13-contracts.md`
 
-**Last updated**: 2026-04-18
+**Last updated**: 2026-04-19
 
 ---
 
@@ -160,6 +160,16 @@ Ch 7's undercurrent section floats a forward-looking idea: cloud storage is chea
 
 This is not a concrete pattern yet but a direction; Reis and Housley describe it as an approach they "have meditated on for a while" as a possible resolution to the command-and-control-review vs auto-rewrite-everything extremes.
 
+## Hard Parts Ch 13 framing — evolution is a contract-strictness trade-off
+
+*Software Architecture: The Hard Parts* Chapter 13 places schema evolution inside the broader **[[contracts|strict-to-loose contract spectrum]]** trade-off (source: raw/software-architecture-the-hard-parts/chapter-13-contracts.md). The evolution mechanism a format provides is part of its strictness profile:
+
+- **Strict contracts with formal evolution rules** (Protobuf, Avro, Thrift) — evolution is explicit, enforceable at build time, and caught by schema registries. The cost is coordinated versioning discipline.
+- **Strict contracts without explicit evolution** (RMI, SOAP/XSD in full ceremony) — evolution requires new versioned endpoints, leading to "integration nightmare" when deprecation discipline is absent.
+- **Loose contracts** (JSON name-value pairs) — evolution is free on the wire but contract fidelity must be recovered via [[consumer-driven-contracts|consumer-driven contract tests]] running as [[architecture-fitness-function|fitness functions]].
+
+The Ch 13 editorial point: **you don't pick a strictness and then figure out evolution — you pick an evolution story and that determines how strict the contract can usefully be.** The three compatibility types from Bellemare (forward, backward, full) and the field-tag / reader-writer-schema mechanics from DDIA are the concrete tools a strict-with-evolution contract uses to avoid becoming a strict-without-evolution nightmare.
+
 ## Testing compatibility at code-submission time
 
 Chapter 15 recommends moving the compatibility check *earlier* than deployment: pull the registered schemas from the [[schema-registry]] and run evolutionary-rule checking as part of the code-submission/CI pipeline (source: chapter-15-testing-event-driven-microservices.md). For stacks that auto-generate schemas from class/struct definitions at compile time, this becomes a mechanical diff between the previous registered schema and the new compile-time-generated one — a failing check blocks the PR rather than the deploy. Good candidate for a [[architecture-fitness-function]].
@@ -181,3 +191,8 @@ Chapter 15 recommends moving the compatibility check *earlier* than deployment: 
 - [[data-ingestion]]
 - [[ingestion-payload]]
 - [[dead-letter-queue]]
+- [[contracts]]
+- [[strict-contract]]
+- [[loose-contract]]
+- [[consumer-driven-contracts]]
+- [[software-architecture-the-hard-parts]]

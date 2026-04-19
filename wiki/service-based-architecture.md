@@ -2,9 +2,9 @@
 
 **Summary**: A distributed architecture style that pairs a separately deployed **user interface**, a small number (4–12, usually ~7) of separately deployed **coarse-grained domain services**, and — most distinctively — a **single shared monolithic database**. Richards and Ford call it **one of the most pragmatic architecture styles available**: most of the benefits of a distributed architecture (agility, testability, deployability, fault tolerance, modularity) at a fraction of the cost and complexity of [[microservices]] or event-driven architecture. The pragmatic sweet spot between [[monolith]] and [[microservices]] for "most" business applications.
 
-**Sources**: `raw/fundamentals-of-software-architecture/chapter-13-service-based-architecture-style.md`
+**Sources**: `raw/fundamentals-of-software-architecture/chapter-13-service-based-architecture-style.md`, `raw/software-architecture-the-hard-parts/chapter-04-architectural-decomposition.md`, `raw/software-architecture-the-hard-parts/chapter-05-component-based-decomposition-patterns.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-19
 
 ---
 
@@ -153,6 +153,31 @@ The chapter's case is strong and worth repeating near-verbatim (source: chapter-
 - **When the domain has more than ~12 bounded contexts of roughly equal importance.** Service-based architecture's small-number-of-large-services assumption doesn't fit a large domain with many small pieces.
 - **When the team is already on a path toward full microservices.** Service-based architecture is a useful intermediate state but is not automatically a migration step; if the organisation has microservices-grade operational maturity, skipping to microservices may be cheaper in the long run.
 
+## As a migration stepping-stone (Hard Parts Ch 4)
+
+*The Hard Parts* Chapter 4 reframes service-based architecture from "a destination" (*Fundamentals*'s framing) to **an intermediate target in a monolith-to-microservices migration** (source: raw/software-architecture-the-hard-parts/chapter-04-architectural-decomposition.md). The [[component-based-decomposition]] patterns in Chapter 5 extract components from a monolith into domain services — that's service-based architecture by definition.
+
+The recommendation:
+
+> When migrating monolithic applications to microservices, consider moving to a service-based architecture first as a stepping-stone to microservices. (source: raw/software-architecture-the-hard-parts/chapter-04-architectural-decomposition.md)
+
+The reasoning restates the points on this page from a migration angle:
+
+- **Service-based architecture does not require the database to be broken apart.** Architects can focus on domain and functional partitioning *first*, and tackle the hardest problem (data) later (Chapter 6 of *The Hard Parts*). See [[database-decomposition]].
+- **Service-based architecture does not require operational automation or containerisation.** Each domain service can be deployed using the same deployment artefact as the original monolith (EAR, WAR, assembly). Kubernetes, service meshes, and observability platforms are optional additions, not preconditions.
+- **Moving to service-based architecture is a *technical* migration, not an organisational one.** It doesn't involve business stakeholders, doesn't require reorganising the IT department, and doesn't force a change to the QA and deployment pipelines.
+- **It acts as a decision checkpoint.** Some domains can stop as coarse-grained domain services forever. Others reveal — once load profiles and rate-of-change are understood under production traffic — that they need further decomposition into microservices (Chapter 7 of *The Hard Parts* covers that decision).
+
+This reframing is the main reason service-based architecture shows up so prominently in the *Hard Parts* decomposition chapters: it is the natural output of disciplined component-based decomposition, and the natural launch pad for any subsequent microservices work.
+
+### The "soft landing" from Chapter 5
+
+Chapter 5 of *The Hard Parts* operationalises this positioning: the sixth and last [[component-based-decomposition]] pattern — [[create-domain-services-pattern]] — takes the logical component domains produced by the preceding five patterns and extracts each one as a separately deployed domain service. The output of that pattern **is** a service-based architecture by construction (source: raw/software-architecture-the-hard-parts/chapter-05-component-based-decomposition-patterns.md). The chapter explicitly calls it a "soft landing":
+
+> Moving to service-based architecture first allows the architect and development team to learn more about each domain service to determine whether it should be broken into smaller services within a microservices architecture or left as a larger domain service. Too many teams make the mistake of starting out too fine-grained. (source: chapter-05-component-based-decomposition-patterns.md)
+
+The landing is soft because nothing about it is irreversible: the shared database stays, the deployment artefacts stay (EAR/WAR/assembly), the team structure stays. The architect can pause at service-based architecture indefinitely for some domains and only decompose the ones that demonstrate a need under production traffic. See [[create-domain-services-pattern]] for the pattern's mechanics and [[create-component-domains-pattern]] for the logical grouping that feeds it.
+
 ## The shared database question
 
 This is the style's most controversial property. Newman's [[shared-database-antipattern]] treatment in *Monolith to Microservices* names direct database sharing as the single biggest obstacle to [[independent-deployability]]; microservices discipline requires each service to own its data. Richards and Ford **explicitly endorse** the shared database for service-based architecture — they frame it as a feature, not a bug, under two conditions:
@@ -191,4 +216,10 @@ The two sources are not contradicting each other. **Newman is describing microse
 - [[domain-driven-design]]
 - [[bounded-context]]
 - [[saga]]
+- [[component-based-decomposition]]
+- [[create-domain-services-pattern]]
+- [[create-component-domains-pattern]]
+- [[tactical-forking]]
+- [[migration-pattern-selection]]
 - [[fundamentals-of-software-architecture]]
+- [[software-architecture-the-hard-parts]]

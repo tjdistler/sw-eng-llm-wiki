@@ -2,9 +2,9 @@
 
 **Summary**: The relational model organizes data into tables of rows and columns, hides storage implementation details behind a clean interface, and has dominated data storage for over 40 years — largely because its query optimizer generalizes well across wildly different use cases.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-02-data-models-and-query-languages.md`, `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-02-data-models-and-query-languages.md`, `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`, `raw/software-architecture-the-hard-parts/chapter-06-pulling-apart-operational-data.md`
 
-**Last updated**: 2026-04-18
+**Last updated**: 2026-04-19
 
 ---
 
@@ -56,6 +56,22 @@ Reis and Housley's Chapter 5 of *Fundamentals of Data Engineering* frames the RD
 - **Extraction primitives.** Modern relational databases expose several: full-table scan, incremental scan by primary key or `updated_at`, read replicas, log-based CDC on the binlog or WAL. See [[application-database-as-source]] for the extraction-pattern comparison.
 - **Lineage of the LAMP stack.** The web era's RDBMS explosion (MySQL, PostgreSQL, MariaDB) produced the workload shape the engineer inherits — thousands of small OLTP databases each backing one application, expected to remain extractable without harm.
 
+## Hard Parts ratings and positioning
+
+Chapter 6 of *Software Architecture: The Hard Parts* rates relational databases on its eight-characteristic matrix. Headline scores (source: raw/software-architecture-the-hard-parts/chapter-06-pulling-apart-operational-data.md):
+
+- **Learning curve — high.** SQL is ubiquitous, taught in schools, and thoroughly documented. Easier to onboard than any NoSQL family.
+- **Data modelling — flexible.** Key-value, document, and graph-like shapes can all be expressed with some effort; what's hard is arbitrary-depth graph traversal.
+- **Scalability — limited.** Vertical scaling by default; horizontal scaling via replicas and HA clusters is complex and coordination-heavy.
+- **Availability / partition tolerance — moderate.** Relational DBs favour consistency over availability and partition tolerance (CA in CAP vocabulary — see [[cap-theorem]]).
+- **Consistency — maximum.** Full ACID, the reason the family has dominated for four decades. The book credits ACID with letting application developers avoid reasoning about low-level concurrency details.
+- **Community — largest.** Every major language has drivers; every tool speaks SQL; hiring is easiest here.
+- **Read/write priority — balanced.** The same schema can be indexed for read efficiency or normalised for write efficiency; the same engine handles both.
+
+**When the Hard Parts Chapter 6 framing says "not relational":** high-volume key-value-shaped reference data, tree-shaped documents where schemas vary per record, massive write-throughput time-series workloads, and graph-shaped relationship data. Each of these has a better-fit family in [[database-type-selection]]. The book's recurring caution: starting with a relational DB "under the impression it's a universal appliance" works until scale or flexibility demands force a rethink — [[polyglot-persistence]] is the escape hatch.
+
+Popular implementations: MySQL, PostgreSQL, Oracle, Microsoft SQL Server. Also available as DBaaS on every major cloud.
+
 ## Related pages
 
 - [[data-models]]
@@ -69,3 +85,6 @@ Reis and Housley's Chapter 5 of *Fundamentals of Data Engineering* frames the RD
 - [[application-database-as-source]]
 - [[change-data-capture]]
 - [[acid]]
+- [[database-type-selection]]
+- [[newsql-database]]
+- [[polyglot-persistence]]

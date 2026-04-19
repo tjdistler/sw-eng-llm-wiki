@@ -2,9 +2,9 @@
 
 **Summary**: Unlike application code, database records are rarely migrated when a schema changes. A row encoded five years ago with an old schema sits in the same table as a row written today. The code is long gone; the data remains. This asymmetry has important consequences for [[backward-forward-compatibility]] in database systems.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`, `raw/software-architecture-the-hard-parts/chapter-01-what-happens-when-there-are-no-best-practices.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-19
 
 ---
 
@@ -53,6 +53,16 @@ Different databases handle schema evolution differently:
 
 When taking a database snapshot (for backup or loading into a data warehouse), it is practical to re-encode all data in the latest schema, since the data is being copied anyway. Formats like Avro object container files are well-suited for this — the writer's schema is embedded in the file header once, and all records use it consistently. This is also an opportunity to re-encode into an analytics-friendly format like Parquet (column-oriented). See [[column-oriented-storage]].
 
+## The architectural consequence (*Hard Parts* Ch 1)
+
+Ford, Richards, Sadalage, and Dehghani open the data chapter of *Software Architecture: The Hard Parts* with Tim Berners-Lee's version of the same observation (source: raw/software-architecture-the-hard-parts/chapter-01-what-happens-when-there-are-no-best-practices.md):
+
+> Data is a precious thing and will last longer than the systems themselves.
+
+Their architectural consequence extends Kleppmann's encoding-focused framing into the distributed-architecture world. Because data outlives systems, **every architecture decision about distribution, decomposition, and bounded contexts must preserve the ability of the business to keep deriving value from its data across successive re-architectures.** This is why, in their framing, "all software architecture is in the service of data."
+
+The same observation also explains why modern microservices architectures feel harder than the distributed architectures of decades ago: in the earlier era most distributed systems still persisted to a single relational database, which carried the data-survival problem by itself. Once microservices' bounded-context decomposition forced data out of one database and into per-service stores, data became an architectural concern alongside transactionality — and the long-lived nature of the data means those decomposition decisions have to be evaluated for their effect on data as much as on code. See [[operational-vs-analytical-data]] for the split Chapter 1 introduces as the first structural lens on this problem, and [[database-decomposition]] / [[change-data-ownership]] for the decomposition techniques that have to reckon with it.
+
 ## Related pages
 
 - [[backward-forward-compatibility]]
@@ -61,3 +71,6 @@ When taking a database snapshot (for backup or loading into a data warehouse), i
 - [[avro]]
 - [[schema-on-read-vs-write]]
 - [[column-oriented-storage]]
+- [[operational-vs-analytical-data]]
+- [[software-architecture-the-hard-parts]]
+- [[database-decomposition]]

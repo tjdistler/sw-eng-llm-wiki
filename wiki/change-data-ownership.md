@@ -2,9 +2,9 @@
 
 **Summary**: Move data out of the monolith into the newly extracted service that should own it, and reverse the dependency: the monolith now calls the new service to read or change that data, instead of accessing its own tables.
 
-**Sources**: `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`
+**Sources**: `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/software-architecture-the-hard-parts/chapter-09-data-ownership-and-distributed-transactions.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-19
 
 ---
 
@@ -35,6 +35,17 @@ Newman is unusually direct: "This one is a little more clear-cut. If your newly 
 
 The judgement isn't *whether* to move the data; it's *how* to do so without breaking integrity. The synchronisation patterns ([[synchronize-data-in-application]], [[tracer-write]]) and the schema-refactoring patterns ([[split-table-pattern]], [[move-foreign-key-to-code]]) are how you actually carry it out.
 
+## Hard Parts Ch 9: the writer-owns rule
+
+*Software Architecture: The Hard Parts* Chapter 9 restates Newman's "encapsulation-of-business-logic" heuristic as a sharper rule: **the service that performs write operations to a table is the owner of that table** (source: raw/software-architecture-the-hard-parts/chapter-09-data-ownership-and-distributed-transactions.md). The two rules are complementary — Newman asks "what service owns the behaviour?" and the Hard Parts asks "what service writes?". In most cases the answers converge.
+
+The interesting cases are where the answers diverge:
+
+- **Multiple services want to write the same table.** Newman's rule gives no clean answer; *The Hard Parts* addresses this as [[data-ownership|joint or common ownership]] and catalogues four resolution techniques ([[joint-ownership-techniques|table split / data domain / delegate / service consolidation]]).
+- **A service owns the business logic but does not write any table.** Rare but possible — a pure coordinator or calculator. Neither rule applies; the question "which service owns which data?" simply doesn't arise for that service.
+
+See [[data-ownership]] for the full Hard Parts framing, including the distinction between single, common, and joint ownership and the techniques for the multi-writer cases.
+
 ## Related pages
 
 - [[database-decomposition]]
@@ -45,3 +56,6 @@ The judgement isn't *whether* to move the data; it's *how* to do so without brea
 - [[split-table-pattern]]
 - [[move-foreign-key-to-code]]
 - [[saga]]
+- [[data-ownership]]
+- [[joint-ownership-techniques]]
+- [[software-architecture-the-hard-parts]]

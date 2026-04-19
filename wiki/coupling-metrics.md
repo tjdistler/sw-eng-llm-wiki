@@ -2,9 +2,9 @@
 
 **Summary**: The quantitative metrics Richards and Ford collect in Chapter 3 of *Fundamentals of Software Architecture* for reasoning about code-level coupling. Afferent and efferent coupling (Yourdon & Constantine, 1979) count incoming and outgoing dependencies; Robert Martin's derived metrics — abstractness, instability, and distance from the main sequence — combine those raw counts into holistic judgments about whether a module is balanced, too abstract, or too concrete.
 
-**Sources**: `raw/fundamentals-of-software-architecture/chapter-03-modularity.md`, `raw/fundamentals-of-software-architecture/chapter-06-measuring-and-governing-architecture-characteristics.md`
+**Sources**: `raw/fundamentals-of-software-architecture/chapter-03-modularity.md`, `raw/fundamentals-of-software-architecture/chapter-06-measuring-and-governing-architecture-characteristics.md`, `raw/software-architecture-the-hard-parts/chapter-04-architectural-decomposition.md`, `raw/software-architecture-the-hard-parts/chapter-05-component-based-decomposition-patterns.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-19
 ---
 
 ## Afferent and efferent coupling
@@ -72,6 +72,43 @@ The metrics earn their keep by establishing **baselines**. Once you know your co
 
 Chapter 6 makes this concrete with a JDepend-based fitness function that fails CI when any package's distance metric exceeds a project-specific tolerance (source: chapter-06-measuring-and-governing-architecture-characteristics.md; see [[architecture-fitness-function]] for the full example). Richards and Ford note the same example also illustrates a caveat: distance-from-the-main-sequence is an esoteric metric, and developers must understand why it matters before the check is imposed, or the failure will seem arbitrary and be bypassed. This is the **no-ivory-tower** rule for [[architecture-governance]].
 
+## Using the metrics as a decomposability check
+
+*The Hard Parts* Chapter 4 repurposes the whole metric suite for a specific question: **is this monolith even decomposable?** Before an architect picks between [[component-based-decomposition]] and [[tactical-forking]], they need to know whether the codebase has enough internal structure to support a disciplined decomposition at all (source: chapter-04-architectural-decomposition.md).
+
+Richards and Ford are explicit that no single metric answers this — the judgement remains the architect's. But the metrics above give the architect an evidence base:
+
+- **Ca / Ce matrices** (via JDepend on the JVM, NDepend for .NET, or equivalent) surface the topology of the monolith. A codebase where every package depends on every other package is the quantitative signature of a [[big-ball-of-mud]]; one where dependency clusters are visible is a candidate for component refinement.
+- **Abstractness / instability per component** reveals whether the monolith has a coherent stable-utility / unstable-orchestrator layering, or whether components are uniformly concrete and uniformly coupled (a mud-ball indicator).
+- **Distance from the main sequence** applied across components is the holistic read. If most components fall near the line, the architect can refine them into service candidates. If most fall into the zones of pain or uselessness, component-based decomposition is not worth the effort — [[tactical-forking]] or a rewrite is the honest call.
+
+The metrics don't decide the decomposition approach on their own; they inform the Chapter 4 decision tree. See [[component-based-decomposition]] for the full selection rubric.
+
+### The JDepend-style tool chain
+
+The chapter names the tooling category explicitly (source: chapter-04-architectural-decomposition.md). Every major platform has a coupling-analysis tool that produces the Ca/Ce matrix and derived metrics an architect needs for the readiness assessment:
+
+- **JDepend / Eclipse plugins** — JVM, the chapter's illustrated example.
+- **NDepend** — .NET.
+- **Structure101, Sonargraph, Lattix** — multi-platform.
+- **IDE built-ins** (IntelliJ's Dependency Matrix, Visual Studio's Architecture Explorer) — quick reads without setting up a separate tool.
+
+These tools produce the *same* metrics Chapter 3 of *Fundamentals* defines. The difference in *Hard Parts* Ch 4 is the **use-case**: not monitoring drift in a living codebase, but *assessing* a legacy codebase for migration feasibility.
+
+## Component-granularity use: the Chapter 5 dependency pattern
+
+Chapter 5 of *The Hard Parts* applies Ca and Ce **at the component level**, not the class level — a component dependency exists when any class in component A references any class in component B, regardless of how many class-to-class edges underlie it (source: raw/software-architecture-the-hard-parts/chapter-05-component-based-decomposition-patterns.md). This coarsening is deliberate: internal class-level coupling inside a component is the developer's problem; inter-component coupling is the architect's problem and the predictor of inter-service coupling after extraction.
+
+The resulting **component dependency graph** is the radar used by [[determine-component-dependencies-pattern]] to answer three migration questions:
+
+- **Sparse graph (golfball)** — feasible, low effort, pure refactor.
+- **Dense asymmetric graph (basketball)** — partially feasible, significant effort, refactor + rewrite.
+- **Saturated graph (airliner)** — not feasible as a decomposition; full rewrite territory.
+
+The chapter further notes that **decomposition itself can reduce coupling**: splitting a high-Ca component into A1 (carrying the small, coupled slice) and A2 (carrying the majority) can cut each piece's afferent count below threshold. This turns the metric into a prescriptive signal, not just a descriptive one (source: chapter-05-component-based-decomposition-patterns.md).
+
+[[architecture-fitness-function|Fitness functions]] paired with the pattern: a total-coupling ceiling per component (the chapter's pseudocode uses 15), and ArchUnit-based "component X must not depend on component Y" rules — one per deliberate architectural prohibition.
+
 ## Unifying coupling and connascence
 
 The chapter's "Unifying Coupling and Connascence" section makes the relationship explicit (source: chapter-03-modularity.md):
@@ -93,4 +130,9 @@ An architect in practice uses both. The metrics flag outliers; connascence tells
 - [[architecture-governance]]
 - [[cyclomatic-complexity]]
 - [[measuring-architecture-characteristics]]
+- [[big-ball-of-mud]]
+- [[component-based-decomposition]]
+- [[determine-component-dependencies-pattern]]
+- [[tactical-forking]]
 - [[fundamentals-of-software-architecture]]
+- [[software-architecture-the-hard-parts]]

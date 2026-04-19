@@ -2,9 +2,9 @@
 
 **Summary**: The degree to which changing one part of a system requires changing another. Newman identifies four types relevant to microservices — implementation, temporal, deployment, and domain — each with different remedies. Reducing coupling is the central design pressure that shapes service boundaries.
 
-**Sources**: `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`, `raw/fundamentals-of-software-architecture/chapter-03-modularity.md`, `raw/building-event-driven-microservices/chapter-01-why-event-driven-microservices.md`, `raw/site-reliability-engineering/chapter-09-simplicity.md`
+**Sources**: `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`, `raw/fundamentals-of-software-architecture/chapter-03-modularity.md`, `raw/building-event-driven-microservices/chapter-01-why-event-driven-microservices.md`, `raw/site-reliability-engineering/chapter-09-simplicity.md`, `raw/software-architecture-the-hard-parts/chapter-01-what-happens-when-there-are-no-best-practices.md`, `raw/software-architecture-the-hard-parts/chapter-02-discerning-coupling-in-software-architecture.md`
 
-**Last updated**: 2026-04-17
+**Last updated**: 2026-04-19
 
 ---
 
@@ -79,6 +79,35 @@ The point is not that domain-data coupling is zero — every dependency is a cou
 
 This is the coupling reframing behind [[event-driven-microservices]]: by pushing cross-service integration onto the data communication structure, services couple on what changes least (domain events) rather than on what changes most (each other's implementations). See [[communication-structures]] and [[synchronous-microservices]] for the structural context.
 
+## Static vs dynamic coupling (Page-Jones, restated in *The Hard Parts*)
+
+*Software Architecture: The Hard Parts* (Ford, Richards, Sadalage, Dehghani, 2021) opens by invoking Meilir Page-Jones's observation — from *What Every Programmer Should Know About Object-Oriented Design* — that architectural coupling splits along a fundamentally different axis than the Newman types above (source: raw/software-architecture-the-hard-parts/chapter-01-what-happens-when-there-are-no-best-practices.md):
+
+- **Static coupling** — how architectural parts are *wired together*: dependencies, coupling degree, connection points. Measurable at compile/deploy time because it represents the static structure of the architecture. Afferent/efferent counts, import graphs, and the service-plus-database-plus-dependency bundle that defines an [[architectural-quantum]] all live here.
+- **Dynamic coupling** — how architectural parts *call one another at runtime*: what kind of communication, what information is passed, strictness of contracts, synchronous vs asynchronous, request/response vs pub/sub. Dynamic coupling is invisible to a deployment diagram; it surfaces only under load and failure.
+
+The two axes are orthogonal. Two services that are statically decoupled (each deploys independently, each has its own database, neither imports the other's code) can still be tightly dynamically coupled (one synchronously calls the other for every request and blocks until it responds). Conversely, two components statically coupled in a shared codebase can interact asynchronously with loose contracts and weak dynamic coupling.
+
+This is the organizing distinction of *Hard Parts*: Part I ("Pulling Things Apart") treats **static coupling** — how to decompose and draw boundaries — and Part II ("Putting Things Back Together") treats **dynamic coupling** — how the pieces communicate after they're separated. The trade-off analysis method (identify coupling → analyze trade-offs → document decisions) applies to both axes.
+
+Mapping onto the Newman types above: implementation and deployment coupling are primarily *static*; temporal coupling is primarily *dynamic*; domain coupling spans both (the dependency is static, but how it's realised is a dynamic choice).
+
+### Chapter 2: the working definition and the three-dimensional dynamic lens
+
+*Hard Parts* Chapter 2 — "Discerning Coupling in Software Architecture" — pins the vocabulary down for the rest of the book (source: raw/software-architecture-the-hard-parts/chapter-02-discerning-coupling-in-software-architecture.md). Its working definition is deliberately minimal:
+
+> Two parts of a software system are coupled if a change in one might cause a change in the other.
+
+From there, the chapter separates [[static-coupling]] from [[dynamic-coupling]] as analytical axes of the [[architectural-quantum]], and crucially refines dynamic coupling into a *three-dimensional* decision space:
+
+1. **Communication** — synchronous vs asynchronous.
+2. **Consistency** — atomic vs eventual.
+3. **Coordination** — orchestrated vs [[choreography|choreographed]].
+
+Each option has a gravitational effect on the others — transactionality is easier with synchronous + mediated workflows, while higher scale is possible with asynchronous + eventual + choreographed workflows. The 2 × 2 × 2 combinations form the pattern space Part II of the book walks through. See [[dynamic-coupling]] for the full treatment and [[static-coupling]] for the bootstrap-time counterpart.
+
+The Chapter 2 refinement also tightens the [[architectural-quantum]] definition to *independently deployable, high functional cohesion, high static coupling, and synchronous dynamic coupling* — synchronous dynamic coupling across a quantum boundary is what silently fuses two otherwise-separate quanta into one.
+
 ## Coupling vs cohesion
 
 Coupling and [[cohesion]] are linked — they are the two halves of Constantine's law. Tightly coupled code tends to have low cohesion (related functionality spread across boundaries); high cohesion tends to reduce coupling (related code grouped together). The microservice movement is at heart a return to modular software design — modules that communicate via networks and can be independently deployed (source: chapter-01-just-enough-microservices.md).
@@ -114,3 +143,8 @@ See [[simplicity-sre]] for the full Chapter 9 treatment.
 - [[communication-structures]]
 - [[simplicity-sre]]
 - [[configuration-management-sre]]
+- [[software-architecture-the-hard-parts]]
+- [[architectural-quantum]]
+- [[static-coupling]]
+- [[dynamic-coupling]]
+- [[choreography]]

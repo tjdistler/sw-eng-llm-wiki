@@ -2,9 +2,9 @@
 
 **Summary**: The four safety guarantees of database [[transactions]] -- Atomicity, Consistency, Isolation, and Durability -- coined in 1983 by Theo Harder and Andreas Reuter, though in practice the meaning varies significantly between database implementations.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-07-transactions.md`, `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`, `raw/fundamentals-of-data-engineering/chapter-06-storage.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-07-transactions.md`, `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`, `raw/fundamentals-of-data-engineering/chapter-06-storage.md`, `raw/software-architecture-the-hard-parts/chapter-06-pulling-apart-operational-data.md`, `raw/software-architecture-the-hard-parts/chapter-09-data-ownership-and-distributed-transactions.md`
 
-**Last updated**: 2026-04-18
+**Last updated**: 2026-04-19
 
 ---
 
@@ -70,6 +70,27 @@ Mechanically, lakehouse [[lakehouse-table-formats|table formats]] (Delta Lake, I
 
 Cloud warehouses like Snowflake and BigQuery provide the same ACID guarantees internally; the open lakehouse formats provide them portably across engines.
 
+## Hard Parts framing: ACID as a data integrator
+
+Chapter 6 of *Software Architecture: The Hard Parts* names ACID transactions as one of the two [[data-decomposition-drivers-and-integrators|data integrators]] — a force that pulls **against** splitting a database. When a service writes to multiple tables in a single schema, those writes can be committed or rolled back as a single unit of work. Once the tables live in separate databases or schemas, that transactional envelope vanishes; partial commits become possible and inconsistent state becomes a real risk (source: raw/software-architecture-the-hard-parts/chapter-06-pulling-apart-operational-data.md).
+
+> When a single service does multiple database write actions to separate tables in the same database or schema, those updates can be done within an ACID transaction and either committed or rolled back as a single unit of work. (source: raw/software-architecture-the-hard-parts/chapter-06-pulling-apart-operational-data.md)
+
+Decomposition therefore costs ACID across domain boundaries. The book's answer is [[saga|sagas]] (Chapter 12): instead of one ACID transaction, sequence local transactions with compensating actions that roll back the effect of earlier steps when later steps fail. Sagas recover availability and independence at the cost of strong consistency, and they introduce their own failure modes — the trade-off the architect must accept to get out from under a shared database.
+
+## Hard Parts Ch 9: property-by-property, what breaks across services
+
+Chapter 9 walks through the four properties and names what is lost once an atomic business request spans services (source: raw/software-architecture-the-hard-parts/chapter-09-data-ownership-and-distributed-transactions.md):
+
+- **Atomicity** — **gone at the business-request level.** Each service commits its own local transaction; atomicity is bound to the service, not the request. A Billing failure after Profile and Contract succeed leaves partial state.
+- **Consistency** — **gone.** A failure in any service leaves data out of sync across tables; DB-level constraints like FK→PK cannot span services.
+- **Isolation** — **gone.** The moment the first service commits its local transaction, that data is visible to every other caller — before the overall business request has finished.
+- **Durability** — **local only.** Each service's commit is durable; the business request's completion is not.
+
+What remains the book calls [[base-properties|BASE]] — Basically Available, Soft state, Eventually consistent. ACID lives *inside* a service; BASE is what obtains *across* services. The architect's job is to design the BASE behaviour deliberately (picking an [[eventual-consistency]] pattern, building [[compensating-update|compensating updates]], tolerating the [[base-properties|soft-state]] window) rather than pretending ACID still applies.
+
+Chapter 9's worked example: a customer-registration request split across a Customer Profile Service, Support Contract Service, and Billing Payment Service. As one service succeeds while another fails, every ACID property demonstrably breaks — the same example is used across [[distributed-transactions]] and the [[eventual-consistency]] pattern pages.
+
 ## Related pages
 
 - [[transactions]]
@@ -85,3 +106,10 @@ Cloud warehouses like Snowflake and BigQuery provide the same ACID guarantees in
 - [[lakehouse-table-formats]]
 - [[mvcc]]
 - [[object-storage]]
+- [[database-decomposition]]
+- [[data-decomposition-drivers-and-integrators]]
+- [[saga]]
+- [[base-properties]]
+- [[data-ownership]]
+- [[distributed-transactions]]
+- [[compensating-update]]

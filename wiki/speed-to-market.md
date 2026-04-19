@@ -2,9 +2,9 @@
 
 **Summary**: Reis and Housley's second criterion for [[technology-selection|choosing data technologies]]. Deliver value early and often; "perfect is the enemy of good." Slow decisions and output are "the kiss of death" to data teams.
 
-**Sources**: `raw/fundamentals-of-data-engineering/chapter-04-choosing-technologies-across-the-data-engineering-lifecycle.md`
+**Sources**: `raw/fundamentals-of-data-engineering/chapter-04-choosing-technologies-across-the-data-engineering-lifecycle.md`, `raw/software-architecture-the-hard-parts/chapter-03-architectural-modularity.md`
 
-**Last updated**: 2026-04-18
+**Last updated**: 2026-04-19
 
 ---
 
@@ -36,6 +36,22 @@ Speed to market trades against several Chapter 4 criteria:
 - [[high-release-velocity]] (SRE release engineering) is the reliability lens on the same goal.
 - [[cost-of-change]] (Richards and Ford) is the architectural counterpart — keep the cost of change low so shipping quickly remains viable long-term.
 
+## The architectural framing: speed to market as business driver
+
+Chapter 3 of *Software Architecture: The Hard Parts* uses **speed to market** (also called *time to market*) as the primary business driver that justifies [[architectural-modularity|breaking a monolith apart]] (source: raw/software-architecture-the-hard-parts/chapter-03-architectural-modularity.md). Ford and Richards situate it in a hierarchy of outcomes:
+
+```
+architectural modularity → agility → speed to market → competitive advantage
+```
+
+Agility is not speed to market on its own; agility is the *architectural capacity* that, combined with the organisation's ability to decide and execute, produces speed to market. The decomposition that matters for architecture is:
+
+> Speed-to-market is achieved through architectural agility — the ability to respond quickly to change. Agility is a compound architectural characteristic made up of many other architecture characteristics, including maintainability, testability, and deployability. (source: raw/software-architecture-the-hard-parts/chapter-03-architectural-modularity.md)
+
+See [[agility]] for the compound-characteristic framing and [[architectural-modularity]] for the structural enabler.
+
+This is the same point Reis and Housley make from the data-engineering tool-selection angle: speed to market is the ability to ship quickly *while maintaining quality and safety*. Ford and Richards supply the architectural substrate — you can't ship quickly from a codebase where every change requires coordinating three teams and a quarterly release window.
+
 ## Related pages
 
 - [[technology-selection]]
@@ -46,3 +62,8 @@ Speed to market trades against several Chapter 4 criteria:
 - [[type-a-vs-type-b-data-engineers]]
 - [[high-release-velocity]]
 - [[cost-of-change]]
+- [[agility]]
+- [[architectural-modularity]]
+- [[maintainability]]
+- [[testability]]
+- [[deployability]]

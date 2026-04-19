@@ -2,9 +2,9 @@
 
 **Summary**: Meilir Page-Jones's 1996 framework for classifying how two components are coupled — if changing one would require changing the other to preserve correctness, they are connascent. The framework separates **static** forms (source-code level, refineable by refactoring) from **dynamic** forms (runtime), and scores each form on **strength**, **locality**, and **degree** to guide where coupling is tolerable and where it should be refactored away.
 
-**Sources**: `raw/fundamentals-of-software-architecture/chapter-03-modularity.md`, `raw/fundamentals-of-software-architecture/chapter-07-scope-of-architecture-characteristics.md`
+**Sources**: `raw/fundamentals-of-software-architecture/chapter-03-modularity.md`, `raw/fundamentals-of-software-architecture/chapter-07-scope-of-architecture-characteristics.md`, `raw/software-architecture-the-hard-parts/chapter-02-discerning-coupling-in-software-architecture.md`, `raw/software-architecture-the-hard-parts/chapter-13-contracts.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-19
 ---
 
 ## Definition
@@ -118,6 +118,27 @@ Two practical consequences for applied connascence analysis:
 
 This also reframes the Jim Weirich rule of thumb. The old formulation was "as the distance between software elements increases, use weaker forms of connascence." At the architectural-quantum scale, the strongest handle on connascence is not *type* but *synchronicity* — asynchronous connascence is the architectural equivalent of weaker.
 
+## Hard Parts: static vs dynamic generalised to the architecture scale
+
+*Software Architecture: The Hard Parts* Chapter 2 lifts Page-Jones's static-vs-dynamic distinction from the code scale to the **architecture scale** and treats it as the central analytical lens for distributed systems (source: raw/software-architecture-the-hard-parts/chapter-02-discerning-coupling-in-software-architecture.md):
+
+- **[[static-coupling]]** is the architectural counterpart to Page-Jones's static connascence. It asks *how quanta are wired together*: operational dependencies (OS, frameworks, libraries, databases, brokers, URLs), contracts, topology — everything that must be in place for a service to bootstrap. Visible on a deployment diagram.
+- **[[dynamic-coupling]]** is the architectural counterpart to Page-Jones's dynamic connascence. It asks *how quanta call one another at runtime*, and it's now a three-dimensional decision space: **communication** (sync/async) × **consistency** (atomic/eventual) × **coordination** (orchestrated/choreographed).
+
+The two frameworks nest rather than compete. The code-level connascence types on this page describe *what kind* of coupling exists between source elements; the architecture-level static/dynamic split describes *which tier of the architecture* the coupling binds at. A cross-service synchronous call is architecturally dynamically coupled *and* contains Page-Jones's dynamic connascence of execution and timing. A shared database schema is architecturally statically coupled *and* contains static connascence of type and meaning across every consumer.
+
+The practical generalisation: Page-Jones's Rule of Locality — *weaker forms of connascence at longer distances* — extends to the architectural scale as *weaker forms of dynamic coupling across quantum boundaries*. Inside a quantum, synchronous calls and shared types are fine. Across quanta, prefer asynchronous communication, eventual consistency, and choreography. Chapter 2's three-dimensional framing makes that preference actionable by naming the specific axes architects can move along.
+
+## Contract strictness as the connascence dial
+
+*Software Architecture: The Hard Parts* Chapter 13 implicitly treats contract strictness as the lever that controls **how much connascence** crosses an integration boundary (source: raw/software-architecture-the-hard-parts/chapter-13-contracts.md):
+
+- A **[[strict-contract|strict contract]]** maximises cross-boundary connascence — name, type, position, and often meaning all must match exactly. The architect buys compile-time verification of all that connascence, but the contract is only as stable as the slowest side can keep up with.
+- A **[[loose-contract|loose contract]]** (name-value pairs) reduces cross-boundary connascence to CoN alone — producer and consumer only need to agree on the names of fields they both use. CoT, CoP, and CoM are either erased or deferred to [[consumer-driven-contracts|CDC]] tests.
+- **[[stamp-coupling|Stamp coupling]]** is the explicit anti-pattern where a contract imposes structural connascence over *more of the data* than the consumer actually needs, propagating breakage far beyond where the semantic coupling actually requires it.
+
+The Page-Jones rule of locality — *weaker connascence at longer distances* — operationalises at the architectural scale as *looser contracts across quantum boundaries*. Ch 13's loose-contract-plus-CDC recommendation for microservices is the direct application.
+
 ## Related pages
 
 - [[coupling]]
@@ -127,6 +148,13 @@ This also reframes the Jim Weirich rule of thumb. The old formulation was "as th
 - [[information-hiding]]
 - [[architectural-quantum]]
 - [[architecture-characteristics]]
+- [[static-coupling]]
+- [[dynamic-coupling]]
+- [[software-architecture-the-hard-parts]]
 - [[fundamentals-of-software-architecture]]
 - [[saga]]
 - [[bounded-context]]
+- [[contracts]]
+- [[strict-contract]]
+- [[loose-contract]]
+- [[stamp-coupling]]

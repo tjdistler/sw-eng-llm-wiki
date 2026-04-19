@@ -2,9 +2,9 @@
 
 **Summary**: A data warehouse is a separate read-optimized database that holds a copy of data from all OLTP systems in an organization, enabling analysts to run expensive queries without impacting production databases. Reis and Housley give it pride of place among data architecture patterns — "among the oldest and most well-established" — and distinguish its **organisational** architecture (business structure around the warehouse) from its **technical** architecture (MPP, columnar, cloud).
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-03-storage-and-retrieval.md`, `raw/fundamentals-of-data-engineering/chapter-03-designing-good-data-architecture.md`, `raw/fundamentals-of-data-engineering/chapter-06-storage.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-03-storage-and-retrieval.md`, `raw/fundamentals-of-data-engineering/chapter-03-designing-good-data-architecture.md`, `raw/fundamentals-of-data-engineering/chapter-06-storage.md`, `raw/software-architecture-the-hard-parts/chapter-14-managing-analytical-data.md`
 
-**Last updated**: 2026-04-18
+**Last updated**: 2026-04-19
 
 ---
 
@@ -141,6 +141,25 @@ Chapter 6 calls out **Snowflake's micro-partitioning** as a representative evolu
 
 See [[partitioning]] for the broader context of analytics partitioning and clustering.
 
+## Hard Parts Ch 14 — failure modes in distributed architectures
+
+*Software Architecture: The Hard Parts* Ch 14 treats the data warehouse as the **first** attempt at queryable analytical data — the pattern that emerged when client/server databases became powerful enough to support dedicated analytical stores — and catalogues the specific failure modes that make it a bad fit for modern distributed architectures (source: raw/software-architecture-the-hard-parts/chapter-14-managing-analytical-data.md).
+
+The common characteristics Ch 14 lists: data extracted from many operational sources; transformed into a single [[star-schema]]-driven warehouse schema; loaded via pipelines that must be updated whenever source schemas change; analysis done inside the warehouse by dedicated data analysts producing BI reports and dashboards through a SQL-like interface.
+
+The failure modes:
+
+- **Integration brittleness** — the transform step couples the warehouse schema to the semantics of the operational domain. Domain changes force schema changes, which force pipeline changes. Changes cascade.
+- **Extreme partitioning of domain knowledge** — domain expertise is split between the operational system (architects, developers, DBAs) and the analytical system (data analysts, data scientists). Building complex reports requires domain knowledge in both places, forcing tight coordination between very different parts of the ecosystem.
+- **Complexity** — an entire parallel ecosystem (ingest, transform, load, serve) must be maintained separately from the operational systems, yet remains highly coupled to the domains embedded in them.
+- **Limited functionality for intended purpose** — the ROI rarely justified the investment; consumers routinely requested reports the warehouse couldn't deliver. "Ultimately, most data warehouses failed because they didn't deliver business value commensurate to the effort required" (source: raw/software-architecture-the-hard-parts/chapter-14-managing-analytical-data.md).
+- **Synchronization creates bottlenecks** — the warehouse is an inevitable convergence point for otherwise-independent operational data streams; sync side-effects leak back into operational systems despite the intended decoupling.
+- **Operational vs analytical contract mismatch** — systems of record have specific contract needs (see [[contracts]], [[data-contract]]); analytical systems have different ones. Pipelines that both ingest and transform fuse those contracts, introducing brittleness in the transformation process.
+
+Ch 14's larger framing: the warehouse is an example of **technical partitioning** — ingest/transform/load/serve are technical capabilities, each their own partition. Modern distributed architectures partition by **domain**, encapsulating technical details inside the domain boundary. The warehouse loses the domain partitioning that microservices work to preserve; architects must recreate domain context inside query logic.
+
+Ch 14's eventual answer is the [[data-mesh]], in which analytical data is published by each domain as a [[data-product-quantum]] alongside the operational service — domain-partitioned from the start, no centralised warehouse required.
+
 ## Data marts
 
 See [[data-mart]]. Chapter 3 introduces the mart as the refined subset of a warehouse tailored to a single department — providing accessibility for analysts and a second transformation stage for performance on complex joins and aggregations.
@@ -163,3 +182,7 @@ See [[data-mart]]. Chapter 3 introduces the mart as the refined subset of a ware
 - [[storage-compute-separation]]
 - [[object-storage]]
 - [[partitioning]]
+- [[data-mesh]]
+- [[data-product-quantum]]
+- [[cross-service-analytics]]
+- [[software-architecture-the-hard-parts]]

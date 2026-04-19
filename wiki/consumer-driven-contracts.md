@@ -2,9 +2,9 @@
 
 **Summary**: A test-based technique where the *consumer* of a microservice writes an executable specification of how the service is expected to behave; the producer runs those tests on every change. CDCs catch contract breakage from the consumer's point of view and reduce the need for cross-team end-to-end tests.
 
-**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md`
+**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md`, `raw/software-architecture-the-hard-parts/chapter-13-contracts.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-19
 
 ---
 
@@ -39,6 +39,44 @@ Newman is candid that adoption is uneven (source: chapter-05-growing-pains.md):
 
 His advice is still to try it. The problem CDCs solve — verifying contracts without huge cross-team test environments — gets harder, not easier, as the architecture grows.
 
+## Hard Parts Ch 13: CDCs as the microservices default
+
+Ford, Richards, Sadalage, and Dehghani's *Software Architecture: The Hard Parts* Chapter 13 promotes CDCs from "poorly underused practice" to **explicit microservices default** — the canonical resolution of the seeming contradiction between loose coupling and contract fidelity (source: raw/software-architecture-the-hard-parts/chapter-13-contracts.md).
+
+### The push vs pull inversion
+
+Most integration scenarios use a *push* model: the provider decides what to emit, and consumers adapt. CDCs invert this into a *pull* model:
+
+> The consumer puts together a contract for the items they need from the provider, and passes the contract to the provider, who includes it in their build and keeps the contract test green at all times. (source: raw/software-architecture-the-hard-parts/chapter-13-contracts.md)
+
+The provider runs every consumer's contract as part of CI/CD. Each consumer specifies its own contract at its own level of strictness. Structural deviations and semantic-behaviour changes both break the build.
+
+### The architectural pitch: loose contract + CDC
+
+Ch 13's recommended pairing for microservices (source: raw/software-architecture-the-hard-parts/chapter-13-contracts.md):
+
+- Use name-value pairs (loose wire format) between services — for decoupling and evolvability.
+- Use CDCs as an [[architecture-fitness-function|architecture fitness function]] — for contract fidelity.
+
+The two interlocking mechanisms substitute for a single end-to-end schema tool and accept a small complexity cost for a large decoupling gain.
+
+### Advantages named by Ch 13
+
+Three (source: raw/software-architecture-the-hard-parts/chapter-13-contracts.md):
+
+1. **Loosest possible coupling.** Name-value pairs mean implementation changes rarely break the integration point.
+2. **Variability in strictness per consumer.** Each consumer can specify as much or as little rigour as it needs — including constraints that typical schemas can't express (e.g. numeric *ranges*, not just numeric types).
+3. **Evolvability.** Loose coupling means integration points can evolve without rewriting the wire format, so long as the semantics are preserved.
+
+### Disadvantages named by Ch 13
+
+Two (source: raw/software-architecture-the-hard-parts/chapter-13-contracts.md):
+
+1. **Requires engineering maturity.** Fitness functions only work when teams respect failing tests. If contract tests are routinely ignored or not run, the verification layer is theatre.
+2. **Two interlocking mechanisms rather than one.** Architects often prefer one end-to-end tool to two composing primitives. The CDC+name-value pattern is explicitly the latter — two simple tools doing one rich job.
+
+The summary: CDCs trade *schema-as-artifact* for *test-as-artifact*, and tests compose better across multiple consumers than any single schema can.
+
 ## Where CDCs sit relative to other testing
 
 A rough mental model:
@@ -56,3 +94,9 @@ A rough mental model:
 - [[independent-deployability]]
 - [[information-hiding]]
 - [[progressive-delivery]]
+- [[contracts]]
+- [[loose-contract]]
+- [[strict-contract]]
+- [[architecture-fitness-function]]
+- [[data-contract]]
+- [[software-architecture-the-hard-parts]]

@@ -2,9 +2,9 @@
 
 **Summary**: Richards and Ford define a **component** as the physical packaging of a [[modularity|module]] — the building block an architect actually manipulates. Components are the generic structural unit that threads through every architecture style in the book: layers of a monolith, services in microservices, plug-ins in a microkernel, subsystems in a pipeline. Identifying and partitioning components is one of the first things an architect does on a new project.
 
-**Sources**: `raw/fundamentals-of-software-architecture/chapter-08-component-based-thinking.md`
+**Sources**: `raw/fundamentals-of-software-architecture/chapter-08-component-based-thinking.md`, `raw/software-architecture-the-hard-parts/chapter-05-component-based-decomposition-patterns.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-19
 
 ---
 
@@ -79,6 +79,14 @@ The component analysis closes back onto the [[architectural-quantum]]. Once comp
 
 The *Going, Going, Gone* worked example makes this concrete: Richards and Ford split a single `BidCapture` component into `BidCapture` and `AuctioneerCapture` specifically because the two have different scalability, reliability, and availability needs — and that split is part of the argument for making GGG distributed rather than monolithic. See [[architectural-quantum]] for the three-quantum decomposition.
 
+## The Hard Parts sharpening: leaf-node rule and statements-per-namespace
+
+*The Hard Parts* Chapter 5 makes the component definition operationally strict for migration work. A **component is the classes contained in a *leaf-node namespace*** — any source code sitting in a namespace that has been extended by another namespace is an **orphaned class** belonging to no component (source: raw/software-architecture-the-hard-parts/chapter-05-component-based-decomposition-patterns.md). This disambiguates "is `ss.survey` the Survey component or a subdomain?" — if `ss.survey.templates` exists, `ss.survey` is not a component, and its classes need to be flattened. See [[flatten-components-pattern]] for the resolution.
+
+The chapter also recommends **statements per namespace** (not files or lines of code) as the useful size metric — programmer style variance makes file counts unreliable, but statements reflect actual work being done (source: chapter-05-component-based-decomposition-patterns.md). See [[identify-and-size-components-pattern]].
+
+Together, the leaf-node rule and the statements metric make components *measurable* in a monolith migration — the prerequisite for the six [[component-based-decomposition]] patterns.
+
 ## Why this is a hub page
 
 Every architecture style in Part II of the book (Chapters 10–17) answers the question "what do components look like in *this* style?" — layers, pipes-and-filters, microkernel + plug-ins, services, events, grid+cloud, and so on. Chapter 8's abstract treatment sets up the vocabulary those chapters re-use. This page is intended to grow inbound links as the style chapters are ingested.
@@ -96,4 +104,8 @@ Every architecture style in Part II of the book (Chapters 10–17) answers the q
 - [[bounded-context]]
 - [[domain-driven-design]]
 - [[conways-law]]
+- [[component-based-decomposition]]
+- [[identify-and-size-components-pattern]]
+- [[flatten-components-pattern]]
 - [[fundamentals-of-software-architecture]]
+- [[software-architecture-the-hard-parts]]

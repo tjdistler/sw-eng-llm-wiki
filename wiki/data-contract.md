@@ -2,9 +2,9 @@
 
 **Summary**: Adam Bellemare's term for the agreement between an event producer and its consumers about the shape *and* meaning of the events on a stream. A data contract has two components — the **data definition** (fields, types, structures) and the **triggering logic** (the business condition that causes an event to be produced). Both must be preserved across evolution, with special care not to break consumers.
 
-**Sources**: `raw/building-event-driven-microservices/chapter-03-communication-and-data-contracts.md`, `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`
+**Sources**: `raw/building-event-driven-microservices/chapter-03-communication-and-data-contracts.md`, `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`, `raw/software-architecture-the-hard-parts/chapter-13-contracts.md`
 
-**Last updated**: 2026-04-18
+**Last updated**: 2026-04-19
 
 ---
 
@@ -60,6 +60,16 @@ If a formal contract feels too heavy, Reis and Housley fall back to an informal 
 
 This source-system-extraction contract and Bellemare's producer-consumer event contract are not the same artefact, but they serve the same purpose — **make the interface between teams explicit so changes don't silently break downstream work**. In a mature [[data-liberation|data-liberated]] organisation, the two collapse: the source team publishes events per the same contract the data team consumes, and the extraction-side contract becomes redundant.
 
+## The broader Hard Parts definition
+
+Ford, Richards, Sadalage, and Dehghani in Chapter 13 of *Software Architecture: The Hard Parts* deliberately *widen* the word "contract" beyond the Bellemare-style producer/consumer event contract and beyond the Reis/Housley source-system extraction agreement. Their definition (source: raw/software-architecture-the-hard-parts/chapter-13-contracts.md):
+
+> The format used by parts of an architecture to convey information or dependencies.
+
+Under this definition, a data contract between a producer and a consumer is one instance of a general category that also includes REST/gRPC endpoints, method signatures across modules, transitive library dependencies, cached values, hardcoded URLs, and any other coupling point. The specific decisions an architect makes about a data contract — strictness, versioning strategy, validation layer — are instances of the strict-to-loose design choice covered in [[contracts]], [[strict-contract]], and [[loose-contract]].
+
+The convergence point across all three framings: **the contract is the primary lever for managing coupling between independently-deployed parts**, and its shape determines whether the interface tightens or loosens over time.
+
 ## Related pages
 
 - [[explicit-vs-implicit-schemas]]
@@ -76,3 +86,8 @@ This source-system-extraction contract and Bellemare's producer-consumer event c
 - [[source-system-considerations]]
 - [[service-level-agreement]]
 - [[service-level-objective]]
+- [[contracts]]
+- [[strict-contract]]
+- [[loose-contract]]
+- [[stamp-coupling]]
+- [[software-architecture-the-hard-parts]]

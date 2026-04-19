@@ -2,9 +2,9 @@
 
 **Summary**: An algorithm for coordinating a sequence of state changes across multiple services without holding distributed locks. The original 1987 paper by Hector Garcia-Molina and Kenneth Salem proposed sagas to handle long-lived transactions; modern microservice architectures use them as the standard alternative to [[two-phase-commit|2PC]] / [[distributed-transactions]].
 
-**Sources**: `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/fundamentals-of-software-architecture/chapter-14-event-driven-architecture-style.md`, `raw/fundamentals-of-software-architecture/chapter-17-microservices-architecture.md`, `raw/building-event-driven-microservices/chapter-08-building-workflows-with-microservices.md`
+**Sources**: `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/fundamentals-of-software-architecture/chapter-14-event-driven-architecture-style.md`, `raw/fundamentals-of-software-architecture/chapter-17-microservices-architecture.md`, `raw/building-event-driven-microservices/chapter-08-building-workflows-with-microservices.md`, `raw/software-architecture-the-hard-parts/chapter-01-what-happens-when-there-are-no-best-practices.md`, `raw/software-architecture-the-hard-parts/chapter-09-data-ownership-and-distributed-transactions.md`, `raw/software-architecture-the-hard-parts/chapter-11-managing-distributed-workflows.md`, `raw/software-architecture-the-hard-parts/chapter-12-transactional-sagas.md`
 
-**Last updated**: 2026-04-17
+**Last updated**: 2026-04-19
 ---
 
 ## What a saga is
@@ -146,6 +146,124 @@ Because the orchestrator materializes workflow state, it can act on signals beyo
 
 Bellemare also names a third option that sits alongside both saga styles: the **[[compensation-workflow]]**. Instead of reversing a failed transaction, complete what can be completed and remediate the rest via a business-level policy (ticketing overbooking, inventory shortfall). This is the operational-pragmatism escape hatch when neither choreographed nor orchestrated strict rollback is appropriate.
 
+## Hard Parts Ch 9: saga vocabulary is introduced before the full treatment
+
+Chapter 9 of *The Hard Parts* introduces the **vocabulary** the book's saga chapter (Chapter 12) depends on — without pre-emptively covering the full saga catalogue. The chapter's contribution:
+
+- Names **[[compensating-update|compensating updates]]** as the fundamental building block of sagas (source: raw/software-architecture-the-hard-parts/chapter-09-data-ownership-and-distributed-transactions.md).
+- Introduces the **[[orchestrated-request-based-pattern]]** as a synchronous orchestrated-saga shape that performs compensation on partial failure.
+- Introduces the **[[event-based-consistency-pattern]]** as the choreographed-saga shape — services publishing/subscribing to events and applying compensations in reverse.
+- Names the nastiest saga failure mode — **compensation of compensation fails** — and observes that human intervention is often the only realistic answer.
+
+Chapter 12's deeper treatment then generalises these shapes into the eight-pattern saga catalogue (characterised by coupling, communication style, and consistency). Chapter 9's job is to make sure the [[data-ownership]] and [[distributed-transactions]] discussion uses saga vocabulary correctly once it arrives.
+
+## Hard Parts Ch 11: sagas are the consistency-flavoured instance of distributed-workflow coordination
+
+Chapter 11 of *The Hard Parts* ([[distributed-workflow-patterns]]) is the book's treatment of coordination at the workflow-implementation grain — [[workflow-orchestration]] vs [[workflow-choreography]]. Chapter 12 then adds consistency constraints to that axis to produce the eight saga patterns. Seen this way, sagas are simply the **transactional flavour** of distributed-workflow patterns: take Chapter 11's orchestration/choreography choice and overlay Chapter 2's atomic/eventual consistency axis (source: raw/software-architecture-the-hard-parts/chapter-11-managing-distributed-workflows.md).
+
+The Chapter 11 rubric for choosing orchestration vs choreography applies directly to saga implementation choice:
+
+- **Complex error / compensation scenarios** — prefer orchestrated sagas. Compensation in a choreographed saga adds new cross-service links per failure case; an orchestrator already has links to everyone.
+- **High throughput / scale** — prefer choreographed sagas. Chapter 11 specifically names `Time Travel Saga(sec)` and `Anthology Saga(aec)` (both choreographed) as the patterns that achieve the highest scale.
+- **Workflow state visibility** — orchestrated sagas give it for free; choreographed sagas need a [[correlation-ids|correlation ID]] + state-projection service.
+
+The eight saga patterns split cleanly across Chapter 11's axis:
+
+- **Orchestrated**: `Epic Saga(sao)`, `Fairy Tale Saga(seo)`, `Fantasy Fiction Saga(aao)`, `Parallel Saga(aeo)`
+- **Choreographed**: `Phone Tag Saga(sac)`, `Time Travel Saga(sec)`, `Anthology Saga(aec)`
+- **The cautionary edge case**: `Horror Story(aac)` — asynchronous + atomic + choreographed — which Chapter 11 flags as the combination that tends to produce genuinely painful implementations.
+
+Practical consequence: when a workflow has both transactional-consistency requirements *and* [[semantic-coupling|high semantic coupling]] in the domain, the saga discussion starts from the orchestrated side of the table. When the workflow is a simple linear chain with rare compensation, choreographed sagas stay close to the domain's semantic floor.
+
+## Hard Parts Ch 12: the eight-pattern saga taxonomy
+
+Chapter 12 of *The Hard Parts* is the **deep treatment** of transactional sagas. It names the full 2×2×2 combination space along the three axes of [[dynamic-coupling]] (source: raw/software-architecture-the-hard-parts/chapter-12-transactional-sagas.md):
+
+- **Communication**: synchronous vs asynchronous
+- **Consistency**: atomic vs eventual
+- **Coordination**: orchestrated vs choreographed
+
+Each combination gets a whimsical Greek- or story-themed name plus a superscript encoding the three axes in alphabetical order (communication, consistency, coordination). The superscript is the pragmatic lookup key; the name is the mnemonic.
+
+### The eight patterns at a glance
+
+| Pattern | Axes | Superscript | One-line |
+|---|---|---|---|
+| [[epic-saga|Epic Saga]] | sync / atomic / orchestrated | **sao** | "Traditional" distributed transaction; most coupled of all; rarely advisable |
+| [[phone-tag-saga|Phone Tag Saga]] | sync / atomic / choreographed | **sac** | Chain-of-responsibility with compensations; rare combination; usually worse than Epic |
+| [[fairy-tale-saga|Fairy Tale Saga]] | sync / eventual / orchestrated | **seo** | Common real-world choice; orchestrator + per-service transactions |
+| [[time-travel-saga|Time Travel Saga]] | sync / eventual / choreographed | **sec** | Fire-and-forget pipelines; Chain of Responsibility / Pipes and Filters |
+| [[fantasy-fiction-saga|Fantasy Fiction Saga]] | async / atomic / orchestrated | **aao** | Mostly implausible; usually an Epic Saga that "needs to be faster"; prefer Parallel |
+| [[horror-story-saga|Horror Story]] | async / atomic / choreographed | **aac** | Worst combination; the cautionary tale; avoid |
+| [[parallel-saga|Parallel Saga]] | async / eventual / orchestrated | **aeo** | Strong default for complex workflows needing scale |
+| [[anthology-saga|Anthology Saga]] | async / eventual / choreographed | **aec** | Exact opposite of Epic; least coupled; EDA's default saga |
+
+The exact ratings tables (Tables 12-2 through 12-9) live on each variant's page. The book ranks each pattern on four characteristics:
+
+- **Coupling** — how tightly the participants are bound by the combination of axes.
+- **Complexity** — design, implementation, debugging, and operational complexity combined.
+- **Responsiveness / availability** — how the pattern behaves under normal load and participant failure.
+- **Scale / elasticity** — throughput ceiling and how well participants scale independently.
+
+### The two ends of the spectrum
+
+- **[[epic-saga|Epic Saga(sao)]]** — **most coupled** pattern. Sync + atomic + orchestrated maximises every axis. Mimics monolithic behaviour in a distributed architecture; architects reach for it reflexively, usually to their cost.
+- **[[anthology-saga|Anthology Saga(aec)]]** — **least coupled** pattern. Async + eventual + choreographed. The natural saga for [[broker-topology|broker-topology]] / [[event-driven-architecture|event-driven]] systems. Highest scale and responsiveness; correspondingly hard for complex workflows.
+
+These two sit at opposite corners of the 2×2×2 cube; the remaining six are each one, two, or three axis-swaps away.
+
+### The axis-substitution intuition
+
+The patterns are easiest to remember as axis-substitutions:
+
+- Start from [[epic-saga|Epic Saga(sao)]] and relax consistency → [[fairy-tale-saga|Fairy Tale(seo)]].
+- Relax consistency and communication → [[parallel-saga|Parallel(aeo)]].
+- Relax all three → [[anthology-saga|Anthology(aec)]].
+
+The book's advice typically tracks exactly this chain: if performance is inadequate, relax the most-expensive axis first (usually consistency), then communication, then coordination. Relaxing axes **in the wrong order** produces the bad patterns — swap communication while keeping atomicity and orchestration and you get [[fantasy-fiction-saga|Fantasy Fiction(aao)]]; swap both communication and coordination while keeping atomicity and you land in [[horror-story-saga|Horror Story(aac)]].
+
+### Pick a pattern per workflow, not per system
+
+Chapter 12's pedagogical point: **there is no single right saga for a system**. Different workflows in the same architecture legitimately want different patterns. A ticket-completion workflow may be a [[fairy-tale-saga]]; an analytics ingestion pipeline in the same system may be an [[anthology-saga]]. Architects do the trade-off analysis **per workflow**.
+
+### Compensating updates are the universal failure primitive
+
+All eight patterns use [[compensating-update|compensating updates]] when they reach for failure recovery inside an atomic workflow, or for data-correction in an eventual-consistency workflow. Chapter 12 reinforces Chapter 9's warning: compensation of a compensation failure is the nastiest known saga error mode and often requires human intervention. The [[compensating-update]] page covers the semantics, prerequisites, and failure modes.
+
+### Saga state machines and state management
+
+Chapter 12 introduces an alternative to compensating updates for [[eventual-consistency|eventual]] sagas: **saga state machines**. The orchestrator (or, in choreographed sagas, the set of participants) models the workflow as an explicit finite state machine with named states (`START`, `CREATED`, `ASSIGNED`, `COMPLETED`, `NO_SURVEY`, `CLOSED`) and transition actions. Instead of issuing a compensating update on partial failure, the saga transitions to an **error state** (e.g. `NO_SURVEY`) and the orchestrator retries or escalates asynchronously (source: raw/software-architecture-the-hard-parts/chapter-12-transactional-sagas.md).
+
+The state-machine approach dominates compensating updates when:
+
+- The end user should not be blocked by transient failures.
+- The error path is resolvable by retry or manual intervention, not rollback.
+- Cross-service atomicity is not a business requirement.
+
+It's the preferred mechanism inside a [[fairy-tale-saga|Fairy Tale(seo)]] or [[parallel-saga|Parallel(aeo)]].
+
+### Managing sagas with annotations / custom attributes
+
+Chapter 12 offers a concrete code-level technique: capture the set of sagas an application participates in as a language-level construct (Java `@Saga` annotation with a `Transaction` enum; C# custom attribute). Each `@ServiceEntrypoint` class declares which sagas it participates in. A simple code-walking CLI tool can then list all services involved in a named saga (source: raw/software-architecture-the-hard-parts/chapter-12-transactional-sagas.md):
+
+```
+$ ./sagatool.sh NEW_TICKET -services
+-> Ticket Service
+-> Assignment Service
+-> Routing Service
+-> Survey Service
+```
+
+This gives the team a real inventory of saga membership for test-scope analysis and change-impact review. The annotations themselves do nothing at runtime; they exist to be grepped.
+
+### The decision matrix
+
+Chapter 12's closing contribution is a combined ratings matrix covering all eight patterns along coupling, complexity, responsiveness, and scale — the condensed form of Tables 12-2 through 12-9. The matrix is the book's final artefact for saga selection: consult it per workflow, pick the least-worst combination.
+
+## The Oxford etymology (*Hard Parts* Ch 1)
+
+*Software Architecture: The Hard Parts* opens its Sysops Squad introduction with the Oxford English Dictionary definition: *a saga is "a long story of heroic achievement"* (source: raw/software-architecture-the-hard-parts/chapter-01-what-happens-when-there-are-no-best-practices.md). The authors note that architects have co-opted the term to describe transactional behaviour in distributed architectures — the coordination pattern documented on this page — but the literary sense survives in the book's recurring *Sysops Squad* pedagogical example, which itself is framed as a "saga" about one fictional ticketing system's journey out of a distributed monolith. The transactional saga chapter sits much later in the book (Chapter 12); Chapter 1 only points at it.
+
 ## A note on BPM tools
 
 Business process modelling tools (e.g. older enterprise platforms) are often pitched for orchestrated sagas. Newman's experience: the central conceit — that nondevelopers will define business processes — almost never holds. Developers end up using GUI-based tools that are hard to version-control and test. (source: chapter-04-decomposing-the-database.md)
@@ -185,3 +303,22 @@ See [[distributed-transactions]] for the operational problems sagas avoid, and [
 - [[idempotence]]
 - [[effectively-once-processing]]
 - [[single-writer-principle]]
+- [[software-architecture-the-hard-parts]]
+- [[data-ownership]]
+- [[base-properties]]
+- [[compensating-update]]
+- [[orchestrated-request-based-pattern]]
+- [[event-based-consistency-pattern]]
+- [[distributed-workflow-patterns]]
+- [[workflow-orchestration]]
+- [[workflow-choreography]]
+- [[semantic-coupling]]
+- [[dynamic-coupling]]
+- [[epic-saga]]
+- [[phone-tag-saga]]
+- [[fairy-tale-saga]]
+- [[time-travel-saga]]
+- [[fantasy-fiction-saga]]
+- [[horror-story-saga]]
+- [[parallel-saga]]
+- [[anthology-saga]]

@@ -43,6 +43,10 @@ It is much harder if both the monolith *and* the new microservice are simultaneo
 - When you want a fast, safe rollback during the migration.
 - Less suited when you're already partway into a microservice extraction and writes can come from multiple services — consider [[tracer-write]] instead.
 
+## Contrast: steady-state cross-service read access
+
+This pattern solves a **migration** — one writer, two stores, eventually one store. It is not the same problem as **steady-state** reads across services that each own different tables. For that, see *The Hard Parts* Ch 10 and [[distributed-data-access]]: four patterns ([[interservice-communication-pattern]], [[column-schema-replication-pattern]], [[replicated-caching-pattern]], [[data-domain-pattern]]) with very different trade-offs. The Newman pattern here is a transient scaffold; the Ch 10 patterns are permanent architectural choices.
+
 ## Related pages
 
 - [[database-decomposition]]
@@ -52,3 +56,5 @@ It is much harder if both the monolith *and* the new microservice are simultaneo
 - [[strangler-fig-pattern]]
 - [[split-the-database-first]]
 - [[eventual-consistency]]
+- [[distributed-data-access]]
+- [[column-schema-replication-pattern]]

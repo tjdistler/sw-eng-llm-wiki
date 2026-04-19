@@ -2,9 +2,9 @@
 
 **Summary**: A query language for application data, created at Facebook as an alternative to REST. Where a REST endpoint returns a fixed resource shape, a GraphQL query **describes the subset of data the client wants** across potentially multiple underlying data models in a single request. From a [[source-systems|source-system]] perspective, GraphQL is one of the three HTTP-based API paradigms a data engineer regularly encounters, alongside REST and [[rpc|gRPC]].
 
-**Sources**: `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`
+**Sources**: `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`, `raw/software-architecture-the-hard-parts/chapter-13-contracts.md`
 
-**Last updated**: 2026-04-18
+**Last updated**: 2026-04-19
 
 ---
 
@@ -48,6 +48,47 @@ Chapter 5 of Reis and Housley catalogues four HTTP-based API paradigms a data en
 
 Each carries different implications for ingestion code, schema evolution, and the [[data-contract]] between producer and consumer.
 
+## As the interesting middle of the contract-strictness spectrum
+
+*Software Architecture: The Hard Parts* Chapter 13 uses GraphQL as a worked case study for a **middle-of-the-spectrum** contract: strict types on the producer side, but **consumer-driven field selection** on the consumer side (source: raw/software-architecture-the-hard-parts/chapter-13-contracts.md). This sidesteps the usual strict-contract brittleness without giving up the tooling advantages of a schema.
+
+Chapter 13's `Profile` example:
+
+```graphql
+# Wishlist's Profile view
+type Profile {
+  name: String
+}
+
+# Customer's full Profile view
+type Profile {
+  name: String
+  addr1: String
+  addr2: String
+  country: String
+  # ...
+}
+```
+
+The same underlying `Profile` is viewed differently by different consumers. The **Customer Wishlist** needs only the customer's name (looked up by ID); the **Customer Profile** needs name, address, country, and more. Both views are valid.
+
+### Why this defeats [[stamp-coupling]]
+
+A naive strict contract on `Profile` would expose every field to every consumer, creating [[stamp-coupling|stamp coupling]]: a change to `addr2` that the Wishlist never reads still breaks the Wishlist's contract. Chapter 13 flags this as an anti-pattern driven by misguided future-proofing (source: raw/software-architecture-the-hard-parts/chapter-13-contracts.md).
+
+GraphQL's consumer-driven selection eliminates this class of breakage by construction: the Wishlist's contract is `{ name }` — nothing else — so a change to any other field simply cannot break it. The schema stays strict (types are guaranteed), but the coupling surface per consumer is narrow.
+
+### Where GraphQL sits on the strictness spectrum
+
+From [[contracts|Ch 13's strict-to-loose ordering]]:
+
+```
+strict ──────────────────────────────── loose
+ RMI / gRPC / SOAP-XSD   REST   GraphQL   JSON name-value pairs
+```
+
+GraphQL is strict about *types* but loose about *which subset of the type space any given integration uses*. This is why it avoids the strict-contract rigidity (evolve the schema, consumers don't break) while keeping the strict-contract tooling (generated types, IDE completion, introspection).
+
 ## Cross-book connections
 
 - [[rpc]] — the DDIA treatment of REST, gRPC, and RPC frameworks generally. GraphQL sits in the same "HTTP-based API style" category.
@@ -62,3 +103,8 @@ Each carries different implications for ingestion code, schema evolution, and th
 - [[webhooks]]
 - [[data-contract]]
 - [[encoding-formats]]
+- [[contracts]]
+- [[strict-contract]]
+- [[loose-contract]]
+- [[stamp-coupling]]
+- [[software-architecture-the-hard-parts]]

@@ -2,9 +2,9 @@
 
 **Summary**: A [[nosql]] database optimized for storing massive volumes of data with high write throughput and sub-10ms latency per row. Wide-column databases trade query expressiveness (only one index — the row key) for extreme scale; they are the natural substrate for ecommerce, fintech, ad-tech, IoT, and real-time personalization workloads.
 
-**Sources**: `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`
+**Sources**: `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`, `raw/software-architecture-the-hard-parts/chapter-06-pulling-apart-operational-data.md`
 
-**Last updated**: 2026-04-18
+**Last updated**: 2026-04-19
 
 ---
 
@@ -45,6 +45,22 @@ The single-index design means an unfortunate row-key choice creates hotspots. Co
 - [[partitioning-strategies]] / [[hot-sharding]] — the row-key hotspotting problem generalises.
 - [[column-oriented-storage]] (DDIA) — distinct from wide-column despite the name overlap: column-oriented storage is an OLAP technique (Parquet, ClickHouse); wide-column is an OLTP-shaped NoSQL technique.
 
+## Hard Parts ratings and positioning
+
+Chapter 6 of *Software Architecture: The Hard Parts* calls this family "column family databases" or "big table databases" and rates it as follows (source: raw/software-architecture-the-hard-parts/chapter-06-pulling-apart-operational-data.md):
+
+- **Learning curve — steep.** Understanding rows of varying name-value pairs, super columns (maps of columns nested inside a column), and row-key design takes practice and time.
+- **Data modelling — hard.** Rows are name-value pair groups keyed by a row identifier; designing the row key takes multiple iterations. Cassandra Query Language (CQL) has improved accessibility by giving modellers a SQL-shaped surface.
+- **Scalability — maximum.** All column-family databases are highly scalable; they are the go-to choice for high write or high read throughput. They scale horizontally in both directions.
+- **Availability / partition tolerance — very high.** Built for clustered operation; a default replication factor of three gives at least three copies of every row. Failures of cluster nodes are transparent to the client.
+- **Consistency — tunable.** Like other NoSQL families, per-operation consistency levels (`ANY`, `ONE`, `QUORUM`, `ALL`). High-consistency writes reduce availability and partition tolerance; low-consistency writes maximise throughput at the risk of data loss.
+- **Community — active and growing.** Cassandra, Scylla, and HBase have active communities; SQL-like query languages (CQL) have widened adoption.
+- **Read/write priority — write-biased.** SSTables, commit logs, and memtables are designed for high write volume. Sparse data (columns present only when there's a value) is handled far better than in a relational schema.
+
+### When Hard Parts picks this family
+
+Extreme write volumes, sparse schemas, natural time-bucketed data, multi-DC replication needs. The recipe's cost is modelling effort and a narrower query surface — anything beyond row-key lookup and range scan needs to be pushed to a downstream analytics store. See [[database-type-selection]] for the full comparison.
+
 ## Related pages
 
 - [[nosql]]
@@ -55,3 +71,5 @@ The single-index design means an unfortunate row-key choice creates hotspots. Co
 - [[column-oriented-storage]]
 - [[source-systems]]
 - [[change-data-capture]]
+- [[database-type-selection]]
+- [[polyglot-persistence]]

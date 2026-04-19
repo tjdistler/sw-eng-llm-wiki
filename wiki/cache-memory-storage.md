@@ -2,9 +2,9 @@
 
 **Summary**: Storage systems that keep data in **RAM** rather than disk to deliver sub-millisecond reads. **Memcached** and **Redis** are the canonical examples. They are primarily used as **caches** in front of slower durable storage, but Redis (with optional persistence) can also serve as the primary store for applications that tolerate small windows of data loss.
 
-**Sources**: `raw/fundamentals-of-data-engineering/chapter-06-storage.md`
+**Sources**: `raw/fundamentals-of-data-engineering/chapter-06-storage.md`, `raw/software-architecture-the-hard-parts/chapter-10-distributed-data-access.md`
 
-**Last updated**: 2026-04-18
+**Last updated**: 2026-04-19
 
 ---
 
@@ -59,6 +59,16 @@ The practical patterns:
 - **[[state-store]]** — stream-processing local state stores (RocksDB, in-memory hash tables) occupy a similar role for streaming applications.
 - **[[caching-layer]]** — the broader architectural concept; includes CDN caches, application-level caches, and database result caches.
 
+## Caching models for distributed data access
+
+*Software Architecture: The Hard Parts* Ch 10 distinguishes three caching shapes used across a service fleet (source: raw/software-architecture-the-hard-parts/chapter-10-distributed-data-access.md):
+
+- **Single in-memory cache** — Redis/Memcached *embedded* as a per-service local cache. Fast, but each service has its own private view; no sharing.
+- **Distributed cache** — the external-server shape Redis/Memcached are best known for. Shared across services via a network hop. Reintroduces a remote dependency; any client with creds can write.
+- **Replicated cache** — each service holds an in-process replica, peer-to-peer sync'd by a cluster (Hazelcast, Apache Ignite, Oracle Coherence). No external server, no bounded-context break. This is the shape Ch 10 recommends for the specific problem of *reading data you don't own* — see [[replicated-caching-pattern]] and [[distributed-data-access]].
+
+Redis and Memcached cover the first two shapes; the third requires a product built for peer replication.
+
 ## Related pages
 
 - [[storage-raw-ingredients]]
@@ -67,3 +77,5 @@ The practical patterns:
 - [[caching-layer]]
 - [[state-store]]
 - [[data-storage-stage]]
+- [[replicated-caching-pattern]]
+- [[distributed-data-access]]

@@ -2,9 +2,9 @@
 
 **Summary**: Newman's catalogue of situations where microservices are the wrong call: an unclear domain, true (pre-product/market-fit) startups, customer-installed software, and — above all — having no clear reason to adopt them.
 
-**Sources**: `raw/monolith-to-microservices/chapter-02-planning-a-migration.md`
+**Sources**: `raw/monolith-to-microservices/chapter-02-planning-a-migration.md`, `raw/software-architecture-the-hard-parts/chapter-07-service-granularity.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-19
 
 ---
 
@@ -43,6 +43,19 @@ The biggest reason not to adopt microservices: no clear idea of what you're tryi
 
 "Doing microservices just because everyone else is doing it is a terrible idea."
 
+## When the integrators outweigh the disintegrators (Hard Parts Ch 7)
+
+Even after the architecture is microservices, every individual service-split decision faces the same go/no-go test. Hard Parts Ch 7 makes the case for **not** splitting (or for *consolidating* over-decomposed services) when [[granularity-integrators]] outweigh [[granularity-disintegrators]] (source: raw/software-architecture-the-hard-parts/chapter-07-service-granularity.md):
+
+- **An ACID transaction is required** across the candidate split. Saga compensations are workable but error-prone; if the business needs strict consistency, keep the services together.
+- **The split would force constant inter-service chatter** to do useful work. Synchronous fan-out kills latency, fault tolerance, and reliability simultaneously.
+- **The shared domain code is a large fraction** of either side's codebase. Frequent shared-library changes force lockstep deployments — the very thing the split was meant to avoid.
+- **The data is genuinely entangled.** If both sides need to read each other's tables for nearly every operation, the split produces interservice round-trips, not autonomy.
+
+The framing: *most architects over-decompose because they focus only on disintegrators*. The Hard Parts prescription is to enumerate both force groups and resolve the trade-off explicitly — often with the business sponsor — and document the call as an [[architecture-decision-record|ADR]]. See [[service-granularity]] for the worked dialogues.
+
+This applies recursively inside an existing microservices estate: services that turned out to be too small can and should be **re-consolidated**. Granularity is not a one-way ratchet.
+
 ## Related pages
 
 - [[why-microservices]]
@@ -51,3 +64,7 @@ The biggest reason not to adopt microservices: no clear idea of what you're tryi
 - [[modular-monolith]]
 - [[bounded-context]]
 - [[incremental-migration]]
+- [[service-granularity]]
+- [[granularity-disintegrators]]
+- [[granularity-integrators]]
+- [[distributed-monolith]]

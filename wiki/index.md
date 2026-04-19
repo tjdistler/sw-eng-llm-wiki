@@ -11,6 +11,7 @@
 | [[building-event-driven-microservices]] | Book by Adam Bellemare — concepts, organization, and ingestion status |
 | [[site-reliability-engineering]] | Book edited by Beyer, Jones, Petoff & Murphy — concepts, organization, and ingestion status |
 | [[fundamentals-of-data-engineering]] | Book by Joe Reis & Matt Housley — concepts, organization, and ingestion status |
+| [[software-architecture-the-hard-parts]] | Book by Ford, Richards, Sadalage & Dehghani — trade-off analysis for decomposing systems, data, and workflows |
 
 ## Data engineering discipline
 
@@ -1302,3 +1303,121 @@ The ninth Part II style — microservices — is catalogued in *Microservices fu
 | [[google-monorepo]] | Single shared repo; CL review, datacenter-parallel build, continuous testing, push-on-green |
 | [[n-plus-2-redundancy]] | Sizing rule: N for peak load, + 2 for one task updating and one failing during the update |
 | [[life-of-a-request]] | The Shakespeare end-to-end trace: DNS → GSLB → GFE → frontend → backend → Bigtable |
+
+## Trade-off analysis (Hard Parts)
+
+| Page | Description |
+|---|---|
+| [[trade-off-analysis]] | Core discipline — find-entangled / analyze-interactions / assess-impacts; MECE, qualitative over quantitative, iterate as context shifts |
+| [[least-worst-trade-offs]] | Don't find the best — find the least worst; architect as objective arbiter against evangelism |
+| [[mece-principle]] | Mutually exclusive, collectively exhaustive — decision-option discipline and its model-vs-reality caveats |
+| [[laws-of-software-architecture]] | "Everything is a trade-off"; "why beats how"; no silver bullets |
+| [[architecture-decision-record]] | ADRs as the documented output of the method; Consequences as the trade-off artefact; Alternatives must be MECE |
+| [[operational-vs-analytical-data]] | The first structural data lens; OLTP boundary drives decomposition decisions |
+| [[data-outlives-code]] | Berners-Lee framing; architecture in service of data, not the other way round |
+
+## Coupling taxonomy (Hard Parts)
+
+| Page | Description |
+|---|---|
+| [[static-coupling]] | How quanta are wired together — dependencies, contracts, topology; measured via bootstrap test |
+| [[dynamic-coupling]] | Runtime coupling along three axes: communication (sync/async) × consistency (atomic/eventual) × coordination (orchestrated/choreographed) |
+| [[semantic-coupling]] | Domain-concept coupling inherent in the workflow; the floor implementation can only worsen |
+| [[stamp-coupling]] | Passing whole structures when only a subset is needed; GraphQL as the counter-pattern |
+| [[orthogonal-coupling]] | Distinct-purposes-that-must-intersect; sidecars/mesh as the cleanest implementation |
+| [[connascence]] | Page-Jones taxonomy lifted to architectural scale; strictness as the connascence dial |
+
+## Architectural modularity and granularity
+
+| Page | Description |
+|---|---|
+| [[architectural-modularity]] | Degree of decomposition into deployment units; five-driver rubric (maintainability, testability, deployability, scalability, fault tolerance) |
+| [[agility]] | Compound characteristic = maintainability + testability + deployability |
+| [[testability]] | Ease + completeness of testing; chatter failure mode; contract tests as preserver |
+| [[deployability]] | Ease + frequency + risk; Matt Stine "big ball of distributed mud" warning |
+| [[service-granularity]] | Hub — disintegrators vs integrators; "hold until disintegrators outweigh" |
+| [[granularity-disintegrators]] | Six forces pulling services apart: scope, code volatility, scalability, fault tolerance, security, extensibility |
+| [[granularity-integrators]] | Four forces keeping services together: transactions, workflow/choreography, shared code, data relationships |
+| [[code-volatility]] | Change-rate as an objective, measurable decomposition driver |
+
+## Decomposition patterns (Hard Parts Ch 4–5)
+
+| Page | Description |
+|---|---|
+| [[component-based-decomposition]] | Hub — six-pattern sequence; preferred approach when a monolith is decomposable |
+| [[tactical-forking]] | De La Torre clone-then-delete pattern; coarse-grained services from coupled code |
+| [[big-ball-of-mud]] | Foote's 1999 antipattern; the decomposability gate |
+| [[identify-and-size-components-pattern]] | Inventory every component; statements metric; standard-deviation balance rule |
+| [[gather-common-domain-components-pattern]] | Consolidate cross-cutting domain logic; leaf-name heuristic; shared component vs library |
+| [[flatten-components-pattern]] | Leaf-node definition; eliminate orphaned classes; push-down vs pull-up flattening |
+| [[determine-component-dependencies-pattern]] | Component-level Ca/Ce; golfball/basketball/airliner triage; ArchUnit enforcement |
+| [[create-component-domains-pattern]] | Namespace-prefix domains; 1:many service-to-components mapping |
+| [[create-domain-services-pattern]] | Physical extraction to a service-based architecture; "soft landing" before microservices |
+
+## Data decomposition (Hard Parts Ch 6)
+
+| Page | Description |
+|---|---|
+| [[database-decomposition]] | Hub — five-step pattern (domains → assign → split connections → split schemas → split servers) |
+| [[data-decomposition-drivers-and-integrators]] | Six disintegrators vs two integrators; the rubric that justifies a database split |
+| [[data-domain]] | Soccer-ball model; groups of tables forming the unit of ownership and extraction |
+| [[data-sovereignty]] | Step-3 outcome; one-owner-per-database rule |
+| [[database-type-selection]] | Eight-family × eight-characteristic star-ratings trade-off matrix |
+| [[polyglot-persistence]] | Decomposition end-state; multiple DB types chosen per workload |
+| [[newsql-database]] | NoSQL scale + ACID; CockroachDB, Spanner, YugabyteDB |
+| [[cloud-native-database]] | Snowflake, Redshift, Cosmos, Datomic; compute/storage separation; opex cost shape |
+
+## Data ownership and access (Hard Parts Ch 9–10)
+
+| Page | Description |
+|---|---|
+| [[data-ownership]] | Writer-owns rule; sole vs common vs joint ownership |
+| [[joint-ownership-techniques]] | Four techniques for legit multi-writer tables: table split, data domain, delegate, service consolidation |
+| [[table-split-technique]] | Split columns into two tables to resolve joint writes; CAP trade-off |
+| [[delegate-technique]] | One service writes; others send write requests; primary-domain vs operational-priority choice |
+| [[base-properties]] | Basically Available, Soft state, Eventual consistency — the ACID complement across services |
+| [[compensating-update]] | Semantic rollback; the core saga building block |
+| [[distributed-data-access]] | Four-pattern hub for reading data a service doesn't own |
+| [[interservice-communication-pattern]] | Remote call for read access; three latencies; tight runtime coupling |
+| [[column-schema-replication-pattern]] | Copy columns into the reader's DB; async sync; staleness trade-off |
+| [[replicated-caching-pattern]] | In-memory replicated cache (Hazelcast-style); ~500 MB ceiling |
+| [[data-domain-pattern]] | Shared schema for cross-service read access |
+| [[background-synchronization-pattern]] | Eventual consistency via a background reconciler (Ch 9) |
+| [[orchestrated-request-based-pattern]] | Synchronous orchestrated workflow; atomic-ish consistency across services (Ch 9) |
+| [[event-based-consistency-pattern]] | Default eventual-consistency pattern via events (Ch 9) |
+
+## Distributed workflows and sagas (Hard Parts Ch 11–12)
+
+| Page | Description |
+|---|---|
+| [[distributed-workflow-patterns]] | Hub — orchestration vs choreography trade-off matrix and the four-force rubric |
+| [[workflow-orchestration]] | Mediator coordinates; central state tracking; scalability ceiling |
+| [[workflow-choreography]] | Peer-to-peer events; responsive/scalable but hard to track state |
+| [[choreography]] | Top-level hub — no central coordinator; cross-links to broker-topology, saga, EDM |
+| [[saga]] | Hub — 2×2×2 taxonomy of eight sagas (communication × consistency × coordination) |
+| [[epic-saga]] | sync + atomic + orchestrated — traditional DT; rarely advisable |
+| [[phone-tag-saga]] | sync + atomic + choreographed — worst of both worlds |
+| [[fairy-tale-saga]] | sync + eventual + orchestrated — common real-world default |
+| [[time-travel-saga]] | sync + eventual + choreographed |
+| [[fantasy-fiction-saga]] | async + atomic + orchestrated — rarely viable |
+| [[horror-story-saga]] | async + atomic + choreographed — avoid |
+| [[parallel-saga]] | async + eventual + orchestrated — very common, strong default |
+| [[anthology-saga]] | async + eventual + choreographed — event-driven architecture's native form |
+
+## Reuse and contracts (Hard Parts Ch 8, 13)
+
+| Page | Description |
+|---|---|
+| [[reuse-patterns]] | Hub — replication / shared library / shared service / sidecar; decision matrix |
+| [[code-replication-pattern]] | Copy code into each service; fine when abstraction + slow change |
+| [[shared-library-pattern]] | Compile-time reuse; versioning as the "ninth fallacy"; granular libraries over god-libs |
+| [[shared-service-pattern]] | Runtime reuse via a shared service; latency/availability/versioning trade-offs |
+| [[contracts]] | Strict-to-loose spectrum hub; coupling vs productivity trade-off |
+| [[strict-contract]] | Strongly typed name/type/count/order; compile-time safety, evolution pain |
+| [[loose-contract]] | Minimal shape; evolution-friendly; needs consumer-driven tests to stay safe |
+
+## Analytical data in distributed systems (Hard Parts Ch 14)
+
+| Page | Description |
+|---|---|
+| [[data-product-quantum]] | DPQ — data-product analogue of `architectural-quantum`; cooperative quantum to the operational service |

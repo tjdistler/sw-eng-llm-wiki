@@ -2,9 +2,9 @@
 
 **Summary**: Document databases store self-contained records (typically JSON) that map naturally to application objects and load efficiently as a unit — at the cost of weak support for joins and many-to-many relationships.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-02-data-models-and-query-languages.md`, `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-02-data-models-and-query-languages.md`, `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`, `raw/software-architecture-the-hard-parts/chapter-06-pulling-apart-operational-data.md`
 
-**Last updated**: 2026-04-18
+**Last updated**: 2026-04-19
 
 ---
 
@@ -70,6 +70,27 @@ Reis and Housley's Chapter 5 of *Fundamentals of Data Engineering* adds a data-e
 - **Analytics extraction is expensive.** To run analytics on a document store, engineers "generally must run a full scan to extract all data from a collection or employ a [[change-data-capture|CDC]] strategy to send events to a target stream." Full scans slow the source and, for many serverless cloud document stores, "charge a significant fee for each full scan." Indexes help, but only for lookup, not for bulk extraction.
 - **Joins are not native.** "Data cannot be easily normalized... Applications can still join manually. Code can look up a document, extract a property, and then retrieve another document." The engineer extracting from a document source must either denormalize in the pipeline or accept slow programmatic joins.
 
+## Hard Parts ratings and positioning
+
+Chapter 6 of *Software Architecture: The Hard Parts* rates document databases on its eight-characteristic matrix (source: raw/software-architecture-the-hard-parts/chapter-06-pulling-apart-operational-data.md):
+
+- **Learning curve — easy.** Documents are human-readable; enterprises already deal with JSON/XML as API payloads and frontend data.
+- **Data modelling — aggregate-oriented, forgiving.** Model orders, tickets, or other domain objects as aggregates. Document databases are *more* forgiving than key-value stores because parts of the aggregate are queryable and indexable.
+- **Scalability — good.** Aggregate-oriented design distributes naturally; complex indexing reduces scalability; past a certain data size, sharding becomes necessary and the sharding-key choice becomes architectural.
+- **Availability / partition tolerance — good.** Configurable; replicated clusters for sharded collections are complex to operate, though cloud providers are smoothing this.
+- **Consistency — tunable.** Some stores now support ACID **within a single collection**, though edge cases persist. Quorum-based tunable consistency lets each read or write pick its own trade-off.
+- **Community — largest of the NoSQL families.** MongoDB leads; active user community, many tutorials, many language drivers.
+- **Read/write priority — read-biased.** Aggregate orientation plus secondary indexes make document stores favour read workloads.
+
+### Document-store design for the Sysops Squad survey
+
+The chapter's worked example for polyglot-persistence migration is the Sysops Squad's **Survey** data domain moving from relational to a document store (source: raw/software-architecture-the-hard-parts/chapter-06-pulling-apart-operational-data.md). The key modelling choice is whether to use a **single aggregate with embedded questions** or **separate aggregates with references**:
+
+- **Embedded questions.** One read gets the whole survey + its questions. Fast, simple, ideal when the survey is always consumed as a unit. Cost: question-centric queries are awkward; changing questions requires rewriting the survey document.
+- **Referenced questions.** Survey and Question are separate aggregates; the survey holds question IDs. Per-question queries are easy; client-side joins are required when the full survey is needed.
+
+Neither is wrong; the workload picks the winner. This is the aggregate-design trade-off the book flags for all aggregate-oriented NoSQL families.
+
 ## Related pages
 
 - [[data-models]]
@@ -81,3 +102,5 @@ Reis and Housley's Chapter 5 of *Fundamentals of Data Engineering* adds a data-e
 - [[nosql]]
 - [[source-systems]]
 - [[change-data-capture]]
+- [[database-type-selection]]
+- [[polyglot-persistence]]

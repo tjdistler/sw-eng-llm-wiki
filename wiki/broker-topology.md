@@ -85,6 +85,8 @@ Newman's [[saga|choreographed saga]] is the saga-level version of the broker top
 
 The terminology reconciliation: Richards and Ford's **broker topology** is Newman's **choreography** applied at the top level of the architecture. See [[saga]] for the saga-level framing and [[event-driven-architecture]] for the reconciliation table.
 
+*The Hard Parts* Chapter 11 ([[distributed-workflow-patterns]]) names the same shape at the **single-workflow grain** as [[workflow-choreography]], and catalogues three options for handling workflow state in the absence of a central owner: the Front Controller pattern (first service owns state), stateless choreography (state rebuilt by querying every participant), and [[stamp-coupling]] (state propagated inside the message contract). The choice depends on whether single-point query is needed, tolerance for chatty reconstruction, or willingness to carry state on every message.
+
 ## When to use the broker topology
 
 - **Simple, linear event flows** — each processor is interested in a small number of upstream events.
@@ -111,3 +113,7 @@ The terminology reconciliation: Richards and Ford's **broker topology** is Newma
 - [[event-pipeline-pattern]]
 - [[microservices]]
 - [[fundamentals-of-software-architecture]]
+- [[workflow-choreography]]
+- [[distributed-workflow-patterns]]
+- [[semantic-coupling]]
+- [[stamp-coupling]]

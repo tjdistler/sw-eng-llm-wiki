@@ -2,9 +2,9 @@
 
 **Summary**: The fourth [[data-engineering-lifecycle|lifecycle]] **undercurrent** — the current and future state of data systems that support an organisation's long-term data needs and strategy. Chapter 2 names the undercurrent; **Chapter 3 defines the discipline**: data architecture is a subset of enterprise architecture, its job is to design systems that support the evolving data needs of the enterprise through flexible, reversible decisions and careful trade-off analysis.
 
-**Sources**: `raw/fundamentals-of-data-engineering/chapter-02-the-data-engineering-lifecycle.md`, `raw/fundamentals-of-data-engineering/chapter-03-designing-good-data-architecture.md`, `raw/fundamentals-of-data-engineering/chapter-04-choosing-technologies-across-the-data-engineering-lifecycle.md`
+**Sources**: `raw/fundamentals-of-data-engineering/chapter-02-the-data-engineering-lifecycle.md`, `raw/fundamentals-of-data-engineering/chapter-03-designing-good-data-architecture.md`, `raw/fundamentals-of-data-engineering/chapter-04-choosing-technologies-across-the-data-engineering-lifecycle.md`, `raw/software-architecture-the-hard-parts/chapter-14-managing-analytical-data.md`
 
-**Last updated**: 2026-04-18
+**Last updated**: 2026-04-19
 
 ---
 
@@ -69,6 +69,17 @@ Teams that pick tools before architecture build "Dr. Seuss fantasy machines." Th
 
 The architecture/tools split also names the scope of architectural decisions: [[principles-of-good-data-architecture|the nine principles]] govern architecture; Chapter 4's ten criteria govern tool choice within that architecture.
 
+## Hard Parts Ch 14 — analytical data in distributed architectures
+
+*Software Architecture: The Hard Parts* Ch 14 frames analytical data as a **cross-cutting concern every decomposed architecture has to solve** (source: raw/software-architecture-the-hard-parts/chapter-14-managing-analytical-data.md). It walks the historical progression — [[data-warehousing|data warehouse]] → [[data-lake|data lake]] → [[data-mesh]] — through an architect's lens, focusing on how each pattern handles domain partitioning.
+
+Ch 14's architectural verdict:
+
+- **Warehouse and lake partition technically** (ingest / transform / load / serve), which works against the domain partitioning modern distributed architectures (microservices) depend on.
+- **Data mesh preserves domain partitioning** by putting the analytical interface — the [[data-product-quantum]] — inside the domain boundary, alongside the operational service.
+
+This adds a specifically architectural take on the patterns Reis & Housley's Chapter 3 introduces, and makes explicit the link between microservices-style domain decomposition and the data-mesh approach to analytics.
+
 ## What Chapter 3 covers (index)
 
 - [[principles-of-good-data-architecture]] — the nine principles, borrowing from AWS Well-Architected and Google Cloud's five cloud-native principles
@@ -91,3 +102,6 @@ The architecture/tools split also names the scope of architectural decisions: [[
 - [[fundamentals-of-software-architecture]]
 - [[architecture-characteristics]]
 - [[technology-selection]]
+- [[data-mesh]]
+- [[data-product-quantum]]
+- [[software-architecture-the-hard-parts]]

@@ -2,9 +2,9 @@
 
 **Summary**: The logical grouping of related code — classes into packages, functions into namespaces, modules into components. Richards and Ford treat modularity as an **implicit architecture characteristic**: no requirement ever asks for it, yet sustainable codebases demand it. The three tools for reasoning about modularity are [[cohesion]], [[coupling]], and [[connascence]].
 
-**Sources**: `raw/fundamentals-of-software-architecture/chapter-03-modularity.md`, `raw/fundamentals-of-software-architecture/chapter-08-component-based-thinking.md`, `raw/site-reliability-engineering/chapter-09-simplicity.md`
+**Sources**: `raw/fundamentals-of-software-architecture/chapter-03-modularity.md`, `raw/fundamentals-of-software-architecture/chapter-08-component-based-thinking.md`, `raw/site-reliability-engineering/chapter-09-simplicity.md`, `raw/software-architecture-the-hard-parts/chapter-03-architectural-modularity.md`
 
-**Last updated**: 2026-04-17
+**Last updated**: 2026-04-19
 ---
 
 ## Definition
@@ -76,6 +76,17 @@ The third point is Constantine's low-cohesion warning at binary granularity. A "
 
 See [[simplicity-sre]] for the full Chapter 9 treatment and [[coupling]] for Newman's four-type taxonomy that the "loose coupling between binaries" framing refines.
 
+## Code-level modularity vs architectural modularity
+
+*Software Architecture: The Hard Parts* (Ch 3) introduces a complementary term — **[[architectural-modularity]]** — for the *deployment-unit* axis of modularity (source: raw/software-architecture-the-hard-parts/chapter-03-architectural-modularity.md). The two are independent:
+
+- **Code modularity** (this page) is about logical grouping — cohesive packages, well-defined interfaces, low incoming coupling per component. A monolith can be highly code-modular (the Shopify modular monolith) and a microservices estate can be code-anti-modular (a service whose internals leak via stamp-coupled payloads).
+- **Architectural modularity** is about physical separation into independently-deployable units. A modular monolith has maximum code modularity but minimum architectural modularity — still one deployment unit.
+
+The two properties matter for different reasons. Code modularity is the precondition for [[evolutionary-architecture|evolution]] and for eventual extraction. Architectural modularity is what unlocks the five drivers Ford and Richards enumerate — scalability, elasticity, fault tolerance, deployability, testability — each of which requires the deployment-unit boundary to be real, not just a package boundary inside one process. A code-modular monolith is easier to *decompose* than a code-tangled one, but a code-modular monolith is not itself architecturally modular.
+
+See [[architectural-modularity]] for the Chapter 3 five-driver rubric and [[modular-monolith]] for the architecture style that maximises code modularity while staying at architectural-modularity=1.
+
 ## Related pages
 
 - [[cohesion]]
@@ -92,3 +103,4 @@ See [[simplicity-sre]] for the full Chapter 9 treatment and [[coupling]] for New
 - [[minimal-apis]]
 - [[protocol-buffers]]
 - [[backward-forward-compatibility]]
+- [[architectural-modularity]]

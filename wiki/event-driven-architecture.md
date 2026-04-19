@@ -145,7 +145,7 @@ Two differences in scope worth noting:
 1. Newman treats orchestration/choreography as a **saga implementation choice inside a microservices architecture**. Richards and Ford treat mediator/broker as the **top-level topology of an event-driven architecture style** — one of two ways the whole system is organised.
 2. Richards and Ford's **broker topology uses pub/sub events** (past-tense facts). Their **mediator topology uses point-to-point commands** (imperative instructions). Newman's saga chapter does not make this event-vs-command split as load-bearing, but the mechanics line up: choreographed sagas communicate via events on a broker, orchestrated sagas communicate via commands to named participants.
 
-See [[saga]] for Newman's framing; this page and its sub-topology pages are the Richards-and-Ford architectural-style framing.
+See [[saga]] for Newman's framing; this page and its sub-topology pages are the Richards-and-Ford architectural-style framing. *The Hard Parts* Chapter 11 names the **workflow-implementation grain** of the same axis: [[workflow-orchestration]] and [[workflow-choreography]] are the single-workflow analogues of mediator/broker topology. See [[distributed-workflow-patterns]] for the side-by-side rubric at that grain and [[semantic-coupling]] for the domain-coupling concept Chapter 11 adds.
 
 ## In data architecture
 
@@ -195,3 +195,7 @@ Richards and Ford sit **above** all of these, using the same mechanics to descri
 - [[microkernel-architecture]]
 - [[fallacies-of-distributed-computing]]
 - [[fundamentals-of-software-architecture]]
+- [[workflow-orchestration]]
+- [[workflow-choreography]]
+- [[distributed-workflow-patterns]]
+- [[semantic-coupling]]

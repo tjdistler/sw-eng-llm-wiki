@@ -2,9 +2,9 @@
 
 **Summary**: Splitting a monolithic database breaks the assumption — held by analytics tools and stakeholders — that all data is queryable from one schema with SQL. Newman's pattern: keep presenting a single database for analytics, and have microservices push data into it. The same idea Chapter 4 generalised as [[database-as-a-service-interface]].
 
-**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md`, `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`
+**Sources**: `raw/monolith-to-microservices/chapter-05-growing-pains.md`, `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/software-architecture-the-hard-parts/chapter-10-distributed-data-access.md`, `raw/software-architecture-the-hard-parts/chapter-14-managing-analytical-data.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-19
 
 ---
 
@@ -38,6 +38,23 @@ This pattern is the Chapter 5 retelling of [[database-as-a-service-interface]] (
 
 The full treatment is in Chapter 5 of *Building Microservices* (Newman, 2015) — confusingly the same chapter number as Chapter 5 of this book.
 
+## Relationship to *Hard Parts* Ch 10
+
+*Software Architecture: The Hard Parts* Ch 10 ([[distributed-data-access]]) catalogues the patterns available for reading data you don't own. Cross-service analytics is a **reporting/aggregation** use case, and Ch 10 singles it out as one of the few places where [[column-schema-replication-pattern]] is a good fit — exactly because analytics tolerates some staleness and needs to join across many sources (source: raw/software-architecture-the-hard-parts/chapter-10-distributed-data-access.md). The Newman "dedicated analytics DB fed by services" shape is a column-schema-replication instance at the system level: replicas land in the analytics store, not in each operational service.
+
+## Hard Parts Ch 14 — data mesh as the scaled-up answer
+
+*Software Architecture: The Hard Parts* Ch 14 frames cross-service analytics as the core problem modern distributed architectures have to solve: analytical and operational data have "widely different purposes" — much of the book's earlier chapters dealt with the operational side, but analytical data is a cross-cutting concern every decomposed architecture still has to handle (source: raw/software-architecture-the-hard-parts/chapter-14-managing-analytical-data.md).
+
+Ch 14's catalogue of prior answers and why they fall short in microservices:
+
+- **[[data-warehousing|Data warehouse]]** — central ETL from many operational DBs into a star-schema warehouse. Breaks on schema change; separates domain expertise from analytical expertise; ingest bottleneck.
+- **[[data-lake|Data lake]]** — central dump of raw data; schema-on-read. Loses domain context; discovery and governance become swamp problems.
+
+Both previous approaches partition **technically** (ingest / transform / load / serve) and thereby break the **domain** partitioning that microservices depend on. Newman's Ch 5 cross-service-analytics pattern keeps one analytics DB fed by services; Ch 14's answer scales the idea up: each domain publishes analytical data as its own [[data-product-quantum]] inside a [[data-mesh]], eliminating the central pipe entirely.
+
+In the evolution: Newman's dedicated analytics DB → data lake → data mesh. Each step moves the analytical interface *closer* to the domain until — in the mesh — the domain team owns both operational service and analytical DPQ side by side.
+
 ## Related pages
 
 - [[database-as-a-service-interface]]
@@ -47,3 +64,9 @@ The full treatment is in Chapter 5 of *Building Microservices* (Newman, 2015) �
 - [[oltp-vs-olap]]
 - [[data-warehousing]]
 - [[derived-data]]
+- [[distributed-data-access]]
+- [[column-schema-replication-pattern]]
+- [[data-mesh]]
+- [[data-product-quantum]]
+- [[data-lake]]
+- [[software-architecture-the-hard-parts]]

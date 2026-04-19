@@ -2,9 +2,9 @@
 
 **Summary**: NoSQL is an umbrella term for non-relational databases that emerged in the 2010s, driven by scalability needs and developer frustration with relational schemas — not a single technology but a set of trade-offs that complement, rather than replace, the relational model.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-02-data-models-and-query-languages.md`, `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-02-data-models-and-query-languages.md`, `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`, `raw/software-architecture-the-hard-parts/chapter-06-pulling-apart-operational-data.md`
 
-**Last updated**: 2026-04-18
+**Last updated**: 2026-04-19
 
 ---
 
@@ -63,6 +63,41 @@ The typical operational advice for all six: many lack full ACID and rich query f
 
 The relational-store-as-default instinct still dies hard. Reis and Housley: "we often see that people start with a relational database under the impression it's a universal appliance and shoehorn in a ton of use cases and workloads. As data and query requirements morph, the relational database collapses under its weight. At that point, you'll want to use a database that's appropriate for the specific workload under pressure" (source: raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md).
 
+## Aggregate orientation (Hard Parts)
+
+Chapter 6 of *Software Architecture: The Hard Parts* names a cross-cutting property of most NoSQL families: **aggregate orientation**. An aggregate (Evans's DDD term) is a cluster of related data stored, queried, and transferred as a unit. Key-value, document, and column-family databases are all aggregate-oriented (source: raw/software-architecture-the-hard-parts/chapter-06-pulling-apart-operational-data.md):
+
+Benefits:
+
+- Easy distribution across a cluster (the whole aggregate moves together).
+- Improved read and write performance (fewer joins).
+- Reduced impedance mismatch with the application's object model.
+
+Shortcomings:
+
+- Arriving at the right aggregate boundaries is hard.
+- Changing aggregate boundaries later is hard (data must be rewritten).
+- Cross-aggregate analysis is hard (no cheap cross-aggregate joins).
+
+The aggregate-orientation lens is why the Sysops Squad Survey domain moves to a document store in the book's worked example — and why the embedded-questions vs referenced-questions trade-off matters. See [[document-model]] for the full treatment.
+
+## Hard Parts' eight families
+
+Chapter 6 expands Reis & Housley's six NoSQL families to eight **database families** (the book doesn't restrict itself to NoSQL) when discussing [[database-type-selection]]:
+
+| Family | Family page |
+|---|---|
+| Relational | [[relational-model]] |
+| Key-value | [[key-value-store]] |
+| Document | [[document-model]] |
+| Column family / wide-column | [[wide-column-database]] |
+| Graph | [[graph-data-models]] |
+| NewSQL | [[newsql-database]] |
+| Cloud-native | [[cloud-native-database]] |
+| Time-series | [[time-series-database]] |
+
+Each family gets a **star-rating matrix** across eight characteristics — learning curve, data modelling, scalability, availability/partition tolerance, consistency, community, read/write priority. See [[database-type-selection]] for the summary matrix.
+
 ## Related pages
 
 - [[data-models]]
@@ -75,3 +110,7 @@ The relational-store-as-default instinct still dies hard. Reis and Housley: "we 
 - [[search-database]]
 - [[time-series-database]]
 - [[source-systems]]
+- [[newsql-database]]
+- [[cloud-native-database]]
+- [[database-type-selection]]
+- [[polyglot-persistence]]

@@ -2,9 +2,9 @@
 
 **Summary**: Graph databases model data as vertices and edges, making highly interconnected data natural to represent and traverse — where the relational model becomes awkward and the document model breaks down entirely.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-02-data-models-and-query-languages.md`, `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-02-data-models-and-query-languages.md`, `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`, `raw/software-architecture-the-hard-parts/chapter-06-pulling-apart-operational-data.md`
 
-**Last updated**: 2026-04-18
+**Last updated**: 2026-04-19
 
 ---
 
@@ -116,6 +116,26 @@ From the data engineer's perspective, a graph database introduces a modelling ga
 
 Reis and Housley anticipate rapid growth in graph-database adoption outside tech companies, so the data engineer's job increasingly includes building extraction and modelling paths for graph sources (source: raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md).
 
+## Hard Parts ratings and positioning
+
+Chapter 6 of *Software Architecture: The Hard Parts* rates graph databases on its eight-characteristic matrix (source: raw/software-architecture-the-hard-parts/chapter-06-pulling-apart-operational-data.md):
+
+- **Learning curve — steep.** Nodes, relations, relation types, and properties are a genuinely different model. Developers used to tables take time to internalise the distinction between "a node with a property" and "a node connected to another node via an edge."
+- **Data modelling — hard.** The common early mistake is overloading relations with properties; as modellers mature, more properties become nodes with their own relation types, improving traversal performance. Edge direction matters and is easy to get wrong.
+- **Scalability — moderate.** Read scaling via replicated nodes is workable, but **graphs are hard to shard** — a graph's connections resist clean partitioning. Write throughput is constrained by the specific engine chosen. Traversal is extremely fast because indexing and storage are persisted, not computed at query time.
+- **Availability / partition tolerance — varies.** Distributed graph databases exist (leader promotion on leader failure) but getting high availability often means picking a specific engine.
+- **Consistency — strong.** Many graph databases support ACID transactions; Neo4j is a common reference.
+- **Community — active.** Built-in algorithm libraries (Dijkstra, node similarity, centrality) reduce the need to implement from scratch. Gremlin is a cross-engine query framework; Cypher is Neo4j's declarative language.
+- **Read/write priority — read-biased.** Storage is optimised for relationship traversal vs computing joins at query time. Graph DBs are at their best on read-heavy traversal workloads.
+
+### Changing relationship types is expensive
+
+A deliberate Hard Parts warning: "changing relationship types is an expensive operation, since each relationship type has to be re-created. When this happens, both nodes connected by the edge have to be visited, the new edge created, and the old edge removed" (source: raw/software-architecture-the-hard-parts/chapter-06-pulling-apart-operational-data.md). Edge types must be chosen with some care up front — they are not cheap to retrofit.
+
+### When Hard Parts picks this family
+
+Domains where the *relationship structure is the product* — social networks, knowledge graphs, fraud detection, recommendation engines, identity management, impact analysis, routing. The [[database-type-selection]] decision rule: if the questions you want to ask are "paths" or "neighbourhoods," this is the family. If the questions are "sums over rows," relational is cheaper.
+
 ## Related pages
 
 - [[data-models]]
@@ -126,3 +146,5 @@ Reis and Housley anticipate rapid growth in graph-database adoption outside tech
 - [[batch-processing]]
 - [[source-systems]]
 - [[nosql]]
+- [[database-type-selection]]
+- [[polyglot-persistence]]

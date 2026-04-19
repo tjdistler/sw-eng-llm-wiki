@@ -2,9 +2,9 @@
 
 **Summary**: Transactions that span multiple nodes or heterogeneous systems, using protocols like [[two-phase-commit]] to ensure atomic commit -- powerful for maintaining cross-system consistency, but carrying significant operational and performance costs. In microservice architectures, both Kleppmann and Newman recommend avoiding them entirely; Newman's preferred alternative is the [[saga]].
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-09-consistency-and-consensus.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/building-event-driven-microservices/chapter-08-building-workflows-with-microservices.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-09-consistency-and-consensus.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/building-event-driven-microservices/chapter-08-building-workflows-with-microservices.md`, `raw/software-architecture-the-hard-parts/chapter-09-data-ownership-and-distributed-transactions.md`
 
-**Last updated**: 2026-04-17
+**Last updated**: 2026-04-19
 
 ---
 
@@ -87,6 +87,37 @@ When distributed transactions *are* required in an EDM context, Bellemare's name
 
 A third option Bellemare names — worth distinguishing from distributed transactions proper — is the **[[compensation-workflow]]**. Rather than reversing a failed transaction, complete what can be completed and remediate the rest with a business-level policy (replenish stock and offer a discount code; rebook the overbooked passenger; credit the ticket). This is the pragmatic choice when strict rollback is technically possible but business-inappropriate (source: chapter-08-building-workflows-with-microservices.md).
 
+## Hard Parts Ch 9: ACID is lost across services; BASE is what remains
+
+*Software Architecture: The Hard Parts* Chapter 9 gives the clearest single framing of what decomposition costs: once a business request spans multiple services, **none** of the four ACID properties survive at the business-request level (source: raw/software-architecture-the-hard-parts/chapter-09-data-ownership-and-distributed-transactions.md).
+
+- **Atomicity** is bound to the service, not the request. Each service commits its local transaction; a partial failure leaves some committed and some not.
+- **Consistency** breaks because FK→PK integrity can't be enforced across services and partial failures leave cross-service invariants violated.
+- **Isolation** breaks because a committed local transaction is visible to the outside world immediately — before the overall business request has completed.
+- **Durability** holds only per-service; the overall request has no single durable commit point.
+
+What remains the book calls [[base-properties|BASE]] — Basically Available, Soft state, Eventually consistent. It is deliberately vague; the point of naming it is to give architects vocabulary for the problem they now must solve.
+
+The book's three resolution patterns for BASE workflows (full treatment at [[eventual-consistency]]):
+
+1. **[[background-synchronization-pattern]]** — external process reconciles data sources after the fact. Breaks bounded contexts; suitable only for closed heterogeneous systems.
+2. **[[orchestrated-request-based-pattern]]** — orchestrator drives the transaction to completion in-request. Strong consistency; poor responsiveness; complex error handling via [[compensating-update|compensating updates]].
+3. **[[event-based-consistency-pattern]]** — primary commits and publishes; subscribers align asynchronously. The recommended default for modern distributed architectures.
+
+Chapter 9 also rules out [[two-phase-commit|two-phase commit / XA]] as a practical option at microservice scale (same operational reasons Kleppmann and Newman give above) and points forward to Chapter 12's [[saga|saga patterns]] as the deeper treatment of BASE coordination.
+
+## Hard Parts Ch 12: the eight-pattern saga catalogue is the alternative to distributed transactions
+
+Chapter 12 is the book's definitive answer to "so what replaces distributed transactions?": **the eight-pattern [[saga|saga catalogue]]** spanning the [[dynamic-coupling|three-axis]] decision space (source: raw/software-architecture-the-hard-parts/chapter-12-transactional-sagas.md). The catalogue explicitly includes [[epic-saga|Epic Saga(sao)]] — the closest saga shape to a "true" distributed transaction, implemented via orchestrated synchronous calls with compensating updates — but the book's recurring message is that Epic Saga is *the one architects reach for reflexively and almost always regret*.
+
+The honest replacements for distributed transactions look like:
+
+- **[[fairy-tale-saga|Fairy Tale Saga(seo)]]** — orchestrated, sync, eventually-consistent. The common real-world choice when a mediator is useful and atomicity isn't a business requirement.
+- **[[parallel-saga|Parallel Saga(aeo)]]** — orchestrated, async, eventually-consistent. Strong default for complex workflows that need scale.
+- **[[anthology-saga|Anthology Saga(aec)]]** — choreographed, async, eventually-consistent. The natural pattern for [[event-driven-architecture|event-driven architectures]].
+
+The full catalogue and ratings tables live on [[saga]]. Chapter 12's closing message is that most "I need a distributed transaction" requirements are actually "I need the user to see consistent-looking state" and resolve cleanly to one of the eventual-consistency patterns rather than requiring atomic coordination across services.
+
 ## Related pages
 
 - [[two-phase-commit]]
@@ -106,3 +137,14 @@ A third option Bellemare names — worth distinguishing from distributed transac
 - [[database-decomposition]]
 - [[workflows-in-edm]]
 - [[compensation-workflow]]
+- [[base-properties]]
+- [[compensating-update]]
+- [[background-synchronization-pattern]]
+- [[orchestrated-request-based-pattern]]
+- [[event-based-consistency-pattern]]
+- [[data-ownership]]
+- [[software-architecture-the-hard-parts]]
+- [[epic-saga]]
+- [[fairy-tale-saga]]
+- [[parallel-saga]]
+- [[anthology-saga]]

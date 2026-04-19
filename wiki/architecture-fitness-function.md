@@ -2,9 +2,9 @@
 
 **Summary**: An objective, automatable integrity assessment of one or more [[architecture-characteristics]]. Borrowed from evolutionary-computing vocabulary by Neal Ford's *Building Evolutionary Architectures* and treated in depth in Chapter 6 of *Fundamentals of Software Architecture*. Fitness functions turn architectural invariants into executable checks that run on a cadence fast enough to catch regressions before they compound.
 
-**Sources**: `raw/fundamentals-of-software-architecture/chapter-01-introduction.md`, `raw/fundamentals-of-software-architecture/chapter-06-measuring-and-governing-architecture-characteristics.md`
+**Sources**: `raw/fundamentals-of-software-architecture/chapter-01-introduction.md`, `raw/fundamentals-of-software-architecture/chapter-06-measuring-and-governing-architecture-characteristics.md`, `raw/software-architecture-the-hard-parts/chapter-01-what-happens-when-there-are-no-best-practices.md`, `raw/software-architecture-the-hard-parts/chapter-05-component-based-decomposition-patterns.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-19
 ---
 
 ## Where the term comes from
@@ -174,6 +174,32 @@ A fitness function that developers can't interpret is a fitness function that wi
 
 Without fitness functions, architectural characteristics drift silently. Developers making local changes cannot tell which choices affect which characteristics; the characteristic degrades; the system still seems to work until the degradation crosses a threshold that manifests as an incident or a customer complaint. This is **[[architecture-vitality|structural decay]]**. Fitness functions are how [[evolutionary-architecture]] prevents decay — they make the invariants executable.
 
+## Decomposition-pattern fitness functions (Hard Parts Ch 5)
+
+*The Hard Parts* Chapter 5 attaches **at least one fitness function to every [[component-based-decomposition|decomposition pattern]]**, making the whole six-pattern sequence amenable to automated governance (source: raw/software-architecture-the-hard-parts/chapter-05-component-based-decomposition-patterns.md). These are atomic, triggered, static fitness functions that run on deployment via CI/CD and alert the architect on drift:
+
+| Pattern | Fitness function |
+|---|---|
+| [[identify-and-size-components-pattern]] | Maintain component inventory; no component exceeds *X*% of codebase; no component exceeds *N* standard deviations from the mean size |
+| [[gather-common-domain-components-pattern]] | Find common leaf-node namespace names; find common source-file names across components (with exclusion lists) |
+| [[flatten-components-pattern]] | No source code shall reside in a root namespace |
+| [[determine-component-dependencies-pattern]] | No component shall have more than *N* total dependencies; component X shall not depend on component Y (ArchUnit rule per restriction) |
+| [[create-component-domains-pattern]] | All namespaces under the root shall be restricted to the approved list of domains (ArchUnit) |
+| [[create-domain-services-pattern]] | All components in a given domain service shall share the same namespace prefix (ArchUnit) |
+
+The editorial point reinforced by this list: fitness functions are how a long-running migration avoids quietly regressing. Each pattern is fragile on its own — orphaned classes creep in, coupling grows back, new domains sprout — and each pattern's fitness function catches the regression on the next deployment instead of the next architect review.
+
+## Re-iterated in *The Hard Parts* (Chapter 1)
+
+Ford, Richards, Sadalage, and Dehghani's *Software Architecture: The Hard Parts* (2021) frames fitness functions alongside ADRs as the book's two load-bearing governance primitives. Chapter 1 restates the Building-Evolutionary-Architectures definition verbatim — *"any mechanism that performs an objective integrity assessment of some architecture characteristic or combination of architecture characteristics"* — and recaps the atomic/holistic distinction and the JDepend cycle-test / ArchUnit / NetArchTest examples (source: raw/software-architecture-the-hard-parts/chapter-01-what-happens-when-there-are-no-best-practices.md).
+
+Two framings Chapter 1 sharpens:
+
+1. **Governance follows documentation.** *"Documenting a decision is important for an architect, but governing the proper use of the decision is a separate topic."* Every [[architecture-decision-record|ADR]] in the book has an implied fitness function asking *"how will we know this decision is being followed?"* — automated when possible, manual when genuinely necessary.
+2. **The Equifax cautionary tale.** Chapter 1 uses the 2017 Equifax breach — where a published Struts CVE and a DHS notification weren't enough to produce universal remediation, and the unpatched instances were still in production months later — as the canonical example of the **zero-day governance problem** fitness functions solve: if every project has a "slot" in its deployment pipeline where the security team can drop in a test for the vulnerable framework version, a CVE plus one push catches every project, and failing builds notify teams automatically. This reframes fitness functions from "architect's local discipline" to **enterprise-wide governance mechanism** (source: raw/software-architecture-the-hard-parts/chapter-01-what-happens-when-there-are-no-best-practices.md).
+
+The Checklist Manifesto framing carries over from *Fundamentals* Chapter 6 — fitness functions are the "important but not urgent" checklist developers can't skip, and the ivory-tower warning still applies ("architects should not form a cabal and retreat to an ivory tower to build an impossibly complex, interlocking set of fitness functions that merely frustrate developers and teams").
+
 ## Relation to other wiki concepts
 
 - [[architecture-governance]] — the umbrella; fitness functions are the primary mechanism.
@@ -205,4 +231,6 @@ Without fitness functions, architectural characteristics drift silently. Develop
 - [[desired-state-management]]
 - [[fault-tolerance]]
 - [[laws-of-software-architecture]]
+- [[component-based-decomposition]]
 - [[fundamentals-of-software-architecture]]
+- [[software-architecture-the-hard-parts]]

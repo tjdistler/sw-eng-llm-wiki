@@ -2,9 +2,9 @@
 
 **Summary**: Scalability describes a system's ability to cope with increased load — in data volume, traffic volume, or complexity — and the strategies available for handling that growth.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-01-reliable-scalable-and-maintainable-applications.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-01-reliable-scalable-and-maintainable-applications.md`, `raw/software-architecture-the-hard-parts/chapter-03-architectural-modularity.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-19
 
 ---
 
@@ -58,6 +58,37 @@ See [[scaling-approaches]] for detail. In brief:
 
 Architecture must match the application's specific load parameters. There is no generic "magic scaling sauce" — a system handling 100,000 × 1 kB requests/sec looks entirely different from one handling 3 × 2 GB requests/min, even at the same total throughput. (source: chapter-01)
 
+## Scalability vs elasticity (Hard Parts framing)
+
+Chapter 3 of *Software Architecture: The Hard Parts* distinguishes scalability from [[elasticity]] along a time-scale axis (source: raw/software-architecture-the-hard-parts/chapter-03-architectural-modularity.md):
+
+- **Scalability** — responsiveness as user load *gradually* increases over time. Driven by normal company growth.
+- **Elasticity** — responsiveness during *instantaneous* spikes. The concert-ticket-on-sale example: 20 to 3,000 concurrent users in seconds.
+
+Both are functions of the number of concurrent requests, but they require different architectural support. Ford and Richards argue:
+
+> Elasticity is more a function of **granularity** (the size of a deployment unit), whereas scalability is more a function of **modularity** (the breaking apart of applications into separate deployment units).
+
+A large monolith with ten instances behind a load balancer has some scalability but no elasticity — each instance's mean time to startup (MTTS) is too long to respond to a burst. Fine-grained [[microservices]] have both. See [[architectural-modularity]] for the full five-driver treatment and [[elasticity]] for the MTTS mechanism.
+
+The star-rating table the chapter uses (Figure 3-9):
+
+| Architecture | Scalability | Elasticity |
+|---|---|---|
+| [[layered-architecture]] (monolithic) | low | low |
+| [[service-based-architecture]] | moderate | low–moderate |
+| [[microservices]] | high | high |
+
+Service-based scales at the **domain** level (each domain service can scale independently), but its coarse grain keeps MTTS high enough that elasticity lags. Microservices achieve **function-level** scalability and elasticity because each service is fine-grained and quick to start.
+
+### The chatter caveat
+
+As with all five modularity drivers in Chapter 3, scalability benefits collapse under synchronous service-to-service chatter (source: raw/software-architecture-the-hard-parts/chapter-03-architectural-modularity.md):
+
+> The more services communicate with one other to complete a single business transaction, the greater the negative impact on scalability and elasticity. For this reason, it is important to keep synchronous communication among services to a minimum when requiring high levels of scalability and elasticity.
+
+A fan-out of ten synchronous calls per request amplifies load ten-fold and gates end-to-end latency on the slowest peer. The prescriptions mirror those on [[architectural-modularity]]: prefer asynchronous integration; if synchronous chatter is unavoidable, fix granularity (bundle chatty services).
+
 ## Related pages
 
 - [[load-parameters]]
@@ -68,3 +99,7 @@ Architecture must match the application's specific load parameters. There is no 
 - [[reliability]]
 - [[maintainability]]
 - [[replicated-load-balanced-service]]
+- [[elasticity]]
+- [[architectural-modularity]]
+- [[microservices]]
+- [[service-based-architecture]]

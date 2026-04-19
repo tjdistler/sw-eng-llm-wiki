@@ -101,6 +101,8 @@ Newman's mitigation for coordinator-centric anaemia — **have different orchest
 
 The terminology reconciliation: Richards and Ford's **mediator topology** is Newman's **orchestration** applied at the top level of the architecture. See [[saga]] for the saga-level framing and [[event-driven-architecture]] for the reconciliation table.
 
+*The Hard Parts* Chapter 11 ([[distributed-workflow-patterns]]) names the same shape at the **single-workflow grain** as [[workflow-orchestration]]. The hierarchy: mediator topology describes a whole-architecture-style choice; workflow orchestration describes one workflow's coordination choice inside any architecture; orchestrated saga describes the transactional-consistency flavour of that workflow choice. All three match the structural properties catalogued on this page — the differences are scope and what's being coordinated.
+
 ## When to use the mediator topology
 
 - **Transactional integrity** across multiple processors matters. A flow that must atomically succeed or fail benefits from the mediator's ownership of state and error handling.
@@ -130,3 +132,6 @@ Richards and Ford explicitly recommend **mixing the two topologies** when comple
 - [[microservices]]
 - [[service-based-architecture]]
 - [[fundamentals-of-software-architecture]]
+- [[workflow-orchestration]]
+- [[distributed-workflow-patterns]]
+- [[semantic-coupling]]

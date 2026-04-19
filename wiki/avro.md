@@ -2,9 +2,9 @@
 
 **Summary**: Apache Avro is a binary encoding format distinguished by having no field tags — it encodes only values, relying on schema resolution to match writer's schema against reader's schema by field name. This makes it the most compact of the major binary formats and uniquely suited to dynamically generated schemas.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`, `raw/software-architecture-the-hard-parts/chapter-13-contracts.md`
 
-**Last updated**: 2026-04-15
+**Last updated**: 2026-04-19
 
 ---
 
@@ -81,6 +81,10 @@ Thrift and Protocol Buffers are designed around code generation — the schema p
 
 Avro supports optional code generation for statically typed languages, but can also be used without it. An Avro object container file is self-describing — it includes the writer's schema in the header. Tools like Apache Pig can open Avro files, inspect fields, and write derived output in Avro format without any schema pre-definition.
 
+## On the contract-strictness spectrum
+
+Avro is a **strict** contract format on the [[contracts|Hard Parts strict-to-loose spectrum]] — the wire bytes are meaningless without the schema, and the writer's/reader's schema pair is the enforced contract (source: raw/software-architecture-the-hard-parts/chapter-13-contracts.md). What distinguishes Avro from Protobuf on this axis is its evolution model: reader and writer schemas don't need to be identical, so an Avro-based integration feels slightly looser in practice — new fields on the producer don't force a consumer upgrade, and removed fields don't break a reader that still declares them. This makes Avro the more naturally evolvable of the strict formats. See [[strict-contract]] for the general trade-offs.
+
 ## Related pages
 
 - [[encoding-formats]]
@@ -88,3 +92,6 @@ Avro supports optional code generation for statically typed languages, but can a
 - [[backward-forward-compatibility]]
 - [[data-outlives-code]]
 - [[rpc]]
+- [[contracts]]
+- [[strict-contract]]
+- [[software-architecture-the-hard-parts]]

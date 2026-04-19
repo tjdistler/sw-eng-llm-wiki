@@ -2,9 +2,9 @@
 
 **Summary**: The traditional separation — architect defines characteristics, patterns, and components; developer produces class diagrams, UI, and code — is what Richards and Ford say makes architecture rarely work. The required fix is a bidirectional, collaborative relationship in which architecture and design are treated as one continuous activity, not sequential handoffs.
 
-**Sources**: `raw/fundamentals-of-software-architecture/chapter-02-architectural-thinking.md`
+**Sources**: `raw/fundamentals-of-software-architecture/chapter-02-architectural-thinking.md`, `raw/software-architecture-the-hard-parts/chapter-01-what-happens-when-there-are-no-best-practices.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-19
 
 ---
 
@@ -49,6 +49,14 @@ The chapter's answer: **it doesn't** (source: chapter-02-architectural-thinking.
 
 This reframes the question. Rather than drawing a line between architecture and design, the architect's job is to keep them tightly coupled — structurally different activities that feed each other continuously.
 
+## The *Hard Parts* framing: "hard" as solidity
+
+Ford, Richards, Sadalage, and Dehghani's *Software Architecture: The Hard Parts* (2021) sharpens the distinction. The book's title plays on two senses of *hard* — difficult, but also **solid**, as in the "hard" of hardware versus the "soft" of software. *Hard* things form the foundation and should change less; *soft* things sit on top and change more easily. Architecture is the hard part; design is the soft part (source: raw/software-architecture-the-hard-parts/chapter-01-what-happens-when-there-are-no-best-practices.md).
+
+A favorite tongue-in-cheek definition the book quotes: *"software architecture is the stuff that's hard to change later."* The foundational-versus-malleable split doesn't dissolve the synchronization requirement above, but it explains why the architect focuses on one layer preferentially: decisions made in the hard layer echo much longer, so the [[laws-of-software-architecture|Second Law]] (*why beats how*) carries more weight there. The [[architecture-decision-record|ADR]] machinery exists because hard-layer decisions will outlive the team that made them.
+
+Chapter 1 also uses this framing to justify the book's pedagogical stance: *Hard Parts* deliberately stays on the architecture (hard) side of the spectrum, treating implementation details as soft-layer concerns the reader can fill in from their own stack. *"Why is more important than how"* — architects must first understand why one choice has better trade-offs than another before worrying about implementation mechanics.
+
 ## Relationship to the rest of the wiki
 
 - [[evolutionary-architecture]] — the book-wide answer to why architecture cannot be "finished" and thrown over a wall; architecture-design synchronisation is an evolutionary-architecture precondition.
@@ -66,3 +74,4 @@ This reframes the question. Rather than drawing a line between architecture and 
 - [[architect-expectations]]
 - [[software-architecture-definition]]
 - [[fundamentals-of-software-architecture]]
+- [[software-architecture-the-hard-parts]]

@@ -432,3 +432,295 @@ Index/summary:
 - Updated wiki/index.md (new "Future of data engineering (FoDE Ch 11)" section)
 
 FoDE ingestion complete.
+
+## 2026-04-19 — Software Architecture: The Hard Parts — Ch 1 ingested
+
+Chapter 1 ("What Happens When There Are No 'Best Practices'?") of *Software Architecture: The Hard Parts* (Ford, Richards, Sadalage, Dehghani, 2021).
+
+Created:
+- Created wiki/software-architecture-the-hard-parts.md (book summary page)
+- Created wiki/operational-vs-analytical-data.md (OLTP vs analytical split)
+- Created wiki/least-worst-trade-offs.md (don't find the best; find the least worst)
+
+Augmented:
+- Updated wiki/trade-off-analysis.md (Hard Parts least-worst reframing + identify/analyze/document method)
+- Updated wiki/laws-of-software-architecture.md (Hard Parts restatement + snowflake corollary)
+- Updated wiki/architecture-decision-record.md (Hard Parts ADR usage; Consequences as trade-off artefact)
+- Updated wiki/architecture-fitness-function.md (Hard Parts governance framing; Equifax cautionary tale)
+- Updated wiki/architecture-versus-design.md (Hard Parts "hard as solidity" framing)
+- Updated wiki/coupling.md (Page-Jones static-vs-dynamic split as organizing axis of the book)
+- Updated wiki/saga.md (Oxford etymology; Sysops Squad literary framing)
+- Updated wiki/distributed-monolith.md (Sysops Squad pathology as worked example)
+- Updated wiki/data-outlives-code.md (Tim Berners-Lee framing + architecture-in-service-of-data)
+
+## 2026-04-19 — Software Architecture: The Hard Parts — Ch 2 ingested
+
+Chapter 2 ("Discerning Coupling in Software Architecture") of *Software Architecture: The Hard Parts*.
+
+Created:
+- Created wiki/static-coupling.md (how quanta are wired together; bootstrap-time dependencies; topology-to-quanta enumeration)
+- Created wiki/dynamic-coupling.md (runtime communication coupling; three-dimensional decision space: communication × consistency × coordination)
+- Created wiki/choreography.md (coordination style with no central coordinator; hub to broker-topology, event-driven, saga coverage)
+
+Augmented:
+- Updated wiki/architectural-quantum.md (Hard Parts refined definition: high static coupling + synchronous dynamic coupling; topology-to-quanta table)
+- Updated wiki/connascence.md (static/dynamic lifted to architectural scale; Rule of Locality extended to quantum boundaries)
+- Updated wiki/coupling.md (Ch 2 working definition; three-dimensional dynamic-coupling lens)
+- Updated wiki/software-architecture-the-hard-parts.md (Ch 2 status; added cross-links)
+
+## 2026-04-19 — Software Architecture: The Hard Parts — Ch 3 ingested
+
+Chapter 3 ("Architectural Modularity") of *Software Architecture: The Hard Parts*.
+
+Created:
+- Created wiki/architectural-modularity.md (hub page: degree of decomposition into deployment units; five-driver rubric; chatter caveat)
+- Created wiki/agility.md (compound characteristic = maintainability + testability + deployability)
+- Created wiki/testability.md (ease + completeness of testing; chatter failure mode)
+- Created wiki/deployability.md (ease + frequency + risk of deployment; big-ball-of-distributed-mud warning)
+
+Augmented:
+- Updated wiki/scalability.md (Hard Parts scalability-vs-elasticity split; modularity-vs-granularity)
+- Updated wiki/elasticity.md (MTTS framing; granularity-driven; concert-ticket example)
+- Updated wiki/maintainability.md (scope-of-change progression; von Zitzewitz incoming-coupling metric)
+- Updated wiki/fault-tolerance.md (architectural-modularity-as-bulkhead; async-to-preserve isolation)
+- Updated wiki/modularity.md (code-modularity vs architectural-modularity distinction)
+- Updated wiki/speed-to-market.md (Ford/Richards business-driver hierarchy; agility as enabler)
+- Updated wiki/software-architecture-the-hard-parts.md (Ch 3 status; added new-page cross-links)
+
+## 2026-04-19 — Software Architecture: The Hard Parts — Ch 4 ingested
+
+Chapter 4 ("Architectural Decomposition") of *Software Architecture: The Hard Parts*.
+
+Created:
+- Created wiki/big-ball-of-mud.md (Foote 1999 antipattern; decomposability gate; coupling-metrics signature)
+- Created wiki/tactical-forking.md (De La Torre; clone-then-delete; coarse-grained services; trade-offs)
+- Created wiki/component-based-decomposition.md (preferred approach rubric; Ch 4 decision tree; service-based-architecture stepping-stone)
+
+Augmented:
+- Updated wiki/coupling-metrics.md (metrics as decomposability-readiness check; JDepend tool-chain)
+- Updated wiki/migration-pattern-selection.md (Hard Parts Ch 4 decision tree orthogonal to Newman patterns)
+- Updated wiki/service-based-architecture.md (Hard Parts framing as migration stepping-stone)
+- Updated wiki/software-architecture-the-hard-parts.md (Ch 4 status; added cross-links)
+
+## 2026-04-19 — Software Architecture: The Hard Parts — Ch 5 ingested
+
+Chapter 5 ("Component-Based Decomposition Patterns") of *Software Architecture: The Hard Parts*.
+
+Created (six patterns):
+- Created wiki/identify-and-size-components-pattern.md (component inventory; statements metric; standard-deviation rule; fitness functions)
+- Created wiki/gather-common-domain-components-pattern.md (domain vs infrastructure cross-cutting; leaf-name heuristic; shared component vs library)
+- Created wiki/flatten-components-pattern.md (component = leaf-node namespace; orphaned classes; push-down vs pull-up flattening; shared-code metric)
+- Created wiki/determine-component-dependencies-pattern.md (component-level Ca/Ce; golfball/basketball/airliner triage; ArchUnit restrictions)
+- Created wiki/create-component-domains-pattern.md (namespace-prefix domains; one-to-many service-to-components; domain restriction fitness function)
+- Created wiki/create-domain-services-pattern.md (physical extraction into service-based architecture; soft-landing framing; per-service namespace rule)
+
+Augmented:
+- Updated wiki/component-based-decomposition.md (expanded hub: six patterns in order with cross-links)
+- Updated wiki/components.md (leaf-node rule; statements-per-namespace metric from Ch 5)
+- Updated wiki/architecture-fitness-function.md (table of per-pattern decomposition fitness functions)
+- Updated wiki/coupling-metrics.md (component-granularity use in Determine Component Dependencies pattern)
+- Updated wiki/service-based-architecture.md (soft-landing framing from Ch 5)
+- Updated wiki/software-architecture-the-hard-parts.md (Ch 5 status; added pattern cross-links)
+
+## 2026-04-19 — Software Architecture: The Hard Parts — Ch 6 ingested
+
+Chapter 6 ("Pulling Apart Operational Data") of *Software Architecture: The Hard Parts*.
+
+Created:
+- Created wiki/data-decomposition-drivers-and-integrators.md (six disintegrators vs two integrators; trade-off framing)
+- Created wiki/data-domain.md (soccer-ball metaphor; synonyms as stepping-stone; domain vs schema distinction)
+- Created wiki/database-type-selection.md (eight-family, eight-characteristic star-ratings summary)
+- Created wiki/polyglot-persistence.md (Sadalage/Fowler term; endpoint of decomposition; trade-offs)
+- Created wiki/newsql-database.md (scalability of NoSQL + ACID of SQL; CockroachDB, Spanner, TiDB)
+- Created wiki/cloud-native-database.md (Snowflake, Redshift, Cosmos, Datomic; cost shape; lock-in)
+- Created wiki/data-sovereignty.md (nirvana state; one-owner-per-DB; Step 3 outcome)
+
+Augmented:
+- Updated wiki/database-decomposition.md (hub: Hard Parts disintegrators/integrators; full five-step pattern)
+- Updated wiki/relational-model.md (Hard Parts ratings; when not relational)
+- Updated wiki/document-model.md (Hard Parts ratings; Sysops Squad aggregate design trade-off)
+- Updated wiki/key-value-store.md (Hard Parts ratings; reference-data use case)
+- Updated wiki/wide-column-database.md (Hard Parts ratings under column-family framing)
+- Updated wiki/graph-data-models.md (Hard Parts ratings; relationship-type-change cost)
+- Updated wiki/nosql.md (aggregate orientation; eight families; star-rating matrix reference)
+- Updated wiki/time-series-database.md (Hard Parts ratings; not-general-purpose warning)
+- Updated wiki/acid.md (Hard Parts: ACID as data integrator; sagas as the cost of decomposition)
+- Updated wiki/software-architecture-the-hard-parts.md (Ch 6 status; Ch 6 cross-links)
+
+## 2026-04-19 — Software Architecture: The Hard Parts — Ch 7 ingested
+
+Chapter 7 ("Service Granularity") of *Software Architecture: The Hard Parts*.
+
+Created:
+- Created wiki/granularity-disintegrators.md (six forces pulling services apart; service-naming test)
+- Created wiki/granularity-integrators.md (four forces keeping services together; "hold until disintegrators outweigh")
+- Created wiki/code-volatility.md (volatility-based decomposition; Notification Service example)
+
+Augmented:
+- Updated wiki/service-granularity.md (Hard Parts disintegrator/integrator hub; modularity-vs-granularity; architect/sponsor dialogues)
+- Updated wiki/architectural-modularity.md (Ch 7 modularity-vs-granularity clarification)
+- Updated wiki/architectural-quantum.md (granularity as per-quantum sizing decision; integrator-collapse caveat)
+- Updated wiki/microservices.md (Ch 7 disintegrator/integrator extension to Ch 17 three-guideline test)
+- Updated wiki/when-microservices-are-a-bad-idea.md (when integrators outweigh disintegrators; re-consolidation)
+- Updated wiki/software-architecture-the-hard-parts.md (Ch 7 status; Ch 7 cross-links)
+
+## 2026-04-19 — Software Architecture: The Hard Parts — Ch 8 ingested
+
+Chapter 8 ("Reuse Patterns") of *Software Architecture: The Hard Parts*.
+
+Created:
+- Created wiki/reuse-patterns.md (hub: replication / library / service / sidecar; decision matrix; abstraction + slow rate of change)
+- Created wiki/code-replication-pattern.md (copy-source-per-service; when tiny static code makes it OK)
+- Created wiki/shared-library-pattern.md (compile-time coupling; granularity; "versioning is simple" as 9th fallacy)
+- Created wiki/shared-service-pattern.md (runtime coupling; performance/scalability/fault-tolerance tax; API versioning pitfalls)
+- Created wiki/orthogonal-coupling.md (distinct-purposes-that-must-intersect; why sidecars are the clean answer)
+
+Augmented:
+- Updated wiki/sidecar-pattern.md (Ch 8 framing: cleanest cross-cutting reuse; Decorator-at-architecture-scale)
+- Updated wiki/service-mesh.md (Ch 8: mesh as home of orthogonal coupling; governance over polyglot fleets)
+- Updated wiki/gather-common-domain-components-pattern.md (Ch 5 finds candidates → Ch 8 picks shape)
+- Updated wiki/static-coupling.md (reuse-pattern lens: library adds static, service doesn't, sidecar per-pod only)
+- Updated wiki/dynamic-coupling.md (shared service = deliberate dynamic coupling for reuse)
+- Updated wiki/software-architecture-the-hard-parts.md (Ch 8 status; Ch 8 cross-links)
+
+## 2026-04-19 — Software Architecture: The Hard Parts — Ch 9 ingested
+
+Chapter 9 ("Data Ownership and Distributed Transactions") of *Software Architecture: The Hard Parts*.
+
+Created:
+- Created wiki/data-ownership.md (hub: sole / common / joint; writer-owns rule; resolution rubric)
+- Created wiki/joint-ownership-techniques.md (table split / data domain / delegate / service consolidation comparison)
+- Created wiki/table-split-technique.md (split shared table into two; CAP trade-off becomes explicit)
+- Created wiki/delegate-technique.md (pick a delegate by primary-domain vs operational-characteristics priority)
+- Created wiki/base-properties.md (BA + S + E; what remains when ACID is lost across services)
+- Created wiki/compensating-update.md (semantic rollback; prerequisites; "compensation of compensation fails")
+- Created wiki/background-synchronization-pattern.md (external process; breaks bounded contexts)
+- Created wiki/orchestrated-request-based-pattern.md (consistency over responsiveness; compensation complexity)
+- Created wiki/event-based-consistency-pattern.md (pub/sub + DLQ; Ch 9's recommended default)
+
+Augmented:
+- Updated wiki/distributed-transactions.md (Ch 9: ACID property-by-property loss; three eventual-consistency patterns)
+- Updated wiki/two-phase-commit.md (Ch 9 reiteration: 2PC impractical at microservice scale)
+- Updated wiki/acid.md (Ch 9 property-by-property breakage across services; BASE vocabulary)
+- Updated wiki/eventual-consistency.md (Ch 9's three-pattern catalogue; default = event-based)
+- Updated wiki/saga.md (Ch 9 introduces saga vocabulary; compensation-of-compensation failure)
+- Updated wiki/change-data-ownership.md (Hard Parts writer-owns rule vs Newman's behaviour heuristic)
+- Updated wiki/data-domain.md (Ch 9 reuse: data domain as joint-ownership technique)
+- Updated wiki/software-architecture-the-hard-parts.md (Ch 9 status; Ch 9 cross-links)
+
+## 2026-04-19 — Software Architecture: The Hard Parts — Ch 10 ingested
+
+Chapter 10 ("Distributed Data Access") of *Software Architecture: The Hard Parts*.
+
+Created:
+- Created wiki/distributed-data-access.md (hub: four patterns + trade-off matrix + selection rubric)
+- Created wiki/interservice-communication-pattern.md (remote call per read; three latencies; tight coupling)
+- Created wiki/column-schema-replication-pattern.md (replicate columns; async sync; governance softness)
+- Created wiki/replicated-caching-pattern.md (Hazelcast/Ignite/Coherence; ~500 MB ceiling; static data only)
+- Created wiki/data-domain-pattern.md (shared schema for read access; Ch 9 data-domain technique on reads)
+
+Augmented:
+- Updated wiki/data-ownership.md (Ch 10 cross-link for read-access side)
+- Updated wiki/data-domain.md (Ch 10: data domain reused as read-access pattern)
+- Updated wiki/cache-memory-storage.md (three caching models from Ch 10; replicated-cache contrast)
+- Updated wiki/synchronize-data-in-application.md (contrast: migration-time vs steady-state patterns)
+- Updated wiki/cross-service-analytics.md (Ch 10 lens: column-schema-replication at system scale)
+- Updated wiki/software-architecture-the-hard-parts.md (Ch 10 status; Ch 10 cross-links)
+
+## 2026-04-19 — Software Architecture: The Hard Parts — Ch 11 ingested
+
+Chapter 11 ("Managing Distributed Workflows") of *Software Architecture: The Hard Parts*.
+
+Created:
+- Created wiki/workflow-orchestration.md (architecture-style orchestration; per-workflow orchestrator; error-links already exist)
+- Created wiki/workflow-choreography.md (Ch 11 workflow-grain treatment; Front Controller / stateless / stamp-coupling state options)
+- Created wiki/semantic-coupling.md (domain-inherent coupling; floor that implementation can worsen not reduce)
+- Created wiki/distributed-workflow-patterns.md (hub: trade-off matrix + four-force rubric; fractal at style and workflow grain)
+
+Augmented:
+- Updated wiki/choreography.md (Ch 11 workflow-grain pointer; error-links-add-per-scenario observation)
+- Updated wiki/saga.md (Ch 11 as coordination axis; sagas as consistency-flavour of workflow patterns; eight-pattern split)
+- Updated wiki/mediator-topology.md (Ch 11 workflow-grain = workflow-orchestration; scope hierarchy)
+- Updated wiki/broker-topology.md (Ch 11 workflow-grain = workflow-choreography; three state-management options)
+- Updated wiki/event-driven-architecture.md (Ch 11 workflow-grain counterpart to mediator/broker topology)
+- Updated wiki/dynamic-coupling.md (coordination axis pointer to Ch 11 pages)
+- Updated wiki/software-architecture-the-hard-parts.md (Ch 11 status; Ch 11 cross-links)
+
+## 2026-04-19 — Ingest *Software Architecture: The Hard Parts* Ch 12 "Transactional Sagas"
+
+Created:
+- wiki/epic-saga.md (sao — sync/atomic/orchestrated; most coupled; traditional distributed transaction)
+- wiki/phone-tag-saga.md (sac — sync/atomic/choreographed; rare combination; chain-of-responsibility compensations)
+- wiki/fairy-tale-saga.md (seo — sync/eventual/orchestrated; common real-world choice)
+- wiki/time-travel-saga.md (sec — sync/eventual/choreographed; fire-and-forget pipelines)
+- wiki/fantasy-fiction-saga.md (aao — async/atomic/orchestrated; mostly implausible)
+- wiki/horror-story-saga.md (aac — async/atomic/choreographed; worst combination; cautionary)
+- wiki/parallel-saga.md (aeo — async/eventual/orchestrated; strong scale-needing default)
+- wiki/anthology-saga.md (aec — async/eventual/choreographed; least coupled; EDA default)
+
+Augmented:
+- wiki/saga.md (Ch 12 eight-pattern taxonomy; axis-substitution intuition; saga state machines; annotations/CLI management)
+- wiki/dynamic-coupling.md (Ch 12 as canonical worked example of 3-axis model; names for all eight corners)
+- wiki/distributed-transactions.md (Ch 12 eight-pattern catalogue as honest replacement for distributed transactions)
+- wiki/compensating-update.md (Ch 12 compensating updates vs saga state machines trade-off)
+- wiki/eventual-consistency.md (Ch 12 saga state machines as eventual-consistency error-handling primitive)
+- wiki/workflow-orchestration.md (named orchestrated sagas linked)
+- wiki/workflow-choreography.md (named choreographed sagas linked)
+- wiki/distributed-workflow-patterns.md (saga pattern names now wikilinked)
+- wiki/software-architecture-the-hard-parts.md (Ch 12 status; cross-links)
+
+## 2026-04-19 — Ingested Software Architecture: The Hard Parts, Chapter 13 (Contracts)
+
+Source: `raw/software-architecture-the-hard-parts/chapter-13-contracts.md`
+
+Created:
+- wiki/contracts.md (hub — strict-to-loose spectrum; trade-off matrix; microservices default pairing)
+- wiki/strict-contract.md (RMI/gRPC/SOAP/XSD end of spectrum; advantages, disadvantages, when-to-pick)
+- wiki/loose-contract.md (JSON name-value-pair end of spectrum; loose+CDC as microservices default)
+- wiki/stamp-coupling.md (anti-pattern — over-specified contracts; bandwidth fallacy arithmetic; legit use in choreographed saga state passing)
+
+Augmented:
+- wiki/consumer-driven-contracts.md (Ch 13 push-vs-pull inversion; loose+CDC default; advantages/disadvantages)
+- wiki/data-contract.md (Hard Parts' broadened "any wiring point" definition; convergence with Bellemare and FoDE framings)
+- wiki/graphql.md (middle-of-spectrum case study; consumer-driven field selection defeats stamp coupling)
+- wiki/protocol-buffers.md (strict end of spectrum; gRPC-over-Protobuf defaults)
+- wiki/avro.md (strict-but-evolvable positioning via reader/writer schemas)
+- wiki/schema-evolution.md (evolution as part of the strictness trade-off)
+- wiki/backward-forward-compatibility.md (compatibility as the mechanism that keeps strict contracts workable)
+- wiki/connascence.md (contract strictness as the connascence-across-boundary dial)
+- wiki/static-coupling.md (Ch 13 strictness dial as the primary static-coupling lever)
+- wiki/software-architecture-the-hard-parts.md (Ch 13 status; cross-links)
+
+## 2026-04-19 — Software Architecture: The Hard Parts Ch 14 (Managing Analytical Data)
+
+Source: `raw/software-architecture-the-hard-parts/chapter-14-managing-analytical-data.md`
+
+Created:
+- wiki/data-product-quantum.md (DPQ — cooperative quantum semantics, three DPQ types, dynamic-coupling constraint, sidecar-analogy framing)
+
+Augmented:
+- wiki/data-mesh.md (Ch 14 architectural treatment; four principles restated; DPQ introduction; when-to-use trade-off)
+- wiki/data-warehousing.md (Ch 14 failure modes in distributed architectures; technical-vs-domain partitioning critique)
+- wiki/data-lake.md (Ch 14 reactionary-swing critique; discovery/PII/staleness issues; still technically partitioned)
+- wiki/data-as-a-product.md (Ch 14 architectural consequence — introduces the DPQ; product qualities)
+- wiki/data-product.md (cross-link to data-product-quantum)
+- wiki/cross-service-analytics.md (Ch 14 framing as the cross-cutting problem; evolution Newman → lake → mesh)
+- wiki/architectural-quantum.md (Ch 14 DPQ extension; cooperative quantum definition)
+- wiki/data-governance.md (federated computational governance; sidecar-based policy enforcement)
+- wiki/data-architecture.md (Ch 14 architect's verdict on technical-vs-domain partitioning across warehouse/lake/mesh)
+- wiki/software-architecture-the-hard-parts.md (Ch 14 status; cross-links)
+
+## 2026-04-19 — Software Architecture: The Hard Parts Ch 15 (Build Your Own Trade-Off Analysis) — BOOK COMPLETE
+
+Source: `raw/software-architecture-the-hard-parts/chapter-15-build-your-own-trade-off-analysis.md`
+
+Created:
+- wiki/mece-principle.md (Mutually Exclusive Collectively Exhaustive — overlap and gap failures; role in trade-off analysis; model-vs-reality)
+
+Augmented:
+- wiki/trade-off-analysis.md (Ch 15 build-your-own method; find/analyze/assess three-step; trade-off techniques — qualitative over quantitative, MECE, out-of-context trap, modelling relevant domain cases, bottom-line-over-evidence, avoiding snake-oil and evangelism; iterative trade-off analysis; model-vs-reality)
+- wiki/architecture-decision-record.md (Ch 15 — ADR as terminal step of build-your-own method; Consequences holds qualitative comparison; Alternatives should be MECE; bottom line in Decision; Superseded as audit trail for iterative re-examination)
+- wiki/least-worst-trade-offs.md (Ch 15 — architect as objective arbiter; anti-evangelism stance; fitness functions as evangelism counter-measure)
+- wiki/laws-of-software-architecture.md (Ch 15 — First Law made operational; iteration because each choice constrains the next; anti-evangelism corollary)
+- wiki/architectural-thinking.md (Ch 15 turns aspect #3 into repeatable method)
+- wiki/software-architecture-the-hard-parts.md (Ch 15 status; book marked fully ingested; cross-links)

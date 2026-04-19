@@ -1,10 +1,10 @@
 # Database Decomposition
 
-**Summary**: Hub page for the patterns and trade-offs involved in pulling a [[monolith]]'s shared database apart so each microservice owns its data. Newman's central message: "Splitting a database apart is far from a simple endeavor" — but it is almost always worth it, and there is a well-defined catalogue of patterns to do it incrementally.
+**Summary**: Hub page for the patterns and trade-offs involved in pulling a [[monolith]]'s shared database apart so each microservice owns its data. Newman's central message: "Splitting a database apart is far from a simple endeavor" — but it is almost always worth it, and there is a well-defined catalogue of patterns to do it incrementally. Ford, Richards, and Sadalage add the complementary **five-step pattern** (Hard Parts Ch 6) and the explicit **disintegrator/integrator** framework that decides whether to split in the first place.
 
-**Sources**: `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`
+**Sources**: `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/software-architecture-the-hard-parts/chapter-06-pulling-apart-operational-data.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-19
 
 ---
 
@@ -73,6 +73,52 @@ Splitting a database means losing the ability to make changes across what used t
 - [[two-phase-commit]] — why Newman says "just say no" for microservices
 - [[saga]] — the alternative: model long-lived business processes as sequences of local transactions, with compensating actions for rollback; orchestrated vs choreographed styles
 
+## Hard Parts: should you split at all? (drivers and integrators)
+
+Chapter 6 of *Software Architecture: The Hard Parts* reframes the decision as a **trade-off analysis** between two opposing force groups before any pattern is chosen (source: raw/software-architecture-the-hard-parts/chapter-06-pulling-apart-operational-data.md). Full treatment at [[data-decomposition-drivers-and-integrators]]:
+
+**Six disintegrators push toward splitting:**
+
+1. **Change control** — reduce the blast radius of schema changes across services.
+2. **Connection management** — a shared DB cannot supply 1,000+ connections after services fan out.
+3. **Scalability** — the DB must scale when services do; a shared DB can't.
+4. **Fault tolerance** — remove the single-point-of-failure a shared DB represents.
+5. **[[architectural-quantum|Architectural quantum]] boundaries** — a shared DB collapses everything into one quantum with one characteristic profile.
+6. **Database type optimisation** — let each data domain move to its best-fit DB type ([[polyglot-persistence]]).
+
+**Two integrators pull toward keeping data together:**
+
+1. **Data relationships** — foreign keys, views, triggers, stored procedures.
+2. **Database transactions** — [[acid|ACID]] across multiple tables in one unit of work.
+
+The architect balances the forces, picks the trade-off, and documents the decision — no universal default.
+
+## Hard Parts: the five-step pattern for how to split
+
+Once the decision to split is made, Chapter 6 gives an evolutionary, reversible-at-each-step pattern that operates on the concept of a [[data-domain|data domain]] (source: raw/software-architecture-the-hard-parts/chapter-06-pulling-apart-operational-data.md). A data domain is a cluster of coupled tables, views, FKs, and triggers that belong together in one bounded functional scope — think of the database as a soccer ball where each white hexagon is a data domain.
+
+The five steps:
+
+### Step 1: Analyze the database and create data domains
+
+Group tables by domain affinity. The Sysops Squad gets six: Customer, Survey, Payment, Profile, Knowledge base, Ticketing. Identify cross-domain artifacts (the dotted lines between hexagons) — these are the coupling points that will have to be broken.
+
+### Step 2: Assign tables to data domains
+
+Move tables into per-domain schemas (`ALTER SCHEMA payment TRANSFER sysops.billing`). Where tables genuinely belong in multiple domains, combine the domains or pick one and call the other via the service layer. **Synonyms** are a stepping-stone: create a DB-level alias for cross-schema tables, use it to find and refactor every caller, then remove the synonym once the caller uses a service call.
+
+### Step 3: Separate database connections to data domains
+
+Refactor each service's connection pool to point at exactly one schema. When a service needs data from another domain, **call that domain's service**; do not reach across into the other schema. This is the step that achieves [[data-sovereignty]] — the nirvana state where every service owns its data. It is also the hardest step because all cross-schema access must be resolved at the service layer.
+
+### Step 4: Move schemas to separate database servers
+
+The data now lives in one logical DB but many schemas. Move each schema to its own physical database server. Two options: **backup-and-restore** (simpler, requires downtime) or **replicate-then-cutover** (no downtime, more coordination). See [[split-the-database-first]] for the physical-vs-logical distinction.
+
+### Step 5: Switch over to independent database servers
+
+Once replication is caught up, switch the service connections to the new servers and remove the schemas from the original database. Each data domain is now in its own failure domain, with its own backup schedule, its own upgrade cadence, and the option to change [[database-type-selection|database type]].
+
 ## Newman's overall guidance
 
 - Schema decomposition is the **most expensive end** of the [[cost-of-change]] spectrum — Newman flags it as the work that warrants real deliberation, in contrast to the easy reversibility of code changes.
@@ -92,3 +138,10 @@ Splitting a database means losing the ability to make changes across what used t
 - [[two-phase-commit]]
 - [[distributed-transactions]]
 - [[eventual-consistency]]
+- [[data-decomposition-drivers-and-integrators]]
+- [[data-domain]]
+- [[data-sovereignty]]
+- [[database-type-selection]]
+- [[polyglot-persistence]]
+- [[architectural-quantum]]
+- [[software-architecture-the-hard-parts]]

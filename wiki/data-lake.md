@@ -2,9 +2,9 @@
 
 **Summary**: An architectural pattern where raw data is dumped into a shared distributed file system or object store with little upfront modeling; consumers decide how to interpret it at read time. Historically built on HDFS; now overwhelmingly on cloud object storage (S3, GCS, ADLS). Originally sold as the warehouse replacement; in practice, **data lake 1.0** frequently degenerated into **data swamps** (see [[data-modeling]]). **Data lake 2.0 / the [[data-lakehouse]]** retrofits transactional guarantees, governance, and schema to address those failures.
 
-**Sources**: `raw/fundamentals-of-data-engineering/chapter-02-the-data-engineering-lifecycle.md`, `raw/fundamentals-of-data-engineering/chapter-03-designing-good-data-architecture.md`, `raw/fundamentals-of-data-engineering/chapter-06-storage.md`, `raw/designing-data-intensive-applications/chapter-10-batch-processing.md`
+**Sources**: `raw/fundamentals-of-data-engineering/chapter-02-the-data-engineering-lifecycle.md`, `raw/fundamentals-of-data-engineering/chapter-03-designing-good-data-architecture.md`, `raw/fundamentals-of-data-engineering/chapter-06-storage.md`, `raw/designing-data-intensive-applications/chapter-10-batch-processing.md`, `raw/software-architecture-the-hard-parts/chapter-14-managing-analytical-data.md`
 
-**Last updated**: 2026-04-18
+**Last updated**: 2026-04-19
 
 ---
 
@@ -67,6 +67,27 @@ WORM was a workaround for the *absence* of update tooling, not a fundamental con
 
 Chapter 6 also underscores what the data lake is uniquely *for* beyond structured analytics: **"Object storage is an ideal repository for unstructured data in any format"** — images, video, audio, raw text. ML pipelines lean on this heavily. A lake is the only practical home for this data at scale; warehouses can handle rich JSON but not arbitrary binary objects.
 
+## Hard Parts Ch 14 — the reactionary-swing critique
+
+*Software Architecture: The Hard Parts* Ch 14 frames the data lake as a **reactionary response** to the complexity and expense of the [[data-warehousing|data warehouse]]. Where the warehouse front-loaded transformation, the lake defers it: do no transformations on write; let consumers transform only when needed (source: raw/software-architecture-the-hard-parts/chapter-14-managing-analytical-data.md).
+
+Ch 14's framing of why the pendulum swung this way:
+
+- Prebuilt warehouse schemas often didn't fit the report or inquiry actually required — extra work was needed just to understand the warehouse schema enough to craft the real query.
+- Many ML models work better on semi-raw data than on a transformed version.
+- Domain experts who already understood the data found the warehouse's transform step "excruciating" — it stripped domain separation and context only to have to reconstruct it in queries.
+
+But the lake, Ch 14 argues, keeps the warehouse's **centralized pipeline model** while inverting only the transform/load order. That leaves most of the original problems in place and introduces new ones (source: raw/software-architecture-the-hard-parts/chapter-14-managing-analytical-data.md):
+
+- **Discovery of proper assets is hard** — domain relationships evaporate when data lands unstructured; domain experts must still get involved to craft analyses.
+- **PII and sensitive-data risk** — dumping raw operational data into a lake can expose fields that, combined, breach privacy. Domain experts who know what's sensitive are forced to re-audit data after it reaches the lake.
+- **Still technically partitioned, not domain partitioned** — like the warehouse, the lake separates ingest, transform, load, and serve as technical capabilities. Modern distributed architectures (microservices) partition by domain; both warehouse and lake break that partitioning.
+- **Pipeline brittleness and pathological coupling remain** — transformation and cleansing still happen; they just move to downstream lake pipelines, which create the same operational bottlenecks.
+- **Data staleness** — the batch-ingestion model means either stale data or broken pipelines when upstream operational schemas change without coordination.
+- **Contractual brittleness between operational and analytical systems** — same issue as the warehouse; the pipelines fuse the two contracts in unhelpful ways.
+
+Ch 14's summary judgement: **the lake fixed the transformation-induced problem of the warehouse, but it did so by losing the domain partitioning that microservices architectures depend on**. Its eventual corrective is the [[data-mesh]] with per-domain [[data-product-quantum|DPQs]] — analytical data that stays inside the domain boundary rather than being exported into a centralised lake.
+
 ## Relationship to other patterns
 
 - The **[[data-warehousing|data warehouse]]** is the schema-on-write counterpart.
@@ -97,4 +118,7 @@ Chapter 6 also underscores what the data lake is uniquely *for* beyond structure
 - [[data-temperature]]
 - [[data-architecture]]
 - [[data-mesh]]
+- [[data-product-quantum]]
 - [[storage-compute-separation]]
+- [[cross-service-analytics]]
+- [[software-architecture-the-hard-parts]]

@@ -59,3 +59,4 @@ The two ideas are compatible; the data-mesh stance operationalises the product-d
 - [[embedded-analytics]]
 - [[data-mesh]]
 - [[dataops]]
+- [[data-product-quantum]]

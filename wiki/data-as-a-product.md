@@ -2,9 +2,9 @@
 
 **Summary**: The organisational stance that treats published datasets as first-class products — with identified consumers, documented SLAs, versioning, and a product manager — rather than as byproducts of application operations. One of Zhamak Dehghani's four pillars of the [[data-mesh]].
 
-**Sources**: `raw/fundamentals-of-data-engineering/chapter-03-designing-good-data-architecture.md`, `raw/fundamentals-of-data-engineering/chapter-09-serving-data-for-analytics-machine-learning-and-reverse-etl.md`
+**Sources**: `raw/fundamentals-of-data-engineering/chapter-03-designing-good-data-architecture.md`, `raw/fundamentals-of-data-engineering/chapter-09-serving-data-for-analytics-machine-learning-and-reverse-etl.md`, `raw/software-architecture-the-hard-parts/chapter-14-managing-analytical-data.md`
 
-**Last updated**: 2026-04-18
+**Last updated**: 2026-04-19
 
 ---
 
@@ -29,6 +29,20 @@ Chapter 3 does not enumerate these exhaustively; the working list from Dehghani'
 - **Secure** — access-controlled; see [[data-security]], [[data-governance]]
 
 These properties echo the qualities a software product team would ship against.
+
+## Hard Parts Ch 14 — the architectural consequence
+
+*Software Architecture: The Hard Parts* Ch 14 (co-authored by Dehghani) restates the principle and names its **architectural consequence**: treating data as a product in a decentralised architecture introduces a new [[architectural-quantum|architecture quantum]] — the [[data-product-quantum]] — "to maintain and serve discoverable, understandable, timely, secure, and high-quality data to the consumers" (source: raw/software-architecture-the-hard-parts/chapter-14-managing-analytical-data.md).
+
+Ch 14's product qualities for a mesh DPQ:
+
+- **Discoverable** — findable across the mesh via platform search and browsing.
+- **Understandable** — self-describing semantics; the consumer can read and interpret the data.
+- **Timely** — freshness meets consumer SLAs.
+- **Secure** — federated governance policies enforced as embedded code on every access.
+- **High-quality** — observed, tested, and supported.
+
+The point the architect takes away: the product is not a dataset. It is a deployable unit — a DPQ — that delivers on those qualities as a matter of *operational* architecture, not just documentation.
 
 ## Relationship to the engineer
 
@@ -62,3 +76,6 @@ See [[data-product]] for the full Chapter 9 treatment.
 - [[reverse-etl]]
 - [[data-serving]]
 - [[trust-in-data]]
+- [[data-product-quantum]]
+- [[architectural-quantum]]
+- [[software-architecture-the-hard-parts]]

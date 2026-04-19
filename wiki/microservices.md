@@ -114,6 +114,16 @@ Richards and Ford's opening position: microservices is "the physical embodiment 
 
 The philosophical move that makes this a distinct style: microservices **prefer duplication to coupling**. An `Address` class is not shared between services the way a monolith would share it. Reuse of code is explicitly traded away in exchange for decoupling. The First Law of Software Architecture is invoked by name: reuse always produces coupling; if your goal is high decoupling, you must prefer duplication (source: chapter-17-microservices-architecture.md). This is the same force [[orchestration-driven-soa]]'s canonical-`Customer` worked example shows going the other direction — SOA pursued reuse and paid the coupling cost; microservices pursues decoupling and pays the duplication cost.
 
+### Hard Parts Ch 7: the disintegrator/integrator extension
+
+Chapter 7 of *The Hard Parts* extends Richards and Ford's three-guideline test (purpose / transactions / choreography) into the full **[[granularity-disintegrators]]** vs **[[granularity-integrators]]** framework. The three Ch 17 guidelines map onto subsets of the larger frame (source: raw/software-architecture-the-hard-parts/chapter-07-service-granularity.md):
+
+- **Purpose** ↔ disintegrators 1 (scope/cohesion) and 6 (extensibility)
+- **Transactions** ↔ integrators 1 (database transactions) and 4 (data relationships)
+- **Choreography** ↔ integrator 2 (workflow/choreography)
+
+The Ch 7 frame adds three disintegrators *Fundamentals* didn't enumerate explicitly — [[code-volatility]], [[scalability]], and [[fault-tolerance]] — plus the shared-code integrator. The combined nine-or-ten-force frame is the most thorough granularity rubric in the books surveyed in the wiki. See [[service-granularity]] for the full balance-of-forces treatment and the architect/sponsor dialogue pattern for resolving the trade-offs.
+
 ### Granularity: the central architect's decision
 
 Chapter 17 elevates **[[service-granularity|granularity]]** to the hardest single decision in the style. The quote: *"The term 'microservice' is a label, not a description"* — Martin Fowler. The name was chosen to contrast with SOA's ["gigantic services"], not as a commandment to build the smallest possible services. Too many developers hear the name and over-decompose (source: chapter-17-microservices-architecture.md).
@@ -240,3 +250,7 @@ Richards and Ford close with: *"The driving philosophy of extreme decoupling cre
 - [[service-mesh]]
 - [[saga]]
 - [[entity-trap]]
+- [[granularity-disintegrators]]
+- [[granularity-integrators]]
+- [[code-volatility]]
+- [[architectural-modularity]]

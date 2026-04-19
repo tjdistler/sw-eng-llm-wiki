@@ -2,9 +2,9 @@
 
 **Summary**: An architecture in which each service instance communicates with other services through its own dedicated *local* proxy (sidecar), with central control and monitoring via a control plane. Avoids the contention of a shared "smart pipe" while still centralising cross-cutting concerns like protocol translation, retries, and observability.
 
-**Sources**: `raw/monolith-to-microservices/chapter-03-splitting-the-monolith.md`, `raw/designing-distributed-systems/chapter-02-the-sidecar-pattern.md`, `raw/designing-distributed-systems/chapter-03-ambassadors.md`, `raw/designing-distributed-systems/chapter-04-adapters.md`, `raw/designing-distributed-systems/chapter-05-replicated-load-balanced-services.md`, `raw/fundamentals-of-software-architecture/chapter-17-microservices-architecture.md`
+**Sources**: `raw/monolith-to-microservices/chapter-03-splitting-the-monolith.md`, `raw/designing-distributed-systems/chapter-02-the-sidecar-pattern.md`, `raw/designing-distributed-systems/chapter-03-ambassadors.md`, `raw/designing-distributed-systems/chapter-04-adapters.md`, `raw/designing-distributed-systems/chapter-05-replicated-load-balanced-services.md`, `raw/fundamentals-of-software-architecture/chapter-17-microservices-architecture.md`, `raw/software-architecture-the-hard-parts/chapter-08-reuse-patterns.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-19
 ---
 
 ## The problem it solves
@@ -61,6 +61,14 @@ The style-level consequence: the mesh is how the microservices architecture hono
 
 Richards and Ford also note that **service discovery** is typically part of the mesh (or the API layer). Rather than invoking a specific service instance, a request goes through service discovery, which monitors request volume and can spin up new instances to handle elasticity demands. This is what lets microservices hit the five-star elasticity and scalability ratings on the Chapter 17 scorecard — the mesh is the mechanism that makes elastic behaviour possible.
 
+## The mesh as the home of orthogonal coupling
+
+Chapter 8 of *Software Architecture: The Hard Parts* names the architectural property the service mesh exists to handle: [[orthogonal-coupling]]. Operational concerns (monitoring, mTLS, retries, tracing) must intersect with every service in the architecture, but are *independent* of any one service's domain — they cross the architecture's seams at right angles (source: raw/software-architecture-the-hard-parts/chapter-08-reuse-patterns.md).
+
+The mesh is *Hard Parts'* recommended answer: a fleet-wide deployment of [[sidecar-pattern|sidecars]] that decorate every service with the orthogonal concerns through a uniform service plane. The chapter places this alongside the other three [[reuse-patterns]] ([[code-replication-pattern|replication]], [[shared-library-pattern|shared library]], [[shared-service-pattern|shared service]]), but with a different role: the first three address *domain* reuse on the static or dynamic coupling axis; the mesh addresses orthogonal cross-cutting reuse, which the others handle clumsily.
+
+The chapter also notes the governance side-effect: a service mesh gives enterprise architects a coherent restraint over highly polyglot environments. Without a mesh, unifying on a common monitoring solution requires a sidecar per platform that supports it; with a mesh, the cross-cutting policy is enforced uniformly regardless of how heterogeneous the underlying services are.
+
 ## Relationship to migration patterns
 
 A service mesh is not itself a migration pattern but a piece of infrastructure that supports them. In particular:
@@ -89,3 +97,5 @@ A service mesh is not itself a migration pattern but a piece of infrastructure t
 - [[ssl-termination]]
 - [[circuit-breaker]]
 - [[bulkhead]]
+- [[reuse-patterns]]
+- [[orthogonal-coupling]]

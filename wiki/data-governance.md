@@ -2,9 +2,9 @@
 
 **Summary**: A sub-facet of [[data-management]] — engaging people, processes, and technologies to maximise data value across the organisation while protecting data with appropriate security controls. Chapter 2 structures governance around **three core categories: discoverability, security, and accountability**, with [[data-quality]], [[metadata]], and privacy sitting underneath.
 
-**Sources**: `raw/fundamentals-of-data-engineering/chapter-02-the-data-engineering-lifecycle.md`
+**Sources**: `raw/fundamentals-of-data-engineering/chapter-02-the-data-engineering-lifecycle.md`, `raw/software-architecture-the-hard-parts/chapter-14-managing-analytical-data.md`
 
-**Last updated**: 2026-04-18
+**Last updated**: 2026-04-19
 
 ---
 
@@ -46,6 +46,19 @@ Assigning an individual responsibility for a portion of data. The accountable pe
 
 Under the core categories sit subcategories the book treats as their own pages — [[data-quality]], [[metadata]], [[data-ethics]] (privacy).
 
+## Federated computational governance (data mesh)
+
+*Software Architecture: The Hard Parts* Ch 14 presents **computational federated governance** as the fourth principle of the [[data-mesh]] (source: raw/software-architecture-the-hard-parts/chapter-14-managing-analytical-data.md). It is the principle that answers the obvious objection to decentralised data ownership: how do you keep compliance, security, privacy, quality, and interoperability consistent if every domain owns its own analytical data?
+
+Ch 14's answer has two load-bearing words:
+
+- **Federated** — decisions are made by a federation of domain data-product owners rather than by a central authority. Representation across domains, not imposition from above.
+- **Computational** — policies are not PDFs. They are **code, automated, embedded in every [[data-product-quantum|DPQ]]**. "The architectural implication of this approach to governance is a platform-supplied embedded sidecar in each data product quantum to store and execute the policies at the point of access: data read or write" (source: raw/software-architecture-the-hard-parts/chapter-14-managing-analytical-data.md).
+
+The mechanism re-uses the [[sidecar-pattern]]: governance policy is an orthogonal cross-cutting concern, and like other cross-cutting concerns in a [[service-mesh]], it rides in a sidecar rather than being baked into domain code. A DPQ deploys with a governance sidecar that enforces access policy, privacy rules, and quality checks at every read and write — automatically, uniformly across the mesh.
+
+This is the corrective to the centralised-governance-committee antipattern: the committee never knows the domain well enough to police it, and domain teams never trust the committee enough to give it teeth. Federated computational governance keeps policy authorship joint and policy enforcement automatic.
+
 ## When governance works
 
 "When data governance is practiced well, people, processes, and technologies align to treat data as a key business driver; if data issues occur, they are promptly handled." When governance is *accidental* and haphazard, the side effects range from untrusted data to security breaches (source: raw/fundamentals-of-data-engineering/chapter-02-the-data-engineering-lifecycle.md).
@@ -60,3 +73,7 @@ Under the core categories sit subcategories the book treats as their own pages �
 - [[data-security]]
 - [[data-ethics]]
 - [[data-lineage]]
+- [[data-mesh]]
+- [[data-product-quantum]]
+- [[sidecar-pattern]]
+- [[software-architecture-the-hard-parts]]

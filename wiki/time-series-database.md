@@ -2,9 +2,9 @@
 
 **Summary**: A database optimized for retrieving and statistically processing **time-indexed data** — stock ticks, sensor measurements, event logs, metrics. Time-series databases serve both as a storage layer for IoT/metrics/ad-tech use cases and, from the [[source-systems|source-system]] perspective, as an increasingly common upstream of analytics pipelines.
 
-**Sources**: `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`
+**Sources**: `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`, `raw/software-architecture-the-hard-parts/chapter-06-pulling-apart-operational-data.md`
 
-**Last updated**: 2026-04-18
+**Last updated**: 2026-04-19
 
 ---
 
@@ -63,6 +63,20 @@ Google's [[borgmon]] uses an in-memory [[time-series-arena|time-series arena]] a
 - [[sstables-and-lsm-trees]] (DDIA) — common on-disk layouts in time-series engines (Prometheus, many commercial TSDBs) resemble LSM trees.
 - [[iot-architecture]] — the IoT lifecycle that produces much time-series source data.
 
+## Hard Parts positioning
+
+Chapter 6 of *Software Architecture: The Hard Parts* includes time-series databases in its eight-family [[database-type-selection]] matrix. Headline notes (source: raw/software-architecture-the-hard-parts/chapter-06-pulling-apart-operational-data.md):
+
+- **Learning curve — easy.** Timestamped data with a tag-and-value shape is intuitive. The mental shift is **append-only** — errors can't be fixed by `UPDATE`, they must be compensated.
+- **Data modelling — tag design dominates.** Bad tagging ("one tag for multiple facts" — `ticket_info=Open.374737`) kills queryability; good tagging ("one fact per tag" — `ticket_status=Open`, `ticket_id=374737`) keeps it.
+- **Scalability / throughput — high.** TimescaleDB inherits PostgreSQL's patterns; InfluxDB clusters via meta and data nodes with replication factor control.
+- **Availability / partition tolerance — configurable.** Replication factors and meta/data node separation give operators dials to turn.
+- **Consistency — varies.** TimescaleDB (relational-backed) gets ACID; others tune consistency via `any`/`one`/`quorum` levels. Higher consistency → lower availability.
+- **Community — growing.** SQL-like query languages (InfluxQL, FluxQL, SQL) lower the entry barrier.
+- **Read/write priority — read-biased.** Append-only writes are optimised, but the workload shape is "aggregate over a time window" — read-heavy in practice.
+
+The book's explicit caveat: time-series databases are **not general-purpose**. They're optimised for one specific question shape ("what happened between T1 and T2"). A data domain whose queries don't fit that shape should pick a different family.
+
 ## Related pages
 
 - [[source-systems]]
@@ -72,3 +86,5 @@ Google's [[borgmon]] uses an in-memory [[time-series-arena|time-series arena]] a
 - [[column-oriented-storage]]
 - [[sstables-and-lsm-trees]]
 - [[data-temperature]]
+- [[database-type-selection]]
+- [[polyglot-persistence]]

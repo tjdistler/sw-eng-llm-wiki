@@ -2,9 +2,9 @@
 
 **Summary**: An algorithm for achieving atomic transaction commit across multiple nodes, ensuring either all nodes commit or all abort -- the most common protocol for [[distributed-transactions]], but vulnerable to blocking if the coordinator fails. Newman's blunt advice for microservices: "just say no" — use [[saga|sagas]] instead.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-09-consistency-and-consensus.md`, `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/site-reliability-engineering/chapter-23-managing-critical-state-distributed-consensus-for-reliability.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-09-consistency-and-consensus.md`, `raw/monolith-to-microservices/chapter-04-decomposing-the-database.md`, `raw/site-reliability-engineering/chapter-23-managing-critical-state-distributed-consensus-for-reliability.md`, `raw/software-architecture-the-hard-parts/chapter-09-data-ownership-and-distributed-transactions.md`
 
-**Last updated**: 2026-04-17
+**Last updated**: 2026-04-19
 
 ---
 
@@ -69,6 +69,12 @@ Newman's recommendation, "Distributed Transactions — Just Say No": (source: ch
 
 If atomicity across services really *is* required, model the operation as a [[saga]] instead — a sequence of local transactions with compensating actions, not distributed locks.
 
+## Hard Parts Ch 9: impractical at scale
+
+*Software Architecture: The Hard Parts* Chapter 9 reaches the same conclusion from the [[data-ownership]] direction. When a business request spans services, [[distributed-transactions|ACID properties are lost]] and the architect is left with [[base-properties|BASE]]. The book evaluates 2PC/XA briefly as a way to restore ACID across services and rejects it for the familiar operational reasons — coordinator SPOF, locks held across network partitions, amplified failure modes, orphan in-doubt transactions (source: raw/software-architecture-the-hard-parts/chapter-09-data-ownership-and-distributed-transactions.md).
+
+The book's prescription is the same as Newman's and Kleppmann's: accept BASE, pick an [[eventual-consistency]] pattern (background sync, orchestrated request-based, or event-based), and use [[compensating-update|compensating updates]] for recovery. Chapter 12 develops this into the full [[saga|saga catalogue]].
+
 ## Related pages
 
 - [[distributed-transactions]]
@@ -80,3 +86,8 @@ If atomicity across services really *is* required, model the operation as a [[sa
 - [[fault-tolerance]]
 - [[zookeeper]]
 - [[database-decomposition]]
+- [[data-ownership]]
+- [[base-properties]]
+- [[eventual-consistency]]
+- [[compensating-update]]
+- [[software-architecture-the-hard-parts]]

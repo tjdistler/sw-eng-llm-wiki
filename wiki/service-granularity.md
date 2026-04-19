@@ -2,9 +2,9 @@
 
 **Summary**: The size and scope of an individual service — the architect's hardest single decision when drawing service boundaries in any distributed architecture style. Richards and Ford frame it as the decision that most determines whether a [[microservices]] architecture succeeds or collapses under communication overhead, and [[service-based-architecture]], [[orchestration-driven-soa]], and [[event-driven-architecture]] each answer the granularity question differently.
 
-**Sources**: `raw/fundamentals-of-software-architecture/chapter-17-microservices-architecture.md`, `raw/fundamentals-of-software-architecture/chapter-13-service-based-architecture-style.md`, `raw/fundamentals-of-software-architecture/chapter-16-orchestration-driven-service-oriented-architecture.md`, `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`, `raw/building-event-driven-microservices/chapter-17-conclusion.md`
+**Sources**: `raw/fundamentals-of-software-architecture/chapter-17-microservices-architecture.md`, `raw/fundamentals-of-software-architecture/chapter-13-service-based-architecture-style.md`, `raw/fundamentals-of-software-architecture/chapter-16-orchestration-driven-service-oriented-architecture.md`, `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`, `raw/building-event-driven-microservices/chapter-17-conclusion.md`, `raw/software-architecture-the-hard-parts/chapter-07-service-granularity.md`
 
-**Last updated**: 2026-04-17
+**Last updated**: 2026-04-19
 
 ---
 
@@ -91,6 +91,68 @@ Follow the rules and a large service is just a large bounded context that *could
 
 Bellemare also reinforces the technical-vs-domain alignment point: **steer clear of technical boundaries; align with the business's bounded context.** A technical microservice (e.g., "the email service") couples itself to every unrelated workflow that uses it; a failure or inadvertent change takes down multiple business workflows at once. This is the same disease Richards and Ford diagnose in [[technical-vs-domain-partitioning]] and that the fine-grained-too-soon failure mode above hints at.
 
+## The Hard Parts framing: disintegrators vs integrators
+
+Chapter 7 of *Software Architecture: The Hard Parts* gives the most rigorous trade-off frame for granularity in the wiki's source canon. Ford, Richards, Sadalage, and Dehghani open with the **modularity vs granularity** distinction — modularity asks *how many pieces*, granularity asks *how small each piece is*. Most distributed-system pain is granularity, not modularity (source: raw/software-architecture-the-hard-parts/chapter-07-service-granularity.md). See [[architectural-modularity]] for the modularity side.
+
+The chapter rejects lines-of-code and number-of-classes as granularity metrics — they vary too much by language, style, and developer. Two more objective metrics:
+
+- **Number of statements** (lines of executable logic terminated by `;` or newline depending on language)
+- **Number of public interfaces or operations** exposed by the service
+
+Neither is fully objective, but both beat LOC.
+
+The chapter then frames granularity as a balance between two opposing force groups, **disintegrators** (push services apart) and **integrators** (pull services together):
+
+### The six disintegrators (full treatment in [[granularity-disintegrators]])
+
+| # | Driver | Question |
+|---|---|---|
+| 1 | **Service scope and function** | Is the service doing too many unrelated things? |
+| 2 | **[[code-volatility|Code volatility]]** | Are changes isolated to only one part of the service? |
+| 3 | **[[scalability]] and throughput** | Do parts of the service need to scale differently? |
+| 4 | **[[fault-tolerance]]** | Are there errors that cause critical functions to fail within the service? |
+| 5 | **Security** | Do some parts of the service need higher security levels than others? |
+| 6 | **Extensibility** | Is the service always expanding to add new contexts? |
+
+### The four integrators (full treatment in [[granularity-integrators]])
+
+| # | Driver | Question |
+|---|---|---|
+| 1 | **Database transactions** | Is an [[acid|ACID]] transaction required between separate services? |
+| 2 | **Workflow and choreography** | Do services need to talk to one another? |
+| 3 | **Shared code** | Do services need to share code among one another? |
+| 4 | **Data relationships** | Although a service can be broken apart, can the data it uses be broken apart as well? |
+
+### The central principle
+
+> The secret of arriving at the appropriate level of granularity for a service is achieving an equilibrium between these two opposing forces. (source: raw/software-architecture-the-hard-parts/chapter-07-service-granularity.md)
+
+The chapter is emphatic that the most common mistake is focusing on disintegrators while ignoring integrators. *Hold services together until a disintegrator outweighs all the integrators in play.* This is the disciplined version of "don't over-decompose."
+
+### Worked architect/sponsor dialogues
+
+The chapter shows trade-off resolution as a literal conversation with the business sponsor, not a unilateral architect call. Three examples (source: raw/software-architecture-the-hard-parts/chapter-07-service-granularity.md):
+
+1. **Volatility (disintegrator) vs ACID transaction (integrator)** — *"Better agility (testability, deployability, time-to-market) or stronger data integrity?"* Sponsor chose data integrity; service stayed consolidated.
+2. **Security (disintegrator) vs ACID transaction (integrator)** — *"Better data consistency or better security?"* Sponsor chose security; services were split and saga-style consistency was accepted as the cost.
+3. **Extensibility (disintegrator) vs workflow/responsiveness (integrator)** — *"Better extensibility or better responsiveness for payment?"* Sponsor chose responsiveness; payment service stayed consolidated until extensibility actually became a pressing concern.
+
+The pattern: identify the forces on both sides, frame the trade-off as a single sentence with two options, and bring it to the business sponsor with the implications spelled out. Capture the resolution in an [[architecture-decision-record|ADR]].
+
+### Sysops Squad sagas in the chapter
+
+The chapter ends with two Sysops Squad worked examples (source: raw/software-architecture-the-hard-parts/chapter-07-service-granularity.md):
+
+- **Ticket Assignment Granularity** — should ticket creation, assignment, and routing be one service or several?
+- **Customer Registration Granularity** — should customer profile and password live together or apart?
+
+Both walk the disintegrator/integrator analysis and resolve via the architect/sponsor dialogue pattern.
+
+## "Microservices" vs "fine-grained" — clearing up the label
+
+Hard Parts Ch 7 reinforces the *Fundamentals* Ch 17 point on the same page where it introduces granularity metrics: a microservice is "a single-purpose, separately deployed unit of software that does one thing really well." The trouble is that "single purpose" is in the eye of the beholder. Combined with the SRP-meets-microservices framing (Robert C. Martin's [[single-responsibility-principle|Single Responsibility Principle]] applied at the service layer), the temptation to make services as small as possible is structural — and the disintegrator/integrator balance is the corrective.
+
 ## Relationship to [[architectural-quantum|architectural quanta]]
 
 The Chapter 7 framing provides the physical interpretation of granularity: a service's quantum is the service-plus-its-database-plus-its-dependent-components. A finer-grained split that breaks a logical bounded context in half produces two quanta that share synchronous connascence — they look independent on the deployment diagram but collapse operationally into one unit during any call chain spanning them.
@@ -128,3 +190,12 @@ The architect's granularity choice is therefore a choice between which *kind* of
 - [[data-liberation]]
 - [[event-as-single-source-of-truth]]
 - [[microservice-tax]]
+- [[granularity-disintegrators]]
+- [[granularity-integrators]]
+- [[code-volatility]]
+- [[architectural-modularity]]
+- [[trade-off-analysis]]
+- [[architecture-decision-record]]
+- [[single-responsibility-principle]]
+- [[acid]]
+- [[software-architecture-the-hard-parts]]

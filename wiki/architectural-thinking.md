@@ -2,9 +2,9 @@
 
 **Summary**: Richards and Ford's name for the mindset that distinguishes an architect from a developer. It is not "thinking about the architecture" — it is seeing systems through an architectural eye. They decompose it into four aspects: knowing the line between [[architecture-versus-design|architecture and design]], favouring [[technical-breadth-vs-depth|technical breadth over depth]], [[trade-off-analysis|analysing trade-offs]] rather than seeking best answers, and translating business drivers into [[architecture-characteristics|architecture characteristics]].
 
-**Sources**: `raw/fundamentals-of-software-architecture/chapter-02-architectural-thinking.md`
+**Sources**: `raw/fundamentals-of-software-architecture/chapter-02-architectural-thinking.md`, `raw/software-architecture-the-hard-parts/chapter-15-build-your-own-trade-off-analysis.md`
 
-**Last updated**: 2026-04-16
+**Last updated**: 2026-04-19
 
 ---
 
@@ -27,6 +27,8 @@ A developer's career rewards depth; an architect's career shifts the knowledge p
 ### 3. Trade-off analysis
 
 The architect's core skill. Every solution carries advantages *and* disadvantages, and "it depends" is the honest answer to most architecture questions. See [[trade-off-analysis]]. This is the applied form of the [[laws-of-software-architecture|First Law of Software Architecture]].
+
+*Software Architecture: The Hard Parts* Chapter 15 turns this aspect into a **repeatable method** the architect can apply to any problem: (1) find what parts are entangled, (2) analyze how they are coupled, (3) assess trade-offs via iterative scenario modelling, then document in an [[architecture-decision-record|ADR]] (source: chapter-15-build-your-own-trade-off-analysis.md). The chapter also catalogues the **techniques** that make trade-off analysis honest — qualitative over quantitative comparison, [[mece-principle|MECE lists]], avoiding the out-of-context trap, modelling relevant domain cases, preferring the bottom line over overwhelming evidence, and resisting snake oil / evangelism. All of these live on [[trade-off-analysis]]. The corollary for architectural thinking: the architect's role is **objective arbiter of trade-offs**, not evangelist.
 
 ### 4. Understanding business drivers
 
@@ -59,3 +61,6 @@ Chapter 1's eight [[architect-expectations]] and Chapter 2's architectural think
 - [[software-architecture-definition]]
 - [[architecture-characteristics]]
 - [[fundamentals-of-software-architecture]]
+- [[software-architecture-the-hard-parts]]
+- [[mece-principle]]
+- [[least-worst-trade-offs]]

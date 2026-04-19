@@ -2,9 +2,9 @@
 
 **Summary**: A distributed architecture that still suffers from the limitations of a monolith — multiple services, but with shared dependencies or a common codebase that forces them to evolve together. Chapter 4 of *Fundamentals of Data Engineering* names Hadoop clusters and some Python orchestration frameworks as canonical data-world examples.
 
-**Sources**: `raw/fundamentals-of-data-engineering/chapter-04-choosing-technologies-across-the-data-engineering-lifecycle.md`, `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`
+**Sources**: `raw/fundamentals-of-data-engineering/chapter-04-choosing-technologies-across-the-data-engineering-lifecycle.md`, `raw/monolith-to-microservices/chapter-01-just-enough-microservices.md`, `raw/software-architecture-the-hard-parts/chapter-01-what-happens-when-there-are-no-best-practices.md`
 
-**Last updated**: 2026-04-18
+**Last updated**: 2026-04-19
 
 ---
 
@@ -50,6 +50,19 @@ The root cause in Newman's account is lack of [[information-hiding]] and [[cohes
 
 Chapter 4's treatment adds the data-specific angle: the distributed monolith is especially common in data because data frameworks historically shipped as large dependency graphs (Hadoop) or single-runtime environments (Python with one interpreter/dependency set). The modern mitigations — ephemeral clusters, containers, isolated runtimes — are what make the [[monolith-vs-modular-data|modular]] data stack actually achievable.
 
+## The Sysops Squad pathology (*Hard Parts* Ch 1)
+
+Ford, Richards, Sadalage, and Dehghani open *Software Architecture: The Hard Parts* with a fictional brownfield case — *Penultimate Electronics'* Sysops Squad ticketing application — that exhibits the full distributed-monolith symptom pattern (source: raw/software-architecture-the-hard-parts/chapter-01-what-happens-when-there-are-no-best-practices.md):
+
+- **Lost and misrouted tickets** — the ticket-assignment component can't reliably pick the right expert, and tickets are dropped altogether when the system "freezes up."
+- **Availability failures** — the system frequently crashes for 5 minutes to 2 hours at a time; the whole application goes dark because there is no real isolation between components.
+- **Change risk** — every change ships the whole monolith; something unrelated to the change typically breaks in production.
+- **Scalability pressure** — the customer-facing ticket-entry flow cannot be scaled independently of the administrative or reporting components.
+
+Despite being called "the monolithic system" in the book, the application is structurally distributed in several senses — multiple component namespaces (ticket, customer, expert, billing, survey, reporting), a shared schema, cross-component views and stored procedures — that make it rhyme with the distributed-monolith pathology as experienced in production. The book uses it to motivate the decomposition exercises in the rest of Part I: this is the system the authors walk through pulling apart.
+
+The Sysops Squad saga itself is pedagogical context, not a concept; it recurs throughout the book as the running worked example for migration, decomposition, saga coordination, and data-ownership decisions.
+
 ## Cross-book framing
 
 - [[monolith]] — Newman's three monolith types, including the distributed variant.
@@ -69,3 +82,5 @@ Chapter 4's treatment adds the data-specific angle: the distributed monolith is 
 - [[information-hiding]]
 - [[cohesion]]
 - [[coupling]]
+- [[software-architecture-the-hard-parts]]
+- [[brownfield-vs-greenfield]]

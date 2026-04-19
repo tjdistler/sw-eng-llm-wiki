@@ -2,9 +2,9 @@
 
 **Summary**: Fault tolerance is the property of a system that allows it to continue operating correctly when one or more of its components fail, by isolating faults before they become failures.
 
-**Sources**: `raw/designing-data-intensive-applications/chapter-01-reliable-scalable-and-maintainable-applications.md`, `raw/designing-data-intensive-applications/chapter-08-the-trouble-with-distributed-systems.md`, `raw/designing-data-intensive-applications/chapter-09-consistency-and-consensus.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/site-reliability-engineering/chapter-21-handling-overload.md`, `raw/site-reliability-engineering/chapter-22-addressing-cascading-failures.md`, `raw/site-reliability-engineering/chapter-26-data-integrity-what-you-read-is-what-you-wrote.md`
+**Sources**: `raw/designing-data-intensive-applications/chapter-01-reliable-scalable-and-maintainable-applications.md`, `raw/designing-data-intensive-applications/chapter-08-the-trouble-with-distributed-systems.md`, `raw/designing-data-intensive-applications/chapter-09-consistency-and-consensus.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/site-reliability-engineering/chapter-21-handling-overload.md`, `raw/site-reliability-engineering/chapter-22-addressing-cascading-failures.md`, `raw/site-reliability-engineering/chapter-26-data-integrity-what-you-read-is-what-you-wrote.md`, `raw/software-architecture-the-hard-parts/chapter-03-architectural-modularity.md`
 
-**Last updated**: 2026-04-17
+**Last updated**: 2026-04-19
 
 ---
 
@@ -140,6 +140,20 @@ Chapter 22's closing argument (source: chapter-22-addressing-cascading-failures.
 
 The fault-tolerance pattern applies with a warning: evaluate each mechanism not just for its steady-state benefit but for its behaviour under overload. See [[cascading-failure]] for the full treatment, including the specific failure modes ([[gc-death-spiral]], [[retry-amplification]], [[bimodal-latency]], [[slow-startup-and-cold-caching]]) and the mitigations ([[queue-management]], [[deadline-propagation]], [[intra-layer-communication]] discipline, and [[testing-for-cascading-failures]]).
 
+## Fault tolerance via architectural modularity (Hard Parts Ch 3)
+
+Chapter 3 of *Software Architecture: The Hard Parts* gives fault tolerance a narrower, architecture-decomposition-focused definition (source: raw/software-architecture-the-hard-parts/chapter-03-architectural-modularity.md):
+
+> the ability for some parts of the system to remain responsive and available as other parts of the system fail.
+
+The canonical illustration: a fatal out-of-memory error in the payment-processing portion of a retail application should not prevent users from searching or placing orders. Ford and Richards argue that monolithic systems fundamentally cannot deliver this — even with multiple load-balanced instances, a programming bug that triggers the fault will exist in every instance. Redundancy without isolation is theatre.
+
+Architectural modularity is the structural answer: breaking the system into independently-deployed units means catastrophic failure is contained within the unit that fails. This is the [[bulkhead]] pattern applied at deployment-unit granularity — the failure of one bulkhead does not flood the others. See [[architectural-modularity]] for the five-driver rubric this fault-tolerance argument is part of.
+
+The chapter's critical caveat: **synchronous coupling defeats this**. If Service A synchronously depends on Service B, and B fails, A fails too. The chapter's prescription — asynchronous communication between services — is the same conclusion Newman's [[robustness-and-resiliency-at-scale]] reaches, and the same conclusion the [[architectural-quantum]] framing produces when applied to services with different availability targets.
+
+The granularity trade-off also applies: domain-level fault tolerance (service-based architecture) isolates failures to one domain service; function-level fault tolerance (microservices) isolates failures to one small service. Finer grain gives finer-grained fault isolation — but only if the communication between services is decoupled enough that failures don't propagate.
+
 ## Related pages
 
 - [[reliability]]
@@ -193,3 +207,5 @@ The fault-tolerance pattern applies with a warning: evaluate each mechanism not 
 - [[data-validation-pipelines]]
 - [[recovery-testing]]
 - [[data-integrity-principles]]
+- [[architectural-modularity]]
+- [[bulkhead]]

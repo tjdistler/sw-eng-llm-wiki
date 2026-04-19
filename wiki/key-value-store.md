@@ -2,9 +2,9 @@
 
 **Summary**: A [[nosql]] database that retrieves records by a single key, functioning as a large-scale, persistent hash map. Key-value stores are the simplest of the NoSQL families — they trade join support, secondary indexing, and query expressiveness for operational simplicity and extreme scale.
 
-**Sources**: `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`
+**Sources**: `raw/fundamentals-of-data-engineering/chapter-05-data-generation-in-source-systems.md`, `raw/software-architecture-the-hard-parts/chapter-06-pulling-apart-operational-data.md`
 
-**Last updated**: 2026-04-18
+**Last updated**: 2026-04-19
 
 ---
 
@@ -39,6 +39,22 @@ For a data engineer pulling from a key-value store as a source:
 - [[distributed-locks-on-kv-stores]] — KV stores are a common substrate for distributed locking.
 - [[document-model]] / [[wide-column-database]] — the two structured variants on the value side.
 
+## Hard Parts ratings and positioning
+
+Chapter 6 of *Software Architecture: The Hard Parts* rates key-value stores on its eight-characteristic matrix (source: raw/software-architecture-the-hard-parts/chapter-06-pulling-apart-operational-data.md):
+
+- **Learning curve — easy.** Simple `get`, `put`, `delete` API. The hard part is *aggregate design* — because values are opaque, any change to the shape of the value means rewriting every stored value. Moving from a relational mindset to a KV mindset takes unlearning: you can't say "give me all the keys."
+- **Data modelling — aggregate-oriented.** Values are memory structures (arrays, maps, blobs). Queries are by key only, so the **key design dominates**. Good keys: `session_id`, `user_id`, `order_id` — things the client already has.
+- **Scalability — very high.** Key-based indexing means no joins, no `ORDER BY`, no cross-record queries. Lookups are O(1) and horizontally-shardable.
+- **Availability / partition tolerance — tunable.** Riak and similar stores offer per-operation quorum levels (`all`, `one`, `quorum`, `default`) — treat KV stores as configurable per-operation, not as a single personality.
+- **Consistency — tunable.** Quorum-based. Higher consistency costs latency (more nodes must acknowledge). Majority quorum is the common trade-off.
+- **Community — good.** Many open source options; most expose HTTP REST APIs, which eases integration.
+- **Read/write priority — read-biased.** Geared toward fast get-by-key; session stores, caches, user-preferences caches are canonical fits.
+
+### Positioning in Hard Parts' decomposition recipe
+
+The [[database-decomposition]] chapter names key-value stores specifically as the better home for **reference data** (country codes, product codes, warehouse codes) that has no real relational structure and only ever gets queried by key. Extracting such tables from a monolithic RDBMS into a KV store is a canonical [[polyglot-persistence]] move (source: raw/software-architecture-the-hard-parts/chapter-06-pulling-apart-operational-data.md).
+
 ## Related pages
 
 - [[nosql]]
@@ -48,3 +64,5 @@ For a data engineer pulling from a key-value store as a source:
 - [[bigtable]]
 - [[source-systems]]
 - [[change-data-capture]]
+- [[database-type-selection]]
+- [[polyglot-persistence]]
