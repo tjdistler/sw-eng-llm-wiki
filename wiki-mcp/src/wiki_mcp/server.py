@@ -118,7 +118,10 @@ TOOL_SPECS: list[dict[str, Any]] = [
         "name": "wiki_check_links",
         "description": (
             "Resolve every `[[wikilink]]` across the given pages (default: all pages) "
-            "and report any that point at a page that does not exist. Ignores anchors."
+            "and report any that point at a page that does not exist. Ignores anchors. "
+            "By default returns `{total_pages_checked, pages_with_issues}` — only pages "
+            "with missing targets or a `page-not-found` error appear in `pages_with_issues`. "
+            "Pass `include_clean: true` to get the full per-page list instead."
         ),
         "inputSchema": {
             "type": "object",
@@ -127,25 +130,47 @@ TOOL_SPECS: list[dict[str, Any]] = [
                     "type": "array",
                     "items": {"type": "string"},
                     "description": "Optional subset of page names. Defaults to all wiki pages.",
-                }
+                },
+                "include_clean": {
+                    "type": "boolean",
+                    "default": False,
+                    "description": "If true, return one entry per page (including clean pages) instead of the filtered summary.",
+                },
             },
             "additionalProperties": False,
         },
     },
     {
         "name": "wiki_list_pages",
-        "description": "List every wiki page (no `.md` suffix). Optional substring filter.",
+        "description": (
+            "List every wiki page (no `.md` suffix). Optional substring filter. "
+            "Use `name_filter` for a single substring, or `name_filters` for an "
+            "OR-combined list of substrings (case-insensitive either way). Passing "
+            "both is an error."
+        ),
         "inputSchema": {
             "type": "object",
             "properties": {
-                "name_filter": {"type": "string"}
+                "name_filter": {
+                    "type": "string",
+                    "description": "Single case-insensitive substring filter.",
+                },
+                "name_filters": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "description": "OR-combined list of case-insensitive substrings.",
+                },
             },
             "additionalProperties": False,
         },
     },
     {
         "name": "raw_list_chapters",
-        "description": "List chapter markdown files under a raw/<book>/ directory, naturally sorted.",
+        "description": (
+            "List chapter markdown files under a raw/<book>/ directory, naturally sorted. "
+            "Each entry includes `chapter`, `line_count`, and `size_bytes` so callers can "
+            "decide whether to read a chapter whole or in chunks without shelling out to `wc -l`."
+        ),
         "inputSchema": {
             "type": "object",
             "properties": {
@@ -173,8 +198,12 @@ def _dispatch() -> dict[str, Handler]:
         "wiki_search": lambda a: wiki_search.wiki_search(
             a["pattern"], a.get("files"), a.get("context", 0)
         ),
-        "wiki_check_links": lambda a: wiki_links.wiki_check_links(a.get("pages")),
-        "wiki_list_pages": lambda a: wiki_search.wiki_list_pages(a.get("name_filter")),
+        "wiki_check_links": lambda a: wiki_links.wiki_check_links(
+            a.get("pages"), a.get("include_clean", False)
+        ),
+        "wiki_list_pages": lambda a: wiki_search.wiki_list_pages(
+            a.get("name_filter"), a.get("name_filters")
+        ),
         "raw_list_chapters": lambda a: wiki_raw.raw_list_chapters(a["book"]),
     }
 

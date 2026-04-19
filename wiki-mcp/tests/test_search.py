@@ -17,6 +17,22 @@ def test_list_pages_filter(sandbox):
     assert wiki_list_pages("zzz") == []
 
 
+def test_list_pages_name_filters_or_union(sandbox):
+    # alpha and gamma, not beta — union of two substrings.
+    assert wiki_list_pages(name_filters=["alph", "gamm"]) == ["alpha", "gamma"]
+
+
+def test_list_pages_name_filters_empty_list_returns_all(sandbox):
+    # An empty or all-empty-string filter list must not filter anything out.
+    assert wiki_list_pages(name_filters=[]) == ["alpha", "beta", "gamma", "index", "log"]
+    assert wiki_list_pages(name_filters=[""]) == ["alpha", "beta", "gamma", "index", "log"]
+
+
+def test_list_pages_rejects_both_filters(sandbox):
+    with pytest.raises(ValueError, match="name_filter"):
+        wiki_list_pages(name_filter="a", name_filters=["b"])
+
+
 def test_search_finds_match(sandbox):
     hits = wiki_search("orphaned")
     assert any(h["page"] == "gamma" and "orphaned" in h["snippet"] for h in hits)
@@ -33,7 +49,21 @@ def test_search_empty_pattern(sandbox):
 
 def test_raw_list_chapters_natural_sort(sandbox):
     chapters = raw_list_chapters("fake")
-    assert chapters == ["chapter-01.md", "chapter-02.md", "chapter-03.md", "chapter-10.md"]
+    names = [c["chapter"] for c in chapters]
+    assert names == ["chapter-01.md", "chapter-02.md", "chapter-03.md", "chapter-10.md"]
+
+
+def test_raw_list_chapters_reports_line_count_and_size(sandbox):
+    chapters = raw_list_chapters("fake")
+    # Sandbox writes single-line files like "# chapter-01.md\n".
+    for entry in chapters:
+        assert set(entry.keys()) == {"chapter", "line_count", "size_bytes"}
+        assert entry["line_count"] == 1
+        # "# chapter-01.md\n" → 17 bytes, etc. Just check non-zero and sensible.
+        assert entry["size_bytes"] > 0
+    # Verify a real chapter path to cross-check line count against disk.
+    ch1 = next(c for c in chapters if c["chapter"] == "chapter-01.md")
+    assert ch1["line_count"] == 1
 
 
 def test_search_empty_files_list_returns_nothing(sandbox):

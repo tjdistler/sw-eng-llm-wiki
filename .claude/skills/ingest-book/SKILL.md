@@ -10,7 +10,21 @@ I want to ingest the content of the "$0" book contained in Markdown files under 
 
 <CRITICAL>Use the Agent tool to ingest the concepts of each chapter one-by-one in a subagent. **DON'T** ingest the chapters in parallel; do it one at a time. Use a subagent to ingest each chapter serially so their content doesn't bloat the main context window and overlapping content will be captured correctly in a serial manner. I only care about **CHAPTERS**, not indexes, prefaces, introductions, or appendices. Focus on the main content of the book. **DON'T** lint the wiki as part of ingestion. I will lint later.
 
-After writing or editing pages, use the `wiki-mcp` tools (`mcp__wiki-mcp__wiki_page_status`, `mcp__wiki-mcp__wiki_check_links`, `mcp__wiki-mcp__wiki_tail_log`, `mcp__wiki-mcp__wiki_list_sections`, `mcp__wiki-mcp__wiki_search`, etc.) for verification rather than shelling out to `ls`, `wc`, `grep`, or `tail`. These tools are pre-approved and scoped to the wiki, so they won't trigger permission prompts.</CRITICAL>
+For verification and discovery, **do not** shell out to `ls`, `wc`, `grep`, `cat`, or `tail` against `wiki/` or `raw/`. The `wiki-mcp` tools below are pre-approved, scoped, and do not trigger permission prompts. Use them instead:
+
+| Don't shell out to… | Use instead |
+|---|---|
+| `ls wiki/` | `mcp__wiki-mcp__wiki_list_pages` (supports `name_filter` or OR-combined `name_filters`) |
+| `ls raw/<book>/` | `mcp__wiki-mcp__raw_list_chapters` (returns `line_count` and `size_bytes` per chapter) |
+| `wc -l` on a wiki page | `mcp__wiki-mcp__wiki_page_status` (returns `line_count`) |
+| `wc -l` on a raw chapter | `mcp__wiki-mcp__raw_list_chapters` (returns `line_count` per chapter) |
+| `grep` in `wiki/` | `mcp__wiki-mcp__wiki_search` |
+| `tail wiki/log.md` / `wiki/index.md` | `mcp__wiki-mcp__wiki_tail_log` / `mcp__wiki-mcp__wiki_tail_index` |
+| Reading a specific line range of a page | `mcp__wiki-mcp__wiki_read_range` |
+| Listing a page's headings | `mcp__wiki-mcp__wiki_list_sections` |
+| Verifying wikilinks resolve | `mcp__wiki-mcp__wiki_check_links` (returns only pages with issues by default) |
+
+When appending to `wiki/log.md`, use `Edit` with an `old_string` that anchors on the last existing line of the file — **do not** use `cat >> wiki/log.md << 'EOF' … EOF`. You already `Read` `log.md` during ingestion, so the anchor text is in-context.</CRITICAL>
 
 ## Related files
 - `CLAUDE.md`

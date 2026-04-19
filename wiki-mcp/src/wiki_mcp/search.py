@@ -10,7 +10,14 @@ import subprocess
 from .paths import PathEscape, wiki_read_path, wiki_root
 
 
-def wiki_list_pages(name_filter: str | None = None) -> list[str]:
+def wiki_list_pages(
+    name_filter: str | None = None,
+    name_filters: list[str] | None = None,
+) -> list[str]:
+    if name_filter is not None and name_filters is not None:
+        raise ValueError(
+            "Pass either name_filter or name_filters, not both."
+        )
     root = wiki_root()
     if not root.exists():
         return []
@@ -18,6 +25,10 @@ def wiki_list_pages(name_filter: str | None = None) -> list[str]:
     if name_filter:
         needle = name_filter.lower()
         pages = [p for p in pages if needle in p.lower()]
+    elif name_filters:
+        needles = [n.lower() for n in name_filters if n]
+        if needles:
+            pages = [p for p in pages if any(n in p.lower() for n in needles)]
     return pages
 
 

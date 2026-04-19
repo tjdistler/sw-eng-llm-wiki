@@ -44,12 +44,14 @@ def _all_stems() -> set[str]:
     return {p.stem for p in root.glob("*.md")}
 
 
-def wiki_check_links(pages: list[str] | None = None) -> list[dict]:
+def wiki_check_links(
+    pages: list[str] | None = None,
+    include_clean: bool = False,
+) -> dict | list[dict]:
     stems = _all_stems()
     root = wiki_root()
 
     if pages is None:
-        # Default: every page in the wiki.
         sources = sorted(root.glob("*.md"))
     else:
         sources = []
@@ -60,14 +62,28 @@ def wiki_check_links(pages: list[str] | None = None) -> list[dict]:
                 continue
             sources.append(path)
 
-    results: list[dict] = []
+    per_page: list[dict] = []
     for path in sources:
-        missing: list[str] = []
         if path.exists():
+            missing: list[str] = []
             for target in _extract_targets(path.read_text(encoding="utf-8")):
                 if target not in stems and target not in missing:
                     missing.append(target)
-            results.append({"page": path.stem, "missing_targets": missing})
+            per_page.append({"page": path.stem, "missing_targets": missing})
         else:
-            results.append({"page": path.stem, "missing_targets": [], "error": "page-not-found"})
-    return results
+            per_page.append(
+                {"page": path.stem, "missing_targets": [], "error": "page-not-found"}
+            )
+
+    if include_clean:
+        return per_page
+
+    pages_with_issues = [
+        entry
+        for entry in per_page
+        if entry["missing_targets"] or "error" in entry
+    ]
+    return {
+        "total_pages_checked": len(per_page),
+        "pages_with_issues": pages_with_issues,
+    }

@@ -20,10 +20,25 @@ def _natural_key(name: str) -> str:
     return _DIGIT_RUN.sub(lambda m: m.group(0).zfill(20), name.lower())
 
 
-def raw_list_chapters(book: str) -> list[str]:
+def _count_lines(path) -> int:
+    count = 0
+    with path.open("rb") as f:
+        for _ in f:
+            count += 1
+    return count
+
+
+def raw_list_chapters(book: str) -> list[dict]:
     book_dir = raw_read_path(book)
     if not book_dir.is_dir():
         raise FileNotFoundError(f"Raw book directory does not exist: {book}")
-    names = [p.name for p in book_dir.glob("*.md")]
-    names.sort(key=_natural_key)
-    return names
+    paths = sorted(book_dir.glob("*.md"), key=lambda p: _natural_key(p.name))
+    entries: list[dict] = []
+    for path in paths:
+        stat = path.stat()
+        entries.append({
+            "chapter": path.name,
+            "line_count": _count_lines(path),
+            "size_bytes": stat.st_size,
+        })
+    return entries
