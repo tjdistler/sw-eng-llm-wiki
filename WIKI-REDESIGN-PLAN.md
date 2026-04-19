@@ -358,7 +358,7 @@ Write per §1 template with these refinements folded in:
 
 **Commit**: 1. **Critical review checkpoint**: voice, density, every wikilink earns a "why"/"when", raw chapter anchors resolve, linter green. This is the template the remaining 15 MOCs copy — iterate here before Phase 3.
 
-### Phase 3 — Architecture-core MOCs (4)
+### Phase 3 — Architecture-core MOCs (4) ✅ Complete (2026-04-19)
 
 `moc-architecture-fundamentals`, `moc-risk-and-communication`, `moc-architecture-styles`, `moc-components-and-partitioning`.
 **Commits**: 1 per MOC, or bundled. **Review**: cluster-wide coherence; consistent terminology.

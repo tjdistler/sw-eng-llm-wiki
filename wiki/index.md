@@ -6,6 +6,10 @@ Narrative entry points for multi-cluster questions. Read the MOC first to find t
 
 | Page | Description |
 |---|---|
+| [[moc-architecture-fundamentals]] | What software architecture *is* — definition, laws, characteristics (-ilities), the quantum, fitness functions, evolution, ADRs, trade-off discipline, the architect's stance |
+| [[moc-risk-and-communication]] | The architect's soft-skills half — risk matrix and risk storming, diagramming, presentation, leadership, providing guidance, negotiation, career path |
+| [[moc-architecture-styles]] | The catalogue of canonical styles — layered, pipeline, microkernel, service-based, event-driven, space-based, orchestration-driven SOA, microservices; comparison and choice |
+| [[moc-components-and-partitioning]] | The inside-the-box partitioning view — components, technical-vs-domain partitioning, the cohesion/coupling/connascence triad, granularity drivers, *Hard Parts*'s component-decomposition playbook |
 | [[moc-decomposition]] | Extracting a service from a monolith — decision frame, seams, extraction patterns, DB decomposition, correctness, org pressure, operational step-up |
 
 ## Source summaries
