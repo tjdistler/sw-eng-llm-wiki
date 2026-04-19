@@ -29,7 +29,7 @@ The book emphasizes:
 | 4 | Decomposing the Database | Ingested 2026-04-16 |
 | 5 | Growing Pains | Ingested 2026-04-16 |
 
-## Chapter 1 concepts
+## Chapter 1: Just Enough Microservices
 
 Chapter 1 establishes the foundation: what microservices are, what monoliths are, and the three forces (coupling, cohesion, domain modeling) that drive how to decompose one into the other.
 
@@ -55,7 +55,7 @@ Organizational alignment:
 
 - [[conways-law]] — why three-tier architectures are everywhere, and what changes with microservices
 
-## Chapter 2 concepts
+## Chapter 2: Planning a Migration
 
 Chapter 2 reframes the entire decision: microservices are not a goal, they are a means to specific outcomes. The chapter covers the *why*, *whether*, *how-to-prioritise*, and *how-to-survive-organisationally* questions of a migration.
 
@@ -88,7 +88,7 @@ Knowing when to change course:
 
 - [[measuring-microservice-transition]] — quantitative + qualitative; checkpoints; the sunk cost fallacy
 
-## Chapter 3 concepts
+## Chapter 3: Splitting the Monolith
 
 Chapter 3 is the pattern catalogue for actually moving functionality out of the monolith. Newman's central message: incremental migration to microservices is a portfolio of well-known patterns, each with a specific shape of problem it fits. Most real migrations use a mix.
 
@@ -110,7 +110,7 @@ Pattern selection and supporting concepts:
 - [[progressive-delivery]] — umbrella term covering parallel run, canary, dark launch, feature toggles
 - [[service-mesh]] — per-service local proxies; avoids the shared-smart-pipe problem when the strangler fig proxy starts accumulating per-service logic
 
-## Chapter 4 concepts
+## Chapter 4: Decomposing the Database
 
 Chapter 4 is the longest and most technically detailed chapter: the pattern catalogue for decomposing the database itself. Newman's view is that schema decomposition is the most expensive end of the migration work, and worth slowing down for.
 
@@ -160,7 +160,7 @@ Augmented existing pages:
 - [[eventual-consistency]] — framing in microservice migrations; reconciliation as a practice
 - [[information-hiding]] — database-decomposition as the embodiment of the principle
 
-## Chapter 5 concepts
+## Chapter 5: Growing Pains
 
 Chapter 5 — *Growing Pains* — is the final substantive chapter. Newman catalogues the operational and organisational pain points that emerge as service count grows. Each section follows the same shape: how the pain shows itself, when it might occur, and potential solutions. His framing: think of microservice adoption as a dial, not a switch — as you turn it up, you encounter different problems at different scales.
 

@@ -43,7 +43,7 @@ The recurring payoff: the event broker is an *infrastructure-level* commitment. 
 | 16 | Deploying Event-Driven Microservices | Ingested 2026-04-17 |
 | 17 | Conclusion | Ingested 2026-04-17 |
 
-## Foundations (Chapters 1–2)
+## Chapter 1: Why Event-Driven Microservices
 
 The first two chapters establish what an event-driven microservice *is* and why it differs from a [[synchronous-microservices|synchronous microservice]]. Bellemare's framing: services talk through durable event streams rather than point-to-point RPC, and the [[event-broker]] becomes the organisation's load-bearing piece of infrastructure.
 
@@ -54,6 +54,8 @@ Hub pages:
 - [[microservice-topology]] and [[business-topology]] — how single services compose into a domain-aligned graph
 - [[microservice-tax]] — the baseline operational cost of running a microservice; the threshold that makes or breaks the architecture
 - [[container-management-system]] — Kubernetes and friends as the substrate that keeps the tax affordable
+
+## Chapter 2: Event-Driven Microservice Fundamentals
 
 The event broker and the log:
 
@@ -66,7 +68,7 @@ The event broker and the log:
 - [[consumer-offset]] and [[consumer-group]] — position tracking and horizontal scaling within a topic
 - [[single-writer-principle]] — exactly one service owns writes to a given stream; the discipline that makes [[event-as-single-source-of-truth]] workable
 
-## Communication and data contracts (Chapter 3)
+## Chapter 3: Communication and Data Contracts
 
 Chapter 3 is where event-driven architecture meets the hard problem of inter-team coordination. Bellemare's stance: the schema on the broker is a public API, and must be treated with the same rigour as any other published contract.
 
@@ -79,7 +81,7 @@ Chapter 3 is where event-driven architecture meets the hard problem of inter-tea
 - [[singular-event-definition-per-stream]] — why polymorphic streams cause pain
 - [[event-as-single-source-of-truth]] — the organisational commitment that makes the whole architecture cohere
 
-## Integrating with existing systems (Chapter 4)
+## Chapter 4: Integrating Event-Driven Architectures with Existing Systems
 
 Most organisations cannot start greenfield. Chapter 4 is the pattern catalogue for getting data *out* of the monolithic databases and legacy systems that currently hold it.
 
@@ -91,7 +93,7 @@ Most organisations cannot start greenfield. Chapter 4 is the pattern catalogue f
 - [[eventification]] — refactoring an existing service to publish domain events alongside (or instead of) its DB writes
 - [[data-liberation-framework]] — Bellemare's generic framework combining the above with a [[schema-registry]] and monitoring
 
-## Processing basics (Chapter 5)
+## Chapter 5: Event-Driven Processing Basics
 
 Chapter 5 covers what services actually *do* with events once they arrive. This is the stateless half of stream processing; stateful work is deferred to Chapter 7.
 
@@ -102,7 +104,7 @@ Chapter 5 covers what services actually *do* with events once they arrive. This 
 - [[copartitioning]] — align two streams on the same key so joins can happen locally
 - [[partition-assignor]] — how consumers in a group divide partitions among themselves
 
-## Determinism (Chapter 6)
+## Chapter 6: Deterministic Stream Processing
 
 Chapter 6 addresses the subtlest problem in stream processing: producing the same answer twice from the same inputs, even when events arrive late or out of order. Without determinism, [[reprocessing-event-streams|reprocessing]] from the start of time produces different results than the original run — and most of the book's operational patterns depend on being able to reprocess.
 
@@ -115,7 +117,7 @@ Chapter 6 addresses the subtlest problem in stream processing: producing the sam
 - [[late-arriving-events]] — arriving after the watermark; handling policies
 - [[reprocessing-event-streams]] — the operational payoff of determinism; rewind the offset, run again
 
-## Stateful streaming (Chapter 7)
+## Chapter 7: Stateful Streaming
 
 Chapter 7 is where stream processing becomes interesting. Real applications need aggregates, joins, and materialised views — which means keeping state across events, surviving restarts, and scaling horizontally.
 
@@ -130,18 +132,18 @@ Chapter 7 is where stream processing becomes interesting. Real applications need
 - [[state-store-rebuilding-vs-migrating]] — the operational decision during deployments
 - [[effectively-once-processing]] — Bellemare's pragmatic alternative to "exactly once": idempotence plus transactional writes (see also [[exactly-once-semantics]])
 
-## Workflows (Chapter 8)
+## Chapter 8: Building Workflows with Microservices
 
 Chapter 8 is short but important: how do you implement a multi-step business process in a world where every step is a separately deployed microservice?
 
 - [[workflows-in-edm]] — choreography vs orchestration in an event-driven world
 - [[compensation-workflow]] — the event-driven counterpart to the [[saga]]; undoing in-flight work when a step fails
 
-## Microservice implementation styles (Chapters 9–12)
+## Microservice implementation styles
 
 Chapters 9–12 form the book's pattern catalogue for the *implementation* of an event-driven microservice. Bellemare's core point: there is no single right answer. Each style has a niche, and large organisations usually run all four.
 
-### FaaS (Chapter 9)
+### Chapter 9: Microservices Using Function-as-a-Service
 
 - [[functions-as-a-service]] — the hub; per-invocation, autoscaled compute
 - [[event-stream-listener]] — the component that pulls events and dispatches them to the function
@@ -151,13 +153,13 @@ Chapters 9–12 form the book's pattern catalogue for the *implementation* of an
 - [[faas-batch-processing]] — amortise invocation overhead across many events
 - [[faas-function-composition]] — chaining functions via streams; avoiding direct invocation
 
-### Basic producer/consumer (Chapter 10)
+### Chapter 10: Basic Producer and Consumer Microservices
 
 - [[basic-producer-consumer-microservice]] — the simplest shape: a loop that consumes, processes, and produces
 - [[gating-pattern]] — single-consumer coordination via an auxiliary stream; the event-driven lock
 - [[hybrid-bpc-stream-processing]] — BPC plus a state store when you need both simplicity and memory
 
-### Heavyweight frameworks (Chapter 11)
+### Chapter 11: Heavyweight Framework Microservices
 
 - [[heavyweight-framework-microservice]] — Spark Streaming, Flink, Storm; cluster-resident stream processing
 - [[stream-processing-cluster]] — the shared compute substrate that services submit jobs to
@@ -167,13 +169,13 @@ Chapters 9–12 form the book's pattern catalogue for the *implementation* of an
 - [[stream-processing-scaling-strategies]] — horizontal, vertical, and partition-count trade-offs
 - [[multitenancy-in-streaming-clusters]] — isolation, resource quotas, the noisy-neighbour problem
 
-### Lightweight frameworks (Chapter 12)
+### Chapter 12: Lightweight Framework Microservices
 
 - [[lightweight-framework-microservice]] — Kafka Streams, Samza; the library-not-cluster model
 - [[broker-as-shuffle-service]] — the trick that lets a library do what a heavyweight cluster needs its own shuffle service for
 - [[stream-table-table-join]] — the three-way join enabled by co-partitioning plus materialised state
 
-## Request-response integration (Chapter 13)
+## Chapter 13: Integrating Event-Driven and Request-Response Microservices
 
 Chapter 13 is the honest admission that event-driven is not the whole world. Users still hit HTTP endpoints; third-party APIs are still synchronous. Bellemare catalogues the patterns for bridging the two worlds.
 
@@ -186,7 +188,7 @@ Chapter 13 is the honest admission that event-driven is not the whole world. Use
 - [[asynchronous-ui]] — UIs that subscribe to events rather than poll
 - [[micro-frontends]] — UI-level counterpart to microservices; an event-driven variant
 
-## Supportive tooling (Chapter 14)
+## Chapter 14: Supportive Tooling
 
 Chapter 14 is the operational reality check: the [[microservice-tax]] is only affordable if the platform team has built the right tooling.
 
@@ -205,7 +207,7 @@ Chapter 14 is the operational reality check: the [[microservice-tax]] is only af
 - [[data-lineage]] — end-to-end provenance; the audit and debugging story
 - [[orphaned-streams]] — streams with no producer or no consumer; the counterpart to [[orphaned-services]]
 
-## Testing (Chapter 15)
+## Chapter 15: Testing Event-Driven Microservices
 
 - [[unit-testing-topology-functions]] — testing individual transformations in isolation
 - [[topology-testing]] — testing the full stream-processing graph without a real broker
@@ -214,7 +216,7 @@ Chapter 14 is the operational reality check: the [[microservice-tax]] is only af
 - [[hosted-service-mocks]] — wiremocks and service virtualisation for third-party calls
 - [[test-data-strategies]] — production snapshots, synthetic data, property-based generation
 
-## Deployment (Chapter 16)
+## Chapter 16: Deploying Event-Driven Microservices
 
 Chapter 16 closes the book with the mechanics of rolling out event-driven microservices safely. The key twist: deployment is not just "swap the binary" — it interacts with partitions, state stores, and schema compatibility.
 
