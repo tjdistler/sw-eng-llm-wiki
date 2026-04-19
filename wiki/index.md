@@ -38,8 +38,6 @@
 | [[analytics]] | BI vs operational vs embedded / customer-facing; self-service; multi-tenancy |
 | [[reverse-etl]] | Warehouse-to-source feedback; Hightouch/Census productisation |
 | [[etl-vs-elt]] | Transform before load vs after; why ELT rose with cloud warehouses |
-| [[data-lake]] | Raw-first schema-on-read storage; archival and destruction problem |
-| [[data-lakehouse]] | Lake foundation + warehouse guarantees; Delta Lake, Iceberg, Hudi |
 | [[feature-store]] | Data-engineering × ML-engineering tool; feature history, sharing, backfill |
 
 ## Source systems (FoDE Ch 5)
@@ -466,7 +464,6 @@ The ninth Part II style — microservices — is catalogued in *Microservices fu
 | Page | Description |
 |---|---|
 | [[oltp-vs-olap]] | OLTP (many small key lookups) vs OLAP (few huge scans for aggregates) |
-| [[data-warehousing]] | ETL, star/snowflake schemas, fact and dimension tables |
 | [[column-oriented-storage]] | Store by column not row; compression, vectorized processing, OLAP cubes |
 
 ## Storage systems (FoDE Ch 6)
@@ -976,7 +973,6 @@ The ninth Part II style — microservices — is catalogued in *Microservices fu
 |---|---|
 | [[data-integration]] | Making data available in the right form across multiple specialized systems |
 | [[unbundling-databases]] | Decomposing database features into composable systems connected by event logs |
-| [[lambda-architecture]] | Running batch and stream in parallel; problems and successors |
 | [[derived-data]] | Data created by transforming a system of record; write path vs read path |
 | [[end-to-end-argument]] | Infrastructure guarantees are insufficient; application-level operation IDs needed |
 | [[exactly-once-semantics]] | Effectively-once via idempotence and end-to-end operation identifiers |

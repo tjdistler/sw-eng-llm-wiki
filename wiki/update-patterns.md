@@ -68,9 +68,9 @@ Adding, deleting, or renaming columns. Columnar systems make this relatively che
 
 See [[schema-evolution]].
 
-## Copy-on-write (COW)
+## Copy-on-write
 
-File-based storage doesn't support in-place file updates. Any logical update rewrites one or more files with the new state (source: raw/fundamentals-of-data-engineering/chapter-08-queries-modeling-and-transformation.md):
+File-based storage doesn't support in-place file updates. Any logical update rewrites one or more files with the new state — this is **copy-on-write (COW)** (source: raw/fundamentals-of-data-engineering/chapter-08-queries-modeling-and-transformation.md):
 
 - COW seldom rewrites the whole table — modern systems operate at partition, cluster, or block resolution.
 - Merges can be extremely performant for **large update batches** and may outperform transactional databases at that scale.

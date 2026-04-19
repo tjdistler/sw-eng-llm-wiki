@@ -37,7 +37,7 @@ Chapter 2 is explicit that the stages interleave in real systems (source: raw/fu
 
 ## The six undercurrents
 
-Concerns that cut across every stage, not confined to any one step (source: raw/fundamentals-of-data-engineering/chapter-01-data-engineering-described.md; elaborated in source: raw/fundamentals-of-data-engineering/chapter-02-the-data-engineering-lifecycle.md):
+Concerns that cut across every stage, not confined to any one step (source: raw/fundamentals-of-data-engineering/chapter-01-data-engineering-described.md) (elaborated in source: raw/fundamentals-of-data-engineering/chapter-02-the-data-engineering-lifecycle.md):
 
 - **[[data-security|Security]]** — encryption, access control, [[least-privilege]], multi-tenant isolation, timing of access.
 - **[[data-management|Data management]]** — [[data-governance|governance]], [[data-quality|quality]], [[master-data-management|master data]], [[data-lineage|lineage]], [[data-modeling|modeling]], [[metadata|metadata]], [[data-lifecycle-management|lifecycle management]], ethics and privacy.
