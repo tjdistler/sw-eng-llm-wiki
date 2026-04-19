@@ -35,7 +35,7 @@ The central framing: most applications today are **data-intensive** (constrained
 | 11 | Stream Processing | Ingested 2026-04-15 |
 | 12 | The Future of Data Systems | Ingested 2026-04-15 |
 
-## Chapter 1 concepts
+## Chapter 1: Reliable, Scalable, and Maintainable Applications
 
 Chapter 1 establishes the three fundamental properties all data systems should aim for:
 
@@ -51,7 +51,7 @@ Supporting concepts:
 - [[scaling-approaches]] — vertical, horizontal, elastic, manual
 - [[accidental-complexity]] — complexity to eliminate, vs essential complexity to accept
 
-## Chapter 2 concepts
+## Chapter 2: Data Models and Query Languages
 
 Chapter 2 covers the landscape of data models and query languages — the central thesis being that the choice of data model shapes everything above it.
 
@@ -66,7 +66,7 @@ Chapter 2 covers the landscape of data models and query languages — the centra
 - [[declarative-vs-imperative-queries]] — why SQL and CSS beat imperative APIs
 - [[data-locality]] — adjacent storage for faster full-document reads
 
-## Chapter 3 concepts
+## Chapter 3: Storage and Retrieval
 
 Chapter 3 covers how databases store and retrieve data internally — the storage engine layer that sits below the data model. Two families of storage engines serve two different workload types.
 
@@ -83,7 +83,7 @@ Analytics-oriented storage:
 - [[data-warehousing]] — ETL, star/snowflake schemas, fact and dimension tables
 - [[column-oriented-storage]] — store by column; compression, vectorized processing, OLAP cubes
 
-## Chapter 4 concepts
+## Chapter 4: Encoding and Evolution
 
 Chapter 4 covers encoding (serialization) formats and how data flows between processes — the infrastructure layer that sits beneath service APIs, databases, and message queues. The central concern is maintaining [[backward-forward-compatibility]] as systems evolve.
 
@@ -98,7 +98,7 @@ Modes of dataflow:
 - [[rpc]] — remote procedure calls; why the local-call abstraction leaks; REST as the honest alternative; gRPC and modern RPC
 - [[message-brokers]] — async message passing; decoupling, buffering, fan-out; the actor model
 
-## Chapter 5 concepts
+## Chapter 5: Replication
 
 Chapter 5 covers replication — keeping a copy of the same data on multiple machines. The central thesis: replication seems simple but is extraordinarily hard because of the need to handle *changes* to replicated data under network delays, node failures, and concurrency.
 
@@ -120,7 +120,7 @@ Failover and conflicts:
 - [[quorums]] — w+r>n overlap; sloppy quorums; the edge cases that undermine quorum safety
 - [[version-vectors]] — tracking happens-before relationships across replicas
 
-## Chapter 6 concepts
+## Chapter 6: Partitioning
 
 Chapter 6 covers partitioning (sharding) — splitting a dataset across multiple machines for scalability. Two key-based strategies (key-range and hash) trade off range query efficiency against load distribution. Secondary indexes interact with partitioning through local (document-partitioned) and global (term-partitioned) approaches. Rebalancing strategies handle cluster topology changes. Request routing and service discovery complete the picture.
 
@@ -133,7 +133,7 @@ Chapter 6 covers partitioning (sharding) — splitting a dataset across multiple
 - [[request-routing]] — service discovery: routing tiers, client awareness, ZooKeeper
 - [[service-discovery]] — general problem of locating services across redundant machines
 
-## Chapter 7 concepts
+## Chapter 7: Transactions
 
 Chapter 7 covers transactions as the primary abstraction for simplifying concurrency and fault tolerance. It systematically builds a hierarchy of isolation levels, characterizes five key race conditions (dirty reads/writes, read skew, lost updates, write skew, phantoms), and compares three approaches to serializability: actual serial execution, two-phase locking, and serializable snapshot isolation.
 
@@ -153,7 +153,7 @@ Chapter 7 covers transactions as the primary abstraction for simplifying concurr
 - [[serializable-snapshot-isolation]] — optimistic serializability (2008); conflict detection at commit
 - [[actual-serial-execution]] — single-threaded with stored procedures; feasible when data fits in memory
 
-## Chapter 8 concepts
+## Chapter 8: The Trouble with Distributed Systems
 
 Chapter 8 catalogs everything that can go wrong in a distributed system — the foundational "trouble" that Chapters 9–12 build solutions for. The core insight: distributed systems suffer *partial failures* that are nondeterministic, unlike single-machine programs that either work or crash completely.
 
@@ -170,7 +170,7 @@ Chapter 8 catalogs everything that can go wrong in a distributed system — the 
 - [[system-models]] — timing and failure models for reasoning about algorithms
 - [[safety-and-liveness]] — nothing bad happens vs something good eventually happens
 
-## Chapter 9 concepts
+## Chapter 9: Consistency and Consensus
 
 Chapter 9 builds the solution to Chapter 8's problems: from linearizability (the strongest single-object guarantee) through causal consistency (the strongest without coordination) to consensus (the fundamental agreement primitive). It shows that linearizability, total order broadcast, and consensus are equivalent problems, and that ZooKeeper provides a practical implementation.
 
@@ -185,7 +185,7 @@ Chapter 9 builds the solution to Chapter 8's problems: from linearizability (the
 - [[state-machine-replication]] — deterministic replicas, same order, same state
 - [[zookeeper]] — coordination service with consensus-based primitives
 
-## Chapter 10 concepts
+## Chapter 10: Batch Processing
 
 Chapter 10 covers batch processing — the third type of system (alongside online services and stream processors). It traces a lineage from Unix pipes through MapReduce to modern dataflow engines, showing how the same principles (immutable inputs, no side effects, composable operators) scale from a single machine to a cluster.
 
@@ -201,7 +201,7 @@ Chapter 10 covers batch processing — the third type of system (alongside onlin
 - [[hadoop-vs-mpp-databases]] — schema-on-read vs modeling; processing diversity; fault tolerance
 - [[graph-batch-processing]] — Pregel/BSP; vertex-centric message passing
 
-## Chapter 11 concepts
+## Chapter 11: Stream Processing
 
 Chapter 11 covers stream processing — treating data as unbounded, continuously arriving events rather than fixed-size batches. It traces transport mechanisms from direct messaging through traditional message brokers to log-based brokers (Kafka), then covers three sources of streams (user activity, sensor data, and derived streams via CDC and event sourcing), and finally addresses stream processing patterns (joins, windowing) and fault tolerance.
 
@@ -214,7 +214,7 @@ Chapter 11 covers stream processing — treating data as unbounded, continuously
 - [[windowing]] — event time vs processing time; tumbling, hopping, sliding, session windows
 - [[stream-processing-fault-tolerance]] — microbatching, checkpointing, idempotent writes, atomic commits
 
-## Chapter 12 concepts
+## Chapter 12: The Future of Data Systems
 
 Chapter 12 synthesizes the book's themes into a vision for the future of data systems. It argues for composing specialized tools via derived data pipelines rather than relying on monolithic databases, and pushes correctness guarantees to the application level via end-to-end arguments.
 

@@ -39,7 +39,7 @@ Across the three parts the recurring payoff is the same: naming a pattern turns 
 | 12 | Coordinated Batch Processing | Ingested 2026-04-16 |
 | 13 | Conclusion: A New Beginning | Skipped (conclusion) |
 
-## Chapter 2 concepts
+## Chapter 2: The Sidecar Pattern
 
 Chapter 2 introduces the **sidecar pattern** as the first of the single-node patterns. Its thesis: two coscheduled containers — an application container plus a sidecar — can add capability to an application through a separate deployable unit instead of through source changes. That opens two doors: adapting legacy applications that are too expensive to modify, and building reusable utility containers (introspection, TLS termination, config sync, git-pull-based PaaS) that any application can compose with. The chapter closes with a design discipline for sidecars to be truly reusable: parameterize, define the API surface, document.
 
@@ -52,7 +52,7 @@ Pages created from this chapter:
 
 Existing pages augmented: [[service-mesh]] (positioned as a large-scale sidecar deployment), [[information-hiding]] (sidecars as deployment-layer information hiding).
 
-## Chapter 3 concepts
+## Chapter 3: Ambassadors
 
 Chapter 3 introduces the **ambassador pattern**, the second of Burns's single-node patterns. An ambassador container brokers the *outbound* connections of the application container — taking sharding, service discovery, and request-splitting logic out of the application process and into a coresident proxy. The application connects to what it believes is a single backend on `localhost`; the ambassador applies whatever outward-facing logic the deployment needs. Like the sidecar, the pattern pays off in modularity and reuse: twemproxy fronting sharded Redis, nginx splitting 10% of traffic to an experiment, and off-the-shelf service brokers can be dropped in front of any application. Burns recurrently flags the client-side ambassador vs server-side proxy-tier trade-off: either is valid, and the right answer depends on how longstanding the logic is and where team boundaries fall.
 
@@ -65,7 +65,7 @@ Pages created from this chapter:
 
 Existing pages augmented: [[sidecar-pattern]] (ambassador cross-reference and distinction), [[pod]], [[modular-reusable-containers]] (ambassadors share the discipline), [[service-mesh]] (ambassador as the outbound primitive), [[service-discovery]], [[request-routing]], [[consistent-hashing]] (ketama), [[partitioning]], [[parallel-run-pattern]], [[progressive-delivery]].
 
-## Chapter 4 concepts
+## Chapter 4: Adapters
 
 Chapter 4 completes the Part I trilogy with the **adapter pattern**: a coresident container that transforms the interface an application container exposes so it matches a uniform standard that fleet tooling expects (monitoring, logging, health checks). The thesis is the heterogeneity argument: real-world deployments assemble code written in-house, by vendors, and off-the-shelf open source in many languages with many conventions; a single tool for monitoring, logging, or health probing presupposes a single interface; the adapter container provides that translation without modifying the application image. Burns's three canonical applications — a Prometheus exporter for Redis, a fluentd adapter normalising logs from Redis and Storm, and a Go adapter running representative SQL against MySQL — are all structurally the same: application's native interface inward, fleet-standard interface outward. The closing note in the chapter is unusually broad: adapters are structurally friendly to community contribution, and the pattern becomes a mechanism for packaging and sharing operational expertise.
 
@@ -78,7 +78,7 @@ Pages created from this chapter:
 
 Existing pages augmented: [[sidecar-pattern]] and [[ambassador-pattern]] (adapter sibling cross-reference, trilogy table), [[pod]] (adapter to Related), [[modular-reusable-containers]] (adapters apply too), [[monitoring-and-observability]] (adapter pattern as container-level mechanism), [[log-aggregation]] (adapter as the normalisation step), [[service-mesh]] (adapter role within the mesh story), [[information-hiding]] (adapters as deployment-layer information hiding), [[legacy-modernization]] (adapters complement sidecars for observability).
 
-## Chapter 5 concepts
+## Chapter 5: Replicated Load-Balanced Services
 
 Chapter 5 opens Part II of the book — the Serving Patterns — with the **replicated load-balanced service**, the simplest multi-node pattern and the foundation all the other serving patterns build on. Its thesis: a stateless service replicated behind a load balancer is horizontally scalable and highly available by default, provided you also deploy the machinery that makes the load balancer behave correctly — especially a **readiness probe** that keeps unfinished replicas out of the pool. From there, the chapter develops two refinements of the base pattern: **session tracking** (when per-user affinity is needed, implemented via IP hash inside the cluster and via cookies/headers across NAT or upstream proxies, with consistent hashing to minimise disruption during scaling) and **application-layer replicated tiers** (stacking replicated load-balanced services on top of each other — a caching tier in front of the app, an SSL-terminating tier in front of the cache — to add capability without changing either the inner or outer tier).
 
@@ -95,7 +95,7 @@ Pages created from this chapter:
 
 Existing pages augmented: [[scaling-approaches]] (horizontal stateless scaling as the textbook case), [[consistent-hashing]] (session affinity as another CDN-style use), [[sidecar-pattern]] (cache-as-sidecar as a worked when-not-to-use example), [[service-mesh]] (mesh proxies as the fleet-wide implementation of session affinity and edge TLS), [[health-check-adapter]] (readiness-vs-liveness framing added), [[fault-tolerance]] (readiness probes as graceful-degradation substrate).
 
-## Chapter 6 concepts
+## Chapter 6: Sharded Services
 
 Chapter 6 is the second serving pattern — the **sharded service**. Where the Chapter 5 [[replicated-load-balanced-service]] had identical stateless replicas sitting behind a round-robin load balancer, a sharded service's replicas each hold a disjoint subset of state, and a **root** examines each request and routes it to the shard that owns it. The thesis: when state outgrows a single machine — Burns's canonical example is a cache whose working set exceeds any one replica's memory — the replicated pattern wastes most of the memory you paid for, and sharding is the answer. Each shard stores unique data, so aggregate cache size grows linearly with shard count.
 
@@ -115,7 +115,7 @@ Pages created from this chapter:
 
 Existing pages augmented: [[partitioning]] (stateful-serving-tier section linking to the Chapter 6 pages), [[consistent-hashing]] (re-sharding-as-cache-flush argument + the nginx `hash $request_uri consistent` example), [[hot-spots]] (hot-sharding as service-level response), [[rebalancing-partitions]] (Burns's naive-`hash % N` warning and per-shard replica rebalancing), [[request-routing]] (the "root" concept and shared-shard-router deployment option), [[client-side-sharding]] (Chapter 6 cross-reference and per-pod vs shared trade-off), [[caching-layer]] (sharded-vs-replicated fork), [[ambassador-pattern]] (Chapter 6 revisits ambassador as sharded-service root), [[replicated-load-balanced-service]] (composition with sharding noted).
 
-## Chapter 7 concepts
+## Chapter 7: Scatter/Gather
 
 Chapter 7 is the third serving pattern — **scatter/gather** — the final piece of the serving-pattern trilogy. Where the [[replicated-load-balanced-service]] replicates for request throughput and the [[sharded-service-pattern]] shards for state size, scatter/gather replicates for **time**: it fans a single request out to many leaves in parallel and combines their partial results, shrinking wall-clock latency by running lots of mostly independent work concurrently. Burns's thesis in the chapter is compact but architecturally important. He walks through two variants (homogeneous leaves with root-distributed work; data-sharded leaves with full fan-out per query), the distributed-document-search worked example for each, and a careful treatment of why increasing the leaf count yields asymptotic rather than linear speedup — per-request overhead scales with leaf count, and the straggler problem means the p99 of the leaf tier becomes the p50 of the user-facing system at modest fan-out. The chapter closes with the standard reliability mitigation: replicate each leaf, so leaf failures degrade performance instead of breaking the gather step.
 
@@ -128,7 +128,7 @@ Pages created from this chapter:
 
 Existing pages augmented: [[response-time-percentiles]] (cross-linked the new tail-latency-amplification page and the serving pattern), [[partitioning-secondary-indexes]] (scatter/gather read path now named as an instance of the scatter-gather pattern), [[partitioning]] (MPP parallel query execution linked to scatter/gather; scatter/gather pages added to Related), [[sharded-service-pattern]] (relationship-to-scatter/gather section expanded and linked bidirectionally), [[replicated-sharded-service]] (replicate-each-leaf fix for scatter/gather reliability noted), [[replicated-load-balanced-service]] (composing with scatter/gather section added), [[hadoop-vs-mpp-databases]] (MPP query execution as scatter/gather at the analytics layer).
 
-## Chapter 8 concepts
+## Chapter 8: Functions and Event-Driven Processing
 
 Chapter 8 closes the serving-pattern part of the book with **functions-as-a-service** — the fourth and structurally distinct serving pattern. Where the previous three patterns ([[replicated-load-balanced-service]], [[sharded-service-pattern]], [[scatter-gather-pattern]]) all assume long-running server processes, FaaS inverts that assumption: functions come into existence per event, run briefly, and disappear, with the platform handling lifecycle and scaling. Burns's chapter is unusually balanced — about half the space is spent on *when FaaS is a good fit and when it isn't*, which is arguably the more useful content than the patterns themselves.
 
@@ -147,7 +147,7 @@ Pages created from this chapter:
 
 Existing pages augmented: [[running-too-many-things]] (Burns's catalogue of FaaS limits now cited as the complement to Newman's serverless-first default), [[desired-state-management]] (Burns's Chapter 8 treatment of FaaS as a serving pattern in its own right now linked), [[decorating-collaborator-pattern]] (FaaS decorator as a natural implementation substrate for Newman's migration pattern), [[adapter-pattern]] (adapter-vs-FaaS-decorator comparison section added), [[event-streams]] (FaaS as an event consumer), [[message-brokers]] (FaaS as a broker consumer; broker+FaaS as the substrate for event pipelines).
 
-## Chapter 9 concepts
+## Chapter 9: Ownership Election
 
 Chapter 9 closes the serving-pattern part of the book with **ownership election** — the final multi-node serving pattern and the one that scales **assignment** rather than requests, state, or time. Burns's thesis: when a task must have exactly one owner across a replicated service, don't implement Paxos or Raft yourself; outsource consensus to etcd, [[zookeeper]], or Consul and build the lock/lease/ownership abstractions you need on top of their compare-and-swap + TTL + resource-version primitives.
 
@@ -165,7 +165,7 @@ Pages created from this chapter:
 
 Existing pages augmented: [[zookeeper]] (container-level perspective; Burns's interchangeability framing; pointer to the lock construction), [[fencing-tokens]] (Burns's applied resource-version-per-request mechanism; the delayed-R1 scenario walk-through), [[truth-and-leadership-in-distributed-systems]] (container-level form of the mitigations), [[failover]] (container-level prescription: decide if you need it, outsource consensus, use renewable leases), [[consensus]] (Burns's "don't implement this yourself" blunt statement), [[process-pauses]] (CPU starvation on overscheduled machines as a concrete scenario), [[desired-state-management]] (operator pattern as the application-specific specialisation), [[health-probes]] (liveness probe as load-bearing for the singleton pattern).
 
-## Chapter 10 concepts
+## Chapter 10: Work Queue Systems
 
 Chapter 10 opens Part III of the book — the **Batch Computational Patterns** — with the **work queue**, the simplest batch pattern. Burns's thesis: when work items are wholly independent of one another (the embarrassingly parallel case), the machinery around them — fetching items, scheduling workers, tracking completion, handling failure — is almost entirely generic. Package it once as a reusable library container and the application-specific parts collapse to two narrow interfaces. The **source container** (an [[ambassador-pattern]] instance) produces items via a simple HTTP REST API on `localhost`; the **worker container** processes one item via a file-based API and exits. Between the two, a generic queue-manager loop plus Kubernetes **Job objects with annotations** provides reliable execution and durable state — the queue-manager itself stores nothing.
 
@@ -183,7 +183,7 @@ Pages created from this chapter:
 
 Existing pages augmented: [[ambassador-pattern]] (work-queue source as a new canonical ambassador use; batch-ingest cross-reference), [[adapter-pattern]] (multi-worker as adapter applied to batch worker composition; adapter-uses table extended), [[batch-processing]] (container-level perspective linked; Burns's work queue positioned as the dispatch primitive below MapReduce), [[message-brokers]] (work queue as a broker-consumer alternative; source-ambassador fronting a topic).
 
-## Chapter 11 concepts
+## Chapter 11: Event-Driven Batch Processing
 
 Chapter 11 is the second of Burns's batch computational patterns: **event-driven batch processing**. Its thesis: when a single-transformation [[work-queue-pattern|Chapter 10 work queue]] isn't enough, chain multiple work queues into a **directed acyclic workflow graph** where the output of each stage becomes the input to the next, and the completion of a worker is itself the event that triggers downstream stages. The shape is the same as [[event-pipeline-pattern|Chapter 8's FaaS event pipelines]] — Burns draws the parallel explicitly — but at batch-stage granularity, wired over a pub/sub broker rather than per-event webhooks.
 
@@ -205,7 +205,7 @@ Pages created from this chapter:
 
 Existing pages augmented: [[work-queue-pattern]] (composed-workflow section; Related extended; Chapter 11 added to Sources), [[event-pipeline-pattern]] (Chapter 11 batch cousin section added explicitly naming the same topology-as-specification payoff), [[batch-processing]] (Chapter 11 extension after the work-queue section, positioning the pattern as the container-level analogue of dataflow DAGs and workflow schedulers like Airflow / Argo / Prefect), [[dataflow-engines]] (container-level-counterpart section with side-by-side comparison table; Chapter 11 added to Sources), [[message-brokers]] (brokers-as-workflow-transport section; Chapter 11 linking patterns added to Related), [[source-container-interface]] (source ambassador composed as filter pattern; merger mention), [[multi-worker-pattern]] (merger as the mirror-image multi-source adapter), [[adapter-pattern]] (every Chapter 11 linking pattern is an adapter at the seam between queues), [[ambassador-pattern]] (filter as ambassador-on-ambassador composition).
 
-## Chapter 12 concepts
+## Chapter 12: Coordinated Batch Processing
 
 Chapter 12 closes Burns's batch-pattern trilogy with **coordinated batch processing** — the aggregation side of the batch pipeline, pulling parallel workflow outputs back together into a single result. Burns's thesis: Chapter 11's linking patterns are good at splitting and chaining, but they offer no primitive for guaranteeing completeness or combining values, and the [[merger-pattern|merger]] alone is not enough — "it does not ensure that a complete dataset is present prior to the beginning of processing." Chapter 12 supplies two distinct coordination primitives to fill that gap.
 

@@ -341,7 +341,7 @@ Per-book summary pages (`wiki/<book-name>.md`) stay at current paths — only ch
 
 13 committable phases plus one conditional. Each phase is independently `git revert`-able; no concept page is renamed or moved. Every phase appends an entry to `wiki/log.md` (not repeated below).
 
-### Phase 1 — Per-book H2 rename (prerequisite)
+### Phase 1 — Per-book H2 rename (prerequisite) ✅ Complete (2026-04-19)
 
 **Files**: `wiki/<book>.md` × 8.
 Rename each `## Chapter N concepts` → `## Chapter N: <Full Chapter Title>` (titles taken from `raw/<book>/chapter-NN-*.md`). After this, anchors like `[[monolith-to-microservices#chapter-4-decomposing-the-database]]` resolve via the current linter's slug match — no linter change needed.

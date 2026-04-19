@@ -57,7 +57,7 @@ The introduction sets out why the [[sysadmin-approach]] is structurally expensiv
 | 33 | Lessons Learned from Other Industries | Ingested 2026-04-17 |
 | 34 | Conclusion | Ingested 2026-04-17 |
 
-## Foundations (Chapter 1)
+## Chapter 1: Introduction
 
 Chapter 1 establishes the discipline itself and the core concepts that structure every later chapter.
 
@@ -66,14 +66,14 @@ Chapter 1 establishes the discipline itself and the core concepts that structure
 - [[devops-vs-sre]] — Treynor Sloss's framing: DevOps as a generalisation, SRE as a specific (and more opinionated) implementation
 - [[sre-tenets]] — the hub for the eight areas every SRE team is responsible for
 
-## The two governing mechanisms (Chapter 1)
+### The two governing mechanisms
 
 Two ideas do most of the heavy lifting in the book, and both are introduced in Chapter 1:
 
 - [[toil-and-engineering-balance]] — the 50% cap on operational work; the safety-valve feedback loop back to the product development team; why automatic beats automated
 - [[error-budget]] — the reframing that resolves the dev-vs-ops conflict; SLO's unavailability share is a budget to be spent on velocity; 100% is the wrong reliability target for almost everything
 
-## SRE tenets (Chapter 1)
+### SRE tenets
 
 The core responsibilities of an SRE team, each catalogued as a separate page:
 
@@ -88,7 +88,7 @@ The core responsibilities of an SRE team, each catalogued as a separate page:
 - [[provisioning]] — the intersection of change management and capacity planning; riskier than load shifting; careful by default
 - [[sre-efficiency]] — resource use as a function of demand, capacity, and software efficiency; why SRE's control of provisioning makes efficiency their lever
 
-## The Google production environment (Chapter 2)
+## Chapter 2: The Production Environment at Google, from the Viewpoint of an SRE
 
 Chapter 2 is a terminology-and-infrastructure tour that names every major internal system the rest of the book refers to. It is structured around four layers — hardware, system software, software infrastructure, and development — plus a worked Shakespeare example that traces a request end-to-end.
 
@@ -122,7 +122,7 @@ Chapter 2 is a terminology-and-infrastructure tour that names every major intern
 - [[life-of-a-request]] — the Shakespeare walkthrough that names every piece of the stack in a single call trace
 - [[n-plus-2-redundancy]] — the sizing rule Chapter 2 derives from the Shakespeare example; per-region application; N + 1 as a cost-driven exception
 
-## Embracing risk (Chapter 3)
+## Chapter 3: Embracing Risk
 
 Chapter 3 is the first chapter of Part II ("Principles"). It develops the *why* behind the error budget and SLO machinery introduced in Chapter 1: rather than maximising uptime, SRE **manages risk** as a continuum and picks the appropriate point on it for each service.
 
@@ -140,7 +140,7 @@ Chapter 3 also motivates and sharpens [[error-budget]] with material that didn't
 
 And [[service-level-objective]] gains the measurement-side framing (request success rate, quarterly tracking) plus the "minimum and maximum" sharpening.
 
-## Service level objectives (Chapter 4)
+## Chapter 4: Service Level Objectives
 
 Chapter 4 is the detailed development of the SLI/SLO/SLA vocabulary that Chapter 1 introduced in passing. It separates the three terms carefully — the [[service-level-indicator|SLI]] is the metric, the [[service-level-objective|SLO]] is the target on the metric, the [[service-level-agreement|SLA]] is the contract around the SLO — and then builds up practice around each.
 
@@ -152,14 +152,14 @@ Chapter 4 is the detailed development of the SLI/SLO/SLA vocabulary that Chapter
 
 Chapter 4 also fills out [[service-level-objective]] itself with target-picking discipline (five rules, including "don't pick a target based on current performance" and "have as few SLOs as possible"), SLO shape (single-target, multi-target for curve shape, per-workload-class for heterogeneous clients), the control-loop framing (monitor → compare → decide → act), and the terse restatement of [[error-budget]] as "an SLO for meeting other SLOs."
 
-## Eliminating toil (Chapter 5)
+## Chapter 5: Eliminating Toil
 
 Chapter 5 (Vivek Rau) is the detailed development of the Chapter 1 toil tenet. It defines toil precisely, distinguishes it from neighbouring categories, and spells out why unchecked toil is toxic to both the individual and the organisation.
 
 - [[toil-and-engineering-balance]] — augmented with Ch 5 material: the six toil characteristics (manual, repetitive, automatable, tactical, no enduring value, O(n)); the toil vs overhead vs grungy-but-valuable distinction; the on-call-rotation arithmetic floor (33% for 6-person, 25% for 8-person); the ranked toil sources (interrupts, on-call, releases); the is-toil-always-bad framing; the personal and organisational harms of excess toil
 - [[engineering-work-categories]] — Ch 5's four-way accounting scheme: software engineering, systems engineering, toil, overhead; which count toward the 50% engineering half and why the taxonomy has to be tight given the on-call floor
 
-## Monitoring distributed systems (Chapter 6)
+## Chapter 6: Monitoring Distributed Systems
 
 Chapter 6 (Rob Ewaschuk) is the book's full treatment of monitoring philosophy. Chapter 1 established the three-output taxonomy (alerts/tickets/logs); Chapter 6 fills in *what to measure* and *when to page*.
 
@@ -176,7 +176,7 @@ Chapter 6 also augments two existing pages:
 - [[sre-monitoring-outputs]] — Chapter 6 adds the *dashboard plus log* concrete substitute for the email-alert anti-pattern
 - [[monitoring-and-observability]] — Chapter 6's material slots inside the *monitoring* half of Newman's monitoring-vs-observability split
 
-## The evolution of automation (Chapter 7)
+## Chapter 7: The Evolution of Automation at Google
 
 Chapter 7 (Niall Murphy with John Looney and Michael Kacirek) develops the *why* and *how* of automation in Google SRE. The central argument: automation is a force multiplier, but the ultimate goal is **autonomous** systems that don't need glue logic at all. The chapter catalogues five values of automation, a five-level hierarchy, three case studies, and a closing warning about operator skill atrophy.
 
@@ -196,7 +196,7 @@ Chapter 7 also augments four existing pages:
 - [[desired-state-management]] — added Borg as the progenitor level-5 autonomous system; the humans-can't-react-fast-enough argument that Newman's framing leaves implicit
 - [[mttr-and-mttf]] — added the MoB philosophical shift ("optimizing to recover quickly through automation" replacing "optimizing for a lack of failover") and the automation-as-MTTR-lever argument from Ch 7's five values
 
-## Release engineering (Chapter 8)
+## Chapter 8: Release Engineering
 
 Chapter 8 (Dinah McNutt) introduces [[release-engineering]] as a **named engineering discipline** at Google, distinct from SRE but tightly partnered with it. Release engineers work with SWEs and SREs to define every step from source repository to production deployment — packaging, versioning, branching, cherry picks, configuration distribution, and rollout orchestration. The chapter is as much "what does this job do" as it is "what tools does Google use."
 
@@ -225,7 +225,7 @@ Chapter 8 also augments two existing pages:
 - [[google-monorepo]] — added the branching model (never-merge-back), hermetic builds, gated operations, and push-on-green
 - [[change-management-sre]] — added the release-engineering stack that actually implements the "progressive rollout + detection + safe rollback" trio
 
-## Simplicity (Chapter 9)
+## Chapter 9: Simplicity
 
 Chapter 9 (Max Luebbe) closes Part II (Principles) with a short, declarative argument that **software simplicity is a prerequisite to reliability**. Luebbe opens with Hoare's Turing-lecture quote ("the price of reliability is the pursuit of the utmost simplicity") and builds out seven short sections covering the stability/agility tension, boring as a virtue, deleting code, minimal APIs, modularity, and release simplicity.
 
@@ -243,7 +243,7 @@ Chapter 9 augments three existing pages:
 - [[coupling]] — added loose coupling as a simplicity pattern (Ch 9): the independent-fixability payoff and code-to-config decoupling
 - [[high-release-velocity]] — added the Ch 9 restatement: the gradient-descent framing and the convergence of the Ch 8 and Ch 9 arguments
 
-## Practical alerting from time-series data (Chapter 10)
+## Chapter 10: Practical Alerting from Time-Series Data
 
 Chapter 10 (Jamie Wilkinson) opens Part III (Practices) with the architecture deep-dive behind the monitoring philosophy of Chapter 6. It describes [[borgmon]], Google's internal monitoring system built in 2003 to complement Borg, which **made time-series collection a first-class role** and replaced custom per-target check scripts with a centralised rule language. The chapter also explicitly positions Prometheus and other open-source tools (Riemann, Heka, Bosun) as descendants — so the material is practical for non-Googlers.
 
@@ -271,7 +271,7 @@ Chapter 10 also augments four existing pages:
 - [[sre-monitoring-outputs]] — Alertmanager as the concrete routing mechanism that implements the three-output split
 - [[monitoring-and-observability]] — Chapter 10's architecture deep-dive section
 
-## Being on-call (Chapter 11)
+## Chapter 11: Being On-Call
 
 Chapter 11 (Andrea Spadaccini) opens Part III's operational practices with the full account of Google SRE's approach to on-call. Chapter 1 introduced [[emergency-response]] as a tenet and set the at-most-two-events-per-shift target; Chapter 11 spells out the engagement model, the two axes of balance, the compensation design, the human factors of responding under stress, and the failure modes at both ends of the load spectrum.
 
@@ -299,7 +299,7 @@ Chapter 11 also augments five existing pages:
 - [[toil-and-engineering-balance]] — the 25% on-call sub-cap inside the 50% operational half; the 8-engineer single-site arithmetic; the 2-incidents-per-shift derivation from the 6-hour average
 - [[alert-philosophy]] — misconfigured monitoring as the top overload cause; SLO-aligned, actionable, fan-out-controlled paging
 
-## Effective troubleshooting (Chapter 12)
+## Chapter 12: Effective Troubleshooting
 
 Chapter 12 (Chris Jones) opens the operational-practices arc with a teachable general-purpose process for debugging distributed systems. The core argument: troubleshooting is not innate talent but a combination of a **generic hypothetico-deductive loop** and **deep system knowledge**; naming the loop, the anti-patterns, and the design disciplines that support it makes the skill learnable.
 
@@ -320,7 +320,7 @@ Chapter 12 also augments five existing pages:
 - [[change-management-sre]] — Ch 12's "what touched it last" heuristic is the diagnostic-side reading of the 70%-of-outages-stem-from-change finding
 - [[incident-response-mindset]] — Ch 12's anti-patterns (latching onto past causes, wildly improbable theories) are the cognitive failures Chapter 11's stress-hormone framing predicts
 
-## Emergency response (Chapter 13)
+## Chapter 13: Emergency Response
 
 Chapter 13 (Corey Adam Baye) is the case-study chapter that takes Chapter 1's [[emergency-response]] tenet and Chapters 11–12's human-factors and troubleshooting machinery, and applies them to three detailed real incidents. The argument across the three is the same: the response template — **don't panic, pull in more people, follow the incident-response process, stop the bleeding first, then learn** — works for radically different triggers, and disciplined repetition of it sharpens the organisation year over year.
 
@@ -343,7 +343,7 @@ Chapter 13 also augments five existing pages:
 - [[automation-gone-wrong]] — the Chapter 13 response-side read of Diskerase with recovery-capacity lessons
 - [[change-management-sre]] — "canary coverage must match the combinatorial surface, not the apparent risk level" and "rollback must be rehearsed"
 
-## Managing incidents (Chapter 14)
+## Chapter 14: Managing Incidents
 
 Chapter 14 (Andrew Stribblehill) is the structural complement to Chapters 11–13's human-factors and case-study material: a defined process for **how a team coordinates** during a production incident. The framework is Google's adaptation of FEMA's [[incident-command-system|Incident Command System]] — chosen for its clarity and scalability — and consists of five elements: defined roles, recursive separation of responsibilities, a recognised command post, a living incident document, and an explicit handoff protocol.
 
@@ -366,7 +366,7 @@ Chapter 14 also augments three existing pages:
 - [[blameless-postmortem]] — added the live-incident-document-as-postmortem-raw-material section; clarified which roles produce which postmortem artefacts
 - [[sre-tenets]] — added Ch 14's ten new pages under Emergency response
 
-## Postmortem culture (Chapter 15)
+## Chapter 15: Postmortem Culture: Learning from Failure
 
 Chapter 15 (John Lunney and Sue Lueder, edited by Gary O'Connor) is the full cultural treatment of what Chapter 1 introduced as a one-line tenet: **postmortems for significant incidents, blameless, with preventive action items that actually land**. The chapter is short but structurally important — it catalogues the philosophy, the criteria, the tooling, the social mechanisms, and the organisational infrastructure behind the discipline.
 
@@ -393,7 +393,7 @@ Chapter 15 also augments three existing pages:
 - [[learning-from-outages]] — Chapter 13's "keep a history of outages" directive gets its operational machinery in Chapter 15 (review pipeline, social activities, the working group as institutional locus)
 - [[live-incident-state-document]] — the live document as input to automated postmortem creation; the working group's incident-tool-integration workstream
 
-## Tracking outages (Chapter 16)
+## Chapter 16: Tracking Outages
 
 Chapter 16 (Gabe Krabbe) is the operational complement to Chapter 15's postmortem culture: where postmortems capture depth on significant incidents, **outage tracking captures breadth across every alert**. The chapter argues that improving reliability requires a tracked baseline and presents Google's two-layer tool stack — Escalator for paging-layer ack tracking, Outalator for outage-layer annotation, grouping, tagging, and analysis.
 
@@ -411,7 +411,7 @@ Chapter 16 also augments three existing pages:
 - [[alertmanager]] — Chapter 16 adds the paging-path neighbours section connecting real-time routing to ack-tracking (Escalator) and archival (Outalator)
 - [[sre-monitoring-outputs]] — added the archival-side section: Outalator is institutional memory for the three-output routing
 
-## Testing for reliability (Chapter 17)
+## Chapter 17: Testing for Reliability
 
 Chapter 17 (Alex Perry and Max Luebbe) opens Part III's engineering arc with the testing discipline that keeps the rest of the practices honest. Its central move is a two-axis taxonomy — **traditional** tests (offline, hermetic) versus **production** tests (against live systems) — combined with a sharp definition of **zero-MTTR testing**: a system-level test that catches exactly what monitoring would catch, but at push time.
 
@@ -464,7 +464,7 @@ Chapter 17 also augments five existing pages:
 - [[system-stability-vs-agility]] — Ch 17's "stability drives agility" is the build-pipeline restatement of Ch 9's thesis
 - [[configuration-management-sre]] — Ch 17's configuration tests, integration tests, and MTTR-based categorisation are the testing disciplines that protect the four Ch 8 distribution models
 
-## Software engineering in SRE (Chapter 18)
+## Chapter 18: Software Engineering in SRE
 
 Chapter 18 (Dave Helstroom, Trisha Weir, Evan Leonard, Kurt Delimon) steps up a level: rather than catalogue another operational practice, it argues that **SRE teams should run full-fledged software-engineering projects**, not just one-off automation scripts. The chapter's case study is [[auxon|Auxon]], Google's [[intent-based-capacity-planning|intent-based capacity planner]]; the broader discussion generalises from it into lessons on project selection, adoption, staffing, and the organisational change required to foster the practice.
 
@@ -484,7 +484,7 @@ Chapter 18 also augments three existing pages:
 - [[engineering-work-categories]] — added the software-engineering-as-a-category section: Chapter 18's framing of software development as a career path, how the 50% cap funds it, and why SREs doing development must remain SREs
 - [[sre-tenets]] — added software-engineering-within-SRE as a first-class organisational responsibility beyond the Chapter 1 eight
 
-## Load balancing at the frontend (Chapter 19)
+## Chapter 19: Load Balancing at the Frontend
 
 Chapter 19 (Piotr Lewandowski) opens Part III's *frontend* arc with a treatment of how Google steers user traffic to the right datacenter and to the right machine once it arrives. The chapter's thesis: a single enormously powerful machine is not the answer (speed of light, single point of failure), so a distributed fleet plus **layered** load balancing is the only viable approach. The layering: [[dns-load-balancing]] picks the datacenter, [[virtual-ip-address|VIP]]-level balancing picks the machine. Chapter 20 will then add the intra-datacenter service and RPC layers.
 
@@ -508,7 +508,7 @@ Chapter 19 also augments two existing pages:
 - [[consistent-hashing]] — added the Ch 19 packet-level-load-balancer application: the connection-tracking-with-consistent-hashing-fallback pattern that makes stateless-under-DoS behaviour practical; the connection-reset disruption math on backend set changes
 - [[gslb]] — added the Ch 19 deep-dive on the first (DNS) level: anycast authoritative nameservers, EDNS0, the recursive-resolver geographic map, and the integration with capacity and health control systems
 
-## Load balancing in the datacenter (Chapter 20)
+## Chapter 20: Load Balancing in the Datacenter
 
 Chapter 20 (Alejandro Forero Cuervo) is the companion to Chapter 19, covering the *intra-datacenter* layer of Google's load-balancing stack: once packets reach a datacenter, how does a client task choose which backend task to send each request to? The chapter develops three arcs — identifying bad tasks, bounding the connection pool, and per-request backend selection — culminating in the [[weighted-round-robin]] policy that sharply tightens CPU distribution across Google's fleets.
 
@@ -540,7 +540,7 @@ Chapter 20 also augments five existing pages:
 - [[rpc]] — added the Ch 20 sentence noting that Stubby is not just a wire protocol but also the home of state propagation and client-side balancing
 - [[health-probes]] — added the three-state-vs-binary-probe comparison, explaining why lame duck has no vanilla Kubernetes equivalent
 
-## Handling overload (Chapter 21)
+## Chapter 21: Handling Overload
 
 Chapter 21 (Alejandro Forero Cuervo) is the companion to Chapter 20: once balancing has done its best, how does each layer of the stack respond when some part is still overloaded? The thesis is that overload handling is not one mechanism but a **cooperating stack** of them, so that the system degrades gracefully rather than collapsing when any single defence is exceeded.
 
@@ -582,7 +582,7 @@ Chapter 21 also augments four existing pages:
 - [[operational-overload]] — added the Chapter 21 software-analogue-of-on-call-overload framing; the give-back-the-pager remedy in software form is [[load-shedding]]
 - [[fault-tolerance]] — the Chapter 21 stack (quotas → throttling → shedding → degradation → retry budgets) is a canonical fault-tolerance pattern for serving systems
 
-## Addressing cascading failures (Chapter 22)
+## Chapter 22: Addressing Cascading Failures
 
 Chapter 22 (Mike Ulrich) is the system-level companion to Chapter 21's per-task overload mechanisms. A cascading failure is a failure that grows over time through **positive feedback**: one failure increases the probability of others, producing a domino effect. The chapter catalogues causes, prevention disciplines, triggering conditions, testing strategies, and in-progress remedies — and closes with a warning that the changes most likely to improve the steady state (retries, caching, automatic failover) are often the ones that worsen cascading-failure risk.
 
@@ -628,7 +628,7 @@ Chapter 22 also augments seven existing pages:
 - [[capacity-planning]] — added the Chapter 22 capacity-planning-is-not-sufficient section, the organic-growth-trigger framing, and the breaking-point-measurement discipline
 - [[change-management-sre]] — added the changes-as-cascade-triggers section, the change-logging-for-diagnostics directive, and the reliability-improving-changes-can-worsen-cascade-risk warning
 
-## Managing critical state (Chapter 23)
+## Chapter 23: Managing Critical State: Distributed Consensus for Reliability
 
 Chapter 23 (Laura Nolan, edited by Tim Harvey) is the book's dedicated treatment of distributed [[consensus]] as the structural answer to leader election, group membership, distributed locking, reliable queuing, and any maintenance of critical shared state. The thesis is operational: informal approaches (heartbeats, gossip, timeouts, human-escalated failover) always have reliability problems, so production systems should outsource coordination to a formally-proven consensus service rather than rolling their own.
 
@@ -684,7 +684,7 @@ Chapter 23 also augments existing pages:
 - [[failover]] — added the STONITH-via-heartbeats split-brain case-study reference from the Chapter 23 opening
 - [[two-phase-commit]] — added the Chapter 23 reinforcement: atomic commit with quorum-elected coordinators and recovery is the consensus-family alternative
 
-## Distributed periodic scheduling with cron (Chapter 24)
+## Chapter 24: Distributed Periodic Scheduling with Cron
 
 Chapter 24 (Štěpán Davidovič) is the applied counterpart to Chapter 23: a detailed worked example of a production Paxos-backed service. The chapter takes a deceptively simple Unix utility — cron — and follows through what changes when it becomes a datacenter-wide service. Every major single-machine assumption (one failure domain, ephemeral state, fire-and-forget launches) breaks, and the solutions pull in almost every structural concern from the rest of the book: [[consensus]], [[idempotence]], [[cron-partial-failure-resolution|partial-failure resolution]], state replication, [[cron-thundering-herd|thundering herd]] mitigation.
 
@@ -703,7 +703,7 @@ Chapter 24 also augments existing pages:
 - [[idempotence]] — added the "not universal" counter-example section: cron jobs span the full idempotency spectrum and the scheduler cannot assume either direction; fail-closed as the asymmetric-cost response; Chapter 24 also uses idempotence internally for partial-failure resolution
 - [[borg]] — added the cron-as-Borg-client section: cron replicas run on Borg, Borg's job-naming API is what makes precomputed-name partial-failure resolution work; failure-domain-aware placement is the precondition for a correct cron deployment
 
-## Data processing pipelines (Chapter 25)
+## Chapter 25: Data Processing Pipelines
 
 Chapter 25 (Dan Dennison) is the operational counterpart to the [[batch-processing]] / [[mapreduce]] / [[stream-processing]] strand from Kleppmann. It describes the failure modes of large-scale **periodic data pipelines** at Google and the architectural alternative — a continuous data processing system called **Workflow** — that uses leader-follower coordination plus the system-prevalence pattern to provide exactly-once semantics without the periodic-pipeline pathology. The chapter's overall message: a pipeline that begins as cron-driven batch and grows into a deep multiphase chain becomes a reliability minefield, and a continuous design with strong correctness guarantees is the durable fix.
 
@@ -730,7 +730,7 @@ Chapter 25 also augments existing pages:
 - [[work-queue-pattern]] (Burns) — the container-level minimal version of Workflow's coordinator-plus-stateless-workers shape; both store no worker-side state and use the queue/Task Master as the source of truth
 - [[exactly-once-semantics]] — added the Workflow-as-structural-alternative framing: instead of at-least-once + idempotence, Workflow's correctness is structural via leases, unique filenames, configuration barriers, and server tokens
 
-## Data integrity (Chapter 26)
+## Chapter 26: Data Integrity: What You Read Is What You Wrote
 
 Chapter 26 (Raymond Blum and Rhandeev Singh) is Part III's treatment of **data integrity at Google scale**. The operational definition: data integrity is what users think it is, and users cannot distinguish data loss, data corruption, and extended unavailability. So the chapter folds *access* into the integrity guarantee — preserving bytes on tape while users can't reach their mail for a week is a failure, not a success. The engineering response is a three-layer [[defense-in-depth-data|defence in depth]] that covers the [[data-integrity-failure-modes|24 combinations of failure modes]] at reasonable total cost, plus [[recovery-testing|continuously-exercised recovery]] that keeps the defences from silently rotting.
 
@@ -757,7 +757,7 @@ Chapter 26 also augments existing pages:
 - [[mttr-and-mttf]] — added the Ch 26 data-integrity MTTR section: the once-a-year-corruption thought experiment; defence layers as MTTR levers; the N→0 recovery-time aspiration
 - [[learning-from-outages]] — added the Ch 26 proactive-testing section: Gmail and Google Music both credit prior DiRT-tested tooling; continuous (not annual) recovery tests
 
-## Reliable product launches (Chapter 27)
+## Chapter 27: Reliable Product Launches at Scale
 
 Chapter 27 (Rhandeev Singh, Sebastian Kirsch, Vivek Rau) is Part III's treatment of **launches** as a distinctive reliability problem. The chapter's opening definition: a launch is any new code introducing an externally visible change. At up to 70 launches per week, Google has both the rationale and the opportunity to build a codified launch process — something traditional companies, at a launch every few years, neither need nor accumulate experience enough to produce. Google's answer is three coupled pieces: a dedicated [[launch-coordination-engineering|Launch Coordination Engineering]] team, a curated [[launch-checklist]] that consolidates launch-disaster lessons, and a set of [[gradual-rollout|staged-rollout]] and [[feature-flag-framework|feature-flag]] techniques that make the act of launching safer. The [[norad-tracks-santa|NORAD Tracks Santa]] opener — Keyhole at 25x normal peak on Christmas Eve 2011 — is the motivating case.
 
@@ -785,7 +785,7 @@ Chapter 27 also augments existing pages:
 - [[retry-amplification]] — added the Ch 27 client-side view linking the launch-checklist client-behaviour question and the dormant-functionality emergency-disable pattern
 - [[graceful-degradation]] — added the Ch 27 Make-children-cry-switches section: deliberately dark-humoured naming reminds on-call that activation has real user cost; graceful degradation paths are the structural form of the NORAD kill-switch trade-off
 
-## Accelerating SREs to on-call and beyond (Chapter 28)
+## Chapter 28: Accelerating SREs to On-Call and Beyond
 
 Chapter 28 (Andrew Widdowson) closes Part III by treating **SRE training and onboarding as a first-class engineering discipline**. The thesis: an SRE team's time-to-on-call for a new hire is a structural property of the team, not an individual attribute, and the return on investing in that property is compound. On-call depends on trust; trust depends on demonstrable competence; competence depends on a deliberately designed curriculum. The chapter catalogues the practices that build that curriculum, from frontloaded postmortem reading through reverse-engineering classes to shadow and reverse-shadow on-call rotations.
 
@@ -828,7 +828,7 @@ Chapter 28 also augments five existing pages:
 - [[operational-underload]] — added the Ch 28 Wheel-of-Misfortune-uses-historical-incidents section connecting the underload remedy to the teachable-postmortem feedstock
 - [[postmortem-culture-activities]] — added the Ch 28 "tales of fail" alternative format and the teachable-vs-rote postmortem distinction
 
-## Dealing with interrupts (Chapter 29)
+## Chapter 29: Dealing with Interrupts
 
 Chapter 29 (Dave O'Connor) treats **interrupt management as a team-design problem**, not an individual productivity problem. The thesis: [[operational-load]] is more than pages — it's pages plus tickets plus ongoing responsibilities — and an engineer's [[context-switch-cost|context switch is not free]]. A 20-minute interrupt costs a couple of hours of productive work. The structural consequence: the team lead has to set up the interrupt model so each engineer is in one mode at a time (either flow-producing project work, or flow-producing interrupt work), not constantly oscillating.
 
@@ -853,7 +853,7 @@ Chapter 29 also augments five existing pages:
 - [[balanced-on-call]] — added the Ch 29 on-call-as-fully-polarised-work-mode section: an on-call week is written off for project work, which sharpens Ch 11's 25% cap from "at most one week in four" to "that week is entirely an interrupt mode"
 - [[engineering-work-categories]] — added the Ch 29 interrupts-threaten-the-engineering-half note: polarising time protects the 50% engineering half of the four-way taxonomy
 
-## Embedding an SRE to recover from operational overload (Chapter 30)
+## Chapter 30: Embedding an SRE to Recover from Operational Overload
 
 Chapter 30 (Randall Bosetti) is the **rescue playbook** for an SRE team that has slipped into [[ops-mode]] — meeting load growth with more humans rather than more software. The intervention: temporarily transfer one experienced SRE into the overloaded team, not to help empty the queue but to change how the team works. Three phases — learn the service, share context, drive change — with an after-action [[postvitam]] as the exit artefact. The chapter doubles as the starter playbook for building a first SRE team without defaulting into [[sysadmin-approach|the sysadmin trajectory]].
 
@@ -874,7 +874,7 @@ Chapter 30 also augments four existing pages:
 - [[toil-and-engineering-balance]] — added the Ch 30 sort-fires-into-toil-and-not-toil section: Phase 2's concrete operationalisation of the Chapter 5 toil definition into a team exercise
 - [[service-level-objective]] — added the Ch 30 SLO-as-first-lever section with the strong *"if this agreement is missing, no other advice in this chapter will be helpful"* claim; the SLO as prerequisite for principled reasoning inside an overloaded team
 
-## Communication and collaboration in SRE (Chapter 31)
+## Chapter 31: Communication and Collaboration in SRE
 
 Chapter 31 (Niall Murphy et al.) treats communication and collaboration as a first-class engineering problem for SRE, given the organisation's distributed and multi-master nature — service SRE teams owe allegiance to both SRE and their partner product-development teams, and most SRE teams are deliberately multi-site for follow-the-sun coverage. The chapter frames the SRE team's external interface as an **API** (designed deliberately, costly to fix later) and its internal data flow like **production data flow** (reliable paths between interested parties). Two worked case studies ground the abstract recommendations: [[viceroy-case-study|Viceroy]] (cross-SRE monitoring-dashboard consolidation) and [[dfp-to-f1-migration]] (joint SRE + product-development database migration).
 
@@ -889,7 +889,7 @@ The hub and its seven new pages:
 - [[sre-dev-collaboration]] — the early-in-design thesis; OKRs as the tracking mechanism; service-team mainstay framing; what SRE brings (infrastructure expertise) vs product-dev (business logic); the production meeting as the recurring venue; why peer engineering status is the leverage
 - [[dfp-to-f1-migration]] — case study: DoubleClick for Publishers' main database migrated from MySQL to F1 while serving system stayed untouched; SRE drove infrastructure design, product-dev owned BL, weekly meetings, joint design doc and interface-contract-up-front, validation by output comparison, SRE-owned release process for speed, seamless cutover
 
-## The evolving SRE engagement model (Chapter 32)
+## Chapter 32: The Evolving SRE Engagement Model
 
 Chapter 32 (Acacio Cruz and Ashish Bhambhani) closes Part IV by tracing how SRE learned to take services on. The same production concerns — architecture/dependencies, instrumentation/metrics/monitoring, emergency response, capacity planning, change management, performance — have driven three successive engagement models, each scaling SRE's impact further: the [[simple-prr-model|Simple PRR Model]] (per-service review on already-launched services), the [[early-engagement-model|Early Engagement Model]] (SRE in the Design phase), and [[frameworks-and-sre-platform|Frameworks and SRE Platform]] (codified best practices as reusable infrastructure). The chapter also defines the fallback support modes for services SRE cannot take on.
 
@@ -922,7 +922,7 @@ Chapter 32 augments existing pages:
 - [[sre-dev-collaboration]] — Chapter 32's Early Engagement Model is the engagement-shaped version of Chapter 31's early-in-design collaboration thesis
 - [[stubby]] — Chapter 32's framework pattern generalises what Stubby already demonstrated for RPC: production concerns as framework primitives inherited by construction
 
-## Lessons learned from other industries (Chapter 33)
+## Chapter 33: Lessons Learned from Other Industries
 
 Chapter 33 (Jennifer Petoff) closes the book with a cross-industry survey: how aviation, lifeguarding, refractive eye surgery, telecommunications/E911, medical devices, military aircraft and naval avionics, railway signaling, synthetic-diamond manufacturing (Six Sigma), proprietary trading, civil nuclear power, the US Navy nuclear submarine program, and air traffic control all approach reliability. The chapter distils SRE practice into four themes — preparedness and disaster testing, postmortem culture, automation and reduced operational overhead, structured and rational decision-making — and walks each across the interviewed industries. The closing argument: Google has a higher appetite for velocity than most other high-reliability industries because most Google products operate where users are inconvenienced rather than injured, and the [[error-budget|error budget]] is the mechanism that funds the difference.
 
@@ -945,7 +945,7 @@ Chapter 33 augments existing pages:
 - [[testing-disaster-recovery]] — Chapter 33 places DiRT in the live-drill family alongside US nuclear Navy weekly drills, aviation simulators, lifeguard mystery-shopper drownings, and telecom weather drills; the consequence-cost calibration of live-drill cadence
 - [[incident-command-system]] — Chapter 33 generalises the borrow-the-practice instinct already present for ICS across the four chapter themes; the cross-domain note now references the Chapter 33 hub
 
-## Closing thoughts (Chapter 34)
+## Chapter 34: Conclusion
 
 Chapter 34 is a short reflective conclusion by Benjamin Lutch (VP, SRE at Google), written ten years after Treynor Sloss founded the discipline. It introduces no new concepts but offers three durable framings worth keeping alongside the rest of the book (source: chapter-34-conclusion.md).
 

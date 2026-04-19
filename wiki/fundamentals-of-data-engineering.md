@@ -30,7 +30,7 @@ The authors frame data engineering as the practice of designing, building, and o
 | 10 | Security and Privacy | Ingested 2026-04-18 |
 | 11 | The Future of Data Engineering | Ingested 2026-04-18 |
 
-## Chapter 1 — Data Engineering Described
+## Chapter 1: Data Engineering Described
 
 Chapter 1 defines the discipline. It walks through the history of the role, lands on a definition, sketches the [[data-engineering-lifecycle|five-stage lifecycle]] and its six undercurrents, introduces a three-stage [[data-maturity|data-maturity model]] that shapes the engineer's day-to-day work, and maps the web of stakeholders the engineer collaborates with.
 
@@ -45,7 +45,7 @@ Concept pages touched by Chapter 1:
 - [[data-engineer-stakeholders]] — upstream (architects, software engineers, DevOps/SRE) and downstream (data scientists, analysts, ML engineers, C-suite) collaborators.
 - [[data-science-hierarchy-of-needs]] — Rogati's pyramid; the argument for why data engineering is upstream of, and equal to, data science.
 
-## Chapter 2 — The Data Engineering Lifecycle
+## Chapter 2: The Data Engineering Lifecycle
 
 Chapter 2 is the deep dive into the five lifecycle stages and six undercurrents introduced in Chapter 1. Its key added framing: **virtually all data is inherently streaming**; batch is a specialised way of processing a stream. The chapter also elevates *data management* — traditionally thought of as "corporate" — to first-class data-engineering concern as cloud tools absorb low-level plumbing.
 
@@ -93,7 +93,7 @@ Existing pages augmented with Chapter 2 content:
 - [[stream-processing]] — FoDE's streaming-at-ingestion perspective.
 - [[schema-evolution]] — source-system and storage-metadata framing of schema change.
 
-## Chapter 3 — Designing Good Data Architecture
+## Chapter 3: Designing Good Data Architecture
 
 Chapter 3 defines data architecture as a subset of enterprise architecture — "the design of systems to support the evolving data needs of an enterprise, achieved by flexible and reversible decisions reached through a careful evaluation of trade-offs" — then lays out nine principles and surveys the major architecture patterns. The chapter borrows the first-law framing from Richards and Ford's *Fundamentals of Software Architecture* and cites Jeff Bezos, Martin Fowler, Werner Vogels, Grady Booch, and Zhamak Dehghani along the way.
 
@@ -128,7 +128,7 @@ Existing pages augmented with Chapter 3 content:
 - [[event-driven-architecture]] — FoDE's lightweight treatment as data-architecture concept.
 - [[strangler-fig-pattern]] — FoDE's adoption for brownfield data architecture.
 
-## Chapter 4 — Choosing Technologies Across the Data Engineering Lifecycle
+## Chapter 4: Choosing Technologies Across the Data Engineering Lifecycle
 
 Chapter 4 is the tactical counterpart to Chapter 3's strategy. Once the architecture is set, ten criteria govern how to pick specific technologies: team size and capabilities; speed to market; interoperability; cost (TCO, TOCO, FinOps, opex vs capex); today vs future (immutable vs transitory); location (on-prem, cloud, hybrid, multicloud); build vs buy (OSS, COSS, walled gardens); monolith vs modular; serverless vs servers; and the benchmark wars. The chapter's message: architecture first, technology second — and every technology choice should be tested against how it supports the [[data-engineering-lifecycle|lifecycle's six undercurrents]].
 
@@ -169,7 +169,7 @@ Existing pages augmented with Chapter 4 content:
 - [[dataops]] — DataOps as the undercurrent that technology selection must support.
 - [[data-architecture]] — the architecture-vs-tools split from Chapter 4's opening.
 
-## Chapter 5 — Data Generation in Source Systems
+## Chapter 5: Data Generation in Source Systems
 
 Chapter 5 is the first deep dive into a lifecycle stage — the **generation** stage. It surveys the varieties of source systems (files, APIs, application databases, OLAP systems, CDC, logs, insert-only patterns, messages and streams, data sharing, third-party data, NoSQL in its many shapes), tours the practical details the data engineer must know about each (DBMS internals, lookups, consistency, partitioning), and runs the source-system problem through the six lifecycle undercurrents. Its closing message: source systems feel like "someone else's problem" — treat them that way at your peril.
 
@@ -205,7 +205,7 @@ Existing pages augmented with Chapter 5 content:
 - [[third-party-api-integration]] — FoDE's REST/GraphQL/gRPC/Webhook category survey and tooling advice.
 - [[data-ingestion]] — Chapter 5 expansion of what "source-system shape" ingestion must handle.
 
-## Chapter 6 — Storage
+## Chapter 6: Storage
 
 Chapter 6 is the deep dive into the **storage** stage. It structures storage into three layers — raw ingredients, storage systems, and storage abstractions — and adds a set of cross-cutting big ideas (catalogs, schema, storage/compute separation, zero-copy cloning, retention, single- vs multi-tenant storage). The chapter's closing message: "Storage is everywhere and underlays many stages of the data engineering lifecycle."
 
@@ -243,7 +243,7 @@ Existing pages augmented with Chapter 6 content:
 - [[tombstone]] — tombstones in lakehouse table formats; GDPR deletion.
 - [[log-based-message-brokers]] — tiered storage; replay as standard retrieval; streaming-as-storage.
 
-## Chapter 7 — Ingestion
+## Chapter 7: Ingestion
 
 Chapter 7 is the deep dive into the **ingestion** stage — the third lifecycle stage and the point where data engineers begin actively designing pipeline activity. It defines data ingestion and data pipelines, enumerates eight engineering considerations (bounded vs unbounded, frequency, sync vs async, serialization, throughput, reliability, payload, push/pull/poll), treats batch and stream ingestion patterns separately, surveys the concrete ways to ingest (direct DB, CDC, APIs, streams, managed connectors, object storage, EDI, file export, shell, SSH, SFTP, webhooks, web scraping, transfer appliances, data sharing), discusses upstream and downstream stakeholders, and closes with ingestion-specific framings of the six undercurrents.
 
@@ -273,7 +273,7 @@ Existing pages augmented with Chapter 7 content:
 - [[reprocessing-event-streams]] — Ch 7's replay-as-ingestion-consideration framing; TTL-replay interaction; platform-choice dependency.
 - [[schema-evolution]] — Ch 7's automation-is-mixed-blessing point; three-part defense (registry + DLQ + communication); Git-style branching floated as a future direction.
 
-## Chapter 8 — Queries, Modeling, and Transformation
+## Chapter 8: Queries, Modeling, and Transformation
 
 Chapter 8 is the deep dive into the **transformation** stage. Rather than a linear stage-by-stage walk, it's a three-part treatise on the intellectual layers that make data useful: what a **query** is and how to make it fast; how to **model** data for the business; and how to **transform** it for downstream consumption. The chapter is the book's longest and densest — and the one that leans hardest on durable concepts over named technologies.
 
@@ -326,7 +326,7 @@ Existing pages augmented with Chapter 8 content:
 - [[feature-store]] — Ch 8's placement of feature engineering inside transformation.
 - [[normalization]] — pointer to [[normalization-levels]] for the full normal-form sequence.
 
-## Chapter 9 — Serving Data for Analytics, Machine Learning, and Reverse ETL
+## Chapter 9: Serving Data for Analytics, Machine Learning, and Reverse ETL
 
 Chapter 9 is the deep dive into the **serving** stage — the final lifecycle stage, where the engineer's output meets its users. The chapter is organised around general considerations first (trust, use case/user, data products, self-service, definitions and logic, data mesh as serving), then the three major serving modes (analytics / ML / reverse ETL), then the concrete serving mechanisms (files, databases, streaming, federation, data sharing, semantic/metrics layers, notebooks), and closes with the six undercurrents applied to serving.
 
@@ -366,7 +366,7 @@ Existing pages augmented with Chapter 9 content:
 - [[data-mesh]] — Ch 9 view of the mesh as a serving architecture.
 - [[data-as-a-product]] — link to sibling [[data-product]] page.
 
-## Chapter 10 — Security and Privacy
+## Chapter 10: Security and Privacy
 
 Chapter 10 is the first of two short closing chapters. It revisits the [[data-security|security undercurrent]] — previously introduced briefly in Chapter 2 and sharpened architecturally in Chapter 3 — and gives it a full dedicated treatment organised around **people, processes, and technology, in that order**. The chapter's core argument is that the weakest link in every data system is the human, so process and technology must both be designed to survive human error, not to assume it away.
 
@@ -390,7 +390,7 @@ Existing pages augmented with Chapter 10 content:
 - [[zero-trust-security]] — Ch 10's cloud-vs-air-gapped framing; air gap as the ultimate hardened perimeter; still vulnerable to humans.
 - [[backups-vs-archives]] — ransomware as a reason backups are a security control, not just a reliability control; shrinking insurance payouts.
 
-## Chapter 11 — The Future of Data Engineering
+## Chapter 11: The Future of Data Engineering
 
 Chapter 11 is the short closing chapter — a set of forward-looking predictions grounded in the authors' perspective on past, present, and current trends. Its organising claim is that the [[data-engineering-lifecycle]] itself is durable, but the shape of each stage, the tools used, and the role boundaries around data engineers will keep morphing. The chapter explicitly hedges: some predictions are safe ("proceeded day by day as we've written this book"), others are speculative ("significant paradigm shift that might stall").
 
