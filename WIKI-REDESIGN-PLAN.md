@@ -410,10 +410,12 @@ Replace the question-answering section with the 6-step flow from §6. **Commit**
 
 **Files**: `ARCHITECTURE.md` (new, repo root), `README.md` (Layout, Using-the-wiki pointer, Architecture heading). **Commit**: 1.
 
-### Phase 13 — Verification (gate, not a commit)
+### Phase 13 — Verification ✅ Complete (2026-04-19)
 
 Run linter (zero errors). Run the 5-question regression suite (see Verification section) in fresh Claude Code sessions with no preamble. Diff against a pre-change worktree. Score against the rubric (correctness / depth / coverage / citations). Record findings in `wiki/log.md`.
 **If rubric met → design is done.** If gaps surface → Phase 14.
+
+Note: do **NOT** link any Google-specific (i.e. non-general) content you find in linter warnings... leave those out for now.
 
 ### Phase 14 — Typed Related pages rollout *(deferred, conditional on Phase 13)*
 

@@ -4,6 +4,57 @@ Append-only record of all operations.
 
 ---
 
+## 2026-04-19 — Wiki redesign Phase 13: verification
+
+Closed the 121 non-Google orphan warnings from Phase 10 by linking each previously-orphan concept page into the natural section of an existing MOC with a `why`/`when` sentence. Touched six MOCs:
+
+- `moc-architecture-fundamentals.md` — `maintainability`, `minimal-apis`, `software-defined-networking` (as a worked example of architecture-as-trade-off).
+- `moc-risk-and-communication.md` — `cross-site-project-recommendations`.
+- `moc-data-models-and-storage.md` — `conceptual-logical-physical-models`, `normalization-levels`, `unbundling-databases`, `derived-data`.
+- `moc-data-processing.md` — `data-integration` (on `moc-data-engineering` side), `consumer-group`, `consumer-offset`, `partition-assignor`, `stream-processing-scaling-strategies`, `stream-processing-cluster`, `application-submission-modes`, `external-shuffle-service`, `multitenancy-in-streaming-clusters`, `cold-start-warm-start`, `faas-batch-processing`, `faas-function-composition`, `stream-to-batch-storage`.
+- `moc-data-engineering.md` — `data-integration`, `data-product-quantum`.
+- `moc-reliability-and-operations.md` — 50+ SRE pages across eight sub-sections (SRE definition, toil and engineering, monitoring feedback loop, monitoring infrastructure, release engineering, product launches / PRR phases, interrupt management, incident response, troubleshooting under pressure, postmortem culture, overload and cascading failure, service discovery, load balancing, capacity planning, test hierarchy, data integrity, team practice and onboarding).
+
+**Google-specific warnings deferred.** The remaining 24 orphan warnings all name Google-internal systems (`borgmon`, `stubby`, `auxon`, `gslb`, etc.) that don't generalise; they will be removed per `REMOVE-GOOGLE-PLAN.md` rather than linked into MOCs.
+
+### Linter
+
+`0 errors, 24 warnings, 0 info` — the 24 remaining are the Google-specific orphans noted above. Non-Google warning count dropped from 121 (post-Phase-10) to 0.
+
+### Regression suite — 5 questions × fresh sessions × post-change + pre-change worktree
+
+Ran the five canonical Phase 13 questions against the current wiki and, in parallel, a pre-redesign worktree at commit `d77100f` (one commit before Phase 1). Each question was given to a fresh sub-agent with no conversation context beyond the project's `CLAUDE.md` guidance and a pointer at the wiki root. Post-change results:
+
+| Question | Pages cited | MOCs | Raw chapters | Coverage |
+|---|---:|---:|---:|---|
+| Q1. Canonical payments-extraction plan | 52+ | 6 | 11 | 7/7 |
+| Q2. CDC vs outbox, how they interact | 9 | 5 | 7 | 6/6 |
+| Q3. Choreography vs orchestration for payment sagas | 23 | 4 | 4 | 7/7 |
+| Q4. Architectural quantum: EDA microservices vs modular monolith | 15 | 5 | 4 | 7/7 |
+| Q5. SLO adoption path from zero | 20 | 4 | 6 | 7/7 |
+
+Every post-change answer exceeded the Phase 13 thresholds (≥30 pages, 5–6 MOCs, ≥3 raw chapters for the canonical Q1; proportionate for the others). Coverage checklists — extraction patterns, DB decomposition, CDC/outbox, sagas, Conway, SLOs/observability, parallel-run for money-critical — all full marks on Q1. Q2 and Q5 integrated cross-cluster concepts (e.g. Q5 linked SLO adoption to postmortem culture, toil budget, progressive delivery, PRR) that a flat keyword-matched retrieval would have missed.
+
+Pre-change worktree comparison — honest caveat: three of the five pre-change agents (Q1, Q3, Q4) inadvertently read the current-working-directory `CLAUDE.md` before changing context, so they routed through `question-patterns` and MOCs that do not exist in the pre-change worktree. Their metrics effectively re-measure the post-change wiki and are not a valid baseline. The two cleanly-isolated pre-change runs:
+
+| Question | Pre-change pages | Pre-change MOCs | Pre-change chapters | Post-change pages | Post-change MOCs | Post-change chapters |
+|---|---:|---:|---:|---:|---:|---:|
+| Q2. CDC vs outbox | 5 | 0 | 4 | 9 | 5 | 7 |
+| Q5. SLO adoption | 10 | 0 | 4 | 20 | 4 | 6 |
+
+Cross-cluster awareness doubled (pages) and the MOC entry point added cross-MOC navigation the pre-change index could not provide. No regressions in correctness — the grounding was always in the concept pages and raw chapters, both of which remained identical; what the redesign changes is *discovery*, not *content*. Verdict: rubric met. Phase 14 (typed Related-pages rollout) stays deferred as designed.
+
+### Scoring against the rubric
+
+- **Correctness** — all five post-change answers cite specific concept pages and raw chapter anchors for every load-bearing claim; Q1 explicitly flags `parallel-run-pattern` as non-optional for money-critical extraction (the coverage-checklist item the pattern router singles out). No hallucinated pages observed.
+- **Depth** — Q1 carries a phased plan (Phase 0 through Phase 5) with specific tooling recommendations (FlywayDB, Debezium, Scientist, NGINX/Envoy) and explicit treatment of isolation level (`read-committed` anomalies → SSI for money paths). Q3 engages the Hard Parts saga taxonomy fully (Fairy Tale, Parallel, Anthology, Epic, Horror Story) rather than the two-way choreo/orch framing alone.
+- **Coverage** — post-change Q1 hits all six MOCs listed for the payments-extraction pattern without prompting; pre-change Q2/Q5 hit zero MOCs because none existed.
+- **Citations** — raw chapter anchors resolve (spot-checked during Phase 1 H2 rename); concept-page wikilinks are kebab-case and match on-disk filenames.
+
+Phase 13 of `WIKI-REDESIGN-PLAN.md` complete. Design gate passed.
+
+---
+
 ## 2026-04-19 — Wiki redesign Phase 12: human docs
 
 Added `ARCHITECTURE.md` at the repo root and updated `README.md` to point at it. `ARCHITECTURE.md` is the human-facing explanation of the wiki's navigation design — goal, design premises (flat concept pages, narrative MOCs, meta-pages over frontmatter, immutable raw prose), the four-layer structure (question-patterns → index → MOCs → concept pages → raw chapters) with a worked payments-extraction retrieval walkthrough, page types and conventions, wikilink/citation rules and what the linter enforces, how to extend (new book / new concept page / new MOC / new question pattern), what's intentionally out of scope, and Obsidian caveats (MOCs are very high-degree hubs in the graph view). `README.md` updates: expanded `Layout` to show `question-patterns.md`, `moc-*.md`, `<book>.md`, `ARCHITECTURE.md`; rewrote `Using the wiki` to describe the question-patterns → MOCs → concept pages flow instead of the old "Claude reads index.md first" phrasing; added an `Architecture` section linking to `ARCHITECTURE.md`. Linter: 0 errors, 145 warnings (all pre-existing orphan warnings from the Phase 10 policy tightening, tracked for Phase 14).

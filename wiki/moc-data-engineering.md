@@ -49,6 +49,7 @@ The lifecycle is Reis and Housley's structuring device. It is *not* a waterfall;
 - [[data-storage-stage]] — storage; why it underpins every other stage; the evaluation criteria for picking storage at lifecycle-stage scope, not at individual-component scope.
 - [[data-temperature]] — hot / lukewarm / cold tiers and the cloud archival economics; the vocabulary for storage-cost decisions.
 - [[data-ingestion]] — the ingestion stage; batch vs streaming; push vs pull; the streaming-first checklist. Execution mechanics live on [[moc-data-processing]]; the *choice* lives here.
+- [[data-integration]] — making data available across systems via batch and stream processing. The discipline-level frame for what the ingestion-plus-transformation stages together are *for*; the story that knits the lifecycle stages into a pipeline-family, not a collection of point-to-point plumbing.
 - [[data-transformation]] — basic-through-complex; business logic as driver. Mechanics on [[moc-data-processing]]; discipline here.
 - [[data-serving]] — analytics / ML / reverse ETL; the "data vanity projects" anti-pattern. The payoff stage; the one executives care about.
 - [[analytics]] — BI vs operational vs embedded/customer-facing; self-service; multi-tenancy. The single largest category of serving.
@@ -138,6 +139,7 @@ The architectural layer of the discipline. This section pairs the FoDE principle
 - [[iot-architecture]] — devices, gateways, constrained-network ingestion, reverse-ETL control loops. The pattern the data function inherits when the source systems are things, not services.
 - [[data-mesh]] — Dehghani's four principles (domain ownership, data as product, self-serve platform, federated governance). The organisational architecture of the 2020s; as much a Conway's-law statement as a technical one.
 - [[data-as-a-product]] — the organisational stance inside data mesh. The thing that separates a mesh from "microservices for data" in caricature.
+- [[data-product-quantum]] — the architectural unit of data mesh — the smallest independently-deployable piece of a data product, sitting alongside the domain microservice that owns it. The concept that lets mesh principles compile down to concrete team and deployment boundaries.
 
 Deeper reading: [[fundamentals-of-data-engineering#chapter-3-designing-good-data-architecture]].
 
