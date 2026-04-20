@@ -363,7 +363,7 @@ Write per §1 template with these refinements folded in:
 `moc-architecture-fundamentals`, `moc-risk-and-communication`, `moc-architecture-styles`, `moc-components-and-partitioning`.
 **Commits**: 1 per MOC, or bundled. **Review**: cluster-wide coherence; consistent terminology.
 
-### Phase 4 — Service-design MOCs (2)
+### Phase 4 — Service-design MOCs (2) ✅ Complete (2026-04-19)
 
 `moc-microservices`, `moc-domain-driven-design` (decomposition already in Phase 2).
 **Review — specific check**: decomposition ↔ microservices boundary. Where does the agent start for "should we extract?" vs. "how do we organize around services?"
