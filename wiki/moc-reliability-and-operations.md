@@ -138,6 +138,7 @@ These mechanisms are owned as *shapes* by [[moc-container-and-serving-patterns]]
 - [[canary-test]] — expose the new version to 1% of traffic and watch SLIs. The cheap version of progressive delivery.
 - [[progressive-delivery]] — automated canary analysis: as long as SLO gates hold, traffic percentage increases; on gate failure, automatic rollback. The safety mechanism that protects a tight error budget.
 - [[gradual-rollout]] — the generalisation: any growing-cohort exposure mechanism. Canary, feature-flag-percentage, geographic rollout.
+- [[feature-toggle]] — the primitive: a runtime switch that gates a code path without a redeploy. Under the reliability lens, the mechanism that turns a bad release from a redeploy into a flag flip — seconds instead of minutes of MTTR.
 - [[feature-flag-framework]] — the infrastructure that makes deploy-vs-release workable at scale: registry, SDK, targeting rules, kill-switch semantics.
 - [[blue-green-deployment]] — atomic cutover between environments; the safest rollback mechanism at the cost of 2x capacity during transition.
 - [[rolling-update-pattern]] — the default for replicated services; safe when the new version is wire-compatible with the old.
