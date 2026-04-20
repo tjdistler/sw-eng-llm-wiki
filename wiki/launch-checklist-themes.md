@@ -31,7 +31,7 @@ The company's internal ecosystem — how to set up machines, configure new servi
 - Set up load balancers to talk to your service.
 - Set up monitoring for your new service.
 
-At Google the internal ecosystem means [[bns]], [[borg]], [[borgmon]], [[gslb]], and [[stubby]].
+At Google the internal ecosystem means cluster manager, naming service, time-series monitoring, [[gslb]], and the internal RPC framework.
 
 ## Capacity planning
 
@@ -98,7 +98,7 @@ Google is an extensive user of version control, and nearly every development pro
 - Check all code and configuration files into the version control system.
 - Cut each release on a new release branch.
 
-See [[google-monorepo]], [[release-engineering]], [[configuration-management-sre]].
+See [[release-engineering]] and [[configuration-management-sre]].
 
 ## External dependencies
 
@@ -123,7 +123,7 @@ External requirements from marketing and PR may complicate things further — a 
 - Set up a launch plan identifying actions to launch the service; identify who owns each item.
 - Identify risk in each launch step and implement contingency measures.
 
-See [[progressive-delivery]], [[sisyphus]], [[canary-test]], [[feature-flag-framework]].
+See [[progressive-delivery]], [[canary-test]], [[feature-flag-framework]].
 
 ## Related pages
 

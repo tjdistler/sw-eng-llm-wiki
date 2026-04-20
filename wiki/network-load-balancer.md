@@ -90,7 +90,7 @@ The network load balancer is the mechanism; the [[virtual-ip-address|VIP]] is th
 
 ### Network load balancer vs L7 reverse proxy
 
-A network load balancer operates at the IP/TCP level (L3/L4) — it forwards packets without understanding application-layer content. An L7 reverse proxy like nginx, Varnish, or the [[google-frontend|GFE]] terminates TCP and speaks the application protocol. The layers stack: at Google, the VIP's network load balancer forwards packets to a GFE, which then terminates TLS, parses HTTP, and forwards inward via [[stubby|Stubby]] — where [[datacenter-load-balancing|Chapter 20's]] application-layer balancer ([[subsetting]] + [[load-balancing-policies]]) takes over.
+A network load balancer operates at the IP/TCP level (L3/L4) — it forwards packets without understanding application-layer content. An L7 reverse proxy like nginx, Varnish, or Google's internal edge proxy terminates TCP and speaks the application protocol. The layers stack: at Google, the VIP's network load balancer forwards packets to an edge reverse proxy, which then terminates TLS, parses HTTP, and forwards inward over the internal RPC framework — where [[datacenter-load-balancing|Chapter 20's]] application-layer balancer ([[subsetting]] + [[load-balancing-policies]]) takes over.
 
 ### Network load balancer and consistent hashing
 
@@ -110,5 +110,4 @@ The network load balancer is a production-critical component whose design choice
 - [[frontend-load-balancing]]
 - [[datacenter-load-balancing]]
 - [[load-balancing-policies]]
-- [[google-frontend]]
 - [[site-reliability-engineering]]

@@ -1,6 +1,6 @@
 # Cross-Site Project Recommendations
 
-**Summary**: Chapter 31's explicit list of recommendations for running engineering projects across sites — distilled from the [[viceroy-case-study|Viceroy]] retrospective. Start from: only go cross-site when you have to, but recognise there often *are* good reasons to have to. The operating principles are divide-and-conquer decomposition, written-first communication to offset distance, standardisation as an ongoing activity, and in-person time concentrated on project leaders and occasional team summits.
+**Summary**: Chapter 31's explicit list of recommendations for running engineering projects across sites — distilled from the dashboard-consolidation retrospective. Start from: only go cross-site when you have to, but recognise there often *are* good reasons to have to. The operating principles are divide-and-conquer decomposition, written-first communication to offset distance, standardisation as an ongoing activity, and in-person time concentrated on project leaders and occasional team summits.
 
 **Sources**: `raw/site-reliability-engineering/chapter-31-communication-and-collaboration-in-sre.md`
 
@@ -25,7 +25,7 @@ Motivated contributors are valuable, but **not all contributions are equally val
 - Contributors chasing *"a notch on their belt"* by attaching their name to a shiny project.
 - Contributors wanting to code on a new exciting project without committing to maintain it.
 
-Contributors with a **specific goal to achieve** are better motivated and will better maintain what they contribute. This is the positive framing of the [[viceroy-case-study|Viceroy]] dilution-of-ownership problem: people who solve a real need stay engaged after delivery; people scratching a CV-itch don't.
+Contributors with a **specific goal to achieve** are better motivated and will better maintain what they contribute. This is the positive framing of the dashboard-consolidation dilution-of-ownership problem: people who solve a real need stay engaged after delivery; people scratching a CV-itch don't.
 
 ## Design the project structure up front
 
@@ -97,7 +97,6 @@ Don't front-load heavyweight process; grow the process in step with the project.
 
 - [[communication-and-collaboration-in-sre]]
 - [[cross-sre-collaboration]]
-- [[viceroy-case-study]]
 - [[conways-law]]
 - [[architecture-decision-record]]
 - [[architect-leadership-skills]]

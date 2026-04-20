@@ -71,7 +71,7 @@ Chapter 13's [[change-induced-emergency|configuration-push case]] found that a "
 - [[progressive-delivery]] (Newman / Burns) — canary is the flagship progressive-delivery technique; the rollout arithmetic in Chapter 17 quantifies what Newman and Burns describe qualitatively
 - [[change-management-sre]] — canary is the "progressive rollout" leg of the automation trio; Ch 13's sharpening is embedded there
 - [[change-induced-emergency]] (Ch 13) — the case study that proved the "combinatorial surface" rule
-- [[sisyphus]] (Ch 8) — the general-purpose rollout framework that executes the canary pattern across Google services
+- A general-purpose rollout framework (SRE Ch 8) executes the canary pattern across Google services
 - Chaos engineering (industry practice) — the statistical-testing tools Chapter 17 cites ([[statistical-testing-techniques|Chaos Monkey, Jepsen]]) induce variance canaries must then catch
 
 ## Related pages
@@ -80,7 +80,6 @@ Chapter 13's [[change-induced-emergency|configuration-push case]] found that a "
 - [[change-management-sre]]
 - [[change-induced-emergency]]
 - [[progressive-delivery]]
-- [[sisyphus]]
 - [[regression-tests]]
 - [[stress-tests]]
 - [[statistical-testing-techniques]]

@@ -100,7 +100,6 @@ Chapter 18 adds three implications for the taxonomy:
 - [[sysadmin-approach]]
 - [[software-engineering-in-sre]]
 - [[fostering-software-engineering-in-sre]]
-- [[auxon]]
 - [[dealing-with-interrupts]]
 - [[polarizing-time]]
 - [[context-switch-cost]]

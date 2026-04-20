@@ -80,7 +80,6 @@ The reason: immersion in the world of production is what gives SREs doing develo
 
 ## Related pages
 
-- [[auxon]]
 - [[software-engineering-in-sre]]
 - [[sre-software-development-lessons]]
 - [[sre-product-adoption]]

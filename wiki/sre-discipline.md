@@ -61,7 +61,7 @@ The SRE model has its own problems (source: chapter-01-introduction.md):
 
 ## Software engineering within SRE
 
-Chapter 18 sharpens the discipline's self-understanding: SREs don't just write automation — they **run full software-engineering projects** that solve internal production problems. [[auxon|Auxon]], Google's [[intent-based-capacity-planning|intent-based capacity planner]], is the case study. Chapter 18's argument:
+Chapter 18 sharpens the discipline's self-understanding: SREs don't just write automation — they **run full software-engineering projects** that solve internal production problems. Google's [[intent-based-capacity-planning|intent-based capacity planner]] is the case study. Chapter 18's argument:
 
 - Firsthand production experience makes SREs the right authors of tools that solve production problems
 - SRE-supported services grow exponentially while SRE headcount grows linearly or slower — perpetual tool development is the only way to close that gap
@@ -116,7 +116,6 @@ DevOps, introduced into industry around late 2008, shares SRE's core principles 
 - [[error-budget]]
 - [[software-engineering-in-sre]]
 - [[fostering-software-engineering-in-sre]]
-- [[auxon]]
 - [[sre-onboarding]]
 - [[sre-engagement-model]]
 - [[frameworks-and-sre-platform]]

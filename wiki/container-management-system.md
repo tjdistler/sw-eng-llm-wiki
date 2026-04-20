@@ -51,7 +51,7 @@ Cluster bringup itself is a separate tool — see [[cluster-creation-and-managem
 
 ## Google's internal ancestor: Borg
 
-[[borg|Borg]] is Google's distributed cluster operating system and the direct ancestor of Kubernetes. The SRE book describes it as a cluster-level job manager similar to Apache Mesos, open-sourced as Kubernetes in 2014 (source: site-reliability-engineering, chapter 2). Borg is the internal reference system behind the CMS category — Bellemare's framing and Burns's patterns (sidecar, pod, operator) are both descended from what Borg pioneered inside Google: fluid task placement, failure-domain-aware binpacking, declarative resource budgets, automatic restart, and [[bns|BNS]]-based indirection for addressing.
+[[borg|Borg]] is Google's distributed cluster operating system and the direct ancestor of Kubernetes. The SRE book describes it as a cluster-level job manager similar to Apache Mesos, open-sourced as Kubernetes in 2014 (source: site-reliability-engineering, chapter 2). Borg is the internal reference system behind the CMS category — Bellemare's framing and Burns's patterns (sidecar, pod, operator) are both descended from what Borg pioneered inside Google: fluid task placement, failure-domain-aware binpacking, declarative resource budgets, automatic restart, and symbolic naming-service indirection for addressing.
 
 ## Relationship to existing wiki coverage
 

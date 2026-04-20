@@ -54,7 +54,7 @@ His chapter's hands-on walkthroughs use etcd (because it is Kubernetes-native) a
 
 ## Google's Chubby: the ancestor
 
-[[chubby|Chubby]] is Google's internal lock service, and ZooKeeper is modelled directly after it (source: site-reliability-engineering, chapter 2). Chubby provides a filesystem-like API for locks across datacenter locations, uses Paxos for asynchronous [[consensus]], and is the canonical home for "data that must be consistent" inside Google — [[bns|BNS]] stores its name-to-address mappings in Chubby, for example. The lock-plus-consistent-KV fusion is exactly the ZooKeeper/etcd shape, with Paxos/Zab/Raft as the three consensus algorithms in the family.
+[[chubby|Chubby]] is Google's internal lock service, and ZooKeeper is modelled directly after it (source: site-reliability-engineering, chapter 2). Chubby provides a filesystem-like API for locks across datacenter locations, uses Paxos for asynchronous [[consensus]], and is the canonical home for "data that must be consistent" inside Google — the internal naming service stores its name-to-address mappings in Chubby, for example. The lock-plus-consistent-KV fusion is exactly the ZooKeeper/etcd shape, with Paxos/Zab/Raft as the three consensus algorithms in the family.
 
 ## Consensus-as-a-service (SRE Chapter 23)
 

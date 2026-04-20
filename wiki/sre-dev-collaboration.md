@@ -1,6 +1,6 @@
 # SRE-Dev Collaboration
 
-**Summary**: Chapter 31's model for how SRE teams collaborate with product development teams. The central claim: collaboration is best when it starts **early in the design phase, ideally before any code has been committed**, because SREs are uniquely positioned to make recommendations about architecture and software behaviour that are painful or impossible to retrofit. Work is tracked via the OKR process, and for some service SRE teams this consultation is the main activity. The worked example is [[dfp-to-f1-migration]].
+**Summary**: Chapter 31's model for how SRE teams collaborate with product development teams. The central claim: collaboration is best when it starts **early in the design phase, ideally before any code has been committed**, because SREs are uniquely positioned to make recommendations about architecture and software behaviour that are painful or impossible to retrofit. Work is tracked via the OKR process, and for some service SRE teams this consultation is the main activity. The worked example is an ad-serving database migration from MySQL to a Spanner-backed SQL store.
 
 **Sources**: `raw/site-reliability-engineering/chapter-31-communication-and-collaboration-in-sre.md`, `raw/site-reliability-engineering/chapter-32-the-evolving-sre-engagement-model.md`
 
@@ -50,7 +50,7 @@ Once SRE and product development are collaborating on a service, the [[productio
 
 ## Early involvement and the handoff model
 
-The chapter's early-involvement thesis is the inverse of the traditional handoff model: in the handoff model, developers build and then hand the operating system over to a separate operations team, who discover the reliability implications at the moment they have the least leverage to change them. SRE's model is to be present at the design, own infrastructure-adjacent parts of the implementation, and participate through to production. The DFP-to-F1 case study ([[dfp-to-f1-migration]]) is a worked example of this full-cycle involvement; the [[sre-discipline|SRE discipline]] page and Chapter 32 develop the broader model.
+The chapter's early-involvement thesis is the inverse of the traditional handoff model: in the handoff model, developers build and then hand the operating system over to a separate operations team, who discover the reliability implications at the moment they have the least leverage to change them. SRE's model is to be present at the design, own infrastructure-adjacent parts of the implementation, and participate through to production. Chapter 31's ad-serving database migration is a worked example of this full-cycle involvement; the [[sre-discipline|SRE discipline]] page and Chapter 32 develop the broader model.
 
 Contrast [[architecture-versus-design]] and [[architect-role-intersections]] (Richards & Ford) — both make similar arguments about architects remaining connected to implementation. Chapter 31's version is the operations-side sibling argument: the reliability discipline only has leverage if it participates in design.
 
@@ -58,14 +58,13 @@ Chapter 32 makes the early-involvement thesis concrete in engagement terms. The 
 
 ## Worked example
 
-[[dfp-to-f1-migration]] — the migration of DoubleClick for Publishers' main database from MySQL to F1. Joint SRE + product-development collaboration from the start of the project. SRE drove the infrastructure design (indexing, extract/join/filter, capacity planning), product development owned the business-logic changes, weekly meetings synchronised the tracks, and the production rollout was seamless to users.
+The Chapter 31 ad-serving database migration: DoubleClick for Publishers' main database was migrated from MySQL to an F1/Spanner store. Joint SRE + product-development collaboration from the start of the project. SRE drove the infrastructure design (indexing, extract/join/filter, capacity planning), product development owned the business-logic changes, weekly meetings synchronised the tracks, and the production rollout was seamless to users.
 
 ## Related pages
 
 - [[communication-and-collaboration-in-sre]]
 - [[production-meetings]]
 - [[sre-team-composition]]
-- [[dfp-to-f1-migration]]
 - [[sre-discipline]]
 - [[software-engineering-in-sre]]
 - [[launch-coordination-engineering]]

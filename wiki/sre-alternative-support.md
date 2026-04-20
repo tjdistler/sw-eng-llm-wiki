@@ -51,5 +51,4 @@ The [[shared-responsibility-engagement|shared responsibility]] engagement model 
 - [[frameworks-and-sre-platform]]
 - [[shared-responsibility-engagement]]
 - [[launch-coordination-engineering]]
-- [[production-guide]]
 - [[site-reliability-engineering]]

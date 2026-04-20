@@ -74,7 +74,6 @@ The pitfall to avoid at the other extreme: **don't define success as 100% adopti
 
 ## Related pages
 
-- [[auxon]]
 - [[software-engineering-in-sre]]
 - [[sre-software-development-lessons]]
 - [[fostering-software-engineering-in-sre]]

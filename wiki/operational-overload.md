@@ -67,7 +67,7 @@ Giving back the pager is the most aggressive form of the Chapter 1 safety valve 
 
 ## Embedding an SRE as constructive intervention (Chapter 30)
 
-Chapter 30 supplies the **constructive** intervention for an overloaded team: temporarily embed one experienced SRE into the team to change how the team works, not to help empty the queue (source: chapter-30-embedding-an-sre-to-recover-from-operational-overload.md). The embedded SRE runs through three phases — learn the service and identify [[identifying-kindling|kindling]], share context via a well-run postmortem and toil/not-toil sorting, and drive change by writing an [[service-level-objective|SLO]], teaching engineers to fix kindling themselves, [[explaining-reasoning|verbalising reasoning]], and asking [[leading-questions]]. The exit artefact is a [[postvitam]]. See [[embedding-sre]] for the full walkthrough.
+Chapter 30 supplies the **constructive** intervention for an overloaded team: temporarily embed one experienced SRE into the team to change how the team works, not to help empty the queue (source: chapter-30-embedding-an-sre-to-recover-from-operational-overload.md). The embedded SRE runs through three phases — learn the service and identify [[identifying-kindling|kindling]], share context via a well-run postmortem and toil/not-toil sorting, and drive change by writing an [[service-level-objective|SLO]], teaching engineers to fix kindling themselves, [[explaining-reasoning|verbalising reasoning]], and asking [[leading-questions]]. The exit artefact is a forward-looking written report. See [[embedding-sre]] for the full walkthrough.
 
 Embedding and giving back the pager are two points on the same escalation ladder:
 
@@ -123,4 +123,3 @@ Chapter 11 ends the section on a framing note: the possibility of renegotiating 
 - [[embedding-sre]]
 - [[ops-mode]]
 - [[identifying-kindling]]
-- [[postvitam]]

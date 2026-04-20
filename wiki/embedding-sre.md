@@ -51,9 +51,9 @@ Four moves drive change:
 3. **[[explaining-reasoning|Explain your reasoning]] for every decision, whether or not it's asked for.** The team will copy what they observe. Reasoning that isn't verbalised is reasoning that can't be inherited. The goal: after the visit, *the team should be able to predict what your comment on a design or changelist would be.*
 4. **Ask [[leading-questions]].** Rather than correcting bad practices, ask questions that guide the team back to first principles. Examples from the chapter: "I see that the TaskFailures alert fires frequently, but the on-call engineers usually don't do anything to respond to the alert. How does this impact the SLO?" and "This turnup procedure looks pretty complicated. Do you know why there are so many config files to update when creating a new instance of the service?" (source: chapter-30-embedding-an-sre-to-recover-from-operational-overload.md).
 
-## Exit: the [[postvitam|postvitam]]
+## Exit: the written after-action report
 
-The embedded engagement ends with a written **after-action report** — Chapter 30 names it a *postvitam* in contrast to a postmortem. The postvitam restates the visiting SRE's perspective, examples, and explanations, and leaves action items the team can exercise on the principles they've been taught (source: chapter-30-embedding-an-sre-to-recover-from-operational-overload.md).
+The embedded engagement ends with a written **after-action report** — Chapter 30 names it a *postvitam* in contrast to a postmortem. The report restates the visiting SRE's perspective, examples, and explanations, and leaves action items the team can exercise on the principles they've been taught (source: chapter-30-embedding-an-sre-to-recover-from-operational-overload.md).
 
 The embedded SRE should remain available for design and code reviews afterward, and should *keep an eye on the team for the next few months to confirm that they're slowly improving their capacity planning, emergency response, and rollout processes.*
 
@@ -74,7 +74,6 @@ Chapter 30's existence is an acknowledgement that the [[toil-and-engineering-bal
 - [[ops-mode]]
 - [[identifying-kindling]]
 - [[bad-apple-theory]]
-- [[postvitam]]
 - [[explaining-reasoning]]
 - [[leading-questions]]
 - [[operational-overload]]

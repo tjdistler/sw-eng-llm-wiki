@@ -66,7 +66,6 @@ Chapter 1 then expands the list into the concrete tenets catalogued below.
 
 - [[capacity-planning]] — organic + inorganic demand forecasting; load-testing to correlate raw capacity to service capacity.
 - [[intent-based-capacity-planning]] — Chapter 18's proposed approach: encode the service's intent and let a solver produce the allocation plan.
-- [[auxon]] — Chapter 18's case-study implementation; the mixed-integer linear programming tool that plans the use of many millions of dollars of Google machine resources.
 
 ### Provisioning
 
@@ -101,7 +100,6 @@ Chapter 32 (Acacio Cruz and Ashish Bhambhani) adds another structural responsibi
 - [[service-framework]] — what a framework provides
 - [[shared-responsibility-engagement]] — the staffing model frameworks unlock
 - [[sre-alternative-support]] — documentation and consultation for services that don't get full engagement
-- [[production-guide]] — the documentation backbone of alternative support
 
 ### Training and onboarding
 
@@ -169,7 +167,6 @@ Note that the tenets blend *what* the team is responsible for (monitoring, capac
 - [[declaring-an-incident]]
 - [[unmanaged-incident-anti-patterns]]
 - [[software-engineering-in-sre]]
-- [[auxon]]
 - [[intent-based-capacity-planning]]
 - [[traditional-capacity-planning]]
 - [[fostering-software-engineering-in-sre]]
@@ -199,4 +196,3 @@ Note that the tenets blend *what* the team is responsible for (monitoring, capac
 - [[service-framework]]
 - [[shared-responsibility-engagement]]
 - [[sre-alternative-support]]
-- [[production-guide]]

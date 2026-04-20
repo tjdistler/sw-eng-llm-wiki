@@ -27,7 +27,7 @@ Chapter 32 explicitly calls out the variability (source: chapter-32-the-evolving
 The reasons:
 
 - **Available engineering time.** Developer attention is finite; refactoring contends with feature work
-- **Starting maturity.** A service that already follows [[production-guide|production best practices]] has less to do than one that doesn't
+- **Starting maturity.** A service that already follows shared production best practices has less to do than one that doesn't
 - **Starting complexity.** Larger, older, more intertwined services take longer to refactor safely
 - **Myriad other factors.** Integration constraints, cross-team dependencies, platform migrations in flight
 

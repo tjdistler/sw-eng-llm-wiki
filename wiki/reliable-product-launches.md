@@ -95,7 +95,6 @@ The LCE team was Google's answer to achieving **safety without impeding change**
 - [[change-management-sre]]
 - [[progressive-delivery]]
 - [[canary-test]]
-- [[sisyphus]]
 - [[error-budget]]
 - [[toil-and-engineering-balance]]
 - [[capacity-planning]]
