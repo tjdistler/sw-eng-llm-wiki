@@ -4,6 +4,23 @@ Append-only record of all operations.
 
 ---
 
+## 2026-04-19 — Wiki redesign Phase 10: linter update
+
+Extended `wiki-linter/lint.py` for the MOC-era navigation contract. Four behaviour changes:
+
+- **Meta-page exemption**: `index.md`, `log.md`, `question-patterns.md`, and every `moc-*.md` are now recognised as meta-pages and skip the `sources` on-disk check (their `**Sources**:` line carries a `(meta-page; …)` marker instead of backticked `raw/` files).
+- **Tightened `orphan`**: concept pages must be linked from at least one MOC (`moc-*.md`). Concept-page-to-concept-page links no longer rescue an orphan — a page unreachable from the question-patterns → MOC path is invisible to the agent's intended retrieval walk. MOCs and `question-patterns.md` are exempt (covered by the `index` check via their listing in `index.md`).
+- **MOC-aware `index`**: "indexed" is now the union of `index.md` outbound links and every MOC's outbound links. The A–Z appendix in `index.md` remains the belt-and-braces default, but a page reachable through its MOC alone no longer warns.
+- **Typed `## Related pages`**: the five canonical relationship labels (`Prerequisite`, `Generalizes`, `Alternative`, `Contrast`, `See also`) are allowed inside `## Related pages`. Legacy flat-bullet format continues to pass silently; a `**Label:**` prefix with a non-canonical label warns.
+
+Updated `wiki-linter/REQUIREMENTS.md` to document all four changes.
+
+Linter on the current wiki: **0 errors** (exit 0). The tightened `orphan` check surfaces **145 warnings** — concept pages that no MOC currently references. These are legitimate reachability gaps to close in a follow-up pass; they are not regressions, they are signal uncovered by the new policy.
+
+Phase 10 of `WIKI-REDESIGN-PLAN.md` complete.
+
+---
+
 ## 2026-04-19 — Wiki redesign Phase 9: index hub rewrite
 
 Rewrote `wiki/index.md` as a hub. Replaced the 1442-line tabular catalogue (85 semantic groupings) with a four-block structure: Start-here pointer to `[[question-patterns]]` → 16-MOC table with one-sentence descriptions → 8-book table → A–Z appendix under `<details>`. The A–Z lists every concept page (979) alphabetically grouped by first letter, preserving the linter's "every page appears in `index.md`" invariant while keeping the rendered hub compact (~60 visible lines before expansion).
