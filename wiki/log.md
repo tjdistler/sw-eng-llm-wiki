@@ -4,6 +4,12 @@ Append-only record of all operations.
 
 ---
 
+## 2026-04-19 — Wiki redesign Phase 7: ops/security MOCs (3)
+
+Added the three Phase 7 Map-of-Content pages — `moc-container-and-serving-patterns`, `moc-reliability-and-operations`, `moc-security-and-privacy` — completing the 16-MOC layer. Deployment patterns (blue/green, canary, progressive delivery, feature flags) are dual-owned: mechanics in container-and-serving, safety practice in reliability-and-operations, with explicit framing sentences in each. Platform topics (service discovery, load balancing, capacity planning) cluster under named sub-sections in reliability-and-operations. Security-and-privacy documents known gaps (no auth/IAM, privacy-regulation-specific, or app-security concept pages yet) for future ingests to fill.
+
+---
+
 ## 2026-04-19 — Wiki redesign Phase 6: distributed + events MOCs (3)
 
 Added the three Phase 6 Map-of-Content pages — distributed systems, consistency and transactions, and events and streaming — following the voice template established in Phase 2 and carried through Phases 3–5. Each MOC opens with the jurisdictional rule so that shared pages (saga, outbox, CDC, Kafka/log-based brokers, linearizability, CAP, single-writer principle) are framed under different lenses in different MOCs rather than duplicated or arbitrated at retrieval time.
