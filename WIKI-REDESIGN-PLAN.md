@@ -378,7 +378,7 @@ Write per §1 template with these refinements folded in:
 `moc-distributed-systems`, `moc-consistency-and-transactions`, `moc-events-and-streaming`.
 **Review — specific check**: events-vs-processing boundary; saga placement; outbox multi-home framing (capture in data-processing, publication in events-and-streaming, correctness bridge in consistency-and-transactions).
 
-### Phase 7 — Ops/security MOCs (3)
+### Phase 7 — Ops/security MOCs (3) ✅ Complete (2026-04-19)
 
 `moc-container-and-serving-patterns`, `moc-reliability-and-operations`, `moc-security-and-privacy`.
 **Review — specific check**: deployment-pattern dual ownership (mechanics in container-and-serving, reliability lens in reliability-and-operations); platform topics (service discovery, load balancing, DNS, feature flags, capacity planning, incident response) cluster under named sub-sections in reliability.
