@@ -18,7 +18,7 @@ Configuration cuts across both the release engineers' domain (packaging, version
 
 All four patterns share:
 
-- **Config lives in the primary source repository** ([[google-monorepo]]).
+- **Config lives in the primary source repository**.
 - **Strict code review requirement** — same gate as application code.
 
 ## The four models
@@ -32,18 +32,18 @@ Developers and SREs modify configuration files at the head of the main branch. C
 
 This was the first method used for Borg and its predecessors.
 
-### 2. Config bundled in the binary's MPM package
+### 2. Config bundled in the binary's package
 
-For projects with few config files, or where the files change every release cycle, the configuration is included in the [[midas-package-manager|MPM]] package alongside the binaries.
+For projects with few config files, or where the files change every release cycle, the configuration is included in the content-addressed package alongside the binaries.
 
 - **Advantage**: simple deployment — one package.
 - **Disadvantage**: binary and config are tightly bound, limiting flexibility.
 
-### 3. Separate MPM "configuration packages" tied by label
+### 3. Separate "configuration packages" tied by label
 
-Apply the [[hermetic-builds|hermetic principle]] to configuration itself. Generate two MPM packages — one for the binary, one for the configuration — and link them with a shared MPM label (the chapter's example is `much_ado`).
+Apply the [[hermetic-builds|hermetic principle]] to configuration itself. Generate two packages — one for the binary, one for the configuration — and link them with a shared movable label (the chapter's example is `much_ado`).
 
-> We can leverage MPM's labeling feature to indicate which versions of MPM packages should be installed together. A label of much_ado can be applied to the MPM packages... When a new version of the project is built, the much_ado label will be applied to the new packages. Because these tags are unique within the namespace for an MPM package, only the latest package with that tag will be used. (source: chapter-08-release-engineering.md)
+> We can leverage the package manager's labeling feature to indicate which versions of packages should be installed together. A label of much_ado can be applied... When a new version of the project is built, the much_ado label will be applied to the new packages. Because these tags are unique within the namespace, only the latest package with that tag will be used. (source: chapter-08-release-engineering.md)
 
 This is the most flexible pattern:
 
@@ -94,10 +94,8 @@ The Chapter 8 rule ("config in repo + strict code review") is necessary but not 
 ## Related pages
 
 - [[release-engineering]]
-- [[midas-package-manager]]
 - [[release-policy-enforcement]]
 - [[hermetic-builds]]
-- [[google-monorepo]]
 - [[feature-toggle]]
 - [[deployment-vs-release]]
 - [[chubby]]

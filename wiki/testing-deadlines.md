@@ -33,7 +33,7 @@ A test suite dominated by batch tests — because the unit suite isn't comprehen
 ## Cross-book connections
 
 - [[test-flakiness-budget]] — the reliability floor; a flaky batch test that fails an hour after the commit wastes even more attention than a flaky interactive test
-- [[hermetic-builds]] / [[blaze-bazel]] (Ch 8) — the infrastructure that makes fast selective tests possible; without dependency graphs every patch triggers the slow suite
+- [[hermetic-builds]] (Ch 8) — the infrastructure that makes fast selective tests possible; without dependency graphs every patch triggers the slow suite
 - [[build-system-discipline]] — the continuous-build notification loop is the batch-test-feedback channel; Ch 17 argues it must be as short as technically feasible
 
 ## Related pages

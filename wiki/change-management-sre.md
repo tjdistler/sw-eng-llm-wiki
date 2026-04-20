@@ -57,9 +57,9 @@ Chapter 7 also reinforces a subtler rule: **automation must not rely on implicit
 
 Chapter 8 shows the full tool stack that actually realises progressive rollout + detection + safe rollback at Google scale. The [[release-engineering]] discipline is the home for this machinery (source: chapter-08-release-engineering.md):
 
-- **Progressive rollouts** — [[sisyphus]] is the SRE-developed general-purpose rollout framework; it can fan out to all clusters at once, expand exponentially over hours, or interleave across geographic regions over several days. Deployment is **fit to the risk profile of the service**, not to a fixed template.
+- **Progressive rollouts** — an SRE-developed general-purpose rollout framework can fan out to all clusters at once, expand exponentially over hours, or interleave across geographic regions over several days. Deployment is **fit to the risk profile of the service**, not to a fixed template.
 - **Fast detection** — canary deployments run system tests on the first few jobs before the rollout expands. The [[rapid-release-system|Rapid]] workflow logs every step and produces a change report for SRE triage.
-- **Safe rollback** — [[midas-package-manager|MPM]]'s movable labels (dev / canary / production) make rollback a label move to the previous package rather than a rebuild. Reverting `production` to the last-known-good package is cheap and fast.
+- **Safe rollback** — a content-addressed package manager with movable labels (dev / canary / production) makes rollback a label move to the previous package rather than a rebuild. Reverting `production` to the last-known-good package is cheap and fast.
 
 The upstream discipline that makes all of this possible:
 
@@ -79,7 +79,7 @@ For this heuristic to be fast rather than archaeological, the change-management 
 
 > Well-designed systems should have extensive production logging to track new version deployments and configuration changes at all layers of the stack, from the server binaries handling user traffic down to the packages installed on individual nodes in the cluster.
 
-The chapter also recommends **annotating monitoring dashboards with deployment start/end markers** so that performance changes can be visually correlated with deploys. The [[rapid-release-system|Rapid]] workflow's change reports and [[midas-package-manager|MPM]]'s package-label history are the pieces of infrastructure that make this cheap at Google.
+The chapter also recommends **annotating monitoring dashboards with deployment start/end markers** so that performance changes can be visually correlated with deploys. The [[rapid-release-system|Rapid]] workflow's change reports and the package manager's movable-label history are the pieces of infrastructure that make this cheap at Google.
 
 ## When the canary is insufficient (Chapter 13)
 
@@ -112,7 +112,7 @@ Chapter 22's [[cascading-failure-triggers|triggering conditions]] section explic
 
 > A new binary, configuration changes, or a change to the underlying infrastructure stack can result in changes to request profiles, resource usage and limits, backends, or a number of other system components that can trigger a cascading failure. During a cascading failure, it's usually wise to check for recent changes and consider reverting them, particularly if those changes affected capacity or altered the request profile.
 
-This is the 70%-of-outages finding applied at the incident-response level: when a cascade starts, the highest-prior guess for the trigger is a recent change. Chapter 22 recommends that every service implement some form of change logging for exactly this diagnostic reason. [[outalator]] and [[sisyphus]] already provide this record at Google; open-source equivalents are audit logs and deployment-tracking dashboards.
+This is the 70%-of-outages finding applied at the incident-response level: when a cascade starts, the highest-prior guess for the trigger is a recent change. Chapter 22 recommends that every service implement some form of change logging for exactly this diagnostic reason. At Google this record is supplied by the outage-archive and rollout-framework tools; open-source equivalents are audit logs and deployment-tracking dashboards.
 
 Chapter 22 also adds a subtler warning about *what counts as a change*: changes that improve steady-state reliability can *worsen* cascade risk. Adding retries reduces transient error rates and increases retry-amplification risk. Adding caches improves latency and creates a [[slow-startup-and-cold-caching|cold-cache]] hard dependency. Automatic failover reduces MTTR and can death-loop under load. The trio (progressive rollout + fast detection + safe rollback) is the right mechanism for **any** change, but evaluating the change must also include its cascading-failure behaviour, which is specifically what [[testing-for-cascading-failures|testing to failure and beyond]] measures.
 
@@ -146,8 +146,6 @@ Chapter 27 also adds specific discipline to the change-management trio for launc
 - [[idempotence]]
 - [[release-engineering]]
 - [[rapid-release-system]]
-- [[sisyphus]]
-- [[midas-package-manager]]
 - [[push-on-green]]
 - [[divide-and-conquer-debugging]]
 - [[troubleshooting-model]]

@@ -24,7 +24,7 @@ Naïvely, every patch would trigger a full-system rebuild and re-run. That's com
 
 > Practical testing environments try to select branch points among the versions and merges. Doing so resolves the maximum amount of dependent uncertainty for the minimum number of iterations. Of course, when an area of uncertainty resolves into a fault, you need to select additional branch points. (source: chapter-17-testing-for-reliability.md)
 
-The testing system is making an **economic choice about which subset of the closure to actually exercise**. Build systems like [[blaze-bazel|Bazel]] make this selection possible by producing dependency graphs that expose exactly which tests a given file change affects.
+The testing system is making an **economic choice about which subset of the closure to actually exercise**. Build systems like Bazel make this selection possible by producing dependency graphs that expose exactly which tests a given file change affects.
 
 ## Footnote example of a shared-library hazard
 
@@ -36,14 +36,12 @@ The test's assertion logic is correct, but the observational window has moved: e
 
 ## Cross-book connections
 
-- [[blaze-bazel]] (Ch 8) — the build system whose dependency graphs enable selective test execution; Ch 17 explicitly credits Bazel's "only rebuild the part that depends on this file" feature
 - [[hermetic-builds]] (Ch 8) — hermetic builds make the dependency graph trustworthy; without hermeticity, what the build tool *thinks* depends on what can diverge from what actually does
 - [[simplicity-sre]] / [[minimal-apis]] (Ch 9) — smaller APIs have smaller transitive dependency closures; the simplicity discipline is a prerequisite for the dependency selection to produce manageable test sets
 
 ## Related pages
 
 - [[testing-for-reliability]]
-- [[blaze-bazel]]
 - [[hermetic-builds]]
 - [[test-flakiness-budget]]
 - [[fake-backend-versions]]

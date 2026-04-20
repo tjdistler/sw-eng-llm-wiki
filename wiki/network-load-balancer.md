@@ -98,7 +98,7 @@ A network load balancer operates at the IP/TCP level (L3/L4) — it forwards pac
 
 ### Network load balancer and the SRE tenets
 
-The network load balancer is a production-critical component whose design choices have major availability and capacity implications — it is the kind of infrastructure [[capacity-planning]], [[change-management-sre]], and [[release-engineering]] all apply to. Google's Maglev rollout is the kind of change [[sisyphus]] orchestrates.
+The network load balancer is a production-critical component whose design choices have major availability and capacity implications — it is the kind of infrastructure [[capacity-planning]], [[change-management-sre]], and [[release-engineering]] all apply to. A Maglev-style rollout is the kind of change a general-purpose rollout framework orchestrates.
 
 ## Related pages
 

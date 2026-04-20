@@ -45,7 +45,7 @@ The claim is load-bearing: a rock-solid mainline makes emergency changes *cheape
 
 ## Bazel's role
 
-The chapter credits [[blaze-bazel|Bazel]] for making this scalable (source: chapter-17-testing-for-reliability.md):
+The chapter credits Bazel for making this scalable (source: chapter-17-testing-for-reliability.md):
 
 > Some build systems like Bazel have valuable features that afford more precise control over testing. For example, Bazel creates dependency graphs for software projects. When a change is made to a file, Bazel only rebuilds the part of the software that depends on that file. Such systems provide reproducible builds. Instead of running all tests at every submit, tests only run for changed code. As a result, tests execute cheaper and faster.
 
@@ -60,7 +60,6 @@ Coverage is a project with deliverables: measured baselines, target numbers, dea
 ## Cross-book connections
 
 - [[system-stability-vs-agility]] (Ch 9) — Ch 9 argues that reliable processes increase agility; Ch 17's stability-drives-agility case study is the testing-infrastructure realisation
-- [[blaze-bazel]] (Ch 8) — the build tool named in Ch 17 as essential; Ch 8 covers Blaze / Bazel in full
 - [[hermetic-builds]] (Ch 8) — the property that makes continuous build reproducible; without hermeticity, "the build is green" means different things on different machines
 - [[push-on-green]] (Ch 8) — the logical endpoint: continuous build + continuous test + automated deploy
 - [[continuous-integration-delivery-deployment]] (Bellemare) — the broader practice this chapter describes the SRE slice of
@@ -69,6 +68,5 @@ Coverage is a project with deliverables: measured baselines, target numbers, dea
 
 - [[testing-for-reliability]]
 - [[hermetic-builds]]
-- [[blaze-bazel]]
 - [[push-on-green]]
 - [[system-stability-vs-agility]]

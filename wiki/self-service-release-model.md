@@ -21,7 +21,7 @@ Two consequences follow:
 
 If the teams run the releases, what is release engineering for? (source: chapter-08-release-engineering.md)
 
-- **Tool defaults.** The tools ([[rapid-release-system|Rapid]], [[blaze-bazel|Blaze]], [[midas-package-manager|MPM]], [[sisyphus|Sisyphus]]) have to behave correctly by default. A team shouldn't have to become a build expert to get a reproducible release.
+- **Tool defaults.** The tools ([[rapid-release-system|Rapid]] plus the hermetic build tool, package manager, and rollout framework) have to behave correctly by default. A team shouldn't have to become a build expert to get a reproducible release.
 - **Documentation.** Adequate documentation so teams can stay focused on features and users, not on reinventing release processes poorly.
 - **Best-practice guidance.** Compiler flags, build-identification tag formats, required build steps — all defined once, applied everywhere.
 - **Telemetry and metrics.** Release engineers measure release velocity and build-configuration usage and use those numbers to improve the tools.

@@ -14,7 +14,7 @@ Chapter 8 names the pattern directly:
 
 > Other teams have adopted a "Push on Green" release model and deploy every build that passes all tests. (source: chapter-08-release-engineering.md)
 
-Chapter 2 had already mentioned push-on-green as the end state of the [[google-monorepo|monorepo]] workflow — continuous testing on each CL plus an automatic promotion step for projects that opt in (source: chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md).
+Chapter 2 had already mentioned push-on-green as the end state of the shared-monorepo workflow — continuous testing on each CL plus an automatic promotion step for projects that opt in (source: chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md).
 
 ## Why the model is viable
 
@@ -25,7 +25,7 @@ Push-on-green collapses the human review step between "tests pass" and "producti
 - **[[release-branching-and-cherry-picking|Build from continuous-test revisions]]** — the chapter recommends creating releases at the revision of the last continuous test build that successfully completed all tests, which is the push-on-green-compatible shape.
 - **[[change-management-sre|Automation trio]]** — progressive rollout + fast detection + safe rollback, because some regressions will escape tests.
 - **[[error-budget]]** — the model presumes the [[service-level-objective|SLO]] leaves room for occasional regressions that get caught in rollout.
-- **[[rapid-release-system|Rapid]] + [[sisyphus]]** — the orchestration that actually performs the push.
+- **[[rapid-release-system|Rapid]] and a general-purpose rollout framework** — the orchestration that actually performs the push.
 
 Without these, push-on-green is not velocity — it is hope.
 
@@ -61,12 +61,10 @@ Chapter 1 framed 1%-experiments and progressive rollouts as ways to **free up er
 - [[high-release-velocity]]
 - [[hermetic-builds]]
 - [[rapid-release-system]]
-- [[sisyphus]]
 - [[change-management-sre]]
 - [[error-budget]]
 - [[progressive-delivery]]
 - [[continuous-integration-delivery-deployment]]
-- [[google-monorepo]]
 - [[testing-for-reliability]]
 - [[test-flakiness-budget]]
 - [[zero-mttr-testing]]
