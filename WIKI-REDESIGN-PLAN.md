@@ -402,9 +402,7 @@ Start-here pointer to `question-patterns.md` → 16-MOC table → 8-book table �
 `META_PAGES` class (exempt `moc-*.md`, `question-patterns.md` from sources-existence); tightened orphan check (concept pages must link from ≥1 MOC; MOCs themselves are exempt); MOC-aware index-sync (pages listed in any MOC count as indexed); typed Related-pages prefix allowance. Run lint; expect green.
 **Must come after Phase 7** to avoid false orphan positives. **Commit**: 1.
 
-**Landed**: 0 errors (exit 0). The tightened `orphan` check surfaces 145 warnings for concept pages that no MOC currently links — legitimate navigational-reachability gaps to close in a follow-up pass (candidates include Google-internal SRE terms, narrow sub-patterns, and a handful of data-engineering concepts the MOCs did not pick up). All other new checks (typed `related-pages`, MOC-aware `index`, meta-page `sources` exemption) are quiet on the current wiki.
-
-### Phase 11 — `CLAUDE.md` guidance
+### Phase 11 — `CLAUDE.md` guidance ✅ Complete (2026-04-19)
 
 Replace the question-answering section with the 6-step flow from §6. **Commit**: 1.
 
