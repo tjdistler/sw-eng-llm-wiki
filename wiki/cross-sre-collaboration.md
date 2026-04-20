@@ -61,7 +61,7 @@ The chapter's pithy observation: *"Even if you're a great writer, over time you 
 
 ## Relationship to project-level mechanics
 
-Cross-SRE collaboration at the **project** level gets its own treatment in the chapter's Viceroy case study ([[viceroy-case-study]]) and the distilled [[cross-site-project-recommendations|recommendations]]. The high-level lessons:
+Cross-SRE collaboration at the **project** level gets its own treatment in the chapter's dashboard-consolidation case study and the distilled [[cross-site-project-recommendations|recommendations]]. The high-level lessons:
 
 - Reduce communication costs via divide-and-conquer — split the project into reasonably sized components, assign each to a small group preferably within one site.
 - Use design documents and reviews; writing things down offsets physical and logical distance.
@@ -70,14 +70,13 @@ Cross-SRE collaboration at the **project** level gets its own treatment in the c
 
 ## Cheap-to-run vs expensive-to-run collaboration
 
-Collaboration outside SRE — with product development teams — is tracked using the OKR process (see [[sre-dev-collaboration]]). Within SRE, the primary instruments are the [[production-meetings|production meeting]] (for local and near-local collaboration), design-document reviews, and cross-team collaborations like [[viceroy-case-study|Viceroy]] that create shared infrastructure.
+Collaboration outside SRE — with product development teams — is tracked using the OKR process (see [[sre-dev-collaboration]]). Within SRE, the primary instruments are the [[production-meetings|production meeting]] (for local and near-local collaboration), design-document reviews, and cross-team collaborations that create shared infrastructure.
 
 ## Related pages
 
 - [[communication-and-collaboration-in-sre]]
 - [[production-meetings]]
 - [[sre-team-composition]]
-- [[viceroy-case-study]]
 - [[cross-site-project-recommendations]]
 - [[sre-dev-collaboration]]
 - [[multi-site-on-call]]

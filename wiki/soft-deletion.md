@@ -57,7 +57,7 @@ Where soft deletion is controlled by the **client application**, lazy deletion i
 | Soft deletion | Application server | No (except admin paths) | Developer bug, account hijack |
 | Lazy deletion | Cloud storage provider | No | Internal developer bug, customer developer bug |
 
-Lazy deletion is the chapter's response to: *the application developer just wrote a pipeline that deletes 600,000 audio tracks by accident. How do we get them back?* (See [[google-music-runaway-deletion]] for the case study.)
+Lazy deletion is the chapter's response to: *the application developer just wrote a pipeline that deletes 600,000 audio tracks by accident. How do we get them back?*
 
 ## The Blobstore example
 
@@ -88,7 +88,7 @@ The chapter names the most devastating class of acute data-deletion cases (sourc
 
 The architectural response: build soft deletion into the storage API so developers writing new code *can't bypass it by accident*. If the API makes the only deletion path a tombstone-with-TTL, a developer unfamiliar with the code can't write a pipeline that hard-deletes data even if they try.
 
-The **[[google-music-runaway-deletion|Google Music 2012 incident]]** is this class of bug exactly — a refactored deletion pipeline introduced a race condition that removed data the soft-deletion layer never had a chance to protect.
+A 2012 batch-pipeline incident at Google is this class of bug exactly — a refactored deletion pipeline introduced a race condition that removed data the soft-deletion layer never had a chance to protect.
 
 ## Summary of layer 1 defences
 
@@ -108,5 +108,4 @@ Some products let users revert items to previous states. When user-facing, it's 
 - [[defense-in-depth-data]]
 - [[tiered-backup-strategy]]
 - [[data-validation-pipelines]]
-- [[google-music-runaway-deletion]]
 - [[data-integrity-failure-modes]]

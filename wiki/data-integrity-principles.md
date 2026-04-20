@@ -91,7 +91,6 @@ Chapter 26's closing sentence on the goal state (source: chapter-26-data-integri
 - [[recovery-testing]]
 - [[data-integrity-failure-modes]]
 - [[gmail-gtape-restore]]
-- [[google-music-runaway-deletion]]
 - [[learning-from-outages]]
 - [[testing-for-reliability]]
 - [[end-to-end-argument]]

@@ -22,11 +22,11 @@ Every job specifies its required resources (e.g., *3 CPU cores, 2 GiB RAM*). Usi
 
 If a task tries to use more resources than requested, Borg kills and restarts it. The quoted rationale: "a slowly crashlooping task is usually preferable to a task that hasn't been restarted at all" (source: chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md).
 
-## Naming and discovery: BNS
+## Naming and discovery
 
-Because tasks move fluidly between machines, IP address and port number are not stable identifiers. Borg solves this with an extra level of indirection via the **[[bns|Borg Naming Service (BNS)]]**: at job start, each task is given a name like `/bns/<cluster>/<user>/<job name>/<task number>` which resolves to `<IP address>:<port>`. Other processes connect via the BNS name, not the raw address (source: chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md).
+Because tasks move fluidly between machines, IP address and port number are not stable identifiers. Borg solves this with an extra level of indirection via a **Borg Naming Service**: at job start, each task is given a name like `/bns/<cluster>/<user>/<job name>/<task number>` which resolves to `<IP address>:<port>`. Other processes connect via the symbolic name, not the raw address (source: chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md).
 
-BNS is the [[service-discovery]] layer for Borg. The mapping is stored in [[chubby]] so it is consistent across the cluster.
+The naming service is the [[service-discovery]] layer for Borg. The mapping is stored in [[chubby]] so it is consistent across the cluster.
 
 ## Relationship to Kubernetes and Mesos
 
@@ -74,12 +74,11 @@ Chapter 24's design explicitly depends on a datacenter scheduler providing three
 - [[operator-pattern]] — Kubernetes-era extension of the Borg model.
 - [[capacity-planning]] — Borg's binpacking is the mechanism that makes efficient multi-tenant capacity planning possible at Google.
 - [[autonomous-systems]] — the conceptual category Borg canonicalises; the Chapter-7 story is the worked example.
-- [[mysql-on-borg]] — the stateful-workload-on-Borg case study; Decider as the failover-autonomy layer grafted onto Borg's task-level autonomy.
+- MySQL-on-Borg (Decider) — the stateful-workload-on-Borg case study; the failover-autonomy layer grafted onto Borg's task-level autonomy.
 - [[automation-at-google]] — the chapter's overall argument, of which Borg is the largest case study.
 
 ## Related pages
 
-- [[bns]]
 - [[chubby]]
 - [[container-management-system]]
 - [[pod]]
@@ -88,7 +87,6 @@ Chapter 24's design explicitly depends on a datacenter scheduler providing three
 - [[autonomous-systems]]
 - [[hierarchy-of-automation-classes]]
 - [[automation-at-google]]
-- [[mysql-on-borg]]
 - [[distributed-cron]]
 - [[cron-partial-failure-resolution]]
 - [[site-reliability-engineering]]

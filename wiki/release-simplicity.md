@@ -48,7 +48,7 @@ Three pages in the wiki make adjacent versions of this argument from different s
 | [[release-simplicity]] (Ch 9) | Simplicity as a virtue | "Simple releases are better than complicated releases" |
 | [[change-management-sre]] (Ch 1) | Change-induced outage rate | "Progressive rollouts, detection, and rollback" |
 
-All three converge on the same pattern: small batches + feedback + automation. Ch 9 provides the intuition ("one change is easier to reason about than ten"); Ch 8 provides the pipeline (Rapid + Blaze + MPM + Sisyphus); Ch 1 provides the risk framing (70% of outages come from change).
+All three converge on the same pattern: small batches + feedback + automation. Ch 9 provides the intuition ("one change is easier to reason about than ten"); Ch 8 provides the pipeline (release system, hermetic build tool, content-addressed package manager, general-purpose rollout framework); Ch 1 provides the risk framing (70% of outages come from change).
 
 ## Prerequisites the section leaves implicit
 
@@ -56,8 +56,8 @@ Chapter 9's section is short because the pipeline that makes small releases chea
 
 - [[hermetic-builds]] — each small release is reliably identifiable.
 - [[rapid-release-system]] — the automated build-and-release workflow.
-- [[sisyphus]] — the general-purpose rollout framework that paces deployments to the service's risk profile.
-- [[midas-package-manager|MPM]] — movable labels make "roll back to the previous release" a label move, not a rebuild.
+- A package manager with movable labels (dev / canary / production) so that "roll back to the previous release" is a label move, not a rebuild.
+- A general-purpose rollout framework that paces deployments to the service's risk profile.
 - [[push-on-green]] — the endpoint of the small-step logic: if the step is small enough and the tests are good enough, ship every passing build.
 
 Without this supporting stack, small releases are just more work per change. With it, they are a natural consequence of how the pipeline is instrumented.
@@ -79,7 +79,5 @@ Without this supporting stack, small releases are just more work per change. Wit
 - [[progressive-delivery]]
 - [[hermetic-builds]]
 - [[rapid-release-system]]
-- [[sisyphus]]
-- [[midas-package-manager]]
 - [[continuous-integration-delivery-deployment]]
 - [[site-reliability-engineering]]

@@ -58,24 +58,24 @@ Chapter 6 also gives fuller framing for what *does* belong in the alert bucket (
 
 ## The mechanism: Alertmanager
 
-Chapter 10 shows the concrete routing mechanism that implements the three-output split (source: chapter-10-practical-alerting-from-time-series-data.md). When a [[borgmon]] rule fires, Borgmon sends an `Alert` RPC to a central [[alertmanager]] service. Alertmanager is configured to route by label:
+Chapter 10 shows the concrete routing mechanism that implements the three-output split (source: chapter-10-practical-alerting-from-time-series-data.md). When a rule in the time-series monitoring system fires, it sends an `Alert` RPC to a central [[alertmanager]] service. Alertmanager is configured to route by label:
 
 > Teams send their page-worthy alerts to their on-call rotation and their important but subcritical alerts to their ticket queues. All other alerts should be retained as informational data for status dashboards.
 
 So the three-output taxonomy is not just a conceptual split — it is the actual routing schema baked into the production monitoring infrastructure. The alert's `severity` label determines which bucket it lands in, and Alertmanager additionally deduplicates, groups, and inhibits alerts to keep each bucket clean.
 
-## The archival side: Outalator
+## The archival side
 
-Chapter 16 adds the long-term counterpart to Alertmanager's real-time routing (source: chapter-16-tracking-outages.md). [[escalator]] tracks ack/no-ack for each alert and escalates on timeout; [[outalator]] ingests the full notification stream and lets SRE teams **annotate, group, tag, and analyse** it over weeks and quarters.
+Chapter 16 adds the long-term counterpart to Alertmanager's real-time routing (source: chapter-16-tracking-outages.md). An ack-tracking service follows each alert and escalates on timeout; an outage-level archive ingests the full notification stream and lets SRE teams **annotate, group, tag, and analyse** it over weeks and quarters.
 
 The stack for a given page-worthy event:
 
-1. [[borgmon]] rule fires → Alert RPC.
-2. [[alertmanager]] routes the alert by label to pager + ticket queue / dashboard / Outalator / Escalator destinations.
-3. [[escalator]] waits for ack and escalates if none arrives.
-4. [[outalator]] stores the notification, allowing [[incident-aggregation|post-hoc grouping]] into incidents, [[incident-tagging|tagging]], and [[outage-analysis|longitudinal analysis]].
+1. A rule in the time-series monitoring system fires → Alert RPC.
+2. [[alertmanager]] routes the alert by label to pager + ticket queue / dashboard / archive destinations.
+3. The ack tracker waits for ack and escalates if none arrives.
+4. The archive stores the notification, allowing [[incident-aggregation|post-hoc grouping]] into incidents, [[incident-tagging|tagging]], and [[outage-analysis|longitudinal analysis]].
 
-The three-output taxonomy and Alertmanager's routing handle the *notification moment*. Outalator handles the *institutional memory* — what the team looks at weeks later to answer "how noisy has our alert load been?" or "what's causing the most incidents this quarter?" The two are complementary: real-time clarity and archival clarity need different machinery.
+The three-output taxonomy and Alertmanager's routing handle the *notification moment*. The archive handles the *institutional memory* — what the team looks at weeks later to answer "how noisy has our alert load been?" or "what's causing the most incidents this quarter?" The two are complementary: real-time clarity and archival clarity need different machinery.
 
 ## Connection to other tenets
 
@@ -102,8 +102,5 @@ This taxonomy is compatible with and sharper than the framings elsewhere in the 
 - [[blameless-postmortem]]
 - [[emergency-response]]
 - [[change-management-sre]]
-- [[borgmon]]
 - [[alertmanager]]
-- [[escalator]]
-- [[outalator]]
 - [[outage-tracking]]

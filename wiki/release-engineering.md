@@ -47,13 +47,11 @@ Release engineering at Google is guided by four principles, each with its own pa
 
 ## The tooling stack
 
-Google's continuous build and deployment system is assembled from a set of purpose-built components:
+Google's continuous build and deployment system is assembled from a set of purpose-built components, of which one has a page here:
 
 - [[rapid-release-system]] — the automated release system; runs workflows on [[borg]]; blueprints define build/test/deploy actions
-- [[blaze-bazel]] — the build tool; hermetic, dependency-graph driven; open-sourced as Bazel
-- [[midas-package-manager]] — MPM; packages build artifacts with names, unique-hash versions, and movable labels (dev / canary / production)
-- [[sisyphus]] — SRE-developed general-purpose rollout automation framework for complicated deployments
-- [[google-monorepo]] — the single shared repository all of this builds from
+
+Beyond it sit a hermetic dependency-graph-driven build tool (open-sourced as Bazel), a content-addressed package manager with movable labels (dev / canary / production), and a general-purpose rollout automation framework — all running from a single shared monorepo.
 
 ## Branching, testing, and cherry picks
 
@@ -89,12 +87,11 @@ Google built custom tools because open-source and vendor tools don't work at Goo
 
 ## Cross-book connections
 
-- [[continuous-integration-delivery-deployment]] (Bellemare) — Rapid + Blaze + MPM implement continuous delivery at the repository scale; Bellemare's per-service EDM pipeline is the microservice analogue
-- [[google-monorepo]] — the substrate the entire release process operates on; continuous testing and push-on-green depend on it
-- [[progressive-delivery]] (Newman / Burns) — the canary, dark launch, and staged rollout techniques Rapid and Sisyphus orchestrate at Google's scale
-- [[deployment-vs-release]] (Newman) — Rapid separates "built and packaged" from "deployed" via MPM labels (dev / canary / production); moving a label promotes a package without rebuilding
+- [[continuous-integration-delivery-deployment]] (Bellemare) — Rapid plus the hermetic build tool and package manager implement continuous delivery at the repository scale; Bellemare's per-service EDM pipeline is the microservice analogue
+- [[progressive-delivery]] (Newman / Burns) — the canary, dark launch, and staged rollout techniques the release and rollout tools orchestrate at scale
+- [[deployment-vs-release]] (Newman) — the package manager separates "built and packaged" from "deployed" via movable labels (dev / canary / production); moving a label promotes a package without rebuilding
 - [[change-management-sre]] — release engineering is the discipline that implements the "progressive rollout + quick detection + safe rollback" trio
-- [[automation-at-google]] — Rapid and Sisyphus are level-4 internally-maintained system-specific automation; the discipline builds the tools that let SREs remain engineers not operators
+- [[automation-at-google]] — the release and rollout tools are level-4 internally-maintained system-specific automation; the discipline builds the tools that let SREs remain engineers not operators
 
 ## Related pages
 
@@ -104,13 +101,9 @@ Google built custom tools because open-source and vendor tools don't work at Goo
 - [[hermetic-builds]]
 - [[release-policy-enforcement]]
 - [[rapid-release-system]]
-- [[blaze-bazel]]
-- [[midas-package-manager]]
-- [[sisyphus]]
 - [[release-branching-and-cherry-picking]]
 - [[configuration-management-sre]]
 - [[push-on-green]]
-- [[google-monorepo]]
 - [[change-management-sre]]
 - [[progressive-delivery]]
 - [[continuous-integration-delivery-deployment]]

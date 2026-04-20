@@ -90,7 +90,6 @@ A classical circuit breaker operates on a single dependency with no notion of wh
 - [[adaptive-throttling]]
 - [[utilization-signals]]
 - [[load-shedding]]
-- [[stubby]]
 - [[correlation-ids]]
 - [[bulkhead]]
 - [[circuit-breaker]]

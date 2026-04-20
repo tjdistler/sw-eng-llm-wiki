@@ -122,7 +122,6 @@ Email alerts are specifically called out in the Chapter 6 conclusion as having v
 - [[toil-and-engineering-balance]]
 - [[blameless-postmortem]]
 - [[monitoring-and-observability]]
-- [[borgmon-rules]]
 - [[alertmanager]]
 - [[site-reliability-engineering]]
 - [[operational-overload]]

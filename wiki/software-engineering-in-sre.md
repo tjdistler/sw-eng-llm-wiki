@@ -1,6 +1,6 @@
 # Software Engineering in SRE
 
-**Summary**: Chapter 18's argument that SRE teams should run full-fledged software engineering projects — not just one-off automation scripts — and the practices that make such projects succeed. The central case study is [[auxon|Auxon]], Google's [[intent-based-capacity-planning|intent-based capacity planner]]; the chapter generalises from it into lessons on project selection, staffing, adoption, and organisational discipline.
+**Summary**: Chapter 18's argument that SRE teams should run full-fledged software engineering projects — not just one-off automation scripts — and the practices that make such projects succeed. The central case study is Google's [[intent-based-capacity-planning|intent-based capacity planner]]; the chapter generalises from it into lessons on project selection, staffing, adoption, and organisational discipline.
 
 **Sources**: `raw/site-reliability-engineering/chapter-18-software-engineering-in-sre.md`
 
@@ -32,21 +32,21 @@ The argument flows the other way too. Software-engineering projects benefit SREs
 - **Team diversity** — development projects attract engineers with varied backgrounds, which helps SRE's blind-spot problem.
 - **Staffing and retention** — Google deliberately staffs SRE teams with a mix of traditional software-engineering and systems-engineering backgrounds.
 
-## The case study: Auxon
+## The case study: an intent-based capacity planner
 
-Chapter 18's worked example is [[auxon|Auxon]], an SRE-built tool for [[intent-based-capacity-planning|intent-based capacity planning]] that replaced spreadsheet-driven bin-packing across several Google divisions. Auxon demonstrates every point in the chapter:
+Chapter 18's worked example is Google's [[intent-based-capacity-planning|intent-based capacity planner]], an SRE-built tool that replaced spreadsheet-driven bin-packing across several Google divisions. It demonstrates every point in the chapter:
 
 - Firsthand-experience origin (SRE + TPM who had both done manual capacity planning)
 - Launch-and-iterate development under uncertainty (the "Stupid Solver")
 - Agnostic design that let customers bring their own tools
 - Deliberate adoption strategy (target teams with no incumbent; white-glove onboarding; customer case studies as advertising)
-- Ongoing SRE embedding: the Auxon team stayed on call for services, so they remained their own customer
+- Ongoing SRE embedding: the team stayed on call for services, so they remained their own customer
 
-See [[auxon]] for the full architecture and [[sre-product-adoption]] for the adoption lessons.
+See [[sre-product-adoption]] for the adoption lessons.
 
 ## Lessons learned: building the software
 
-Chapter 18 distils Auxon's development into a set of named disciplines. See [[sre-software-development-lessons]] for the catalogue. The short version:
+Chapter 18 distils the case study's development into a set of named disciplines. See [[sre-software-development-lessons]] for the catalogue. The short version:
 
 - **Approximation** — don't focus on perfection when bounds aren't known; build a simplified component (the Stupid Solver), hide it behind an interface, and replace it later.
 - **Agnostic design** — integrate with whatever the customer already uses, so adoption doesn't require abandoning existing tools.
@@ -101,7 +101,6 @@ Chapter 18's closing section is a change-management guide for SRE leaders who wa
 
 ## Related pages
 
-- [[auxon]]
 - [[intent-based-capacity-planning]]
 - [[traditional-capacity-planning]]
 - [[sre-software-development-lessons]]

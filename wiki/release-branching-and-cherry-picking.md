@@ -39,7 +39,6 @@ Each cherry-pick request is independently approved or rejected for inclusion in 
 
 ## Cross-book connections
 
-- [[google-monorepo]] — mainline-with-branch-off and no-merge-back pairs naturally with a monorepo: there's one shared mainline, so "the mainline" is unambiguous
 - [[strangler-fig-pattern]] (Newman) — the no-merge-back property is structurally the same discipline: once you've moved past something, you don't re-converge
 - [[event-sourcing]] (Kleppmann) — the release-branch-plus-cherry-picks stream is analogous to an event-sourced state: a base snapshot plus a log of additive operations
 
@@ -50,4 +49,3 @@ Each cherry-pick request is independently approved or rejected for inclusion in 
 - [[hermetic-builds]]
 - [[release-policy-enforcement]]
 - [[rapid-release-system]]
-- [[google-monorepo]]

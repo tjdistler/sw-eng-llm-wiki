@@ -19,14 +19,14 @@ Two implications:
 1. **Every alert matters, not just every outage.** The chapter explicitly calls out the questions outage tracking answers that postmortems can't: alerts per on-call shift, actionable/nonactionable ratios, "which service produces the most toil for this team." None are answerable from the postmortem corpus alone.
 2. **Reliability is longitudinal.** You cannot tell whether a change helped without before-and-after data. A tool that stores the before-and-after is the precondition for evidence-based reliability work.
 
-## The two-layer architecture at Google
+## The two-layer architecture
 
-Chapter 16 names Google's two tools:
+Chapter 16 describes two layers:
 
-- [[escalator|Escalator]] — the paging-layer tool. Receives all SRE notifications, tracks ack/no-ack, escalates to the next destination after timeout.
-- [[outalator|Outalator]] — the outage-layer tool built on top. Stores the notifications, groups them into incidents, lets teams annotate and tag, and produces reports.
+- The paging-layer tool. Receives all SRE notifications, tracks ack/no-ack, escalates to the next destination after timeout.
+- The outage-layer tool built on top. Stores the notifications, groups them into incidents, lets teams annotate and tag, and produces reports.
 
-Escalator was "a largely transparent tool that received copies of emails sent to on-call aliases." Outalator followed the same design principle: **plug into the existing workflow, don't force a migration**. That's how both spread inside Google.
+The paging-layer tool was "a largely transparent tool that received copies of emails sent to on-call aliases." The outage-archive tool followed the same design principle: **plug into the existing workflow, don't force a migration**. That's how both spread inside Google.
 
 ## What outage tracking adds over postmortems
 
@@ -56,29 +56,27 @@ The third layer is what justifies horizontal investment in shared infrastructure
 Chapter 16's closing section lists payoffs the designers didn't originally target:
 
 - **Cross-team awareness during incidents.** You can see whether the team whose system you suspect is already paged. If they're not, you page them.
-- **System-of-record uses.** Dummy Escalator configs feed Outalator with auditable events (privileged role-account use, non-idempotent periodic job runs) that nobody needs to act on in real time but that teams want a searchable history of.
+- **System-of-record uses.** "Dummy" paging configs feed the outage archive with auditable events (privileged role-account use, non-idempotent periodic job runs) that nobody needs to act on in real time but that teams want a searchable history of.
 
 ## Relationship to the rest of SRE
 
 Outage tracking sits at the intersection of several SRE practices:
 
 - [[alert-philosophy]] — outage-tracking data is the input to alert-hygiene projects. The "how many alerts per shift?" and "actionable ratio?" questions from Chapter 16 are what [[operational-overload]] symptoms look like when measured.
-- [[learning-from-outages]] — Chapter 13's "keep a history of outages" directive gets its Escalator/Outalator machinery in Chapter 16, just as Chapter 15 gave that directive its postmortem machinery.
-- [[postmortem-culture-activities]] — the monthly review and [[postmortem-review-process|review-and-broadcast pipeline]] are postmortem-layer activities; Outalator's weekly "report mode" is the same rhythm at the aggregate layer.
-- [[alertmanager]] — the real-time routing side of the same data Outalator archives.
-- [[sre-monitoring-outputs]] — Outalator is where alerts/tickets/logs accumulate into longitudinal history.
+- [[learning-from-outages]] — Chapter 13's "keep a history of outages" directive gets its paging + outage-archive machinery in Chapter 16, just as Chapter 15 gave that directive its postmortem machinery.
+- [[postmortem-culture-activities]] — the monthly review and [[postmortem-review-process|review-and-broadcast pipeline]] are postmortem-layer activities; the outage archive's weekly "report mode" is the same rhythm at the aggregate layer.
+- [[alertmanager]] — the real-time routing side of the same data the archive stores.
+- [[sre-monitoring-outputs]] — the outage archive is where alerts/tickets/logs accumulate into longitudinal history.
 
 ## Cross-book connections
 
-- [[log-aggregation]] (Newman) — the organisational analogue: a single queryable durable record of everything that happened, used for diagnosis well after the fact. Outalator is log-aggregation applied to alerts and incidents rather than to application logs.
+- [[log-aggregation]] (Newman) — the organisational analogue: a single queryable durable record of everything that happened, used for diagnosis well after the fact. The outage archive is log-aggregation applied to alerts and incidents rather than to application logs.
 - [[architecture-fitness-function]] (Richards & Ford) — the second and third analysis layers (comparison across teams; semantic cross-cutting analysis) are fitness functions applied to reliability: objective, automatable, integrity assessments of operational characteristics.
 - [[architecture-decision-record]] (Richards & Ford) — the longitudinal outage record is input material to Consequences sections; decisions whose consequences produced recurring alerts want to be linked back to the tracked history.
 - [[unknown-unknowns]] (Richards & Ford) — Chapter 16's semantic-analysis layer is the mechanism that surfaces cross-cutting unknowns no single incident exposes.
 
 ## Related pages
 
-- [[outalator]]
-- [[escalator]]
 - [[incident-aggregation]]
 - [[incident-tagging]]
 - [[outage-analysis]]

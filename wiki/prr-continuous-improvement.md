@@ -1,6 +1,6 @@
 # PRR Continuous Improvement
 
-**Summary**: The steady-state phase after [[prr-onboarding-phase|Onboarding]] completes. The SRE team sustains reliability as the service evolves in response to new features, dependencies, and upgrades, and contributes lessons back to the [[production-guide|Production Guide]] so the broader organisation benefits.
+**Summary**: The steady-state phase after [[prr-onboarding-phase|Onboarding]] completes. The SRE team sustains reliability as the service evolves in response to new features, dependencies, and upgrades, and contributes lessons back to the shared production-best-practices repository so the broader organisation benefits.
 
 **Sources**: `raw/site-reliability-engineering/chapter-32-the-evolving-sre-engagement-model.md`
 
@@ -43,7 +43,6 @@ In that sense, Continuous Improvement is less a "phase" than the normal operatin
 - [[simple-prr-model]]
 - [[production-readiness-review]]
 - [[prr-onboarding-phase]]
-- [[production-guide]]
 - [[production-meetings]]
 - [[sre-dev-collaboration]]
 - [[blameless-postmortem]]

@@ -115,16 +115,16 @@ The chapter's summary (source: chapter-26-data-integrity-what-you-read-is-what-y
 
 > Addressing a broad range of scenarios at reasonable cost demands a tiered backup strategy. The first tier comprises many frequent and quickly restored backups stored closest to the live datastores... Due to relative expense, backups are retained in this tier for anywhere from hours to single-digit days, and may take minutes to restore. The second tier comprises fewer backups retained for single-digit or low double-digit days on random access distributed filesystems local to the site... Subsequent tiers take advantage of nearline storage such as dedicated tape libraries and offsite storage.
 
-The two Chapter 26 case studies exercise different tiers:
+Chapter 26 exercises two different tiers across its case studies:
 
 - **[[gmail-gtape-restore|Gmail 2011]]** — primary failure of Gmail's internal redundancy triggered a restore from GTape, the offsite tape system (tier 3).
-- **[[google-music-runaway-deletion|Google Music 2012]]** — 5,475 tape restores of 1.5 PB from offsite locations, also tier 3.
+- **A 2012 deletion-pipeline recovery** — 5,475 tape restores of 1.5 PB from offsite locations, also tier 3.
 
 The live-site tiers handle day-to-day recovery invisibly; the rare tier-3 use is the payoff for the investment.
 
 ## Backups must themselves be reliable
 
-The overarching concern: *the instances containing your backups would themselves be replicated* (source: chapter-26-data-integrity-what-you-read-is-what-you-wrote.md). When that's infeasible, stagger backups across different sites and write them with **redundancy codes** — RAID, Reed-Solomon erasure codes, GFS-style replication. Google Music 2012 specifically relied on redundant encoding: when 17 tapes turned out to be bad, redundancy tapes were recalled to cover the gap.
+The overarching concern: *the instances containing your backups would themselves be replicated* (source: chapter-26-data-integrity-what-you-read-is-what-you-wrote.md). When that's infeasible, stagger backups across different sites and write them with **redundancy codes** — RAID, Reed-Solomon erasure codes, GFS-style replication. The 2012 deletion-pipeline recovery specifically relied on redundant encoding: when 17 tapes turned out to be bad, redundancy tapes were recalled to cover the gap.
 
 The discipline: choose a popular, continuously-exercised redundancy scheme, not a bespoke one your team tests only during disasters.
 
@@ -139,4 +139,3 @@ The discipline: choose a popular, continuously-exercised redundancy scheme, not 
 - [[replication]]
 - [[distributed-filesystems]]
 - [[gmail-gtape-restore]]
-- [[google-music-runaway-deletion]]

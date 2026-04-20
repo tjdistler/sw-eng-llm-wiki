@@ -48,7 +48,7 @@ Each complication moves the test closer to the runtime and further from a mechan
 ## Cross-book connections
 
 - [[configuration-management-sre]] (Ch 8) — the four distribution models this test validates; configuration tests are what make the "config in repo + strict code review" rule enforceable end-to-end
-- [[prodtest]] (Ch 7) — the forerunner: Python unit tests extended to check real services; configuration tests are a specialisation of the same idea
+- SRE Ch 7's Prodtest — the forerunner: Python unit tests extended to check real services; configuration tests are a specialisation of the same idea
 - [[architecture-fitness-function]] (Richards & Ford) — "the running configuration matches the declared configuration" is an objective automatable integrity assessment of release hygiene
 
 ## Related pages
@@ -56,5 +56,4 @@ Each complication moves the test closer to the runtime and further from a mechan
 - [[testing-for-reliability]]
 - [[configuration-management-sre]]
 - [[configuration-integration-testing]]
-- [[prodtest]]
 - [[production-probes]]

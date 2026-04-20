@@ -10,7 +10,7 @@
 
 ## The problem subsetting solves
 
-Every client-to-backend connection in Google's [[stubby|RPC system]] is long-lived: it is established when the client starts and usually remains open, with requests flowing through it, until the client dies. Tearing down and reopening a connection per request has significant resource and latency cost, so the long-lived model is the default (source: chapter-20-load-balancing-in-the-datacenter.md).
+Every client-to-backend connection in Google's internal [[rpc|RPC system]] is long-lived: it is established when the client starts and usually remains open, with requests flowing through it, until the client dies. Tearing down and reopening a connection per request has significant resource and latency cost, so the long-lived model is the default (source: chapter-20-load-balancing-in-the-datacenter.md).
 
 Each connection costs memory and CPU at *both* ends, chiefly because of periodic health checks. In theory the overhead is small; across many machines it can become significant. Two pathological cases the chapter wants to avoid:
 
@@ -82,7 +82,6 @@ Subsetting is *not* the same as [[partitioning|sharding]] or [[sharded-service-p
 - [[deterministic-subsetting]]
 - [[datacenter-load-balancing]]
 - [[load-balancing-policies]]
-- [[stubby]]
 - [[capacity-planning]]
 - [[consistent-hashing]]
 - [[site-reliability-engineering]]

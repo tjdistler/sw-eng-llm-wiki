@@ -46,7 +46,7 @@ The chapter adds:
 
 > Your service should implement some type of change logging, which can help quickly identify recent changes.
 
-[[outalator|Outage tracking]] and [[sisyphus|rollout automation]] typically record enough to answer the "what changed" question fast.
+An [[outage-tracking|outage-tracking archive]] and rollout automation typically record enough to answer the "what changed" question fast.
 
 ## Organic growth
 
@@ -113,5 +113,4 @@ Chapter 22's [[addressing-ongoing-cascading-failure|immediate-steps]] list start
 - [[addressing-ongoing-cascading-failure]]
 - [[canary-test]]
 - [[n-plus-2-redundancy]]
-- [[outalator]]
 - [[site-reliability-engineering]]

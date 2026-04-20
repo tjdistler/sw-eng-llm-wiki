@@ -26,7 +26,7 @@ Ideally the SLI directly measures the service level of interest. In practice a p
 
 ## Collection: server-side vs client-side
 
-Many SLIs are most naturally gathered on the **server side** using a monitoring system ([[borgmon]], Prometheus) or periodic log analysis (for example, HTTP 500 responses as a fraction of all requests). But some systems need **client-side collection** because server-side metrics miss whole classes of user-visible problems. The chapter's illustrative case: concentrating on the Shakespeare search backend's response latency can miss slow page-render caused by the page's JavaScript — measuring *time to page usability in the browser* is a better proxy for user experience (source: chapter-04-service-level-objectives.md).
+Many SLIs are most naturally gathered on the **server side** using a monitoring system (Prometheus and its internal-Google ancestor) or periodic log analysis (for example, HTTP 500 responses as a fraction of all requests). But some systems need **client-side collection** because server-side metrics miss whole classes of user-visible problems. The chapter's illustrative case: concentrating on the Shakespeare search backend's response latency can miss slow page-render caused by the page's JavaScript — measuring *time to page usability in the browser* is a better proxy for user experience (source: chapter-04-service-level-objectives.md).
 
 ## What SLIs matter by service type
 

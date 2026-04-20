@@ -100,7 +100,6 @@ Concretely: **a platform that evolves autonomously** — with migration tooling 
 - [[automation-at-google]]
 - [[hierarchy-of-automation-classes]]
 - [[borg]]
-- [[mysql-on-borg]]
 - [[automation-gone-wrong]]
 - [[desired-state-management]]
 - [[operator-pattern]]

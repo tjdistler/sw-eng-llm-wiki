@@ -1,6 +1,6 @@
 # SRE Software Development Lessons
 
-**Summary**: Chapter 18's catalogue of practices distilled from [[auxon|Auxon]]'s development — how to build SRE-developed software under uncertainty. The short version: **launch and iterate**, approximate where bounds aren't known, stay modular where requirements are fuzzy, design at a general-enough level that customers don't have to commit to your whole ecosystem to get value.
+**Summary**: Chapter 18's catalogue of practices distilled from its intent-based capacity-planner case study — how to build SRE-developed software under uncertainty. The short version: **launch and iterate**, approximate where bounds aren't known, stay modular where requirements are fuzzy, design at a general-enough level that customers don't have to commit to your whole ecosystem to get value.
 
 **Sources**: `raw/site-reliability-engineering/chapter-18-software-engineering-in-sre.md`
 
@@ -68,7 +68,6 @@ The chapter doesn't frame these negatively, but the anti-patterns implied by the
 
 ## Related pages
 
-- [[auxon]]
 - [[software-engineering-in-sre]]
 - [[sre-product-adoption]]
 - [[fostering-software-engineering-in-sre]]

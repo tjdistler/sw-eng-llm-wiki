@@ -53,9 +53,9 @@ Together these give a stateless-fallback, horizontally-scalable, DSR-capable loa
 
 The packet-encapsulation balancer is one implementation of the [[virtual-ip-address|VIP]] layer — the second tier of [[frontend-load-balancing]] after [[dns-load-balancing]]. It is orthogonal to the DNS layer; changing how the DNS layer steers users between datacenters does not change what happens inside a datacenter once the connection arrives.
 
-### Encapsulation and Jupiter
+### Encapsulation and the datacenter fabric
 
-Google's Jupiter ([[jupiter-network]]) intra-datacenter fabric is the network that carries the encapsulated packets between load balancers and backends. Running a larger MTU in Jupiter is the infrastructure precondition that makes the encapsulation approach practical without mass fragmentation.
+The datacenter's internal network fabric is what carries the encapsulated packets between load balancers and backends. Running a larger internal MTU is the infrastructure precondition that makes the encapsulation approach practical without mass fragmentation.
 
 ### Encapsulation and SDN
 
@@ -71,7 +71,6 @@ GRE is one of several encapsulation protocols used in load balancing and network
 - [[virtual-ip-address]]
 - [[direct-server-return]]
 - [[consistent-hashing]]
-- [[jupiter-network]]
 - [[software-defined-networking]]
 - [[frontend-load-balancing]]
 - [[site-reliability-engineering]]

@@ -52,7 +52,7 @@ Three conditions, any of which being missed can produce a production surprise.
 - [[automation-at-google]] / [[autonomous-systems]] (Ch 7) — Ch 17 is the testing counterpart of Ch 7's automation hierarchy; tools at the autonomous end need the strongest testing because their feedback loops run without human gates
 - [[automation-gone-wrong]] (Ch 7) — the Diskerase incident is a canonical example of an automation tool whose inputs were not adequately tested against environmental transients
 - [[idempotence]] — the "restart semantics" precondition; idempotence at the workflow level is what makes the circular-dependency case testable
-- [[prodtest]] (Ch 7) — an early SRE automation-test pattern that applied unit-test discipline to cluster state; Chapter 17 generalises the idea
+- SRE Ch 7's Prodtest — an early SRE automation-test pattern that applied unit-test discipline to cluster state; Chapter 17 generalises the idea
 
 ## Related pages
 

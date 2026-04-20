@@ -46,8 +46,7 @@ The key phrase is "doesn't require extremely low latency": if you need to *alert
 
 ## Cross-book connections
 
-- [[borgmon]] — the scrape-based pull model Google uses; the one-minute default scrape interval matches the aggregation cadence this pattern assumes.
-- [[unified-monitoring-interface]] (Burns) — the adapter-container realisation of server-local sampling and Prometheus-style bucketed histograms.
+- [[unified-monitoring-interface]] (Burns) — the adapter-container realisation of server-local sampling and Prometheus-style bucketed histograms; the one-minute scrape interval of pull-based monitoring systems matches the aggregation cadence this pattern assumes.
 - [[response-time-percentiles]] (Kleppmann) — Kleppmann's note that percentiles can be efficiently computed over rolling windows using approximation algorithms (forward decay, t-digest, HdrHistogram) is the same pattern scaled up.
 
 ## Related pages
@@ -55,6 +54,5 @@ The key phrase is "doesn't require extremely low latency": if you need to *alert
 - [[four-golden-signals]]
 - [[long-tail-latency]]
 - [[monitoring-simplicity]]
-- [[borgmon]]
 - [[unified-monitoring-interface]]
 - [[site-reliability-engineering]]

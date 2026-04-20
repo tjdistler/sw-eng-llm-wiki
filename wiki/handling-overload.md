@@ -93,7 +93,6 @@ Criticality deserves special mention as Google's solution to the "which request 
 - [[connection-level-load]]
 - [[datacenter-load-balancing]]
 - [[weighted-round-robin]]
-- [[stubby]]
 - [[rate-limiting]]
 - [[circuit-breaker]]
 - [[bulkhead]]

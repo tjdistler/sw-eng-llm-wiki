@@ -44,7 +44,7 @@ See [[push-on-green]] for the full pattern, the prerequisites that make it safe,
 High velocity of this kind is not a configuration setting — it is a consequence of everything else in the chapter:
 
 - [[hermetic-builds]] so that each build is a known quantity
-- [[rapid-release-system|Rapid]] + [[blaze-bazel|Blaze]] + [[midas-package-manager|MPM]] so that "build hourly" is cheap
+- [[rapid-release-system|Rapid]] plus a hermetic build tool and content-addressed package manager so that "build hourly" is cheap
 - Continuous testing on the mainline so builds are already tested before release selection
 - [[self-service-release-model]] so that teams don't have to queue at a central release team
 - [[change-management-sre]] automation (progressive rollout + detection + rollback) so that a bad build doesn't mean a big outage

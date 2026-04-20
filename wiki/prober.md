@@ -1,6 +1,6 @@
 # Prober
 
-**Summary**: Google's black-box monitoring tool. Runs a protocol check against a target and reports success or failure; can send alerts directly to [[alertmanager]] or expose its own `/varz` for [[borgmon]] to scrape. Fills the coverage gap that white-box monitoring leaves: failures invisible to the server itself (DNS errors, load-balancer misroutes, crashed instances).
+**Summary**: Google's black-box monitoring tool. Runs a protocol check against a target and reports success or failure; can send alerts directly to [[alertmanager]] or expose its own metrics endpoint for the pull-based time-series monitoring system to scrape. Fills the coverage gap that white-box monitoring leaves: failures invisible to the server itself (DNS errors, load-balancer misroutes, crashed instances).
 
 **Sources**: `raw/site-reliability-engineering/chapter-10-practical-alerting-from-time-series-data.md`, `raw/site-reliability-engineering/chapter-17-testing-for-reliability.md`
 
@@ -10,7 +10,7 @@
 
 ## Why white-box isn't enough
 
-Borgmon is a pure white-box monitoring system: it scrapes the target's internal state. That gives enormous power to identify *what* is failing, *which* queues are full, and *where* bottlenecks are — but it has a structural blind spot (source: chapter-10-practical-alerting-from-time-series-data.md):
+The internal time-series monitoring system is pure white-box: it scrapes the target's internal state. That gives enormous power to identify *what* is failing, *which* queues are full, and *where* bottlenecks are — but it has a structural blind spot (source: chapter-10-practical-alerting-from-time-series-data.md):
 
 > You only see the queries that arrive at the target; the queries that never make it due to a DNS error are invisible, while queries lost due to a server crash never make a sound. You can only alert on the failures that you expected.
 
@@ -23,7 +23,7 @@ Prober runs a protocol check against a target and reports success or failure (so
 - **Protocol checks** — send an HTTP request, make a DNS query, open a TCP connection.
 - **Response validation** — inspect the payload (e.g. the HTML of an HTTP response) and confirm it matches expectations.
 - **Variable extraction** — pull values out of responses and export them as time-series. Teams often use Prober to export histograms of response times broken down by operation and payload size.
-- **Two output paths** — send alerts directly to Alertmanager, or expose its own `/varz` for Borgmon to scrape. The second path is usually preferred because it feeds the full [[borgmon-rules]] language.
+- **Two output paths** — send alerts directly to Alertmanager, or expose its own metrics endpoint for the monitoring system to scrape. The second path is usually preferred because it feeds the full aggregation-rule language.
 
 ## Before-the-LB and behind-the-LB
 
@@ -59,7 +59,6 @@ Chapter 17's sharpening of Chapter 10's probe story: probes are **also a rollout
 
 ## Related pages
 
-- [[borgmon]]
 - [[black-box-vs-white-box-monitoring]]
 - [[alertmanager]]
 - [[synthetic-transactions]]

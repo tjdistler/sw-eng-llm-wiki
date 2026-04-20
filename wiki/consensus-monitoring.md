@@ -68,7 +68,7 @@ The signals compose. A quick read of what these metrics together are saying:
 - [[symptoms-vs-causes]] (SRE Ch 6) — "no leader exists" is a symptom; "view number increasing rapidly" is a cause; both should be monitored but the symptom is what pages
 - [[sli-aggregation]] / [[sli-standardization]] (SRE Ch 4) — the operational framework for defining these metrics consistently
 - [[consumer-lag-monitoring]] (Bellemare) — the EDM-world analogue: lagging consumer on an event stream is structurally the same failure mode as a lagging consensus replica
-- [[borgmon-rules]] / [[prober]] (SRE Ch 10) — the Google-internal mechanism for implementing these monitors
+- [[prober]] (SRE Ch 10) — the black-box companion for implementing these monitors
 
 ## Related pages
 

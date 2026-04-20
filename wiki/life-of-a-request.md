@@ -1,6 +1,6 @@
 # Life of a Request
 
-**Summary**: The end-to-end trace of a user request through Google's production stack, using the Chapter 2 Shakespeare example as the worked case. Every major piece of Google infrastructure — DNS, [[gslb|GSLB]], [[google-frontend|GFE]], [[stubby|Stubby]]/[[protocol-buffers|protobuf]], [[bigtable]], [[bns|BNS]] — appears in a single call chain.
+**Summary**: The end-to-end trace of a user request through Google's production stack, using the Chapter 2 Shakespeare example as the worked case. Every major piece of Google infrastructure — DNS, [[gslb|GSLB]], an edge HTTP reverse proxy, RPC over [[protocol-buffers|protobuf]], [[bigtable]], and a naming service — appears in a single call chain.
 
 **Sources**: `raw/site-reliability-engineering/chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md`
 
@@ -22,9 +22,9 @@ The batch component itself is a classic map-sort-reduce pipeline: mapping splits
 When a user asks `shakespeare.google.com` for a word, the trace runs like this (source: chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md):
 
 1. **DNS.** Browser resolves `shakespeare.google.com`. The resolver eventually reaches Google's DNS server, which consults [[gslb|GSLB]]; GSLB picks a frontend IP based on load distribution across regions.
-2. **TCP termination.** The browser opens a TCP connection to that IP. A **[[google-frontend|Google Frontend (GFE)]]** terminates it. The GFE is a reverse proxy.
-3. **Service routing.** The GFE identifies the service (Shakespeare, in this case), consults [[gslb|GSLB]] again to find an available Shakespeare **frontend** server, and sends it the HTML request as a [[stubby|Stubby]] RPC.
-4. **Frontend → backend.** The Shakespeare frontend builds a [[protocol-buffers|protobuf]] request containing the word to look up. It consults [[gslb|GSLB]] for a suitable unloaded Shakespeare **backend** server via [[bns|BNS]].
+2. **TCP termination.** The browser opens a TCP connection to that IP. An **edge HTTP reverse proxy** terminates it.
+3. **Service routing.** The reverse proxy identifies the service (Shakespeare, in this case), consults [[gslb|GSLB]] again to find an available Shakespeare **frontend** server, and sends it the HTML request as an internal RPC.
+4. **Frontend → backend.** The Shakespeare frontend builds a [[protocol-buffers|protobuf]] request containing the word to look up. It consults [[gslb|GSLB]] for a suitable unloaded Shakespeare **backend** server via the internal naming service.
 5. **Backend → Bigtable.** The Shakespeare backend calls a [[bigtable]] server to read the row for that word.
 6. **Return.** Bigtable returns the locations → backend packs them into a reply protobuf → frontend assembles the HTML → user's browser renders it.
 
@@ -32,8 +32,8 @@ Whole round trip: hundreds of milliseconds.
 
 ## What to notice
 
-- **Every hop goes through [[gslb|GSLB]].** DNS, GFE → frontend, frontend → backend — GSLB chooses a peer at every level. GSLB is therefore a critical dependency; "a failing GSLB would wreak havoc" (source: chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md).
-- **Addresses are logical, not physical.** [[bns|BNS]] resolves logical names to `IP:port` at call time, so [[borg]] is free to move tasks around underneath.
+- **Every hop goes through [[gslb|GSLB]].** DNS, reverse proxy → frontend, frontend → backend — GSLB chooses a peer at every level. GSLB is therefore a critical dependency; "a failing GSLB would wreak havoc" (source: chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md).
+- **Addresses are logical, not physical.** The internal naming service resolves logical names to `IP:port` at call time, so [[borg]] is free to move tasks around underneath.
 - **Intra-process modularity crosses the RPC boundary.** "Often, an RPC call is made even when a call to a subroutine in the local program needs to be performed." Frontend-vs-backend is an RPC boundary even within one logical service (source: chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md).
 - **Graceful degradation holds it together.** Careful rollouts, rigorous testing, and graceful-degradation defaults are what prevent the many potential failure points in the chain from aggregating into outages.
 
@@ -51,10 +51,7 @@ The chapter follows the trace with a sizing calculation: at 100 QPS per backend 
 ## Related pages
 
 - [[gslb]]
-- [[google-frontend]]
-- [[stubby]]
 - [[protocol-buffers]]
-- [[bns]]
 - [[bigtable]]
 - [[borg]]
 - [[n-plus-2-redundancy]]

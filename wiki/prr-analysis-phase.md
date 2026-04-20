@@ -1,6 +1,6 @@
 # PRR Analysis Phase
 
-**Summary**: The first large work phase of the [[simple-prr-model|Simple PRR Model]]. SRE reviewers learn the service, gauge its maturity along SRE's axes of concern, and run it against a PRR checklist drawn from domain expertise, experience with related systems, and the Google [[production-guide|Production Guide]]. Output: a list of recommended improvements prioritised for reliability impact.
+**Summary**: The first large work phase of the [[simple-prr-model|Simple PRR Model]]. SRE reviewers learn the service, gauge its maturity along SRE's axes of concern, and run it against a PRR checklist drawn from domain expertise, experience with related systems, and a shared production-best-practices repository. Output: a list of recommended improvements prioritised for reliability impact.
 
 **Sources**: `raw/site-reliability-engineering/chapter-32-the-evolving-sre-engagement-model.md`
 
@@ -52,6 +52,5 @@ The Analysis phase produces a ranked list of recommended improvements. That list
 - [[prr-engagement-phase]]
 - [[prr-improvements-and-refactoring]]
 - [[sre-engagement-model]]
-- [[production-guide]]
 - [[blameless-postmortem]]
 - [[site-reliability-engineering]]

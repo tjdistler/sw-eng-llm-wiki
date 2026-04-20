@@ -103,7 +103,7 @@ Explicitly delineated service levels let clients make their own cost/reliability
 
 ### Frontend infrastructure
 
-Not all infrastructure is storage. Google's frontend infrastructure (reverse proxies, load balancers near the network edge; see [[google-frontend]]) is engineered for extremely high reliability because **a request that never reaches the application frontend is simply lost** — there is no backend to gracefully handle the failure.
+Not all infrastructure is storage. Google's frontend infrastructure (edge reverse proxies, load balancers near the network edge) is engineered for extremely high reliability because **a request that never reaches the application frontend is simply lost** — there is no backend to gracefully handle the failure.
 
 ## The common thread
 
@@ -120,4 +120,3 @@ Once discovered, the tolerance becomes an [[service-level-objective|SLO]], and t
 - [[reliability]]
 - [[bigtable]]
 - [[spanner]]
-- [[google-frontend]]

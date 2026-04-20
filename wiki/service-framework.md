@@ -43,14 +43,13 @@ The framework "takes care of correct infrastructure use," so developers can focu
 
 ## Relationship to other Google infrastructure
 
-The framework story is a natural progression from the [[stubby|Stubby]] era in which the RPC framework already carried cross-cutting behaviour (connection management, [[backend-task-states|backend states]], [[weighted-round-robin|balancing policies]], [[adaptive-throttling|throttling]]). [[handling-overload|Chapter 21]] already showed the RPC framework pulling overload-handling mechanisms into itself; Chapter 32's frameworks are the generalisation — the same pattern applied to instrumentation, logging, configuration, and the control surface.
+The framework story is a natural progression from the era in which the internal RPC framework already carried cross-cutting behaviour (connection management, [[backend-task-states|backend states]], [[weighted-round-robin|balancing policies]], [[adaptive-throttling|throttling]]). [[handling-overload|Chapter 21]] already showed the RPC framework pulling overload-handling mechanisms into itself; Chapter 32's frameworks are the generalisation — the same pattern applied to instrumentation, logging, configuration, and the control surface.
 
 ## Related pages
 
 - [[frameworks-and-sre-platform]]
 - [[sre-engagement-model]]
 - [[shared-responsibility-engagement]]
-- [[stubby]]
 - [[handling-overload]]
 - [[load-shedding]]
 - [[site-reliability-engineering]]

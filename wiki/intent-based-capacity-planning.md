@@ -1,6 +1,6 @@
 # Intent-Based Capacity Planning
 
-**Summary**: Chapter 18's proposed replacement for manual capacity planning: programmatically encode a service's **intent** (dependencies, performance metrics, prioritisation) and let a solver auto-generate an allocation plan. The approach turns capacity planning from a brittle spreadsheet-driven exercise into a computation that can be re-run on any change. [[auxon|Auxon]] is Google's implementation.
+**Summary**: Chapter 18's proposed replacement for manual capacity planning: programmatically encode a service's **intent** (dependencies, performance metrics, prioritisation) and let a solver auto-generate an allocation plan. The approach turns capacity planning from a brittle spreadsheet-driven exercise into a computation that can be re-run on any change. Google's internal implementation is a mixed-integer linear-programming solver.
 
 **Sources**: `raw/site-reliability-engineering/chapter-18-software-engineering-in-sre.md`
 
@@ -57,13 +57,12 @@ See [[traditional-capacity-planning]] for the problem this replaces — demand-d
 ## Cross-book connections
 
 - [[capacity-planning]] — Chapter 1's one-page tenet gets its industrial-strength implementation in Chapter 18
-- [[desired-state-management]] (Newman) — intent-as-specification + solver-produces-plan + automation-enacts-plan is the declarative-desired-state pattern applied to capacity. The *what* is intent; the *how* is computed; the *reconciliation* is someone else's job (Auxon is deliberately agnostic about who)
+- [[desired-state-management]] (Newman) — intent-as-specification + solver-produces-plan + automation-enacts-plan is the declarative-desired-state pattern applied to capacity. The *what* is intent; the *how* is computed; the *reconciliation* is someone else's job (the Google implementation is deliberately agnostic about who)
 - [[architecture-fitness-function]] (Richards & Ford) — the intent constraints (latency bounds, redundancy levels, geographic requirements) are objective automatable integrity assessments; the unmet-requirements list in the allocation plan is a fitness-function failure report
 - [[declarative-vs-imperative-queries]] (Kleppmann) — intent-based planning is the declarative end of the same distinction: say *what* you want, let the system figure out *how*
 
 ## Related pages
 
-- [[auxon]]
 - [[traditional-capacity-planning]]
 - [[software-engineering-in-sre]]
 - [[capacity-planning]]

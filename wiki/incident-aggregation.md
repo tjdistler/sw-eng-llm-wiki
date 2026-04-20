@@ -1,6 +1,6 @@
 # Incident Aggregation
 
-**Summary**: Chapter 16's framing of the **group-multiple-alerts-into-one-incident** affordance in [[outalator]]. A single underlying event routinely produces many alerts — different error symptoms, different affected teams, different backend reports — and grouping them into one logical incident is what makes the resulting record usable for counting, comparison, and trend analysis. Without grouping, "incidents per day" and "alerts per day" blur into one number that measures neither.
+**Summary**: Chapter 16's framing of the **group-multiple-alerts-into-one-incident** affordance in an outage-tracking archive. A single underlying event routinely produces many alerts — different error symptoms, different affected teams, different backend reports — and grouping them into one logical incident is what makes the resulting record usable for counting, comparison, and trend analysis. Without grouping, "incidents per day" and "alerts per day" blur into one number that measures neither.
 
 **Sources**: `raw/site-reliability-engineering/chapter-16-tracking-outages.md`
 
@@ -61,7 +61,6 @@ The two work together: Alertmanager keeps the page-to-human ratio manageable dur
 
 ## Related pages
 
-- [[outalator]]
 - [[outage-tracking]]
 - [[incident-tagging]]
 - [[outage-analysis]]

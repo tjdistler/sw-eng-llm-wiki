@@ -48,5 +48,4 @@ A mixed rotation during onboarding is a useful pattern: developers carry the pag
 - [[sre-dev-collaboration]]
 - [[production-meetings]]
 - [[sre-engagement-model]]
-- [[shakespeare-example-prr]]
 - [[site-reliability-engineering]]

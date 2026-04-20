@@ -126,7 +126,7 @@ The cap only works if the whole organisation — SRE and dev — understands **w
 
 ## Automate yourself out of a job (Chapter 7)
 
-Chapter 7 supplies the [[mysql-on-borg|MySQL-on-Borg]] case study as the concrete worked example of what a team looks like when the engineering half of the 50/50 split is spent well (source: chapter-07-the-evolution-of-automation-at-google.md). The Ads SRE team believed their MySQL work was already "mature and managed" after automating routine replica replacements. Then they migrated onto [[borg|Borg]] — and the project forced them to eliminate 30–90-minute manual master failovers, because Borg's fluid task placement was incompatible with any human-dependent failover procedure that couldn't hit the 30-second error-budget threshold.
+Chapter 7 supplies the MySQL-on-Borg (Decider) case study as the concrete worked example of what a team looks like when the engineering half of the 50/50 split is spent well (source: chapter-07-the-evolution-of-automation-at-google.md). The Ads SRE team believed their MySQL work was already "mature and managed" after automating routine replica replacements. Then they migrated onto [[borg|Borg]] — and the project forced them to eliminate 30–90-minute manual master failovers, because Borg's fluid task placement was incompatible with any human-dependent failover procedure that couldn't hit the 30-second error-budget threshold.
 
 The outcome cited:
 
@@ -178,7 +178,6 @@ Chapter 5 closes with a small, cumulative framing: if every SRE eliminates a lit
 - [[error-budget]]
 - [[automation-at-google]]
 - [[autonomous-systems]]
-- [[mysql-on-borg]]
 - [[balanced-on-call]]
 - [[sre-on-call-engagement]]
 - [[multi-site-on-call]]

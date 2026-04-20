@@ -4,6 +4,16 @@ Append-only record of all operations.
 
 ---
 
+## 2026-04-19 — Remove Google-specific pages
+
+Executed `REMOVE-GOOGLE-PLAN.md`. Deleted 24 pages describing Google-internal systems (Borg/Borgmon, Stubby, Blaze, BNS, GFE, Jupiter, B4, Auxon, Midas, Sisyphus, Outalator, Escalator, Viceroy, Prodtest, etc.) that didn't generalise. Fixed the ~230 inbound `[[wikilinks]]` across ~118 pages, rewriting load-bearing citations to describe the general concept (pull-based time-series monitoring, internal RPC framework, outage-tracking archive, edge reverse proxy, content-addressed package manager with movable labels, general-purpose rollout framework, intent-based capacity planner, etc.). Dropped the 24 A–Z entries from `wiki/index.md` and updated the page count from 979 to 955.
+
+Raw book chapters were left untouched per the plan; `raw/site-reliability-engineering/*.md` still discusses these systems as the book's own worked examples.
+
+### Linter
+
+`0 errors, 0 warnings, 0 info` — the 24 deferred Google-specific warnings from Phase 13 verification are gone because the pages themselves are gone.
+
 ## 2026-04-19 — Wiki redesign Phase 13: verification
 
 Closed the 121 non-Google orphan warnings from Phase 10 by linking each previously-orphan concept page into the natural section of an existing MOC with a `why`/`when` sentence. Touched six MOCs:

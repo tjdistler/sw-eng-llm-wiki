@@ -28,11 +28,11 @@ The six phases (covered on their own pages) sequence the review, reshape the ser
 3. **[[prr-improvements-and-refactoring|Improvements and Refactoring]]** — jointly prioritise and execute the identified gaps; usually the longest and most variable phase
 4. **[[prr-training-phase|Training]]** — PRR leaders train the full SRE team via design overviews, request-flow deep dives, production walkthroughs, and hands-on exercises
 5. **[[prr-onboarding-phase|Onboarding]]** — progressive transfer of operations, change management, and access rights
-6. **[[prr-continuous-improvement|Continuous Improvement]]** — ongoing partnership; SRE maintains reliability as the service evolves and contributes lessons back to the [[production-guide|Production Guide]]
+6. **[[prr-continuous-improvement|Continuous Improvement]]** — ongoing partnership; SRE maintains reliability as the service evolves and contributes lessons back to the shared production-best-practices repository
 
 ## Shakespeare, worked
 
-Chapter 32 closes with the [[shakespeare-example-prr|Shakespeare service]] running through the Simple PRR Model: dashboards weren't covering some SLO-defined metrics, those were fixed, SRE took over the pager with two developers still in the rotation, weekly on-call meetings became the coordination venue, and future launches are now pre-reviewed with SRE (source: chapter-32-the-evolving-sre-engagement-model.md).
+Chapter 32 closes with its worked Shakespeare-service example running through the Simple PRR Model: dashboards weren't covering some SLO-defined metrics, those were fixed, SRE took over the pager with two developers still in the rotation, weekly on-call meetings became the coordination venue, and future launches are now pre-reviewed with SRE (source: chapter-32-the-evolving-sre-engagement-model.md).
 
 ## Limitations
 
@@ -56,5 +56,4 @@ These limitations are the motivation for the [[early-engagement-model|Early Enga
 - [[prr-onboarding-phase]]
 - [[prr-continuous-improvement]]
 - [[early-engagement-model]]
-- [[shakespeare-example-prr]]
 - [[site-reliability-engineering]]

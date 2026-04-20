@@ -1,6 +1,6 @@
 # Hermetic Builds
 
-**Summary**: A build is **hermetic** when it is insensitive to the machine it runs on. Given the same source revision and the same versioned build tools, two builds on two machines produce identical results. Google requires this property from [[blaze-bazel|Blaze]] so that releases are reproducible, audits are trustworthy, and old releases can be rebuilt months later for bug fixes without picking up unrelated drift.
+**Summary**: A build is **hermetic** when it is insensitive to the machine it runs on. Given the same source revision and the same versioned build tools, two builds on two machines produce identical results. Google requires this property from its build tool (open-sourced as Bazel) so that releases are reproducible, audits are trustworthy, and old releases can be rebuilt months later for bug fixes without picking up unrelated drift.
 
 **Sources**: `raw/site-reliability-engineering/chapter-08-release-engineering.md`, `raw/site-reliability-engineering/chapter-17-testing-for-reliability.md`
 
@@ -50,11 +50,10 @@ Without versioned build tools, the rebuild picks up whatever compiler is install
 
 Chapter 17 surfaces a testing-side consequence of hermeticity. At Google's scale, a service's test suite may depend transitively on every object in the code repository (source: chapter-17-testing-for-reliability.md). [[testing-at-scale|Practical test selection]] relies on the build tool knowing exactly what each file depends on — which is only meaningful if the build is reproducible.
 
-Chapter 17 also credits [[blaze-bazel|Bazel]]'s dependency graphs for enabling selective rebuilds: "when a change is made to a file, Bazel only rebuilds the part of the software that depends on that file" (source: chapter-17-testing-for-reliability.md). Hermeticity is what makes the graph a contract rather than a hint.
+Chapter 17 also credits Bazel's dependency graphs for enabling selective rebuilds: "when a change is made to a file, Bazel only rebuilds the part of the software that depends on that file" (source: chapter-17-testing-for-reliability.md). Hermeticity is what makes the graph a contract rather than a hint.
 
 ## Cross-book connections
 
-- [[google-monorepo]] — hermetic builds pair naturally with a monorepo: since every dependency lives at a known revision in the same repository, the build can be fully reproducible without depending on external artifact resolution
 - [[idempotence]] — hermetic building is the build-time analogue of idempotent operations: same inputs, same outputs, regardless of how many times or where you run it
 - [[architecture-fitness-function]] (Richards & Ford) — "this build produces bit-identical output on two different machines" is an objective, automatable integrity check on the release pipeline
 - [[data-outlives-code]] (Kleppmann) — the inverse case: code outlives its build environment; hermetic builds are the discipline that keeps old code rebuildable
@@ -63,11 +62,9 @@ Chapter 17 also credits [[blaze-bazel|Bazel]]'s dependency graphs for enabling s
 
 - [[release-engineering]]
 - [[release-engineering-principles]]
-- [[blaze-bazel]]
 - [[release-branching-and-cherry-picking]]
 - [[rapid-release-system]]
 - [[push-on-green]]
-- [[google-monorepo]]
 - [[testing-for-reliability]]
 - [[testing-at-scale]]
 - [[build-system-discipline]]

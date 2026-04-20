@@ -77,7 +77,6 @@ The explanation is the demonstration; the leading question is the exercise. A te
 
 - [[embedding-sre]]
 - [[leading-questions]]
-- [[postvitam]]
 - [[service-level-objective]]
 - [[error-budget]]
 - [[mttr-and-mttf]]

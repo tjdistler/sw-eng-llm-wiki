@@ -111,7 +111,7 @@ SRE Chapter 26 specialises the fault-tolerance framing to **data integrity at sc
 
 Chapter 26 also explicitly strengthens Kleppmann's "trust but verify" framing with an operational rule: [[recovery-testing|continuously test the recovery process]] in normal operations and alert on missing success heartbeats. The only way to know backups are backups (not archives) is to actually restore from them, repeatedly. See [[data-integrity-sre]] for the hub and [[data-integrity-principles]] for the five principles Ch 26 closes with.
 
-The 2011 [[gmail-gtape-restore|Gmail GTape restore]] and 2012 [[google-music-runaway-deletion|Google Music runaway-deletion]] case studies in Chapter 26 are the worked examples of the three-layer discipline paying off at Google scale.
+The 2011 [[gmail-gtape-restore|Gmail GTape restore]] case study in Chapter 26 is the worked example of the three-layer discipline paying off at Google scale.
 
 ## Overload as a fault class
 

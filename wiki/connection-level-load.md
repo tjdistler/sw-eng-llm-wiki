@@ -48,7 +48,7 @@ The two options:
 
 If health checks run every second and requests arrive once per minute, 60 health checks happen per useful request. Dropping health-check frequency (e.g., to every 10 seconds for idle connections) reduces this ratio by an order of magnitude at modest cost in how quickly a backend failure is detected for currently-idle clients.
 
-[[stubby|Stubby's]] idle-connection optimisation (described in Chapter 20's [[backend-task-states]] material) is the first step: switch idle TCP connections to cheaper UDP health checks with lower frequency. Chapter 21 suggests going further when load demands it.
+The RPC framework's idle-connection optimisation (described in Chapter 20's [[backend-task-states]] material) is the first step: switch idle TCP connections to cheaper UDP health checks with lower frequency. Chapter 21 suggests going further when load demands it.
 
 ### Create and destroy connections dynamically
 
@@ -117,9 +117,9 @@ The batch proxy is a textbook [[bulkhead]]: isolating the batch workload so its 
 
 [[subsetting]] from Chapter 20 is the primary mechanism for bounding the connection-count problem: each client connects to a subset of backends rather than all of them. Chapter 21 picks up where subsetting stops helping — when even the subsetted connection pool is too large, or when the pool churns rapidly.
 
-### Connection load and [[stubby]]
+### Connection load and the RPC framework
 
-Stubby's idle-connection optimisation (switch idle TCP to UDP health checks, lower frequency) is the first-line defence against the health-check-dominates pathology. Chapter 21's recommendation to "significantly decrease the frequency of health checks" is tuning the Stubby idle-path parameters. This is an example of the pattern that recurs throughout Chapter 20-21: cross-cutting concerns live in the RPC framework so every service benefits without custom code.
+The RPC framework's idle-connection optimisation (switch idle TCP to UDP health checks, lower frequency) is the first-line defence against the health-check-dominates pathology. Chapter 21's recommendation to "significantly decrease the frequency of health checks" is tuning the framework's idle-path parameters. This is an example of the pattern that recurs throughout Chapter 20-21: cross-cutting concerns live in the RPC framework so every service benefits without custom code.
 
 ### Connection load and [[dynamic-worker-scaling]]
 
@@ -132,7 +132,6 @@ Two of Deutsch's fallacies apply directly: "bandwidth is infinite" (connection s
 ## Related pages
 
 - [[handling-overload]]
-- [[stubby]]
 - [[subsetting]]
 - [[bulkhead]]
 - [[datacenter-load-balancing]]

@@ -39,7 +39,7 @@ The gradual rollout is one of the three techniques Chapter 27 identifies as espe
 ## Cross-references
 
 - [[canary-test]] develops the first-stage-only view with the exponential-rollout mathematics from Ch 17.
-- [[sisyphus]] is the rollout-orchestration framework that implements the staged pattern across Google services.
+- A general-purpose rollout-orchestration framework implements the staged pattern across Google services.
 - [[change-management-sre]] is the broader SRE discipline this technique realises.
 - [[progressive-delivery]] is Newman's and Burns's umbrella term for the same family of techniques.
 
@@ -47,7 +47,6 @@ The gradual rollout is one of the three techniques Chapter 27 identifies as espe
 
 - [[canary-test]]
 - [[feature-flag-framework]]
-- [[sisyphus]]
 - [[change-management-sre]]
 - [[progressive-delivery]]
 - [[reliable-product-launches]]

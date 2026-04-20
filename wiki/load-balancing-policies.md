@@ -75,7 +75,7 @@ Burns's [[replicated-load-balanced-service]] mentions round-robin as the default
 
 ### Policies and the network-layer balancer
 
-The [[network-load-balancer|Chapter 19 packet-level balancer]] also picks backends (least-loaded, hash-mod-N, consistent-hashing); the mechanisms are different because they operate on packets rather than RPCs. Chapter 20's policies are the *application-layer* balancer, running inside each client task in the [[stubby|RPC framework]].
+The [[network-load-balancer|Chapter 19 packet-level balancer]] also picks backends (least-loaded, hash-mod-N, consistent-hashing); the mechanisms are different because they operate on packets rather than RPCs. Chapter 20's policies are the *application-layer* balancer, running inside each client task in the [[rpc|RPC framework]].
 
 ### Policies and Weighted Round Robin as a closed loop
 

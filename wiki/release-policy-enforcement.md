@@ -25,7 +25,7 @@ Each is a separate permission, each is independently auditable, and each is eval
 
 ## Code review as the first layer
 
-Almost all changes to the codebase require a code review, integrated into the normal developer workflow (source: chapter-08-release-engineering.md). This is the CL-to-owner pattern described in [[google-monorepo]]: a file's owners, listed in in-repo configuration, must approve changes to it before submission.
+Almost all changes to the codebase require a code review, integrated into the normal developer workflow (source: chapter-08-release-engineering.md). This is the CL-to-owner pattern that ships with a shared monorepo: a file's owners, listed in in-repo configuration, must approve changes to it before submission.
 
 ## The release report
 
@@ -60,5 +60,4 @@ Policy enforcement and hermetic builds compose: the release report is only trust
 - [[release-engineering-principles]]
 - [[hermetic-builds]]
 - [[release-branching-and-cherry-picking]]
-- [[google-monorepo]]
 - [[architecture-governance]]

@@ -115,5 +115,4 @@ The SRE postmortem philosophy aligns with the [[unknown-unknowns]] framing in Ri
 - [[postmortems-at-google-working-group]]
 - [[learning-from-outages]]
 - [[outage-tracking]]
-- [[outalator]]
 - [[site-reliability-engineering]]

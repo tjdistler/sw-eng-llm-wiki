@@ -69,7 +69,7 @@ The SRE book's version is pushed deeper into the RPC framework itself, so every 
 
 ### Three-state model and clean shutdown
 
-The lame-duck state is the RPC-level equivalent of a process trapping SIGTERM to finish its work before exiting. Chapter 20's shutdown sequence shows that [[stubby|Stubby]] exposes a lame-duck API call that is invoked in the SIGTERM handler; the connection-draining negotiation and the process exit itself are handled by the framework, not by every application. This is an instance of Chapter 9's [[virtue-of-boring]] and [[minimal-apis]] thinking applied to a shutdown API.
+The lame-duck state is the RPC-level equivalent of a process trapping SIGTERM to finish its work before exiting. Chapter 20's shutdown sequence shows that the internal RPC framework exposes a lame-duck API call that is invoked in the SIGTERM handler; the connection-draining negotiation and the process exit itself are handled by the framework, not by every application. This is an instance of Chapter 9's [[virtue-of-boring]] and [[minimal-apis]] thinking applied to a shutdown API.
 
 ### Three-state model and least-loaded policies
 
@@ -83,6 +83,5 @@ The [[least-loaded-round-robin]] policy has a failure mode — "sinkholing traff
 - [[least-loaded-round-robin]]
 - [[weighted-round-robin]]
 - [[health-probes]]
-- [[stubby]]
 - [[change-management-sre]]
 - [[site-reliability-engineering]]

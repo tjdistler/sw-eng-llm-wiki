@@ -72,4 +72,3 @@ Leading questions borrow structurally from the Chapter 12 [[hypothetico-deductiv
 - [[simplicity-sre]]
 - [[toil-and-engineering-balance]]
 - [[hypothetico-deductive-debugging]]
-- [[postvitam]]

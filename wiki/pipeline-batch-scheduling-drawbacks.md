@@ -55,7 +55,7 @@ The implicit recommendation, developed in the rest of Chapter 25, is to **stop r
 
 - [[borg]] (SRE Ch 2 / Ch 7) — the cluster scheduler whose batch-tier policies are the source of all four limitations
 - [[handling-overload]] (SRE Ch 21) / [[request-criticality]] (SRE Ch 21) — Chapter 21's criticality framework is the request-level analogue of the batch-vs-production-priority distinction Chapter 25 invokes; both are mechanisms for telling the scheduler/serving layer which work to drop first when capacity is tight
-- [[capacity-planning]] (SRE Ch 1 / Ch 18) — the "secure sufficient capacity" recommendation is a capacity-planning problem; [[auxon]]'s intent-based plans would naturally express "I need this pipeline to run within X minutes 99% of cycles" as an SLO and let the planner allocate the priority needed
+- [[capacity-planning]] (SRE Ch 1 / Ch 18) — the "secure sufficient capacity" recommendation is a capacity-planning problem; an [[intent-based-capacity-planning|intent-based planner]] would naturally express "I need this pipeline to run within X minutes 99% of cycles" as an SLO and let the planner allocate the priority needed
 - [[cron-leader-follower]] (SRE Ch 24) — for the cron service itself, Google avoided batch priority and ran the cron leader at production priority to ensure scheduling latency. The same calculus applies in reverse: any system that is on the critical path of business operations should not be on batch tier
 
 ## Related pages

@@ -47,7 +47,7 @@ Black-box is always symptom-oriented. That's the point.
 
 The Chapter 6 recipe:
 
-- **Heavy white-box** — every Google server exposes internal metrics (see [[borgmon]]); dashboards, debugging, and most alerting rely on it.
+- **Heavy white-box** — every server exposes internal metrics scraped by a central time-series monitoring system; dashboards, debugging, and most alerting rely on it.
 - **Modest but critical black-box** — the discipline backstop that ensures a page is only triggered when a problem is actually manifesting externally.
 
 The "modest" part matters: you don't need hundreds of black-box probes. You need a small set of them hitting the user-critical paths, plus extensive white-box for everything else.
@@ -56,8 +56,8 @@ The "modest" part matters: you don't need hundreds of black-box probes. You need
 
 Chapter 10 supplies the concrete realisation of each side (source: chapter-10-practical-alerting-from-time-series-data.md):
 
-- **White-box: [[borgmon]]** — scrapes `/varz` on every server, stores in its [[time-series-arena]], evaluates [[borgmon-rules]]. Inspects the internal state of the target with knowledge of the internals in mind.
-- **Black-box: [[prober]]** — runs a protocol check against a target and reports success or failure. Validates response payload, extracts values as time-series, can alert directly or feed its own `/varz` back to Borgmon.
+- **White-box**: a time-series monitoring system scrapes a text metrics endpoint on every server, stores the series in an in-memory arena, and evaluates rules. Inspects the internal state of the target with knowledge of the internals in mind.
+- **Black-box: [[prober]]** — runs a protocol check against a target and reports success or failure. Validates response payload, extracts values as time-series, can alert directly or feed its own metrics back to the monitoring system.
 
 Chapter 10 also gives the pointed white-box limitation that makes Prober necessary:
 
@@ -86,6 +86,5 @@ Chapter 6's [[alert-philosophy]] section argues that once you enforce *"every pa
 - [[health-check-adapter]]
 - [[monitoring-and-observability]]
 - [[sre-monitoring-outputs]]
-- [[borgmon]]
 - [[prober]]
 - [[site-reliability-engineering]]

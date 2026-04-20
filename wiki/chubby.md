@@ -1,6 +1,6 @@
 # Chubby
 
-**Summary**: Google's lock service — a filesystem-like API for maintaining distributed locks across datacenters. Chubby uses the Paxos protocol for asynchronous [[consensus]] and is the canonical place to store data that must be consistent across the cluster, including [[bns|BNS]] name-to-address mappings. The direct ancestor of [[zookeeper|ZooKeeper]].
+**Summary**: Google's lock service — a filesystem-like API for maintaining distributed locks across datacenters. Chubby uses the Paxos protocol for asynchronous [[consensus]] and is the canonical place to store data that must be consistent across the cluster, including the naming-service's name-to-address mappings. The direct ancestor of [[zookeeper|ZooKeeper]].
 
 **Sources**: `raw/site-reliability-engineering/chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md`, `raw/site-reliability-engineering/chapter-04-service-level-objectives.md`, `raw/site-reliability-engineering/chapter-23-managing-critical-state-distributed-consensus-for-reliability.md`
 
@@ -22,7 +22,7 @@ Chubby's defining use case is master election. When a service has five replicas 
 
 ## Storing consistent data
 
-Beyond lock-holding, Chubby is the general home for "data that must be consistent." The chapter explicitly mentions [[bns|BNS]] storing its mapping between BNS paths and `IP:port` pairs in Chubby (source: chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md). This is the structural analogue of using [[zookeeper|ZooKeeper]] or etcd as the authoritative source of partition-to-node mappings in other systems (see [[request-routing]]).
+Beyond lock-holding, Chubby is the general home for "data that must be consistent." The chapter explicitly mentions the cluster naming service storing its mapping between symbolic paths and `IP:port` pairs in Chubby (source: chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md). This is the structural analogue of using [[zookeeper|ZooKeeper]] or etcd as the authoritative source of partition-to-node mappings in other systems (see [[request-routing]]).
 
 ## Relationship to ZooKeeper
 
@@ -55,7 +55,6 @@ Structurally Chubby is a [[replicated-state-machine]] on top of Paxos whose API 
 - [[zookeeper]]
 - [[consensus]]
 - [[ownership-election-pattern]]
-- [[bns]]
 - [[borg]]
 - [[slo-expectations]]
 - [[service-level-objective]]

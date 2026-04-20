@@ -77,9 +77,9 @@ Modern RPC frameworks (gRPC, Stubby) implement both: deadlines propagate down th
 
 [[latency-and-deadlines]] is the Chapter 22 hub for the broader discussion of why deadlines matter. Deadline propagation is the specific discipline that makes deadlines work correctly in multi-layer RPC trees.
 
-### Deadline propagation and [[stubby]]
+### Deadline propagation and the RPC framework
 
-[[stubby]] (Google's internal RPC framework, open-sourced as gRPC) has deadlines as a first-class envelope field. Every Stubby call carries an absolute deadline; the deadline is automatically propagated by the framework when the server opens an outgoing call in the context of the incoming one. This is one of the ways Stubby/gRPC materially differs from libraries that require manual threading of the deadline.
+Google's internal RPC framework (open-sourced as gRPC) has deadlines as a first-class envelope field. Every RPC call carries an absolute deadline; the deadline is automatically propagated by the framework when the server opens an outgoing call in the context of the incoming one. This is one of the ways gRPC materially differs from libraries that require manual threading of the deadline.
 
 ### Deadline propagation and [[correlation-ids]]
 
@@ -103,7 +103,6 @@ The [[bimodal-latency]] failure mode is specifically what happens when a fractio
 - [[cascading-failure]]
 - [[bimodal-latency]]
 - [[queue-management]]
-- [[stubby]]
 - [[correlation-ids]]
 - [[distributed-tracing]]
 - [[retry-budget]]

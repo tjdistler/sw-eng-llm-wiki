@@ -75,7 +75,7 @@ Kleppmann's discussion of [[load-parameters]] makes the same observation at a mo
 
 ### And [[capacity-planning]]
 
-[[capacity-planning]] is the activity that *consumes* a capacity metric. Chapter 21's argument is that if the capacity metric is QPS, the plan is wrong in a way that will be exposed every time the client mix shifts. Switching the metric to CPU makes the plan stable under workload-shape changes, which is a precondition for [[auxon|intent-based capacity planning]] to work at all.
+[[capacity-planning]] is the activity that *consumes* a capacity metric. Chapter 21's argument is that if the capacity metric is QPS, the plan is wrong in a way that will be exposed every time the client mix shifts. Switching the metric to CPU makes the plan stable under workload-shape changes, which is a precondition for [[intent-based-capacity-planning|intent-based capacity planning]] to work at all.
 
 ### And [[weighted-round-robin]]
 
@@ -93,5 +93,4 @@ The CPU signal is most useful when sampled at high enough frequency to catch tra
 - [[weighted-round-robin]]
 - [[capacity-planning]]
 - [[load-parameters]]
-- [[auxon]]
 - [[site-reliability-engineering]]

@@ -82,7 +82,6 @@ Chapter 26 doesn't dwell on the **root cause** of the Gmail data loss, focusing 
 - [[tiered-backup-strategy]]
 - [[recovery-testing]]
 - [[data-integrity-principles]]
-- [[google-music-runaway-deletion]]
 - [[testing-disaster-recovery]]
 - [[incident-management-framework]]
 - [[learning-from-outages]]
