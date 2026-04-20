@@ -4,6 +4,20 @@ Append-only record of all operations.
 
 ---
 
+## 2026-04-19 — Wiki redesign Phase 4: service-design MOCs (2)
+
+Added the two service-design Map-of-Content pages. Both follow the Phase 2/3 voice template (narrative, every wikilink earns a "why"/"when", explicit jurisdictional handoffs). Decomposition ↔ microservices boundary is made explicit in each MOC's "when to read this" section: `moc-decomposition` owns *getting to* microservices from a monolith; `moc-microservices` owns *running* them; `moc-domain-driven-design` owns the modelling craft that both of the others borrow from.
+
+Files touched:
+
+- `wiki/moc-microservices.md` — new (defining properties, is-this-the-right-style gate, independent deployability, granularity, data ownership, communication sync/async/event-driven, reuse, platform substrate and microservice tax, growing pains, Conway/organisation, sibling MOCs)
+- `wiki/moc-domain-driven-design.md` — new (core vocabulary, ubiquitous-language placeholder, workshop techniques including event storming, modelling-enough discipline, domain-partitioning consequence, microservices bridge, data-ownership bridge, when DDD isn't a fit, sibling MOCs)
+- `wiki/index.md` — added both MOC entries to the `## Maps of Content (MOCs)` section
+
+Linter: 0 errors. One pre-existing warning in `idempotence.md` (unrelated to Phase 4).
+
+---
+
 ## 2026-04-19 — Wiki redesign Phase 3: architecture-core MOCs (4)
 
 Added the four architecture-core Map-of-Content pages, modelled on the Phase 2 `moc-decomposition` template (narrative voice, every wikilink earning a "why"/"when", explicit jurisdictional handoffs to sibling MOCs, raw chapter anchors for deeper reading). Sibling-MOC handoffs to forthcoming Phase 4–7 MOCs are still noted in prose, but the four new MOCs and `moc-decomposition` cross-link to each other where the boundary already exists.
