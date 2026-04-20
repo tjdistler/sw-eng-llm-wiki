@@ -94,6 +94,9 @@ Stream processing is what batch becomes when you take the bounded-input assumpti
 - [[repartitioning]] — rekeying and reshuffling a stream to co-locate data for joins and aggregations. The broker-as-shuffle move in lightweight frameworks; the network-shuffle move in heavyweight ones.
 - [[copartitioning]] — partitioning two streams on the same key and partition count so matching keys land together. The prerequisite for efficient stream-stream and stream-table joins.
 - [[single-writer-principle]] — one microservice, one stream: the write-ownership rule that keeps sources unambiguous and compacted streams durable. Framed here under its execution-mechanics lens; see also [[moc-microservices]] for the organisational lens.
+- [[consumer-group]] — the mechanism that horizontally scales event consumers across processes while preserving per-partition order — each partition is owned by exactly one group member at a time. The primitive under "parallelise this consumer" in Kafka/Kinesis/Pulsar.
+- [[consumer-offset]] — the per-consumer, per-partition cursor into a log; the thing that makes replay, at-least-once, and effectively-once semantics mechanically tractable. Storage of the offset (in the broker, in an external store) is a commit-atomicity decision, not a detail.
+- [[partition-assignor]] — the component that decides which partitions each consumer-group member owns when membership changes. Range vs round-robin vs sticky assignors trade rebalance time against data-locality across restarts; picking one is an operational decision with latency consequences.
 
 ### Stream transformations
 
@@ -132,6 +135,16 @@ Stateful streaming is where stream processing gets real — and where most of th
 - [[effectively-once-processing]] — exactly-once semantics *in practice*: idempotence plus transactional offset commits. The name is a humility marker — the thing users want is almost-always effectively-once, and the engineering cost of true exactly-once often exceeds the value.
 - [[stream-processing-fault-tolerance]] — microbatching, checkpointing, idempotent writes, atomic commits. The engine-internals survey.
 - [[checkpointing-stream-processing]] — periodic durable snapshots of operator state and offsets; the recovery primitive under Flink and Spark Structured Streaming.
+- [[stream-processing-scaling-strategies]] — two fundamentally different approaches: scale-while-running (online rebalance) vs scale-by-restart (checkpoint, stop, reconfigure, resume). State size and acceptable downtime decide which one the framework can even offer.
+
+### Heavyweight framework execution — clusters, shuffles, multitenancy
+
+These are the operational mechanics of running Spark / Flink / Kafka-Streams-at-scale. Distinct from the programming model; the place most production incidents actually live.
+
+- [[stream-processing-cluster]] — the dedicated-pool execution model: master nodes schedule work, executor nodes run jobs. The shape the heavyweight streaming frameworks inherited from their batch ancestors.
+- [[application-submission-modes]] — driver-in-client vs driver-in-cluster modes for submitting heavyweight streaming jobs. The choice that decides whether the client machine is a critical-path failure domain.
+- [[external-shuffle-service]] — a sidecar service that holds shuffle data independent of executor lifetime, so an executor crash doesn't force a full stage recompute. The operational win that turns long streaming jobs from "fragile" into "recoverable."
+- [[multitenancy-in-streaming-clusters]] — running many jobs on one shared pool: resource contention, noisy neighbours, per-tenant quotas. The engineering tax that buys hardware-cost efficiency; the reason dedicated clusters keep returning for latency-sensitive jobs.
 
 Deeper reading: [[building-event-driven-microservices#chapter-7-stateful-streaming]] for the full stateful-streaming discipline.
 
@@ -177,6 +190,14 @@ The architecture is half the story; the operational shape of a running pipeline 
 - [[cron-idempotency-and-skip-vs-double-launch]] — the fail-closed default: skip rather than double-launch, because skipped launches are usually recoverable while double launches often aren't.
 - [[cron-partial-failure-resolution]] — precomputed job names + scheduled launch time embedded in the name; state lookup as the resolution mechanism.
 - [[cron-thundering-herd]] — the `?` crontab extension; hashing job configuration to distribute launches stably. The midnight-MapReduce-spawn fix.
+
+### Serverless / FaaS execution
+
+Functions-as-a-service are a third execution substrate for data processing — distinct from long-running stream clusters and scheduled batch. The operational constraints (short-lived invocations, no native state, per-invocation billing) shape the pipeline design.
+
+- [[cold-start-warm-start]] — the invocation lifecycle: first request pays for container provisioning and language-runtime init; subsequent requests hit a reused warm instance. Decides whether a pipeline is viable at latency SLO; often the single largest tuning lever for a FaaS-based stage.
+- [[faas-batch-processing]] — tuning batch size, window, and per-invocation execution time when the processing unit is a function, not a long-running worker. The envelope that keeps per-record cost tractable; gets the balance wrong and the bill dominates.
+- [[faas-function-composition]] — event-driven (function-writes-to-topic, next-function-consumes) vs direct-call (function-A-invokes-function-B) composition. The choice that decides whether back-pressure, retries, and deadlines compose; event-driven usually wins past two stages.
 
 Deeper reading: [[site-reliability-engineering#chapter-25-data-processing-pipelines]] for the full continuous-vs-periodic argument; [[site-reliability-engineering#chapter-24-distributed-periodic-scheduling-with-cron]] for the cron-at-scale treatment.
 
@@ -238,6 +259,7 @@ Serving is the stage where data becomes usable — analytics, ML, reverse ETL, e
 - [[serving-in-notebooks]] — Jupyter as a serving target; credential hygiene; scaling off the laptop.
 - [[reverse-etl]] — warehouse-to-source feedback; Hightouch, Census. The pattern that closes the loop between analytics and operations.
 - [[etl-vs-elt]] — transform before load vs after; why ELT rose with cloud warehouses. Picks are usually a function of where compute is cheap.
+- [[stream-to-batch-storage]] — the fan-out pattern where a stream's consumers include one that lands records into batch storage (warehouse, lake) for later analytics. The mechanism that makes the same stream serve both operational consumers (sub-second) and analytical ones (minute-to-hour) without duplicating producers.
 
 Deeper reading: [[fundamentals-of-data-engineering#chapter-9-serving-data-for-analytics-machine-learning-and-reverse-etl]].
 

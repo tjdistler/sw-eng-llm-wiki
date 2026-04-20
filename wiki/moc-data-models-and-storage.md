@@ -41,7 +41,9 @@ Get the model right before arguing about the engine. A wrong model is the kind o
 ### Modelling concepts that cut across models
 
 - [[object-relational-mismatch]] — the impedance mismatch between OOP objects and relational rows; the ORM exists because of it. Documents escape it at the cost of queryability; don't forget the trade.
+- [[conceptual-logical-physical-models]] — the three-level modelling continuum from business abstraction (entities and relationships the business cares about) through logical structure (tables, columns, types) to physical implementation (files, pages, indexes, compression). The vocabulary for saying which layer a modelling disagreement is actually about.
 - [[normalization]] — remove duplication with IDs, pay with joins. The relational default; the thing document models partially abandon.
+- [[normalization-levels]] — 1NF through BCNF as a sequence of normal forms, each eliminating a specific update anomaly by enforcing a specific functional-dependency rule. The vocabulary for saying "this schema violates 3NF, which is why the update storm exists."
 - [[schema-on-read-vs-write]] — enforce schema at write time (relational) or at read time (document/lake). Write-time schemas catch errors early and pay migration costs; read-time schemas delay error discovery and pay it as runtime noise.
 - [[declarative-vs-imperative-queries]] — why SQL beat hand-rolled traversal; what you lose when you reach for an imperative API on top of a declarative engine.
 - [[data-locality]] — adjacent bytes read together. Document-shaped storage is fast for whole-document reads and slow for field-level reads; relational is the inverse.
@@ -71,6 +73,8 @@ When the choice is truly open — greenfield service, new workload, greenfield c
 - [[newsql-database]] — CockroachDB, Spanner, YugabyteDB. NoSQL-scale with ACID semantics; the answer when you need both horizontal write scaling and strong consistency and aren't willing to compromise either. Historically expensive; increasingly viable.
 - [[cloud-native-database]] — Snowflake, Redshift, BigQuery, Cosmos DB, Datomic. Storage/compute separation; elastic scaling; opex-shaped cost. The native cloud answer for analytics workloads and some operational ones.
 - [[polyglot-persistence]] (re-cited here under selection) — the valid end state when one type isn't enough. Selection is *per service*, not *per organisation*.
+- [[unbundling-databases]] — Kleppmann's framing: the classical database is a bundle of storage, indexing, replication, query, and caching glued together. The modern data stack *unbundles* them — Kafka for the log, search engines for inverted indexes, materialised streams for caches, warehouses for analytics. A useful lens for why polyglot persistence isn't a retreat from the relational model but a factoring of what the relational model was doing all along.
+- [[derived-data]] — data created by applying a deterministic function to some system of record (search indexes, caches, materialised views, aggregate stores). The storage-side name for the downstream shape that stream processing and CDC produce. Separating derived from source stores is the structural discipline that makes "rebuild from the log" possible.
 
 ## Encoding and schema evolution
 
