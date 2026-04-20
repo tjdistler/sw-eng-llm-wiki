@@ -406,7 +406,7 @@ Start-here pointer to `question-patterns.md` → 16-MOC table → 8-book table �
 
 Replace the question-answering section with the 6-step flow from §6. **Commit**: 1.
 
-### Phase 12 — Human docs
+### Phase 12 — Human docs ✅ Complete (2026-04-19)
 
 **Files**: `ARCHITECTURE.md` (new, repo root), `README.md` (Layout, Using-the-wiki pointer, Architecture heading). **Commit**: 1.
 

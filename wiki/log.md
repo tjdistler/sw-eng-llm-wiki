@@ -4,6 +4,14 @@ Append-only record of all operations.
 
 ---
 
+## 2026-04-19 — Wiki redesign Phase 12: human docs
+
+Added `ARCHITECTURE.md` at the repo root and updated `README.md` to point at it. `ARCHITECTURE.md` is the human-facing explanation of the wiki's navigation design — goal, design premises (flat concept pages, narrative MOCs, meta-pages over frontmatter, immutable raw prose), the four-layer structure (question-patterns → index → MOCs → concept pages → raw chapters) with a worked payments-extraction retrieval walkthrough, page types and conventions, wikilink/citation rules and what the linter enforces, how to extend (new book / new concept page / new MOC / new question pattern), what's intentionally out of scope, and Obsidian caveats (MOCs are very high-degree hubs in the graph view). `README.md` updates: expanded `Layout` to show `question-patterns.md`, `moc-*.md`, `<book>.md`, `ARCHITECTURE.md`; rewrote `Using the wiki` to describe the question-patterns → MOCs → concept pages flow instead of the old "Claude reads index.md first" phrasing; added an `Architecture` section linking to `ARCHITECTURE.md`. Linter: 0 errors, 145 warnings (all pre-existing orphan warnings from the Phase 10 policy tightening, tracked for Phase 14).
+
+Phase 12 of `WIKI-REDESIGN-PLAN.md` complete.
+
+---
+
 ## 2026-04-19 — Wiki redesign Phase 11: CLAUDE.md guidance
 
 Replaced the `## Question answering` section in `CLAUDE.md` with the 6-step flow from the redesign plan §6. The new guidance routes any non-trivial question through `wiki/question-patterns.md`, instructs reading every MOC the matched pattern lists (3–6 in parallel for complex questions), pushes follow-through into concept pages and raw chapter sections cited by MOCs, and keeps the existing "cite specific pages" + "offer to save valuable answers" steps. This wires the navigation layer built in Phases 1–10 into the agent's default retrieval behaviour.
