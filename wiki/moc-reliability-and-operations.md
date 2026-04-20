@@ -382,7 +382,7 @@ If you're adopting SRE practices rather than running an established one, three e
 2. **Start with postmortems.** [[blameless-postmortem]] culture is the cheapest SRE practice to adopt and has the largest compounding effect. Pick a recent incident, write one, share it, read it at a team meeting.
 3. **Start with one automation.** Pick the toil item that is most painful and most obvious. Automate it. Use the saved time to automate the next one. The practice of "we invest in automation" is a culture change as much as a technical one.
 
-Do all three in parallel; none of them work in isolation. The full "adopting SLOs from scratch" pattern will be captured in the forthcoming question-patterns router (Phase 8).
+Do all three in parallel; none of them work in isolation. See [[question-patterns]]'s *Adopt SLOs and reliability practices for an existing system* archetype for the full composition of MOCs, concept pages, and raw chapters that ground a from-scratch adoption plan.
 
 ## Sibling MOCs
 

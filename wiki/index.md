@@ -1,5 +1,9 @@
 # Wiki Index
 
+## Start here
+
+For any non-trivial expert question, read [[question-patterns]] first. It maps common question archetypes — extract-a-service, scale-10x, pick-a-style, event-driven-design, SLO-adoption, Conway-friction, choose-a-database, schema-evolution, build-a-data-platform, secure-a-data-platform, cascading-failure response — to the MOCs and concept pages that compose to a grounded answer.
+
 ## Maps of Content (MOCs)
 
 Narrative entry points for multi-cluster questions. Read the MOC first to find the concepts that compose for a given question shape, then follow wikilinks into concept pages.
