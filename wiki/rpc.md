@@ -83,11 +83,11 @@ The SRE book's Chapter 2 frames RPC use at Google more aggressively than Kleppma
 
 > Often, an RPC call is made even when a call to a subroutine in the local program needs to be performed. This makes it easier to refactor the call into a different server if more modularity is needed, or when a server's codebase grows.
 
-All Google services communicate via [[stubby|Stubby]], whose open-source release is gRPC; data on the wire is [[protocol-buffers|protocol-buffer]]-encoded. [[gslb|GSLB]] load-balances RPCs the same way it load-balances externally visible services. The SRE book also inverts the usual RPC vocabulary: inside a service, the caller is the **frontend** (client) and the callee is the **backend** (server), regardless of who is browser-facing.
+All Google services communicate via an internal RPC framework (its open-source release is gRPC); data on the wire is [[protocol-buffers|protocol-buffer]]-encoded. [[gslb|GSLB]] load-balances RPCs the same way it load-balances externally visible services. The SRE book also inverts the usual RPC vocabulary: inside a service, the caller is the **frontend** (client) and the callee is the **backend** (server), regardless of who is browser-facing.
 
 The Google style is a design stance in favour of [[independent-deployability]]: even in-process modularity gets expressed as an RPC boundary so it can later be moved across machines without refactoring.
 
-SRE Chapter 20 further shows that Stubby is not just a wire protocol: it also implements [[backend-task-states|backend state propagation]] (including [[lame-duck-state|graceful shutdown via lame duck]]), [[subsetting|per-client backend subsetting]], and [[load-balancing-policies|client-side load balancing]] culminating in [[weighted-round-robin]]. These are "RPC framework responsibilities" in Google's stance, not per-service concerns — which is what lets [[change-management-sre|rolling deployments]] be non-disruptive across every Google service by default.
+SRE Chapter 20 further shows that the RPC framework is not just a wire protocol: it also implements [[backend-task-states|backend state propagation]] (including [[lame-duck-state|graceful shutdown via lame duck]]), [[subsetting|per-client backend subsetting]], and [[load-balancing-policies|client-side load balancing]] culminating in [[weighted-round-robin]]. These are "RPC framework responsibilities" in Google's stance, not per-service concerns — which is what lets [[change-management-sre|rolling deployments]] be non-disruptive across every Google service by default.
 
 ## Related pages
 
@@ -97,6 +97,5 @@ SRE Chapter 20 further shows that Stubby is not just a wire protocol: it also im
 - [[message-brokers]]
 - [[microservices]]
 - [[idempotence]]
-- [[stubby]]
 - [[protocol-buffers]]
 - [[gslb]]

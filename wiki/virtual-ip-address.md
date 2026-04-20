@@ -66,15 +66,15 @@ VIP-level balancing is the second layer of [[frontend-load-balancing]]. [[dns-lo
 
 ### VIP and service discovery
 
-A VIP is an extreme version of [[service-discovery]]: clients discover exactly one address, and the "set of machines that actually serve this" is abstracted away entirely. Compare [[bns|BNS]] (returns a specific `IP:port` per task) and [[gslb|GSLB]] (layered DNS + service + RPC): VIPs collapse the whole discovery problem into "here is an IP, connect to it."
+A VIP is an extreme version of [[service-discovery]]: clients discover exactly one address, and the "set of machines that actually serve this" is abstracted away entirely. Compare a naming service (which returns a specific `IP:port` per task) and [[gslb|GSLB]] (layered DNS + service + RPC): VIPs collapse the whole discovery problem into "here is an IP, connect to it."
 
 ### VIP and the replicated-load-balanced-service pattern
 
 Burns's [[replicated-load-balanced-service]] pattern assumes a load balancer sits in front of the replicas. A VIP is the network-layer *implementation* of that load balancer — what actually lives behind the Kubernetes `Service` LoadBalancer type, behind an AWS Network Load Balancer, or behind an internal VIP system like Google's.
 
-### VIP vs GFE
+### VIP vs edge reverse proxy
 
-The [[google-frontend|Google Frontend]] is an *application-layer* reverse proxy: it terminates TCP/TLS and speaks HTTP. A VIP is a *packet-level* component: it forwards raw IP packets. At Google the stack is layered — DNS returns a VIP, the VIP's network load balancer forwards packets to a GFE machine, the GFE speaks HTTP and forwards to service frontends over Stubby. See [[life-of-a-request]].
+An edge HTTP reverse proxy is an *application-layer* component: it terminates TCP/TLS and speaks HTTP. A VIP is a *packet-level* component: it forwards raw IP packets. At Google the stack is layered — DNS returns a VIP, the VIP's network load balancer forwards packets to a reverse-proxy machine, which speaks HTTP and forwards to service frontends over RPC. See [[life-of-a-request]].
 
 ## Related pages
 
@@ -84,6 +84,5 @@ The [[google-frontend|Google Frontend]] is an *application-layer* reverse proxy:
 - [[consistent-hashing]]
 - [[frontend-load-balancing]]
 - [[dns-load-balancing]]
-- [[google-frontend]]
 - [[replicated-load-balanced-service]]
 - [[site-reliability-engineering]]

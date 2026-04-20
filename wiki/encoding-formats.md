@@ -84,7 +84,7 @@ The SRE book's Chapter 2 gives a concise pitch for Protocol Buffers ("protobufs"
 
 > Protocol buffers have many advantages over XML for serializing structured data: they are simpler to use, 3 to 10 times smaller, 20 to 100 times faster, and less ambiguous.
 
-Every [[stubby|Stubby]] (gRPC) call carries protobuf payloads. Protobufs are one of the three Thrift-style formats in the binary schema-driven category above; see [[protocol-buffers]] for the dedicated page.
+Every internal Google RPC call (gRPC and its internal ancestor) carries protobuf payloads. Protobufs are one of the three Thrift-style formats in the binary schema-driven category above; see [[protocol-buffers]] for the dedicated page.
 
 ## Related pages
 
@@ -101,4 +101,3 @@ Every [[stubby|Stubby]] (gRPC) call carries protobuf payloads. Protobufs are one
 - [[explicit-vs-implicit-schemas]]
 - [[event-driven-microservices]]
 - [[protocol-buffers]]
-- [[stubby]]

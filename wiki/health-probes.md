@@ -88,7 +88,7 @@ SRE Chapter 20 frames the same territory as a three-state model ([[backend-task-
 - **Lame duck** is a backend *choosing* to stop receiving new work while still serving in-flight requests. There is no vanilla Kubernetes equivalent — the closest is the termination grace period during which the pod is being shut down.
 - **Healthy** is "readiness true."
 
-The SRE book pushes the state model into the RPC framework itself ([[stubby|Stubby]]), which gives every service graceful shutdown for free and propagates state changes to inactive clients via UDP health checks in 1-2 RTT. Burns's Kubernetes-level machinery gets you the healthy/unhealthy distinction; Chapter 20 adds the backend-initiated drain signal on top.
+The SRE book pushes the state model into the RPC framework itself, which gives every service graceful shutdown for free and propagates state changes to inactive clients via UDP health checks in 1-2 RTT. Burns's Kubernetes-level machinery gets you the healthy/unhealthy distinction; Chapter 20 adds the backend-initiated drain signal on top.
 
 ### Health probes and monitoring
 
@@ -107,5 +107,4 @@ Probes are narrow: one bit per probe per replica. [[monitoring-and-observability
 - [[singleton-pattern]]
 - [[backend-task-states]]
 - [[lame-duck-state]]
-- [[stubby]]
 - [[designing-distributed-systems]]

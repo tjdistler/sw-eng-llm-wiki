@@ -51,7 +51,7 @@ Chapter 19's concrete discussion uses HTTP over TCP. The mechanisms mostly trans
 
 ## Relationship to Google's real stack
 
-Chapter 2 introduces [[gslb|GSLB]] as Google's three-level load balancer (DNS / service / RPC). Chapter 19 is the *deep dive* on the first level; Chapter 20 is the deep dive on the second and third. The [[google-frontend|Google Frontend]] sits between them: DNS/VIP gets the user's TCP connection to a GFE; the GFE then uses GSLB for the service-level and RPC-level hops inward. See [[life-of-a-request]].
+Chapter 2 introduces [[gslb|GSLB]] as Google's three-level load balancer (DNS / service / RPC). Chapter 19 is the *deep dive* on the first level; Chapter 20 is the deep dive on the second and third. An edge HTTP reverse proxy sits between them: DNS/VIP gets the user's TCP connection to the reverse-proxy tier, which then uses GSLB for the service-level and RPC-level hops inward. See [[life-of-a-request]].
 
 ## Relationship to existing wiki concepts
 
@@ -78,7 +78,6 @@ The Chapter 19 thesis — *load balance early and load balance often* — is the
 - [[packet-encapsulation-load-balancer]]
 - [[consistent-hashing]]
 - [[gslb]]
-- [[google-frontend]]
 - [[datacenter-load-balancing]]
 - [[replicated-load-balanced-service]]
 - [[site-reliability-engineering]]

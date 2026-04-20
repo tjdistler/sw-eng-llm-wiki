@@ -1,6 +1,6 @@
 # Lame Duck State
 
-**Summary**: SRE Chapter 20's *quasi-operational* backend state: the task is still listening on its port and still processing in-flight requests, but is explicitly asking its clients to stop sending *new* requests. It is the mechanism that makes clean shutdown possible without serving errors to the unlucky requests that happen to be in flight when a backend starts shutting down. The RPC framework ([[stubby|Stubby]]) propagates the state change to every client in 1-2 RTT via piggybacked UDP health checks, so even idle clients learn about the drain before they try to send the next request.
+**Summary**: SRE Chapter 20's *quasi-operational* backend state: the task is still listening on its port and still processing in-flight requests, but is explicitly asking its clients to stop sending *new* requests. It is the mechanism that makes clean shutdown possible without serving errors to the unlucky requests that happen to be in flight when a backend starts shutting down. The internal RPC framework propagates the state change to every client in 1-2 RTT via piggybacked UDP health checks, so even idle clients learn about the drain before they try to send the next request.
 
 **Sources**: `raw/site-reliability-engineering/chapter-20-load-balancing-in-the-datacenter.md`
 
@@ -92,7 +92,6 @@ All three are special cases of the same pattern: the component signals "I'm goin
 - [[backend-task-states]]
 - [[datacenter-load-balancing]]
 - [[health-probes]]
-- [[stubby]]
 - [[change-management-sre]]
 - [[rapid-release-system]]
 - [[site-reliability-engineering]]

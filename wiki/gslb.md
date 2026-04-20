@@ -1,6 +1,6 @@
 # Global Software Load Balancer (GSLB)
 
-**Summary**: Google's three-tier load balancer. Directs users to the closest datacenter with available capacity, then to a user-service-level frontend, then across RPC backends. Operates on symbolic service names plus per-location capacity declarations, using [[bns|BNS]] addresses as its inputs.
+**Summary**: Google's three-tier load balancer. Directs users to the closest datacenter with available capacity, then to a user-service-level frontend, then across RPC backends. Operates on symbolic service names plus per-location capacity declarations, using Google's internal naming-service addresses as its inputs.
 
 **Sources**: `raw/site-reliability-engineering/chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md`, `raw/site-reliability-engineering/chapter-19-load-balancing-at-the-frontend.md`
 
@@ -21,10 +21,10 @@ GSLB load-balances at three different levels in the request path (source: chapte
 Service owners register with GSLB (source: chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md):
 
 - A **symbolic name** for the service.
-- A list of **[[bns|BNS]] addresses** of the servers implementing it.
+- A list of **naming-service addresses** of the servers implementing it.
 - The **capacity** available at each location, typically in queries per second.
 
-GSLB then routes traffic to the BNS addresses, weighted by capacity and proximity. Because BNS is already the stable naming layer for [[borg]] tasks, GSLB inherits fluid placement automatically — a task rescheduled by Borg keeps its BNS name and GSLB keeps routing to it.
+GSLB then routes traffic to the registered addresses, weighted by capacity and proximity. Because the naming service is already the stable naming layer for [[borg]] tasks, GSLB inherits fluid placement automatically — a task rescheduled by Borg keeps its symbolic name and GSLB keeps routing to it.
 
 ## How the DNS level actually works
 
@@ -43,7 +43,7 @@ The first level of GSLB is therefore not just "return an IP near the user" — i
 GSLB appears at every cross-machine hop in the Chapter 2 Shakespeare example (source: chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md):
 
 1. The user's DNS query resolves via GSLB to the nearest frontend IP.
-2. The [[google-frontend|Google Frontend]] uses GSLB to find a Shakespeare frontend server.
+2. An edge HTTP reverse proxy uses GSLB to find a Shakespeare frontend server.
 3. The Shakespeare frontend uses GSLB to find an unloaded Shakespeare backend.
 
 Every service-to-service hop goes through GSLB. This makes GSLB a single point of potential failure — the chapter is explicit: "a failing GSLB would wreak havoc" — which is why it is protected by rigorous testing, careful rollouts, and graceful degradation (source: chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md). See [[life-of-a-request]] for the full trace.
@@ -57,9 +57,7 @@ Every service-to-service hop goes through GSLB. This makes GSLB a single point o
 
 ## Related pages
 
-- [[bns]]
 - [[borg]]
-- [[google-frontend]]
 - [[life-of-a-request]]
 - [[service-discovery]]
 - [[replicated-load-balanced-service]]

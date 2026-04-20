@@ -76,9 +76,9 @@ Retries without deadline awareness compound the problem. A client retrying a req
 
 Deadlines provide the failure signal that feeds a [[circuit-breaker]]: a call that exceeds its deadline counts as a failure. Without deadlines, a slow downstream might never hit the breaker's failure counter.
 
-### Deadlines and [[stubby]]
+### Deadlines and the RPC framework
 
-Google's RPC framework [[stubby]] has deadlines as a first-class part of every RPC, and deadline propagation is automatic. This is one of the many ways Google's RPC infrastructure differs from a plain HTTP-based microservice stack — the fault-tolerance mechanisms are built into the transport.
+Google's internal RPC framework has deadlines as a first-class part of every RPC, and deadline propagation is automatic. This is one of the many ways the framework differs from a plain HTTP-based microservice stack — the fault-tolerance mechanisms are built into the transport.
 
 ## Related pages
 
@@ -90,5 +90,4 @@ Google's RPC framework [[stubby]] has deadlines as a first-class part of every R
 - [[retry-amplification]]
 - [[retry-budget]]
 - [[circuit-breaker]]
-- [[stubby]]
 - [[site-reliability-engineering]]

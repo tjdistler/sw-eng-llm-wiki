@@ -18,12 +18,12 @@ The chapter's thesis is that distribution quality matters: in the ideal case the
 
 Chapter 20 explicitly situates itself in Google's real stack (source: chapter-20-load-balancing-in-the-datacenter.md):
 
-- External HTTP requests reach the [[google-frontend|GFE]] via the [[frontend-load-balancing|DNS + VIP]] layers of Chapter 19.
-- The GFE uses the Chapter 20 algorithms (plus the Chapter 19 ones) to route request payloads to the individual application processes that can handle them, based on URL-pattern configuration.
+- External HTTP requests reach an edge HTTP reverse-proxy tier via the [[frontend-load-balancing|DNS + VIP]] layers of Chapter 19.
+- The reverse proxy uses the Chapter 20 algorithms (plus the Chapter 19 ones) to route request payloads to the individual application processes that can handle them, based on URL-pattern configuration.
 - Those application processes use the same Chapter 20 algorithms in turn when they call their own infrastructure and dependency services.
 - A single incoming HTTP request can trigger a *long transitive chain* of dependent requests, potentially with high fan-out at various points.
 
-Communication between clients and backends is over TCP and UDP, via Google's [[stubby|RPC framework]]. Everything in Chapter 20 assumes that substrate.
+Communication between clients and backends is over TCP and UDP, via Google's internal [[rpc|RPC framework]]. Everything in Chapter 20 assumes that substrate.
 
 ## The three arcs of Chapter 20
 
@@ -53,7 +53,7 @@ Once a healthy, bounded subset is in place, the client picks a backend per reque
 
 Chapter 20 opens with a formalisation of "ideal" that is worth keeping in mind as the chapter gets more complicated: in the ideal case, all backends consume the same CPU at every instant, and the datacenter can be driven to the edge of the most-loaded task's ceiling. Any deviation from that ideal is *wasted capacity* — reserved but unused (source: chapter-20-load-balancing-in-the-datacenter.md).
 
-This is not just a theoretical concern: the whole Chapter 20 ladder (flow-control → subsetting → weighted round robin) is designed to close the gap between the reserved fleet size and what the fleet can actually serve. The same logic drives Chapter 18's [[auxon|intent-based capacity planning]]: the whole point of good balancing is that the capacity plan's numbers can be trusted.
+This is not just a theoretical concern: the whole Chapter 20 ladder (flow-control → subsetting → weighted round robin) is designed to close the gap between the reserved fleet size and what the fleet can actually serve. The same logic drives Chapter 18's [[intent-based-capacity-planning|intent-based capacity planning]]: the whole point of good balancing is that the capacity plan's numbers can be trusted.
 
 ## Relationship to existing wiki concepts
 
@@ -85,6 +85,4 @@ The [[replicated-load-balanced-service]] pattern assumes a load balancer picks a
 - [[frontend-load-balancing]]
 - [[network-load-balancer]]
 - [[gslb]]
-- [[stubby]]
-- [[google-frontend]]
 - [[site-reliability-engineering]]

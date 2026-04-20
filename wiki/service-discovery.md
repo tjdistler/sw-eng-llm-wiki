@@ -27,14 +27,14 @@ Service discovery solutions range from simple to sophisticated:
 
 Burns frames service discovery as a container-composition concern too (source: raw/designing-distributed-systems/chapter-03-ambassadors.md). A **service-broker ambassador** — a container coresident with the application that introspects the environment and brokers the right backend connection — is a practical way to deliver service discovery to an application without baking it into the application's code. See [[service-brokering]] for the pattern, and [[ambassador-pattern]] for the wider container pattern it sits inside. A fleet-wide generalization is the [[service-mesh]], where every pod's data-plane proxy performs service discovery for every outbound dependency.
 
-## Google's approach: BNS + GSLB
+## Google's approach: naming + capacity-aware routing
 
 Google's production stack splits discovery into two layers (source: site-reliability-engineering, chapter 2):
 
-- **[[bns|BNS]]** (Borg Naming Service) — the *naming* layer. Tasks scheduled by [[borg]] are given stable symbolic paths like `/bns/<cluster>/<user>/<job>/<task>` that resolve to `IP:port`. BNS stores its mapping in [[chubby]] for consistency.
-- **[[gslb|GSLB]]** (Global Software Load Balancer) — the *capacity-aware routing* layer above BNS. Service owners register a symbolic name, a list of BNS addresses, and capacity per location; GSLB directs traffic across them at three levels (DNS, service, RPC).
+- **Naming layer.** Tasks scheduled by [[borg]] are given stable symbolic paths that resolve to `IP:port`. The mapping is stored in [[chubby]] for consistency.
+- **[[gslb|GSLB]]** (Global Software Load Balancer) — the *capacity-aware routing* layer above the naming service. Service owners register a symbolic name, a list of naming-service addresses, and capacity per location; GSLB directs traffic across them at three levels (DNS, service, RPC).
 
-This is the same split the wiki describes elsewhere (stable addresses + capacity-aware routing), but with Google-internal names for each piece. [[chubby]] is the Google ancestor of [[zookeeper]], and together they play the coordination role this page already describes.
+This is the same split the wiki describes elsewhere (stable addresses + capacity-aware routing). [[chubby]] is the Google ancestor of [[zookeeper]], and together they play the coordination role this page already describes.
 
 ## Related pages
 
@@ -46,6 +46,5 @@ This is the same split the wiki describes elsewhere (stable addresses + capacity
 - [[ambassador-pattern]]
 - [[service-brokering]]
 - [[service-mesh]]
-- [[bns]]
 - [[gslb]]
 - [[chubby]]

@@ -1,6 +1,6 @@
 # Software-Defined Networking (SDN)
 
-**Summary**: An architecture that moves routing decisions off the switching hardware and into centralised controllers. Switches become "dumb" high-throughput forwarders; controllers (often duplicated for availability) pre-compute paths and push them down. OpenFlow is the open standard Google uses for this. SDN underpins both [[jupiter-network|Jupiter]] (intra-datacenter) and [[b4-network|B4]] (inter-datacenter).
+**Summary**: An architecture that moves routing decisions off the switching hardware and into centralised controllers. Switches become "dumb" high-throughput forwarders; controllers (often duplicated for availability) pre-compute paths and push them down. OpenFlow is the open standard Google uses for this. SDN underpins both Google's intra-datacenter Clos fabric and its inter-datacenter backbone.
 
 **Sources**: `raw/site-reliability-engineering/chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md`
 
@@ -22,17 +22,15 @@ The communication between the two is done over a standardised protocol; Google u
 Two reasons from the chapter (source: chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md):
 
 1. **Cost**. "Smart" routing hardware is expensive; centralising the computation lets Google use "less expensive 'dumb' switching components."
-2. **Traffic engineering**. Problems that are hard to solve via distributed routing ([[b4-network|B4]]'s elastic bandwidth allocation being the example) are tractable when a single controller sees the whole graph.
+2. **Traffic engineering**. Problems that are hard to solve via distributed routing (elastic bandwidth allocation across a WAN backbone, for example) are tractable when a single controller sees the whole graph.
 
 ## Where it shows up at Google
 
-- [[jupiter-network]] — SDN inside a datacenter.
-- [[b4-network]] — SDN across datacenters.
+- SDN inside the datacenter (a Clos-fabric intra-datacenter switch).
+- SDN across datacenters (the inter-datacenter software-defined backbone).
 - **Bandwidth Enforcer (BwE)** — the per-task bandwidth quota system, analogous to [[borg]] for compute.
 
 ## Related pages
 
-- [[jupiter-network]]
-- [[b4-network]]
 - [[google-datacenter-topology]]
 - [[site-reliability-engineering]]

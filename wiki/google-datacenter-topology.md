@@ -38,16 +38,12 @@ Unlike typical colocation datacenters, Google-designed datacenters use **the sam
 
 ## Networking within and between datacenters
 
-- Within a datacenter, machines talk through the [[jupiter-network]] — a Clos-fabric virtual switch with tens of thousands of ports, built from Google-designed switches.
-- Datacenters connect to each other through the [[b4-network]] — a [[software-defined-networking|software-defined]] backbone using OpenFlow.
-
-See those pages for the networking details.
+- Within a datacenter, machines talk through a Clos-fabric virtual switch with tens of thousands of ports, built from Google-designed switches.
+- Datacenters connect to each other through a [[software-defined-networking|software-defined]] backbone using OpenFlow.
 
 ## Related pages
 
 - [[borg]]
-- [[jupiter-network]]
-- [[b4-network]]
 - [[software-defined-networking]]
 - [[gslb]]
 - [[site-reliability-engineering]]

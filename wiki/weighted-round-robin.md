@@ -60,7 +60,7 @@ The score-update cycle is a closed-loop controller: observe (utilisation, errors
 
 ### Weighted and backend telemetry
 
-Weighted Round Robin depends on backends having accurate self-measurement of QPS, error rate, and CPU utilisation. The telemetry infrastructure Google describes in [[borgmon|Chapter 10]] and the [[varz-endpoints|/varz conventions]] are the plumbing that makes this cheap: a backend *already* exposes these numbers for monitoring, so the same numbers ride on every response as a routing signal.
+Weighted Round Robin depends on backends having accurate self-measurement of QPS, error rate, and CPU utilisation. The telemetry infrastructure Chapter 10 describes — a pull-based time-series monitoring system scraping a text metrics endpoint on every binary — is the plumbing that makes this cheap: a backend *already* exposes these numbers for monitoring, so the same numbers ride on every response as a routing signal.
 
 ### Weighted and the Maglev balancer
 
@@ -68,7 +68,7 @@ The [[network-load-balancer|Chapter 19 packet balancer]] uses connection-trackin
 
 ### Weighted and capacity planning
 
-Good balancing is a precondition for honest [[capacity-planning]]. If the planner reserves N CPUs on the assumption that the service can use them, and the balancer produces an uneven distribution that caps usable capacity at 0.7N, the plan is structurally wrong. Weighted Round Robin is the mechanism that lets the plan be taken at face value — which is why [[auxon|Chapter 18's capacity planner]] works better with Weighted than with Simple Round Robin on its target services.
+Good balancing is a precondition for honest [[capacity-planning]]. If the planner reserves N CPUs on the assumption that the service can use them, and the balancer produces an uneven distribution that caps usable capacity at 0.7N, the plan is structurally wrong. Weighted Round Robin is the mechanism that lets the plan be taken at face value — which is why [[intent-based-capacity-planning|Chapter 18's intent-based capacity planner]] works better with Weighted than with Simple Round Robin on its target services.
 
 ### Weighted and Bellemare's smart load balancer
 
@@ -81,9 +81,6 @@ Bellemare's [[smart-load-balancer]] operates on partition-aware EDM state stores
 - [[least-loaded-round-robin]]
 - [[datacenter-load-balancing]]
 - [[backend-task-states]]
-- [[borgmon]]
-- [[varz-endpoints]]
 - [[capacity-planning]]
-- [[auxon]]
 - [[smart-load-balancer]]
 - [[site-reliability-engineering]]

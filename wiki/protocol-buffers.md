@@ -1,6 +1,6 @@
 # Protocol Buffers
 
-**Summary**: Google's binary, schema-driven serialization format. Language- and platform-neutral, compact, and fast. Data crossing a [[stubby|Stubby]] or gRPC RPC boundary is encoded as a **protobuf**. Comparable to Apache Thrift; 3-10x smaller and 20-100x faster than XML.
+**Summary**: Google's binary, schema-driven serialization format. Language- and platform-neutral, compact, and fast. Data crossing an RPC boundary (gRPC or its internal Google ancestor) is encoded as a **protobuf**. Comparable to Apache Thrift; 3-10x smaller and 20-100x faster than XML.
 
 **Sources**: `raw/site-reliability-engineering/chapter-02-the-production-environment-at-google-from-the-viewpoint-of-an-sre.md`, `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`, `raw/software-architecture-the-hard-parts/chapter-13-contracts.md`
 
@@ -18,7 +18,7 @@ Chapter 2 justifies protobufs against XML in one pointed sentence (source: chapt
 
 > Protocol buffers have many advantages over XML for serializing structured data: they are simpler to use, 3 to 10 times smaller, 20 to 100 times faster, and less ambiguous.
 
-The chapter cites Protocol Buffers as the transport format for all [[stubby|Stubby]] RPCs.
+The chapter cites Protocol Buffers as the transport format for all internal RPCs.
 
 ## How it works
 
@@ -30,7 +30,7 @@ Full details are on [[encoding-formats]] (the general tree-and-category discussi
 
 ## Where it fits at Google
 
-- [[stubby]] / gRPC — the RPC transport.
+- [[rpc]] / gRPC — the RPC transport.
 - Persistent storage — writing protobuf bytes directly is common.
 - [[bigtable]] — uninterpreted byte-array values are often protobuf-encoded.
 
@@ -51,7 +51,6 @@ gRPC-over-Protobuf defaults to strict contracts. Architects who want looser coup
 
 - [[encoding-formats]]
 - [[schema-evolution]]
-- [[stubby]]
 - [[rpc]]
 - [[avro]]
 - [[code-generation]]
