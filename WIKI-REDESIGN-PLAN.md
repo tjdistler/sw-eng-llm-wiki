@@ -390,7 +390,7 @@ Write per §1 template with these refinements folded in:
 8–12 archetypes including the payments example; each lists MOCs + key concept pages + raw chapter anchors.
 **Commit**: 1. **Review**: fuzzy-matchable archetypes; MOC combos exhaustive, not redundant.
 
-### Phase 9 — Index hub rewrite
+### Phase 9 — Index hub rewrite ✅ Complete (2026-04-19)
 
 **Files**: `wiki/index.md` (full rewrite).
 Start-here pointer to `question-patterns.md` → 16-MOC table → 8-book table → A–Z appendix under `<details>`.

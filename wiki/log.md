@@ -4,6 +4,16 @@ Append-only record of all operations.
 
 ---
 
+## 2026-04-19 — Wiki redesign Phase 9: index hub rewrite
+
+Rewrote `wiki/index.md` as a hub. Replaced the 1442-line tabular catalogue (85 semantic groupings) with a four-block structure: Start-here pointer to `[[question-patterns]]` → 16-MOC table with one-sentence descriptions → 8-book table → A–Z appendix under `<details>`. The A–Z lists every concept page (979) alphabetically grouped by first letter, preserving the linter's "every page appears in `index.md`" invariant while keeping the rendered hub compact (~60 visible lines before expansion).
+
+Linter: 0 errors, 1 pre-existing unrelated warning. No duplicate wikilinks; all 1005 page stems (MOCs + books + concept pages + `question-patterns`) resolve from `index.md`.
+
+Phase 9 of `WIKI-REDESIGN-PLAN.md` complete.
+
+---
+
 ## 2026-04-19 — Wiki redesign Phase 8: question patterns (router)
 
 Added `wiki/question-patterns.md` — the meta-entry-point that maps expert-level multi-cluster question archetypes to the MOCs and concept pages that compose a grounded answer. Eleven patterns total, spanning the canonical payments-extraction example plus scale-10x, greenfield-style selection, event-driven design, SLO adoption, Conway-friction resolution, database/model choice, schema evolution, data-platform maturation, data-platform security, and cascading-failure response. Each pattern names the MOCs to read, the key concept pages, and the raw book chapters to cite when the distilled material is too terse.
