@@ -75,11 +75,12 @@ Link to related concepts using [[wiki-links]] throughout the text.
 
 When the user asks a question:
 
-1. Read `wiki/index.md` first to find relevant pages
-2. Read those pages and synthesize an answer
-3. Cite specific wiki pages in your response
-4. If the answer is not in the wiki, say so clearly
-5. If the answer is valuable, offer to save it as a new wiki page
+1. Read `wiki/index.md`. For any non-trivial question, read `wiki/question-patterns.md` next to find the closest archetype.
+2. Read **every MOC** listed by the matched pattern (in parallel when possible) — for complex questions, this will typically be 3–6 MOCs.
+3. Follow MOC guidance into concept pages. Do not stop at the first keyword match; MOCs surface cross-cluster concepts the agent would otherwise miss.
+4. Consult raw book chapter sections cited in MOCs when concept-page distillations seem too terse for the depth the question requires.
+5. Cite specific wiki pages and raw chapter references in the answer.
+6. If the answer is valuable and not already in the wiki, offer to save it.
 
 Good answers should be filed back into the wiki so they compound over time.
 

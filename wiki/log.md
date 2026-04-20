@@ -4,6 +4,14 @@ Append-only record of all operations.
 
 ---
 
+## 2026-04-19 — Wiki redesign Phase 11: CLAUDE.md guidance
+
+Replaced the `## Question answering` section in `CLAUDE.md` with the 6-step flow from the redesign plan §6. The new guidance routes any non-trivial question through `wiki/question-patterns.md`, instructs reading every MOC the matched pattern lists (3–6 in parallel for complex questions), pushes follow-through into concept pages and raw chapter sections cited by MOCs, and keeps the existing "cite specific pages" + "offer to save valuable answers" steps. This wires the navigation layer built in Phases 1–10 into the agent's default retrieval behaviour.
+
+Phase 11 of `WIKI-REDESIGN-PLAN.md` complete.
+
+---
+
 ## 2026-04-19 — Wiki redesign Phase 10: linter update
 
 Extended `wiki-linter/lint.py` for the MOC-era navigation contract. Four behaviour changes:
