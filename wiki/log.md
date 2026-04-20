@@ -4,6 +4,21 @@ Append-only record of all operations.
 
 ---
 
+## 2026-04-19 — Wiki redesign Phase 8: question patterns (router)
+
+Added `wiki/question-patterns.md` — the meta-entry-point that maps expert-level multi-cluster question archetypes to the MOCs and concept pages that compose a grounded answer. Eleven patterns total, spanning the canonical payments-extraction example plus scale-10x, greenfield-style selection, event-driven design, SLO adoption, Conway-friction resolution, database/model choice, schema evolution, data-platform maturation, data-platform security, and cascading-failure response. Each pattern names the MOCs to read, the key concept pages, and the raw book chapters to cite when the distilled material is too terse.
+
+Also updated:
+
+- `wiki/index.md` — added a `## Start here` section pointing at [[question-patterns]] as the first read for any non-trivial question, ahead of the MOC table.
+- `wiki/moc-reliability-and-operations.md:385` — converted the legitimate forthcoming reference (flagged in the previous entry) to a live `[[question-patterns]]` wikilink now that the page exists.
+
+Linter: 0 errors, 1 pre-existing unrelated warning. All wikilinks resolve; question-patterns is linked from index.md (Start here) and moc-reliability-and-operations (SLO-adoption section).
+
+Phase 8 of `WIKI-REDESIGN-PLAN.md` complete.
+
+---
+
 ## 2026-04-19 — Wiki redesign fix-up: convert stale `(forthcoming)` MOC pointers to wikilinks
 
 Re-verification of Phase 2-7 PRs surfaced one missed check: each MOC was committed with `*moc-X* (forthcoming)` italic prose pointers to siblings that hadn't yet landed, and no later PR went back to upgrade those pointers as the sibling MOCs landed. Result: 72 stale "(forthcoming)" references across 12 MOCs, telling the agent to wait for handoffs that already exist on disk.

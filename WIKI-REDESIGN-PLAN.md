@@ -384,7 +384,7 @@ Write per §1 template with these refinements folded in:
 **Review — specific check**: deployment-pattern dual ownership (mechanics in container-and-serving, reliability lens in reliability-and-operations); platform topics (service discovery, load balancing, DNS, feature flags, capacity planning, incident response) cluster under named sub-sections in reliability.
 **End of Phase 7**: all 16 MOCs exist. Optional cross-MOC coherence sweep before Phase 8.
 
-### Phase 8 — Question patterns (router)
+### Phase 8 — Question patterns (router) ✅ Complete (2026-04-19)
 
 **Files**: `wiki/question-patterns.md` (new), `wiki/index.md` (add entry).
 8–12 archetypes including the payments example; each lists MOCs + key concept pages + raw chapter anchors.
