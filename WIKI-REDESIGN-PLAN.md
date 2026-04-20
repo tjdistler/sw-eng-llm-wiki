@@ -368,7 +368,7 @@ Write per §1 template with these refinements folded in:
 `moc-microservices`, `moc-domain-driven-design` (decomposition already in Phase 2).
 **Review — specific check**: decomposition ↔ microservices boundary. Where does the agent start for "should we extract?" vs. "how do we organize around services?"
 
-### Phase 5 — Data MOCs (3)
+### Phase 5 — Data MOCs (3) ✅ Complete (2026-04-19)
 
 `moc-data-models-and-storage`, `moc-data-processing` (carries folded-in ingestion-and-serving content), `moc-data-engineering`.
 **Review — specific check**: jurisdictional rule. CDC, Kafka, outbox framed differently in processing vs. engineering? Execution mechanics (processing) vs. discipline view (engineering) clean?
