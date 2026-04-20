@@ -16,6 +16,9 @@ Narrative entry points for multi-cluster questions. Read the MOC first to find t
 | [[moc-data-models-and-storage]] | The shape of the store itself — data models (relational/document/graph/KV), storage engines (LSM vs B-tree), encoding and schema evolution, replication, partitioning, analytical storage (warehouse/lake/lakehouse), DB type selection, per-service data ownership |
 | [[moc-data-processing]] | Data in motion — ingestion (batch/stream, push/pull, CDC as source-capture), batch engines (MapReduce → Spark/Flink), stream processing (stateless and stateful), pipeline architectures (Lambda/Kappa/Dataflow), pipeline operations, query/transformation mechanics, serving, data integrity |
 | [[moc-data-engineering]] | The discipline view — the data engineer role, the lifecycle (five stages + six undercurrents), data architecture patterns (warehouse/lake/lakehouse/mesh/modern data stack), technology selection, governance/quality/modelling, stakeholder map, future-of-DE predictions |
+| [[moc-distributed-systems]] | Fundamental problems of running computation across machines — partial failures, unreliable networks and clocks, process pauses, fencing, replication, partitioning, consensus (Paxos/Raft), coordination services (ZooKeeper/etcd/Chubby), ownership election, distributed scheduling |
+| [[moc-consistency-and-transactions]] | Correctness under concurrency and partial failure — ACID, isolation levels and anomalies, linearizability/causal/eventual, 2PC vs sagas, the full Hard Parts saga taxonomy, compensations, outbox as correctness bridge, idempotence and effectively-once |
+| [[moc-events-and-streaming]] | Events as integration substrate — brokers (log-based vs traditional), broker vs mediator topology, event design and contracts, data liberation (CDC, outbox as publication), event-driven microservices, request-response integration, supportive tooling, testing, deployment |
 
 ## Source summaries
 

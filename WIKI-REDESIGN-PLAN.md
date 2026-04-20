@@ -373,7 +373,7 @@ Write per §1 template with these refinements folded in:
 `moc-data-models-and-storage`, `moc-data-processing` (carries folded-in ingestion-and-serving content), `moc-data-engineering`.
 **Review — specific check**: jurisdictional rule. CDC, Kafka, outbox framed differently in processing vs. engineering? Execution mechanics (processing) vs. discipline view (engineering) clean?
 
-### Phase 6 — Distributed + events MOCs (3)
+### Phase 6 — Distributed + events MOCs (3) ✅ Complete (2026-04-19)
 
 `moc-distributed-systems`, `moc-consistency-and-transactions`, `moc-events-and-streaming`.
 **Review — specific check**: events-vs-processing boundary; saga placement; outbox multi-home framing (capture in data-processing, publication in events-and-streaming, correctness bridge in consistency-and-transactions).

@@ -4,6 +4,29 @@ Append-only record of all operations.
 
 ---
 
+## 2026-04-19 — Wiki redesign Phase 6: distributed + events MOCs (3)
+
+Added the three Phase 6 Map-of-Content pages — distributed systems, consistency and transactions, and events and streaming — following the voice template established in Phase 2 and carried through Phases 3–5. Each MOC opens with the jurisdictional rule so that shared pages (saga, outbox, CDC, Kafka/log-based brokers, linearizability, CAP, single-writer principle) are framed under different lenses in different MOCs rather than duplicated or arbitrated at retrieval time.
+
+- `moc-distributed-systems` — owns the *systems* layer: partial failures, unreliable networks/clocks, process pauses, fencing, replication, partitioning, consensus (Paxos/Raft), coordination services (ZooKeeper/etcd/Chubby), ownership election at container granularity, distributed scheduling (SRE cron), Google production infrastructure as the concrete case.
+- `moc-consistency-and-transactions` — owns the *guarantees* layer: ACID, isolation levels and anomalies, consistency models (linearizability/causal/eventual/CAP), 2PC vs sagas, the full Hard Parts dynamic-coupling cube of eight saga variants, compensations, outbox as the correctness bridge across a saga step, effectively-once via idempotence and end-to-end operation IDs.
+- `moc-events-and-streaming` — owns events as the *integration substrate*: request-based vs event-based framing, brokers (log-based vs traditional) as infrastructure, broker vs mediator topology, event design and contracts (schema registry, Avro/Protobuf), data liberation (CDC, outbox, eventification), EDM implementation styles, request-response integration patterns, supportive tooling, testing, and deployment.
+
+Saga, outbox, and CDC now appear in all three new MOCs (and `moc-data-processing`) with different framing sentences that state each MOC's lens explicitly. Phase 6 review check (per plan): the events-vs-processing boundary is named at the top of the events MOC; saga placement is cross-linked (taxonomy depth in consistency; integration placement in events); outbox's three-MOC home is called out in each of them.
+
+Files touched:
+
+- `wiki/moc-distributed-systems.md` — new
+- `wiki/moc-consistency-and-transactions.md` — new
+- `wiki/moc-events-and-streaming.md` — new
+- `wiki/index.md` — added three MOC entries to the `## Maps of Content (MOCs)` section
+- `wiki/log.md` — this entry
+- `WIKI-REDESIGN-PLAN.md` — marked Phase 6 complete
+
+Phase 6 of `WIKI-REDESIGN-PLAN.md` complete. All ten of sixteen MOCs now exist; Phase 7 (ops/security MOCs) remains before the design is feature-complete for the planned narrative layer.
+
+---
+
 ## 2026-04-19 — Wiki redesign Phase 5: data MOCs (3)
 
 Added the three data Map-of-Content pages, modelled on the Phase 2-4 voice template (narrative voice, every wikilink earning a "why"/"when", explicit jurisdictional handoffs, raw chapter anchors for deeper reading). Each MOC opens with the jurisdictional rule that names which MOC owns what so the CDC/Kafka/outbox overlap is resolved at the top of each page rather than arbitrated at retrieval time.
