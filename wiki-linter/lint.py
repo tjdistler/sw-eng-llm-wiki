@@ -22,6 +22,9 @@ from pathlib import Path
 SEVERITY_ORDER = {"error": 0, "warning": 1, "info": 2}
 IGNORED_PAGES = {"index.md", "log.md"}
 INBOUND_EXCLUDED_SOURCES = {"index.md", "log.md"}  # meta-pages; links from them don't rescue an orphan
+MOC_PREFIX = "moc-"
+META_PAGE_NAMES = {"index.md", "log.md", "question-patterns.md"}
+CANONICAL_RELATED_LABELS = ("Prerequisite", "Generalizes", "Alternative", "Contrast", "See also")
 
 WIKILINK_RE = re.compile(r"\[\[([^\]\[|#]*)(?:#([^\]\[|]+))?(?:\|([^\]\[]+))?\]\]")
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*$")
@@ -31,6 +34,7 @@ LAST_UPDATED_RE = re.compile(r"^\*\*Last updated\*\*:\s*(\S+)\s*$")
 BACKTICK_SPAN_RE = re.compile(r"`([^`]+)`")
 INLINE_SOURCE_RE = re.compile(r"\(source:\s*([^)]+?)\)")
 VALID_FILENAME_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*\.md$")
+RELATED_BULLET_LABEL_RE = re.compile(r"^\s*-\s+\*\*([^*]+?):\*\*")
 SLUG_QUOTE_RE = re.compile(r"[\u2018\u2019\u201C\u201D'\"`]")  # stripped before dashification
 SLUG_NORMALIZE_RE = re.compile(r"[^a-z0-9]+")
 
@@ -76,6 +80,19 @@ class Page:
 def slugify(s: str) -> str:
     s = SLUG_QUOTE_RE.sub("", s.lower())
     return SLUG_NORMALIZE_RE.sub("-", s).strip("-")
+
+
+def is_moc_page(name_or_stem: str) -> bool:
+    """True for `moc-*.md` filenames and their stems (`moc-*`)."""
+    return name_or_stem.startswith(MOC_PREFIX)
+
+
+def is_meta_page(name: str) -> bool:
+    """True for filenames that are navigational / meta (not concept pages).
+
+    Covers `index.md`, `log.md`, `question-patterns.md`, and any `moc-*.md`.
+    """
+    return name in META_PAGE_NAMES or (name.startswith(MOC_PREFIX) and name.endswith(".md"))
 
 
 def strip_noise(text: str) -> str:
@@ -202,6 +219,10 @@ def check_wikilinks(
 
 
 def check_sources_on_disk(page: Page, repo_root: Path) -> list[Finding]:
+    # Meta pages carry a "(meta-page; …)" marker instead of backticked raw/ files;
+    # their Sources line is prose and has nothing to verify on disk.
+    if is_meta_page(page.name):
+        return []
     findings: list[Finding] = []
     for src in page.sources_files:
         if not src.startswith("raw/"):
@@ -212,6 +233,34 @@ def check_sources_on_disk(page: Page, repo_root: Path) -> list[Finding]:
         if not (repo_root / src).exists():
             findings.append(Finding("error", "sources", page.name, page.sources_line,
                                     f"`**Sources**` entry does not exist on disk: `{src}`"))
+    return findings
+
+
+def check_related_pages_labels(page: Page) -> list[Finding]:
+    """Typed `## Related pages` prefix allowance.
+
+    The redesign permits (but does not require) relationship-type prefixes:
+    `**Prerequisite:**`, `**Generalizes:**`, `**Alternative:**`, `**Contrast:**`,
+    `**See also:**`. A bullet that uses a `**Label:**` prefix must use one of
+    these canonical labels; legacy flat-bullet lists (no `**Label:**` prefix)
+    continue to pass silently.
+    """
+    if page.related_pages_line is None:
+        return []
+    findings: list[Finding] = []
+    for offset, line in enumerate(page.lines[page.related_pages_line:]):
+        if HEADING_RE.match(line):
+            break
+        m = RELATED_BULLET_LABEL_RE.match(line)
+        if not m:
+            continue
+        label = m.group(1).strip()
+        if label not in CANONICAL_RELATED_LABELS:
+            line_no = page.related_pages_line + 1 + offset
+            findings.append(Finding(
+                "warning", "related-pages", page.name, line_no,
+                f"Non-canonical Related-pages label `**{label}:**`",
+                f"Use one of: {', '.join(CANONICAL_RELATED_LABELS)}"))
     return findings
 
 
@@ -238,20 +287,40 @@ def check_inline_sources(
 
 
 def check_orphans(pages: list[Page], inbound: dict[str, set[str]]) -> list[Finding]:
+    """Orphan policy after the MOC redesign:
+
+    - Concept pages (anything that isn't a meta-page) must be linked from at
+      least one MOC (`moc-*.md`). Concept-page-to-concept-page links don't
+      rescue an orphan — the MOC layer is the navigational contract, and an
+      unreachable concept page is one that the question-patterns → MOC path
+      can never surface.
+    - MOCs and `question-patterns.md` are exempt — they're linked from
+      `index.md`; the `index` check covers them.
+    """
     findings: list[Finding] = []
     for page in pages:
-        if page.name in IGNORED_PAGES:
+        if is_meta_page(page.name):
             continue
         sources = inbound.get(page.stem, set())
-        if not sources:
+        moc_sources = {s for s in sources if is_moc_page(s)}
+        if not moc_sources:
             findings.append(Finding("warning", "orphan", page.name, None,
-                                    "Orphan page — no inbound `[[wikilinks]]` from any other page "
-                                    "(excluding `index.md` and `log.md`)",
-                                    "Add a reference to this page from at least one related wiki page"))
+                                    "Orphan concept page — no inbound `[[wikilinks]]` from any MOC "
+                                    "(`moc-*.md`). Concept-page-to-concept-page links do not count.",
+                                    "Link this page from the relevant `moc-<topic>.md` with a "
+                                    "one-sentence `why` / `when`"))
     return findings
 
 
 def check_index_sync(index_page: Page | None, pages: list[Page]) -> list[Finding]:
+    """A page counts as "indexed" if any of the navigational entry points links it:
+    `index.md` itself, or any `moc-*.md`. The A–Z appendix in `index.md` is the
+    belt-and-braces guarantee, but a page reachable only through its MOC is
+    still findable by the agent walking the navigation graph.
+
+    Duplicate-link detection still runs only on `index.md` — that's where
+    catalog hygiene matters.
+    """
     findings: list[Finding] = []
     if index_page is None:
         findings.append(Finding("error", "index", "index.md", None,
@@ -263,12 +332,22 @@ def check_index_sync(index_page: Page | None, pages: list[Page]) -> list[Finding
         if link.target:
             index_refs.setdefault(link.target, []).append(link.line)
 
+    moc_linked: set[str] = set()
+    for p in pages:
+        if not is_moc_page(p.name):
+            continue
+        for link in p.outbound:
+            if link.target:
+                moc_linked.add(link.target)
+
+    indexed_stems = set(index_refs.keys()) | moc_linked
     actual_stems = {p.stem for p in pages if p.name not in IGNORED_PAGES}
 
-    for stem in sorted(actual_stems - set(index_refs.keys())):
+    for stem in sorted(actual_stems - indexed_stems):
         findings.append(Finding("warning", "index", "index.md", None,
-                                f"Page `{stem}.md` is not listed in `index.md`",
-                                "Add an entry for this page in the appropriate section of `index.md`"))
+                                f"Page `{stem}.md` is not reachable from `index.md` or any MOC",
+                                "Add an entry in the appropriate section of `index.md`, or link "
+                                "it from the relevant `moc-<topic>.md`"))
 
     for stem, line_nos in index_refs.items():
         if len(line_nos) > 1:
@@ -385,6 +464,7 @@ def main() -> int:
         findings += check_wikilinks(p, stems, headings_by_stem)
         findings += check_sources_on_disk(p, repo_root)
         findings += check_inline_sources(p, raw_files_by_name, repo_root)
+        findings += check_related_pages_labels(p)
 
     findings += check_orphans(pages, inbound)
     findings += check_index_sync(index_page, pages)
