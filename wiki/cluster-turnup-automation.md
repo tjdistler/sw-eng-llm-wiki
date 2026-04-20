@@ -35,7 +35,7 @@ Clusters routinely took six or more weeks to go from "network-ready" to "serving
 
 ### 2. Prodtest (detection)
 
-The team's first structural answer: **Production Test**, which extended the Python unit-test framework to unit-test real services (see [[prodtest]] for detail). Tests had dependencies, so a failing test aborted a chain. A per-team Prodtest, given a cluster name, could validate that team's services in that cluster. A graph view let engineers see at a glance which steps were failing and why.
+The team's first structural answer: **Production Test**, which extended the Python unit-test framework to unit-test real services. Tests had dependencies, so a failing test aborted a chain. A per-team Prodtest, given a cluster name, could validate that team's services in that cluster. A graph view let engineers see at a glance which steps were failing and why.
 
 The big win: *project managers could, for the first time, predict when a cluster would go live, and had a complete understanding of why each cluster took six or more weeks*. Whenever one team hit a delay from another team's misconfiguration, a Prodtest bug was filed to catch it next time.
 
@@ -103,17 +103,15 @@ The lesson: **automation needs to be careful about relying on implicit "safety" 
 
 ## Cross-book connections
 
-- [[prodtest]] — the idempotent-test-and-fix apparatus at the heart of the second and third generations.
 - [[borg]] — Borg itself is the parallel case study where turnup was *designed out* via autonomy rather than iteratively automated.
 - [[operator-pattern]] (Burns) — a modern Kubernetes operator is structurally similar to the per-service Admin Server: owned by the service team, exposes declarative control over cluster-local operations.
-- [[rpc]] — [[stubby]]/gRPC is the mechanism that made the Admin Server approach feasible.
+- [[rpc]] — gRPC is the modern mechanism that would make the Admin Server approach feasible today.
 - [[idempotence]] — the property that makes the fix-loop safe to retry.
 - [[sre-tenets]] — cluster turnup exercises change management, capacity planning, and provisioning simultaneously.
 
 ## Related pages
 
 - [[automation-at-google]]
-- [[prodtest]]
 - [[automation-gone-wrong]]
 - [[hierarchy-of-automation-classes]]
 - [[autonomous-systems]]

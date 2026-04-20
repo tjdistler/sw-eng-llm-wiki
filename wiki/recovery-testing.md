@@ -58,7 +58,7 @@ The implicit claim: real-failure-during-real-emergency is a dangerous enough out
 Both Chapter 26 case studies explicitly credit prior testing:
 
 - **[[gmail-gtape-restore|Gmail 2011]]** — "similar situations had been previously simulated many times." The team was able to deliver an estimate of restore time and hit it because they'd rehearsed the process before.
-- **[[google-music-runaway-deletion|Google Music 2012]]** — the recovery occurred weeks after the company's annual [[testing-disaster-recovery|DiRT]] exercise. The tape-backup team already knew the capabilities and limitations of their subsystems and began dusting off a tool they'd tested during DiRT.
+- **A 2012 deletion-pipeline recovery** — the recovery occurred weeks after the company's annual [[testing-disaster-recovery|DiRT]] exercise. The tape-backup team already knew the capabilities and limitations of their subsystems and began dusting off a tool they'd tested during DiRT.
 
 Without those tests, both recoveries would have been significantly worse or impossible. The tests paid back multiple years of investment in a single incident.
 
@@ -118,4 +118,3 @@ None of these are discoverable by inspection of the backup state alone. Only run
 - [[fault-tolerance]]
 - [[learning-from-outages]]
 - [[gmail-gtape-restore]]
-- [[google-music-runaway-deletion]]

@@ -1,6 +1,6 @@
 # Data Integrity (SRE)
 
-**Summary**: Chapter 26 hub. "Data integrity" in the user's eyes is a joint property of accuracy, consistency, **and** access — data that's correct but unreachable is effectively lost. The chapter develops the [[data-availability-vs-integrity|means/goal distinction]], catalogues the [[data-integrity-failure-modes|24 combinations of failure modes]], prescribes a three-layer [[defense-in-depth-data|defense in depth]] ([[soft-deletion]], [[tiered-backup-strategy|backups]], [[data-validation-pipelines|early detection]]), and closes with two real Google case studies ([[gmail-gtape-restore|Gmail GTape]] and [[google-music-runaway-deletion|Google Music runaway deletion]]).
+**Summary**: Chapter 26 hub. "Data integrity" in the user's eyes is a joint property of accuracy, consistency, **and** access — data that's correct but unreachable is effectively lost. The chapter develops the [[data-availability-vs-integrity|means/goal distinction]], catalogues the [[data-integrity-failure-modes|24 combinations of failure modes]], prescribes a three-layer [[defense-in-depth-data|defense in depth]] ([[soft-deletion]], [[tiered-backup-strategy|backups]], [[data-validation-pipelines|early detection]]), and closes with a real Google case study ([[gmail-gtape-restore|Gmail GTape]]).
 
 **Sources**: `raw/site-reliability-engineering/chapter-26-data-integrity-what-you-read-is-what-you-wrote.md`
 
@@ -69,10 +69,9 @@ See [[defense-in-depth-data]]. The chapter's architecture:
 
 See [[recovery-testing]]. The only test that earns a good night's sleep is a **full end-to-end recovery test**, run continuously as part of normal operations, with alerts that fire when the test fails. Parts of any recovery process can quietly break between exercises: bad tapes, missing machine resources, unscheduled dependency changes, permission drift. You only know you can recover your recent state if you actually do so.
 
-## Case studies
+## Case study
 
 - [[gmail-gtape-restore]] — February 2011. The first large-scale use of Google's GTape offline backup system. Recovered 99%+ of affected user data within the estimated window because the recovery had been simulated many times before.
-- [[google-music-runaway-deletion]] — March 2012. A refactored privacy-deletion pipeline with a race condition removed audio references for 21,000 users. 5,475 tape restores, 1.5 PB of data, one week to reinstate. The engineers' worst nightmare, caught only because a user complained about unplayable tracks.
 
 ## SRE principles applied to data integrity
 
@@ -103,7 +102,6 @@ Recovery time is the operational metric; once it's low enough, prevention become
 - [[data-validation-pipelines]]
 - [[recovery-testing]]
 - [[gmail-gtape-restore]]
-- [[google-music-runaway-deletion]]
 - [[data-integrity-principles]]
 - [[fault-tolerance]]
 - [[replication]]

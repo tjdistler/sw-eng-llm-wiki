@@ -34,7 +34,7 @@ The hero jack-of-all-trades on-call engineer does work, but the practised on-cal
 
 Chapter 7 lists **faster repairs** as one of the five values of automation (source: chapter-07-the-evolution-of-automation-at-google.md). An automated system that runs regularly and successfully enough reduces MTTR for common faults: the engineers no longer spend time preventing or cleaning up after the problem, and velocity improves because those cycles free up for other work. The chapter adds a product-lifecycle argument: the later a problem is discovered, the more expensive it is to fix — production problems are the most expensive — so automation that surfaces issues as they arise lowers total cost of the system at scale.
 
-[[mysql-on-borg|MySQL on Borg]] is the concrete MTTR-reduction story. Manual master failover was 30–90 minutes; the business required under 30 seconds per failover to hit the [[error-budget]]; no human-dependent procedure could close that gap. The Ads team built Decider, which completed failovers in under 30 seconds 95% of the time. The philosophical shift captured in the chapter:
+MySQL-on-Borg (Decider) is the concrete MTTR-reduction story. Manual master failover was 30–90 minutes; the business required under 30 seconds per failover to hit the [[error-budget]]; no human-dependent procedure could close that gap. The Ads team built Decider, which completed failovers in under 30 seconds 95% of the time. The philosophical shift captured in the chapter:
 
 > We graduated from optimizing our infrastructure for a lack of failover to embracing the idea that failure is inevitable, and therefore optimizing to recover quickly through automation.
 
@@ -80,7 +80,6 @@ Kleppmann's [[reliability]] page covers MTTF mechanics on the fault-vs-failure s
 - [[reliability]]
 - [[fault-tolerance]]
 - [[automation-at-google]]
-- [[mysql-on-borg]]
 - [[autonomous-systems]]
 - [[testing-for-reliability]]
 - [[zero-mttr-testing]]

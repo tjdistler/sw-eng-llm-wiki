@@ -76,7 +76,6 @@ The trade-off is data quality: typos (`cause:netwrok`) and unhelpful tags (`prob
 
 ## Related pages
 
-- [[outalator]]
 - [[outage-tracking]]
 - [[incident-aggregation]]
 - [[outage-analysis]]

@@ -1,6 +1,6 @@
 # Traditional Capacity Planning
 
-**Summary**: The demand-driven, spreadsheet-assisted capacity-planning cycle that prevailed across industry as of Chapter 18's writing — and the four structural problems with it that motivated Google's move to [[intent-based-capacity-planning]]. Understanding this is a precondition for understanding why [[auxon|Auxon]] was worth building.
+**Summary**: The demand-driven, spreadsheet-assisted capacity-planning cycle that prevailed across industry as of Chapter 18's writing — and the four structural problems with it that motivated Google's move to [[intent-based-capacity-planning]]. Understanding this is a precondition for understanding why the replacement was worth building.
 
 **Sources**: `raw/site-reliability-engineering/chapter-18-software-engineering-in-sre.md`
 
@@ -77,6 +77,5 @@ Understanding the four weaknesses is the setup for Chapter 18's move to [[intent
 ## Related pages
 
 - [[intent-based-capacity-planning]]
-- [[auxon]]
 - [[software-engineering-in-sre]]
 - [[capacity-planning]]

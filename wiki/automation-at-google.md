@@ -45,7 +45,7 @@ The chapter's thesis is that level 5 is qualitatively different from levels 1–
 
 Chapter 7 grounds the hierarchy in three extended case studies, each illustrating a different lesson:
 
-- **[[mysql-on-borg]]** — the "automate yourself out of a job" story. Decider reduced failover from 30–90 minutes to under 30 seconds 95% of the time, dropped operational work 95%, and freed 60% of the hardware. The lesson: *go the extra mile to deliver a platform rather than replacing existing manual procedures.*
+- **MySQL-on-Borg (Decider)** — the "automate yourself out of a job" story. Decider reduced failover from 30–90 minutes to under 30 seconds 95% of the time, dropped operational work 95%, and freed 60% of the hardware. The lesson: *go the extra mile to deliver a platform rather than replacing existing manual procedures.*
 - **[[cluster-turnup-automation]]** — the "specialisation trap" story. A turnup team with dedicated scripts achieved low latency but lost domain expertise; relevance and competence decayed; the team eventually re-approached it as a Service-Oriented Architecture where service owners expose per-service Admin Server RPCs. The lesson: *the most functional tools are usually written by those who use them.*
 - **[[borg|Borg itself]]** — the "autonomous system" story. Borg didn't start as a cluster OS; it evolved from Python scripts that SSHed into machines, through a machine-state database, into a system where cluster management became an entity with an API. The lesson: *bring classic distributed-system ideas to infrastructure management and rescheduling becomes an intrinsic feature rather than something to automate.*
 
@@ -103,9 +103,7 @@ The nuclear Navy's *trusted human decision chain* is the structural opposite: wh
 
 - [[hierarchy-of-automation-classes]]
 - [[autonomous-systems]]
-- [[mysql-on-borg]]
 - [[cluster-turnup-automation]]
-- [[prodtest]]
 - [[automation-gone-wrong]]
 - [[borg]]
 - [[toil-and-engineering-balance]]

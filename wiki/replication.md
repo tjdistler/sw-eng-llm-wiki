@@ -77,7 +77,7 @@ A classic but flawed response to "do you have a backup?" is "we have something e
 Replication protects against the failure modes replication was designed for — machine loss, rack loss, datacenter loss. It **does not** protect against:
 
 - **User or admin error** — an errant `DELETE` propagates to every replica, usually within seconds.
-- **Application bugs** — a deletion pipeline with a race condition (see [[google-music-runaway-deletion]]) corrupts every replica simultaneously.
+- **Application bugs** — a deletion pipeline with a race condition corrupts every replica simultaneously.
 - **Zero-day vulnerabilities in low-level components** — a bug in the filesystem or device driver affects every disk-backed replica at the same time.
 
 Chapter 26's prescription: keep **non-serving copies on diverse components** — different media (disk and tape), different stack layers, different storage technologies. This is exactly the [[tiered-backup-strategy|multi-tier backup]] architecture. Replication is useful *within* each tier but cannot substitute *for* any tier. See [[defense-in-depth-data]] and [[data-integrity-sre]] for the broader framing.
@@ -113,4 +113,3 @@ The 2011 [[gmail-gtape-restore|Gmail incident]] is the canonical worked example:
 - [[defense-in-depth-data]]
 - [[tiered-backup-strategy]]
 - [[gmail-gtape-restore]]
-- [[google-music-runaway-deletion]]

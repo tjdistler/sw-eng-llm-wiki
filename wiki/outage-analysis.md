@@ -1,6 +1,6 @@
 # Outage Analysis
 
-**Summary**: Chapter 16's framing of the **analytic payoff** of an outage tracker — three stacked layers of analysis built on the data [[outalator]] captures, plus a reporting-and-communication layer that plugs the output of the analysis back into the weekly on-call rhythm. Chapter 16 is explicit: *enabling such analysis is one of the most important functions of an outage tracking tool*. Tracking outages without analysing them is box-checking; the value is in the second- and third-layer views that single incidents can't produce.
+**Summary**: Chapter 16's framing of the **analytic payoff** of an outage tracker — three stacked layers of analysis built on the captured data, plus a reporting-and-communication layer that plugs the output of the analysis back into the weekly on-call rhythm. Chapter 16 is explicit: *enabling such analysis is one of the most important functions of an outage tracking tool*. Tracking outages without analysing them is box-checking; the value is in the second- and third-layer views that single incidents can't produce.
 
 **Sources**: `raw/site-reliability-engineering/chapter-16-tracking-outages.md`
 
@@ -95,7 +95,6 @@ A rough taxonomy of decisions outage analysis supports:
 
 ## Related pages
 
-- [[outalator]]
 - [[outage-tracking]]
 - [[incident-tagging]]
 - [[incident-aggregation]]

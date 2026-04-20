@@ -46,7 +46,7 @@ Chapter 17 covers the testing economics; Chapter 26 makes the operational demand
 
 > Continuously test the recovery process as part of your normal operations. Set up alerts that fire when a recovery process fails to provide a heartbeat indication of its success.
 
-If recovery tests are manual staged events, they become drudgery that isn't performed deeply or frequently enough to earn confidence. **Automate them and run them continuously.** See [[recovery-testing]] for the full discipline. The two Chapter 26 case studies ([[gmail-gtape-restore]] and [[google-music-runaway-deletion]]) both explicitly credit prior DiRT-tested recovery tooling with making their actual recoveries tractable. The recovery tools were in Ch 17's **offline** category (the tractable one), which is why they were testable enough to be tested continuously, which is why they worked when needed.
+If recovery tests are manual staged events, they become drudgery that isn't performed deeply or frequently enough to earn confidence. **Automate them and run them continuously.** See [[recovery-testing]] for the full discipline. Chapter 26 ([[gmail-gtape-restore|Gmail GTape]] and a 2012 deletion-pipeline recovery) explicitly credits prior DiRT-tested recovery tooling with making both actual recoveries tractable. The recovery tools were in Ch 17's **offline** category (the tractable one), which is why they were testable enough to be tested continuously, which is why they worked when needed.
 
 The composition: Ch 17 tells you which recovery tools are structurally testable; Ch 26 tells you how often you must exercise them.
 
@@ -69,7 +69,7 @@ DiRT sits in the *live-drill* half of this taxonomy (real production systems, re
 
 - [[failover]] (Kleppmann) — Kleppmann's catalogue of failover failure modes is the space online repair tools have to navigate; the operational response is online repair tooling
 - [[eventual-consistency]] (Kleppmann) — the property that makes online repair hard to test; Chapter 17 surfaces the cost from the testing side
-- [[mysql-on-borg]] (Ch 7) — Decider is an example of the opposite choice: replace a human operator with an automated system whose repairs are mostly checkpoint-and-promote style (offline-ish), not online repair
+- Ch 7's MySQL-on-Borg (Decider) — an example of the opposite choice: replace a human operator with an automated system whose repairs are mostly checkpoint-and-promote style (offline-ish), not online repair
 - [[process-induced-emergency]] (Ch 13) — the Diskerase three-day phased manual rebuild is a production-scale demonstration of why online repair at fleet scale is structurally hard; Ch 17 explains the testing reason
 - [[data-integrity-sre]] (Ch 26) — the data-recovery tools Chapter 17 categorises must themselves be exercised continuously; Chapter 26 makes that the default discipline
 
@@ -84,6 +84,5 @@ DiRT sits in the *live-drill* half of this taxonomy (real production systems, re
 - [[defense-in-depth-data]]
 - [[tiered-backup-strategy]]
 - [[gmail-gtape-restore]]
-- [[google-music-runaway-deletion]]
 - [[lessons-from-other-industries]]
 - [[preparedness-and-disaster-testing]]

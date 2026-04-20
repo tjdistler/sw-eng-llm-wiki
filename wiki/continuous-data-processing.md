@@ -37,7 +37,7 @@ Continuous data processing structurally avoids each Chapter 25 periodic-pipeline
 
 - [[pipeline-uneven-work-distribution|Uneven work distribution]] — work units flow through individually, leased one at a time. A slow chunk doesn't hold up unrelated chunks. The "kill and restart wastes everything" failure mode doesn't apply because per-task leases naturally checkpoint progress.
 - [[pipeline-batch-scheduling-drawbacks|Batch-scheduling drawbacks]] — workers run at production priority because they're long-lived; there is no per-cycle startup latency to amortise. The execution-frequency floor doesn't apply because there are no "cycles."
-- [[pipeline-monitoring-problems|Monitoring problems]] — workers are always running, so [[varz-endpoints|`/varz`]] endpoints are always exposing real-time metrics. Continuous-pipeline telemetry matches the operator's "what is it doing right now" mental model.
+- [[pipeline-monitoring-problems|Monitoring problems]] — workers are always running, so metrics endpoints are always exposing real-time data. Continuous-pipeline telemetry matches the operator's "what is it doing right now" mental model.
 - [[pipeline-thundering-herd|Thundering herd]] — work arrives smoothly; existing workers acquire it as they become free. There is no synchronised launch event.
 - [[moire-load-pattern|Moiré load pattern]] — load arrives evenly so multiple continuous pipelines don't have peaks to align. The Moiré pattern can still occur but is much less common.
 

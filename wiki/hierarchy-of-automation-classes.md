@@ -64,7 +64,5 @@ Google's own tooling spans both levels of abstraction: some is generic rollout m
 - [[automation-at-google]]
 - [[autonomous-systems]]
 - [[borg]]
-- [[mysql-on-borg]]
 - [[cluster-turnup-automation]]
-- [[prodtest]]
 - [[desired-state-management]]

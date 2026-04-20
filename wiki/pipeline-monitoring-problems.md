@@ -22,7 +22,7 @@ The chapter's qualifier is honest: periodic pipelines **shouldn't** have inheren
 
 Continuous pipelines (the [[google-workflow|Workflow]] design Chapter 25 advocates) have constantly-running tasks. Their telemetry is naturally designed for real-time exposure because there's no terminal "completion" event to defer reporting to:
 
-- Workers expose [[varz-endpoints|`/varz`]]-style metrics that [[borgmon|Borgmon]] scrapes continuously.
+- Workers expose metrics on an HTTP endpoint that a pull-based time-series monitoring system scrapes continuously.
 - Per-stage throughput, error rates, and queue depths are visible at any moment.
 - The operator's mental model — "what is the system doing right now" — matches the telemetry's reporting model.
 
@@ -43,7 +43,7 @@ Adding real-time metrics to a periodic pipeline is possible but does not address
 - [[four-golden-signals]] (SRE Ch 6) — the canonical metric set is designed for continuously-running services; mapping it onto periodic batch jobs is awkward, which is part of why periodic-pipeline monitoring tends to be poor
 - [[symptoms-vs-causes]] (SRE Ch 6) — without real-time metrics, the operator is stuck at "the job didn't finish" (a coarse symptom) with no way to drill into the cause
 - [[black-box-vs-white-box-monitoring]] (SRE Ch 6) — periodic pipelines force operators into pure black-box monitoring (did the output appear, was it correct), because the white-box signals the workers exposed are gone with the workers themselves
-- [[varz-endpoints]] / [[borgmon]] (SRE Ch 10) — Google's monitoring stack is built around continuously-running binaries that expose metrics on a known endpoint; periodic pipelines fit this model badly because the endpoint goes away when the cycle ends
+- [[monitoring-and-observability]] (SRE Ch 10) — the pull-based time-series monitoring stack is built around continuously-running binaries that expose metrics on a known endpoint; periodic pipelines fit this model badly because the endpoint goes away when the cycle ends
 - [[consumer-lag-monitoring]] (Bellemare) — the continuous-streaming equivalent: a long-running consumer's lag metric is always available, which is why streaming systems naturally have better operational visibility than periodic batch chains
 
 ## Related pages
@@ -56,5 +56,3 @@ Adding real-time metrics to a periodic pipeline is possible but does not address
 - [[continuous-data-processing]]
 - [[google-workflow]]
 - [[four-golden-signals]]
-- [[varz-endpoints]]
-- [[borgmon]]

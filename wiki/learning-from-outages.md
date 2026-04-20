@@ -93,7 +93,7 @@ Chapter 15 formalised postmortem practice — the depth-per-incident side of the
 
 The mapping back to Chapter 13's directives:
 
-- "Keep a history of outages" → Chapter 15's [[postmortem-review-process|postmortem corpus]] **plus** Chapter 16's [[outalator|Outalator]] archive of all notifications. Postmortems carry depth; Outalator carries breadth.
+- "Keep a history of outages" → Chapter 15's [[postmortem-review-process|postmortem corpus]] **plus** Chapter 16's outage-archive of all notifications. Postmortems carry depth; the archive carries breadth.
 - "Ask hard questions" → Chapter 16's [[outage-analysis|three-layer analysis]] is the mechanism that turns questions like "how many alerts per shift?" and "which infrastructure component causes the most incidents?" from guesses into data.
 - "Publish and organise" → Chapter 16's weekly-review "report mode" (important annotations inline) and shift-handoff emails are the aggregate-layer counterparts to postmortem publication.
 - "Ask big improbable questions" → semantic layer-3 analysis across teams (e.g., "is replication lag silently behind alerts from four different services?") surfaces cross-cutting unknowns that no single postmortem would.
@@ -102,8 +102,8 @@ Chapter 16's one-line thesis — *"improving reliability over time is only possi
 
 The full history-of-outages stack as of Chapter 16:
 
-- [[escalator]] — ack-tracking notification capture; every page flows through it.
-- [[outalator]] — outage-level tracking built on Escalator; annotation, grouping, tagging, reporting.
+- An ack-tracking layer; every page flows through it.
+- An outage-level archive built on top of it; annotation, grouping, tagging, reporting.
 - [[outage-tracking]] — the discipline's hub page.
 - [[outage-analysis]] — the three analytic layers plus reporting.
 - [[incident-aggregation]] — grouping multiple alerts into incidents so "incidents per day" and "alerts per day" are separate computable numbers.
@@ -111,7 +111,7 @@ The full history-of-outages stack as of Chapter 16:
 
 ## Chapter 26 reinforces proactive testing for data integrity
 
-Chapter 26's [[recovery-testing|continuous-recovery-testing]] discipline is a direct application of Chapter 13's "encourage proactive testing" directive to the data-integrity domain (source: chapter-26-data-integrity-what-you-read-is-what-you-wrote.md). The 2011 [[gmail-gtape-restore|Gmail restore]] and 2012 [[google-music-runaway-deletion|Google Music recovery]] both explicitly credit prior DiRT-tested recovery tooling for making their actual restorations tractable. Chapter 13 frames the rule generically; Chapter 26 supplies the worked examples of the payoff at Google scale, with the added prescription that recovery tests must be **continuous and alerted**, not just annual.
+Chapter 26's [[recovery-testing|continuous-recovery-testing]] discipline is a direct application of Chapter 13's "encourage proactive testing" directive to the data-integrity domain (source: chapter-26-data-integrity-what-you-read-is-what-you-wrote.md). The 2011 [[gmail-gtape-restore|Gmail restore]] and a 2012 race-condition-deletion recovery both explicitly credit prior DiRT-tested recovery tooling for making their actual restorations tractable. Chapter 13 frames the rule generically; Chapter 26 supplies the worked examples of the payoff at Google scale, with the added prescription that recovery tests must be **continuous and alerted**, not just annual.
 
 ## Connections
 
@@ -126,7 +126,6 @@ Chapter 26's [[recovery-testing|continuous-recovery-testing]] discipline is a di
 - [[incident-response-mindset]] — the "don't panic, pull in more people" directive connects to the cognitive-load argument from Chapter 11.
 - [[test-induced-emergency]], [[change-induced-emergency]], [[process-induced-emergency]] — the three Chapter 13 case studies that illustrate the discipline.
 - [[outage-tracking]] — Chapter 16's aggregate-record mechanism; the breadth complement to the postmortem corpus's depth.
-- [[outalator]] / [[escalator]] — the Google tools that realise outage tracking.
 - [[outage-analysis]] — the three-layer framework for turning the tracked data into decisions.
 - Chaos engineering (industry practice) — the proactive-testing prescription, industrialised via Chaos Monkey-style tools.
 - [[unknown-unknowns]] (Richards & Ford) — the epistemic argument: the questions worth asking are the ones that surface unknowns.
@@ -148,12 +147,9 @@ Chapter 26's [[recovery-testing|continuous-recovery-testing]] discipline is a di
 - [[process-induced-emergency]]
 - [[unknown-unknowns]]
 - [[outage-tracking]]
-- [[outalator]]
-- [[escalator]]
 - [[outage-analysis]]
 - [[incident-tagging]]
 - [[incident-aggregation]]
 - [[data-integrity-sre]]
 - [[recovery-testing]]
 - [[gmail-gtape-restore]]
-- [[google-music-runaway-deletion]]

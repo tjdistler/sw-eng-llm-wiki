@@ -50,7 +50,7 @@ Chapter 18 develops the *how* of capacity planning at industrial scale. It names
 - [[traditional-capacity-planning]] — the demand-driven, spreadsheet-assisted cycle that industry had settled on as of the book's writing. Brittle to change, laborious, imprecise, and loses the requester's intent by the time a planner tries to map demands into supply.
 - [[intent-based-capacity-planning]] — Chapter 18's proposed replacement. Programmatically encode the service's intent (dependencies, performance metrics, prioritisation) and let a solver produce the allocation plan. Regenerable on any change; reaches near-optimal solutions; surfaces unsatisfied requirements explicitly.
 
-The industrial-strength implementation is [[auxon|Auxon]], Google's mixed-integer linear programming tool that plans the use of many millions of dollars of machine resources across several major divisions.
+The industrial-strength implementation is a mixed-integer linear programming solver that plans the use of many millions of dollars of machine resources across several major divisions.
 
 ## Capacity planning and cascading failure (Chapter 22)
 
@@ -78,13 +78,12 @@ The [[launch-checklist-themes|launch checklist]] encodes this as three standing 
 
 - Newman's [[scalability]] and Burns's [[sharded-service-pattern]] cover the mechanics of *how* to scale. SRE's capacity-planning tenet is the upstream discipline: *when* to scale, by how much, and on whose authority.
 - Burns's [[dynamic-worker-scaling]] math (`P > processing_time / interarrival_time`) is capacity planning at the worker-pool granularity.
-- [[desired-state-management]] (Newman) — the Auxon allocation plan is a declarative desired state; enacting automation is the reconciler. Intent-based capacity planning is the declarative-desired-state pattern applied to capacity rather than service composition.
+- [[desired-state-management]] (Newman) — an intent-based capacity plan is a declarative desired state; enacting automation is the reconciler. Intent-based capacity planning is the declarative-desired-state pattern applied to capacity rather than service composition.
 
 ## Related pages
 
 - [[intent-based-capacity-planning]]
 - [[traditional-capacity-planning]]
-- [[auxon]]
 - [[software-engineering-in-sre]]
 - [[sre-tenets]]
 - [[provisioning]]
