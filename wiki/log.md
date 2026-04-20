@@ -4,6 +4,25 @@ Append-only record of all operations.
 
 ---
 
+## 2026-04-19 — Wiki redesign Phase 5: data MOCs (3)
+
+Added the three data Map-of-Content pages, modelled on the Phase 2-4 voice template (narrative voice, every wikilink earning a "why"/"when", explicit jurisdictional handoffs, raw chapter anchors for deeper reading). Each MOC opens with the jurisdictional rule that names which MOC owns what so the CDC/Kafka/outbox overlap is resolved at the top of each page rather than arbitrated at retrieval time.
+
+- `moc-data-models-and-storage` — owns model / engine / encoding / storage-layer replication+partitioning / warehouse-lake-lakehouse / DB type selection / per-service data ownership (target-side shape).
+- `moc-data-processing` — owns execution mechanics: ingestion (with CDC as the source-capture mechanism), batch engines, stream processing, stateful streaming, pipeline architectures (Lambda/Kappa/Dataflow), pipeline operations (Google Workflow, periodic vs continuous), query/transformation, serving mechanics, and pipeline-side data integrity.
+- `moc-data-engineering` — owns the FoDE discipline view: role, lifecycle (five stages + six undercurrents), data architecture patterns, technology selection, governance, stakeholder map, future-of-DE predictions. Routes security deep material to the forthcoming `moc-security-and-privacy`; routes SRE/observability deep material to `moc-reliability-and-operations`.
+
+Files touched:
+
+- `wiki/moc-data-models-and-storage.md` — new
+- `wiki/moc-data-processing.md` — new
+- `wiki/moc-data-engineering.md` — new
+- `wiki/index.md` — added three MOC entries to the `## Maps of Content (MOCs)` section
+
+Linter: 0 errors. The three new MOCs are not orphan-flagged because they mutually link to one another in their jurisdictional-rule and sibling-MOC sections, and also inbound-link to existing MOCs (`moc-decomposition`, `moc-microservices`, `moc-domain-driven-design`, `moc-architecture-fundamentals`) — each picks up inbound wikilinks from at least one non-`index.md` page. One pre-existing warning in `idempotence.md` (unrelated to Phase 5).
+
+---
+
 ## 2026-04-19 — Wiki redesign Phase 4: service-design MOCs (2)
 
 Added the two service-design Map-of-Content pages. Both follow the Phase 2/3 voice template (narrative, every wikilink earns a "why"/"when", explicit jurisdictional handoffs). Decomposition ↔ microservices boundary is made explicit in each MOC's "when to read this" section: `moc-decomposition` owns *getting to* microservices from a monolith; `moc-microservices` owns *running* them; `moc-domain-driven-design` owns the modelling craft that both of the others borrow from.

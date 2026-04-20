@@ -13,6 +13,9 @@ Narrative entry points for multi-cluster questions. Read the MOC first to find t
 | [[moc-decomposition]] | Extracting a service from a monolith — decision frame, seams, extraction patterns, DB decomposition, correctness, org pressure, operational step-up |
 | [[moc-microservices]] | Running microservices — defining properties, granularity, data ownership, sync/async/event-driven communication, reuse trade-offs, the platform/substrate, growing pains, organisational shape |
 | [[moc-domain-driven-design]] | The modelling discipline — domain/subdomain/bounded context/aggregate vocabulary, event storming and workshop techniques, domain partitioning, the bridge into microservices and data ownership |
+| [[moc-data-models-and-storage]] | The shape of the store itself — data models (relational/document/graph/KV), storage engines (LSM vs B-tree), encoding and schema evolution, replication, partitioning, analytical storage (warehouse/lake/lakehouse), DB type selection, per-service data ownership |
+| [[moc-data-processing]] | Data in motion — ingestion (batch/stream, push/pull, CDC as source-capture), batch engines (MapReduce → Spark/Flink), stream processing (stateless and stateful), pipeline architectures (Lambda/Kappa/Dataflow), pipeline operations, query/transformation mechanics, serving, data integrity |
+| [[moc-data-engineering]] | The discipline view — the data engineer role, the lifecycle (five stages + six undercurrents), data architecture patterns (warehouse/lake/lakehouse/mesh/modern data stack), technology selection, governance/quality/modelling, stakeholder map, future-of-DE predictions |
 
 ## Source summaries
 
