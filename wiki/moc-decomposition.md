@@ -112,7 +112,7 @@ Once data spans two stores, the transaction you used to take for granted is gone
 - [[transactions]] — what you lose when splitting a database. Start here to calibrate how much correctness is actually at stake.
 - [[eventual-consistency]] — framing in microservice migrations; reconciliation as an ongoing practice, not a one-time cleanup.
 
-If the domain is money or safety-critical, this section is not optional — combine parallel run (above) with saga-based correctness, and read the full *Consistency and Transactions* material (MOC forthcoming) end to end.
+If the domain is money or safety-critical, this section is not optional — combine parallel run (above) with saga-based correctness, and read the full [[moc-consistency-and-transactions]] material end to end.
 
 ## Organisational pressure
 
@@ -153,14 +153,12 @@ Deeper reading: [[monolith-to-microservices#chapter-5-growing-pains]] for the fu
 
 ## Sibling MOCs
 
-Once the corresponding MOCs land, the handoffs below become wikilinks. For now they're plain pointers to where the jurisdictional boundary sits.
-
-- *moc-microservices* (forthcoming) — owns the ownership, independence, and organisation-around-services view once the decision to have microservices is made. `moc-decomposition` gets you *to* microservices; `moc-microservices` is about *running* them.
-- *moc-domain-driven-design* (forthcoming) — owns the deep DDD material. This MOC borrows bounded contexts and aggregates as seam-finding tools; the DDD MOC owns the modelling discipline itself.
-- *moc-data-models-and-storage* (forthcoming) — owns the target schema shape on the other side of the split. This MOC gets you out of the shared DB; the data MOC is about what the new store should look like.
-- *moc-consistency-and-transactions* (forthcoming) — owns saga, outbox, and the full correctness-across-stores story. This MOC cites saga and outbox as the minimum you need during extraction; the consistency MOC owns the deeper trade-offs.
-- *moc-distributed-systems* (forthcoming) — owns the failure-mode material once the extracted service is in production. Partial failures, unreliable networks, clock skew, consensus — the problems the monolith didn't have and the new service inherits.
-- *moc-reliability-and-operations* (forthcoming) — owns the full SLO/SLI/error-budget, observability, on-call, and incident-response story. This MOC names the operational step-up as a gate before cutover; the reliability MOC is the playbook.
+- [[moc-microservices]] — owns the ownership, independence, and organisation-around-services view once the decision to have microservices is made. `moc-decomposition` gets you *to* microservices; `moc-microservices` is about *running* them.
+- [[moc-domain-driven-design]] — owns the deep DDD material. This MOC borrows bounded contexts and aggregates as seam-finding tools; the DDD MOC owns the modelling discipline itself.
+- [[moc-data-models-and-storage]] — owns the target schema shape on the other side of the split. This MOC gets you out of the shared DB; the data MOC is about what the new store should look like.
+- [[moc-consistency-and-transactions]] — owns saga, outbox, and the full correctness-across-stores story. This MOC cites saga and outbox as the minimum you need during extraction; the consistency MOC owns the deeper trade-offs.
+- [[moc-distributed-systems]] — owns the failure-mode material once the extracted service is in production. Partial failures, unreliable networks, clock skew, consensus — the problems the monolith didn't have and the new service inherits.
+- [[moc-reliability-and-operations]] — owns the full SLO/SLI/error-budget, observability, on-call, and incident-response story. This MOC names the operational step-up as a gate before cutover; the reliability MOC is the playbook.
 
 ## Related pages
 

@@ -20,7 +20,7 @@ Jurisdictional rule for this MOC:
 - [[moc-consistency-and-transactions]] owns the *correctness* layer built *on top* — linearizability vs causal consistency, isolation levels, ACID, two-phase commit, sagas, serializability. Those abstractions are the guarantees an application sees; this MOC is the machinery that produces the guarantees.
 - [[moc-events-and-streaming]] owns the *integration* layer that sits adjacent — brokers as a distributed-systems substrate used as the communication backbone between services, choreography vs orchestration, event design.
 - [[moc-data-models-and-storage]] owns the *storage-engine* side — how LSM trees and B-trees work, replication as a store property, partitioning of secondary indexes. This MOC cites replication and partitioning as distributed-systems primitives; the storage MOC owns the store-shape consequences.
-- *moc-reliability-and-operations* (forthcoming) owns the operational playbook — SLOs, observability, on-call. This MOC is about what you need to reason about to write a correct distributed algorithm; the reliability MOC is about how you run the result in production.
+- [[moc-reliability-and-operations]] owns the operational playbook — SLOs, observability, on-call. This MOC is about what you need to reason about to write a correct distributed algorithm; the reliability MOC is about how you run the result in production.
 
 Shared pages (replication, partitioning, quorums, consensus, ZooKeeper) are linked here under their *mechanism* lens — what they do, when they fail, what their assumptions are. Other MOCs link the same pages under a *guarantee* or *integration* lens.
 
@@ -227,7 +227,7 @@ Deeper reading: [[site-reliability-engineering#chapter-2-the-production-environm
 - [[moc-data-processing]] — owns the pipeline-execution and scheduler side of SRE Ch 25. This MOC owns the cron-at-scale side of Ch 24. Both cite [[site-reliability-engineering]] Ch 24–25; split responsibilities on the *scheduler-for-a-program* vs *program-being-scheduled* axis.
 - [[moc-microservices]] — owns the organisational/architectural view of services that live in the distributed fabric this MOC describes. Sidecars, service mesh, and the platform tax are the mitigations a microservices fleet applies to the problems catalogued here.
 - [[moc-decomposition]] — owns the extraction playbook. This MOC owns the failure modes the extracted service inherits the moment it becomes a network hop.
-- *moc-reliability-and-operations* (forthcoming) — owns the operational playbook (SLO/SLI, observability, on-call, incident response). This MOC says "fencing tokens prevent zombie-leader corruption"; the reliability MOC says "and here's how you know in production that one is happening."
+- [[moc-reliability-and-operations]] — owns the operational playbook (SLO/SLI, observability, on-call, incident response). This MOC says "fencing tokens prevent zombie-leader corruption"; the reliability MOC says "and here's how you know in production that one is happening."
 
 ## Related pages
 

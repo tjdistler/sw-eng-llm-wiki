@@ -4,6 +4,18 @@ Append-only record of all operations.
 
 ---
 
+## 2026-04-19 — Wiki redesign fix-up: convert stale `(forthcoming)` MOC pointers to wikilinks
+
+Re-verification of Phase 2-7 PRs surfaced one missed check: each MOC was committed with `*moc-X* (forthcoming)` italic prose pointers to siblings that hadn't yet landed, and no later PR went back to upgrade those pointers as the sibling MOCs landed. Result: 72 stale "(forthcoming)" references across 12 MOCs, telling the agent to wait for handoffs that already exist on disk.
+
+This commit converts every stale pointer to a `[[moc-X]]` wikilink, removes the now-obsolete "Once the corresponding MOCs land, the handoffs below become wikilinks…" preamble paragraph from 10 `## Sibling MOCs` sections, and cleans up trailing modifiers ("once it lands"). Also fixes the `*Consistency and Transactions* material (MOC forthcoming)` reference at `moc-decomposition.md:115` to point at the now-existing `[[moc-consistency-and-transactions]]`.
+
+Untouched: the single legitimate `forthcoming` reference at `moc-reliability-and-operations.md:385`, which references Phase 8's not-yet-landed `question-patterns.md`.
+
+Linter: 0 errors, 1 pre-existing unrelated warning. All 783 unique concept-page wikilinks across the 16 MOCs resolve; all 85 raw-chapter anchors resolve.
+
+---
+
 ## 2026-04-19 — Wiki redesign Phase 7: ops/security MOCs (3)
 
 Added the three Phase 7 Map-of-Content pages — `moc-container-and-serving-patterns`, `moc-reliability-and-operations`, `moc-security-and-privacy` — completing the 16-MOC layer. Deployment patterns (blue/green, canary, progressive delivery, feature flags) are dual-owned: mechanics in container-and-serving, safety practice in reliability-and-operations, with explicit framing sentences in each. Platform topics (service discovery, load balancing, capacity planning) cluster under named sub-sections in reliability-and-operations. Security-and-privacy documents known gaps (no auth/IAM, privacy-regulation-specific, or app-security concept pages yet) for future ingests to fill.

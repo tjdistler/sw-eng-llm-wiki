@@ -131,7 +131,7 @@ Bellemare's catalogue of how an event-driven microservice actually gets built. E
 - [[basic-producer-consumer-microservice]] — the simplest shape: consume, process per event, produce. No framework. The default starting point.
 - [[gating-pattern]] — a guard consumer that admits events to a downstream stream only when a condition is met. The event-driven "lock."
 - [[hybrid-bpc-stream-processing]] — BPC plus a state store. The common next step up from pure BPC when you need a small aggregate or join.
-- [[functions-as-a-service]] — FaaS as an EDM implementation. Per-invocation, autoscaled compute. Event-driven by design; covered in depth in *moc-container-and-serving-patterns* (forthcoming).
+- [[functions-as-a-service]] — FaaS as an EDM implementation. Per-invocation, autoscaled compute. Event-driven by design; covered in depth in [[moc-container-and-serving-patterns]].
 - [[faas-triggers]] — event-based, schedule-based, HTTP-based triggers.
 - [[faas-offset-management]] — the subtle correctness problem unique to FaaS consumers of a log-based broker.
 - [[event-stream-listener]] — the component pulling events and dispatching to the function.
@@ -221,7 +221,7 @@ Deeper reading: [[designing-distributed-systems#chapter-8-functions-and-event-dr
 - [[moc-distributed-systems]] — owns replication, partitioning, and consensus as the primitives a log-based broker is built on. This MOC treats them as given; that MOC owns what they cost.
 - [[moc-microservices]] — owns the organisational frame around event-driven services. Single-writer principle, service boundaries, reuse, the platform tax. This MOC owns the substrate; that MOC owns how the team lives with it.
 - [[moc-architecture-styles]] — owns the style-catalogue placement of event-driven architecture and the comparison against layered, microservices, space-based, pipeline, and service-based. This MOC goes deeper on the style.
-- *moc-container-and-serving-patterns* (forthcoming) — owns FaaS as a serving pattern. This MOC cites FaaS as an EDM implementation style; the container MOC owns the FaaS pattern's depth.
+- [[moc-container-and-serving-patterns]] — owns FaaS as a serving pattern. This MOC cites FaaS as an EDM implementation style; the container MOC owns the FaaS pattern's depth.
 
 ## Related pages
 

@@ -96,7 +96,7 @@ DDD modelling is incomplete if it stops at *components*; *Hard Parts* reconciles
 - [[repository-per-bounded-context]] — the data-access-layer equivalent: each bounded context owns its own repository abstractions. A useful refactor inside the monolith to make later extraction cheaper.
 - [[aggregate-exposing-monolith]] — the extraction-era pattern: expose aggregates owned by the monolith via a proper API endpoint so new services don't reach into the old schema. Inverts the dependency direction without yet moving the data.
 
-For the deeper correctness-across-contexts material — sagas, outbox, distributed transactions, eventual consistency — see *moc-consistency-and-transactions* (forthcoming) once it lands. For the full database decomposition playbook see [[moc-decomposition]]'s database section.
+For the deeper correctness-across-contexts material — sagas, outbox, distributed transactions, eventual consistency — see [[moc-consistency-and-transactions]]. For the full database decomposition playbook see [[moc-decomposition]]'s database section.
 
 ## When DDD isn't a fit
 
@@ -110,16 +110,14 @@ Deeper reading: [[monolith-to-microservices#chapter-2-planning-a-migration]] for
 
 ## Sibling MOCs
 
-Once the corresponding MOCs land, the handoffs below become wikilinks. For now they're plain pointers to where the jurisdictional boundary sits.
-
 - [[moc-architecture-fundamentals]] — owns characteristics, the quantum, fitness functions, trade-off discipline. This MOC supplies the *domain alignment* input that Chapter 5's *identifying architectural characteristics* cycle depends on; that MOC supplies the frame this modelling work is scored against.
 - [[moc-components-and-partitioning]] — owns the inside-the-box coupling-cohesion-connascence toolkit plus the technical-vs-domain partitioning axis. This MOC produces the *domain* partitioning; that MOC operationalises it with measurement.
 - [[moc-architecture-styles]] — owns the catalogue of shapes. Several styles ([[modular-monolith]], [[service-based-architecture]], [[microservices]], [[event-driven-architecture]]) presuppose domain partitioning; this MOC owns the modelling that makes them possible.
 - [[moc-decomposition]] — owns the monolith-extraction playbook. This MOC supplies the domain seams (*where*); that MOC owns the mechanics of pulling a service out (*how*) and the database untangling that follows.
 - [[moc-microservices]] — owns the running-microservices view. This MOC owns the modelling that produces the service map; that MOC owns what happens after the services exist.
-- *moc-events-and-streaming* (forthcoming) — owns the event-driven architectural patterns. This MOC's entity-event framing is the DDD-to-stream bridge; that MOC owns the broker, schema-evolution, and workflow choreography patterns built on top.
-- *moc-data-models-and-storage* (forthcoming) — owns the target schema shape inside a bounded context. This MOC aligns bounded contexts with data domains; that MOC owns what the per-context schema should look like.
-- *moc-consistency-and-transactions* (forthcoming) — owns saga, outbox, and cross-context correctness. This MOC draws the boundaries; that MOC owns what to do when a workflow has to cross them.
+- [[moc-events-and-streaming]] — owns the event-driven architectural patterns. This MOC's entity-event framing is the DDD-to-stream bridge; that MOC owns the broker, schema-evolution, and workflow choreography patterns built on top.
+- [[moc-data-models-and-storage]] — owns the target schema shape inside a bounded context. This MOC aligns bounded contexts with data domains; that MOC owns what the per-context schema should look like.
+- [[moc-consistency-and-transactions]] — owns saga, outbox, and cross-context correctness. This MOC draws the boundaries; that MOC owns what to do when a workflow has to cross them.
 
 ## Related pages
 

@@ -112,7 +112,7 @@ Once services own their data, the second design surface is how they talk. The op
 
 Deeper reading: [[building-event-driven-microservices#chapter-1-why-event-driven-microservices]] for the motivational argument against sync-by-default; [[fundamentals-of-software-architecture#chapter-17-microservices-architecture]] for how Richards and Ford place communication choice within the style.
 
-See also *moc-events-and-streaming* (forthcoming) for the deeper event-driven architectural material; *moc-consistency-and-transactions* (forthcoming) for the full saga/outbox/eventual-consistency treatment.
+See also [[moc-events-and-streaming]] for the deeper event-driven architectural material; [[moc-consistency-and-transactions]] for the full saga/outbox/eventual-consistency treatment.
 
 ## Reuse — prefer duplication to coupling
 
@@ -146,7 +146,7 @@ Microservices without a platform is an unrunnable architecture. This section is 
 
 Deeper reading: [[building-event-driven-microservices#chapter-2-event-driven-microservice-fundamentals]] for the microservice-tax and platform-piece framing; [[building-event-driven-microservices#chapter-14-supportive-tooling]] for the self-serve tooling catalogue.
 
-See also *moc-container-and-serving-patterns* (forthcoming) for the deeper container-patterns material and *moc-reliability-and-operations* (forthcoming) for SLO/SLI, observability, incident response, and the full operations playbook that complements this section.
+See also [[moc-container-and-serving-patterns]] for the deeper container-patterns material and [[moc-reliability-and-operations]] for SLO/SLI, observability, incident response, and the full operations playbook that complements this section.
 
 ## Growing pains — what breaks as the fleet scales
 
@@ -181,18 +181,16 @@ See also [[moc-domain-driven-design]] for the modelling discipline that turns "d
 
 ## Sibling MOCs
 
-Once the corresponding MOCs land, the handoffs below become wikilinks. For now they're plain pointers to where the jurisdictional boundary sits.
-
 - [[moc-architecture-fundamentals]] — owns characteristics, the quantum, fitness functions, trade-off discipline. This MOC's defining properties cash out as structural realisations of [[architecture-characteristics]]; read that MOC for the frame, then this one for the realisation.
 - [[moc-architecture-styles]] — owns the catalogue of shapes. Microservices is one style in that catalogue; this MOC picks up where Chapter 17's star-rating scorecard leaves off, in depth on running the style rather than placing it.
 - [[moc-components-and-partitioning]] — owns the coupling-cohesion-connascence measurement toolkit plus the granularity force diagram. This MOC reaches into that one for the measurements; that MOC is where the operational vocabulary lives.
 - [[moc-decomposition]] — owns the monolith-extraction playbook (decision frame, extraction patterns, database decomposition, correctness, operational step-up). This MOC picks up *after* extraction — ongoing running of microservices once they exist.
 - [[moc-domain-driven-design]] — owns the modelling discipline (bounded contexts, aggregates, ubiquitous language, event storming). This MOC names domain alignment as the second defining property; the DDD MOC owns the modelling craft that produces the boundaries.
-- *moc-consistency-and-transactions* (forthcoming) — owns saga, outbox, distributed-transaction avoidance, eventual consistency. This MOC names cross-service correctness as a granularity smell and a data-ownership concern; the consistency MOC owns the deeper trade-offs.
-- *moc-events-and-streaming* (forthcoming) — owns the event-driven architectural patterns (brokers, choreography, event design, schema evolution). This MOC cites event-driven microservices as the preferred communication default; the events MOC owns the full broker-plus-contracts story.
-- *moc-container-and-serving-patterns* (forthcoming) — owns the container patterns (sidecar, ambassador, adapter, replicated services). This MOC cites them as the operational-reuse substrate; that MOC owns the patterns themselves in depth.
-- *moc-reliability-and-operations* (forthcoming) — owns SLO/SLI/error-budget, observability, on-call, incident response. This MOC names the operational step-up as a gate; the reliability MOC is the playbook.
-- *moc-data-models-and-storage* (forthcoming) — owns the target schema shape for owned-per-service data. This MOC enforces "own your own data" as a discipline; that MOC owns what the new per-service store should look like.
+- [[moc-consistency-and-transactions]] — owns saga, outbox, distributed-transaction avoidance, eventual consistency. This MOC names cross-service correctness as a granularity smell and a data-ownership concern; the consistency MOC owns the deeper trade-offs.
+- [[moc-events-and-streaming]] — owns the event-driven architectural patterns (brokers, choreography, event design, schema evolution). This MOC cites event-driven microservices as the preferred communication default; the events MOC owns the full broker-plus-contracts story.
+- [[moc-container-and-serving-patterns]] — owns the container patterns (sidecar, ambassador, adapter, replicated services). This MOC cites them as the operational-reuse substrate; that MOC owns the patterns themselves in depth.
+- [[moc-reliability-and-operations]] — owns SLO/SLI/error-budget, observability, on-call, incident response. This MOC names the operational step-up as a gate; the reliability MOC is the playbook.
+- [[moc-data-models-and-storage]] — owns the target schema shape for owned-per-service data. This MOC enforces "own your own data" as a discipline; that MOC owns what the new per-service store should look like.
 
 ## Related pages
 

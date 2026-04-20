@@ -77,14 +77,12 @@ Deeper reading: [[fundamentals-of-software-architecture#chapter-24-developing-a-
 
 ## Sibling MOCs
 
-Once the corresponding MOCs land, the handoffs below become wikilinks. For now they're plain pointers to where the jurisdictional boundary sits.
-
 - [[moc-architecture-fundamentals]] — owns the *what to think* half of the architect's job (definition, characteristics, fitness functions, ADRs, evolution, trade-offs). This MOC owns the *how to surface and convey it* half. The two MOCs are paired; an architect's job is the union.
 - [[moc-components-and-partitioning]] — owns the inside-the-box modularity material. Risk and communication frequently target component boundaries; the partitioning MOC supplies the substrate this MOC's risk arguments operate on.
 - [[moc-architecture-styles]] — owns the catalogue. Diagramming, presentation, and risk all attach to specific architectural styles; this MOC supplies the soft-skills layer that decides whether a style is adopted, deprecated, or left to rot.
 - [[moc-decomposition]] — owns the monolith-extraction playbook. The risk and communication discipline this MOC sets up is the gating force on whether a "let's extract this" conversation ever turns into an actual extraction.
-- *moc-microservices* (forthcoming) — owns the team-and-ownership view of running microservices. The architect-leadership and negotiation material here is the prerequisite skill for the cross-team co-ordination microservices unavoidably create.
-- *moc-reliability-and-operations* (forthcoming) — owns the SLO/SLI/error-budget posture. The five-nines-to-seconds reframing technique on [[architect-negotiation]] is the canonical bridge between "the business wants 100%" and "here is the cost of one more nine."
+- [[moc-microservices]] — owns the team-and-ownership view of running microservices. The architect-leadership and negotiation material here is the prerequisite skill for the cross-team co-ordination microservices unavoidably create.
+- [[moc-reliability-and-operations]] — owns the SLO/SLI/error-budget posture. The five-nines-to-seconds reframing technique on [[architect-negotiation]] is the canonical bridge between "the business wants 100%" and "here is the cost of one more nine."
 
 ## Related pages
 
