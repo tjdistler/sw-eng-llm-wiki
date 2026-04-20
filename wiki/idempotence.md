@@ -4,13 +4,13 @@
 
 **Sources**: `raw/designing-data-intensive-applications/chapter-04-encoding-and-evolution.md`, `raw/designing-data-intensive-applications/chapter-11-stream-processing.md`, `raw/designing-data-intensive-applications/chapter-12-the-future-of-data-systems.md`, `raw/site-reliability-engineering/chapter-24-distributed-periodic-scheduling-with-cron.md`
 
-**Last updated**: 2026-04-17
+**Last updated**: 2026-04-19
 
 ---
 
 ## Definition
 
-An operation `f` is **idempotent** if `f(f(x)) == f(x)` — applying it twice produces the same state as applying it once. More generally, any number of applications (including zero retries, one retry, ten retries) converges on the same observable effect. Kleppmann's definition: "An idempotent operation is one that you can perform multiple times, and it has the same effect as if you performed it only once" (source: raw/designing-data-intensive-applications/chapter-11-stream-processing.md). The book's glossary phrases the operational consequence: "Describing an operation that can be safely retried; if it is executed more than once, it has the same effect as if it was only executed once" (source: raw/designing-data-intensive-applications/glossary.md).
+An operation `f` is **idempotent** if `f(f(x)) == f(x)` — applying it twice produces the same state as applying it once. More generally, any number of applications (including zero retries, one retry, ten retries) converges on the same observable effect. Kleppmann's definition: "An idempotent operation is one that you can perform multiple times, and it has the same effect as if you performed it only once" (source: raw/designing-data-intensive-applications/chapter-11-stream-processing.md). The operational consequence: an idempotent operation can be safely retried — if executed more than once it has the same effect as if executed only once.
 
 The definition is about **observable effects**, not internal bookkeeping. An operation that records each retry in an audit log but leaves the externally visible state unchanged still counts as idempotent for the consumers of that state.
 
