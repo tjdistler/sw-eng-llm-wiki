@@ -112,15 +112,12 @@ These concepts supply the *"what makes a good monitoring signal"* answer that Ne
 
 ## The SRE monitoring-system architecture (Chapter 10)
 
-Chapter 10 of the SRE book (Jamie Wilkinson) is the architecture deep-dive behind the philosophy of Chapter 6 (source: raw/site-reliability-engineering/chapter-10-practical-alerting-from-time-series-data.md). It describes [[borgmon]] — Google's internal monitoring system and the explicit ancestor of Prometheus — in enough detail that the design choices carry over to any modern time-series monitoring stack:
+Chapter 10 of the SRE book (Jamie Wilkinson) is the architecture deep-dive behind the philosophy of Chapter 6 (source: raw/site-reliability-engineering/chapter-10-practical-alerting-from-time-series-data.md). It describes a centralised time-series monitoring system that served as the explicit ancestor of Prometheus, in enough detail that the design choices carry over to any modern time-series monitoring stack:
 
-- [[varz-endpoints]] — the `/varz` HTTP metrics exposition format; every Google binary auto-registers metrics. The pull-with-text-format convention Prometheus inherited.
-- [[time-series-arena]] — in-memory store for ~12 hours of labelled `(timestamp, value)` tuples; older data archived to an external TSDB.
-- [[borgmon-rules]] — the centralised rule language for computing new time-series from existing ones; aggregation-via-sum-of-rates as the cornerstone; the direct ancestor of PromQL.
 - [[alertmanager]] — centrally-run service that deduplicates, inhibits, groups, and routes fired alerts to pager / ticket / dashboard; the Prometheus Alertmanager inherits the design and the name.
-- [[prober]] — the concrete black-box monitoring tool that complements Borgmon's white-box approach; Newman's [[synthetic-transactions]] in Google vocabulary.
-- [[monitoring-topology-sharding]] — the scraper / DC aggregator / global aggregator hierarchy that scales Borgmon past a single instance's capacity; Prometheus federation implements the same pattern.
-- [[prometheus-connection]] — the explicit genealogy, naming what transferred intact from Borgmon to the open-source ecosystem.
+- [[prober]] — the concrete black-box monitoring tool that complements the white-box scraper approach; Newman's [[synthetic-transactions]] in this vocabulary.
+- [[monitoring-topology-sharding]] — the scraper / DC aggregator / global aggregator hierarchy that scales the monitoring system past a single instance's capacity; Prometheus federation implements the same pattern.
+- [[prometheus-connection]] — the explicit genealogy, naming what transferred intact into the open-source ecosystem.
 
 Chapter 10's central claim — that treating time-series as the first-class data source and centralising rule evaluation makes monitoring **scale sublinearly with service size** — is the operational argument behind the Newman/Burns observability-toolbox recommendations.
 
@@ -145,10 +142,6 @@ Chapter 10's central claim — that treating time-series as the first-class data
 - [[adapter-pattern]]
 - [[unified-monitoring-interface]]
 - [[health-check-adapter]]
-- [[borgmon]]
-- [[varz-endpoints]]
-- [[time-series-arena]]
-- [[borgmon-rules]]
 - [[alertmanager]]
 - [[prober]]
 - [[monitoring-topology-sharding]]

@@ -50,15 +50,14 @@ Engineering considerations particular to TSDB sources:
 
 - **Tag cardinality.** Most TSDBs degrade badly when a tag's cardinality explodes (e.g., a per-user ID tag). Source-system owners often have cardinality budgets; the engineer must understand them.
 - **Downsampling and retention.** Old data is typically downsampled (minute → hour → day) to keep size manageable; the engineer must know the downsampling schedule because it changes query results.
-- **Cold tier.** Many deployments tier old data to cheap storage (see [[time-series-arena]] for the Borgmon/TSDB example).
+- **Cold tier.** Many deployments tier old data to cheap storage — an in-memory hot arena plus an external historical TSDB is the common shape.
 
-## Connection to Borgmon's arena
+## Connection to monitoring-system arenas
 
-Google's [[borgmon]] uses an in-memory [[time-series-arena|time-series arena]] as its hot store, with an external TSDB for historical data. This is a concrete instance of the "write-heavy, time-sorted, memory-buffered" shape described here; the SRE-book treatment is the deeper reference.
+Production time-series monitoring systems (both Prometheus and its pre-open-source Google precursor) use an in-memory time-series arena as the hot store, with an external TSDB for historical data. This is a concrete instance of the "write-heavy, time-sorted, memory-buffered" shape described here.
 
 ## Cross-book connections
 
-- [[time-series-arena]] (SRE book) — Borgmon's in-memory time-series store and the hot-memory-plus-cold-TSDB tiering story that most time-series platforms implement.
 - [[column-oriented-storage]] (DDIA) — time-series stores are a specialised cousin: sparse per-label columns optimised for range scans by time.
 - [[sstables-and-lsm-trees]] (DDIA) — common on-disk layouts in time-series engines (Prometheus, many commercial TSDBs) resemble LSM trees.
 - [[iot-architecture]] — the IoT lifecycle that produces much time-series source data.
@@ -82,7 +81,6 @@ The book's explicit caveat: time-series databases are **not general-purpose**. T
 - [[source-systems]]
 - [[nosql]]
 - [[iot-architecture]]
-- [[time-series-arena]]
 - [[column-oriented-storage]]
 - [[sstables-and-lsm-trees]]
 - [[data-temperature]]

@@ -23,11 +23,11 @@ These are design-time decisions whose payoff is incident-time speed.
 
 - **[[four-golden-signals|The four golden signals]]** exposed per component.
 - **Structured logs** that can be searched, joined, and analysed — not just `printf` dumps.
-- **Introspection endpoints** — [[varz-endpoints|`/varz`]], status pages, current-config endpoints — so you can examine a component's state without restarting it.
+- **Introspection endpoints** — metrics endpoints, status pages, current-config endpoints — so you can examine a component's state without restarting it.
 - **Dynamic verbosity** — the ability to turn up log detail at runtime without a deploy.
 - **Exposed current state** — histograms of RPCs sent/received, error rates, latency per RPC type. Chapter 12's "Logging" subsection catalogues these.
 
-The white-box side is [[borgmon]] / [[varz-endpoints]] / [[borgmon-rules]]; the black-box companion is [[prober]].
+The white-box side is a pull-based time-series monitoring system scraping metrics endpoints and evaluating aggregation rules; the black-box companion is [[prober]].
 
 ## Well-defined, observable interfaces
 
@@ -66,7 +66,7 @@ This ties troubleshooting back to [[change-management-sre|change management]]: s
 The chapter names three concrete tools that exemplify these principles:
 
 - **[[distributed-tracing|Dapper]]** (Sigelman et al, 2010) — per-request RPC tracing across the distributed stack; the worked case study uses Dapper to trace App Engine requests end-to-end.
-- **[[borgmon|Borgmon status endpoints]]** — servers expose their current monitoring rules and even allow tracing a computation back to source metrics.
+- **Monitoring status endpoints** — servers expose their current monitoring rules and even allow tracing a computation back to source metrics.
 - **Instrumented clients** — sometimes you have to build a client and use it to experiment with what a server is returning.
 
 All three are examples of the "observability from the ground up" principle realised as infrastructure.
@@ -92,8 +92,6 @@ This is consistent with Chapter 7's ([[automation-at-google]]) broader argument:
 - [[four-golden-signals]]
 - [[distributed-tracing]]
 - [[correlation-ids]]
-- [[varz-endpoints]]
-- [[borgmon]]
 - [[prober]]
 - [[change-management-sre]]
 - [[simplicity-sre]]

@@ -89,5 +89,4 @@ Latency and saturation both require distribution-aware measurement, not averages
 - [[sre-monitoring-outputs]]
 - [[response-time-percentiles]]
 - [[service-level-indicator]]
-- [[borgmon]]
 - [[site-reliability-engineering]]
