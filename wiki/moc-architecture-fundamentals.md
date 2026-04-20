@@ -94,19 +94,17 @@ The wiki's distilled position — drawn from *Hard Parts* and consistent with *D
 - [[operational-vs-analytical-data]] — *Hard Parts*'s opening data lens; the OLTP boundary as a primary driver of decomposition; why this distinction must be made before any extraction or split decision.
 - [[architecture-versus-design]] (re-cited) — ties the data argument to the architect-engineer collaboration model; data integration is the canonical place where the handoff fails most expensively.
 
-For the deep storage, modeling, and processing material that this section is the entry point *to*, see the data MOCs: *moc-data-models-and-storage* (forthcoming), *moc-data-processing* (forthcoming), and *moc-data-engineering* (forthcoming). For the consistency and transactional dimension, *moc-consistency-and-transactions* (forthcoming).
+For the deep storage, modeling, and processing material that this section is the entry point *to*, see the data MOCs: [[moc-data-models-and-storage]], [[moc-data-processing]], and [[moc-data-engineering]]. For the consistency and transactional dimension, [[moc-consistency-and-transactions]].
 
 ## Sibling MOCs
-
-Once the corresponding MOCs land, the handoffs below become wikilinks. For now they're plain pointers to where the jurisdictional boundary sits.
 
 - [[moc-risk-and-communication]] — owns the *risk* and *communicate* halves of the architect's job (architecture risk matrix, risk storming, diagramming, presentation, soft skills, negotiation, career path). This MOC says *what to think*; that one says *how to surface and convey it*.
 - [[moc-components-and-partitioning]] — owns the inside-the-box side: components, the partitioning axis, the identification cycle, modularity in implementation, granularity drivers/integrators, coupling and cohesion as decomposition tools. This MOC introduces modularity as a characteristic; that MOC operationalises it.
 - [[moc-architecture-styles]] — owns the catalogue: layered, pipeline, microkernel, service-based, event-driven, space-based, orchestration-driven SOA, microservices. This MOC tells you *how to score* a style; that MOC catalogues *which styles to score*.
 - [[moc-decomposition]] — owns the monolith-extraction playbook (decision frame, extraction patterns, database decomposition, correctness, organisational pressure, operational step-up). This MOC's trade-off discipline is the prerequisite frame for any extraction call.
-- *moc-microservices* (forthcoming) — owns the running-microservices view (independence, ownership, organisation, scale-out concerns). This MOC's quantum, characteristics, and fitness-function discipline are the prerequisites for getting microservices right.
-- *moc-domain-driven-design* (forthcoming) — owns the modelling discipline that turns "what does the business care about?" into bounded contexts and aggregates. This MOC names domain alignment as the architecturally-significant axis; the DDD MOC owns the modelling craft.
-- *moc-reliability-and-operations* (forthcoming) — owns the SLO/SLI/error-budget, observability, and incident-response posture. This MOC names reliability as one characteristic among many; the reliability MOC owns the operational playbook for actually delivering it.
+- [[moc-microservices]] — owns the running-microservices view (independence, ownership, organisation, scale-out concerns). This MOC's quantum, characteristics, and fitness-function discipline are the prerequisites for getting microservices right.
+- [[moc-domain-driven-design]] — owns the modelling discipline that turns "what does the business care about?" into bounded contexts and aggregates. This MOC names domain alignment as the architecturally-significant axis; the DDD MOC owns the modelling craft.
+- [[moc-reliability-and-operations]] — owns the SLO/SLI/error-budget, observability, and incident-response posture. This MOC names reliability as one characteristic among many; the reliability MOC owns the operational playbook for actually delivering it.
 
 ## Related pages
 

@@ -43,7 +43,7 @@ These are the cheap, fast-to-ship, easy-to-reason-about styles. None of them sco
 
 - [[microkernel-architecture]] — Eclipse, Jira, browsers, tax-prep, claims-processing; minimal core + independent plug-in components communicating through a registry and standard contracts; the *only* Part II style that is both technically *and* domain partitioned (core technical, plug-ins domain); single quantum even when plug-ins are deployed remotely, because of synchronous coupling. Pick when the system has a stable core and an open-ended set of independently-developed extensions.
 
-For the data-modelling and integration counterparts to these styles, see *moc-data-models-and-storage* (forthcoming) and *moc-data-engineering* (forthcoming).
+For the data-modelling and integration counterparts to these styles, see [[moc-data-models-and-storage]] and [[moc-data-engineering]].
 
 ## The distributed styles
 
@@ -61,7 +61,7 @@ If you've been told *"we want microservices"* and the actual force is *"we want 
 - [[broker-topology]] — peer-to-peer pub/sub; no central mediator; past-tense-fact events; relay-race handoff; architectural extensibility as the killer feature. Equivalent to Newman's *choreographed saga*.
 - [[mediator-topology]] — central mediator with point-to-point command queues; explicit workflow control; error handling has a home; recoverability is straightforward. Apache Camel / Mule / BPEL / jBPM by complexity tier. Equivalent to Newman's *orchestrated saga*.
 
-The choice between broker and mediator is the same trade-off as the saga choreography-vs-orchestration choice — both pages cite the same underlying axes. For the deeper saga material see *moc-consistency-and-transactions* (forthcoming) and *moc-events-and-streaming* (forthcoming).
+The choice between broker and mediator is the same trade-off as the saga choreography-vs-orchestration choice — both pages cite the same underlying axes. For the deeper saga material see [[moc-consistency-and-transactions]] and [[moc-events-and-streaming]].
 
 Deeper reading: [[fundamentals-of-software-architecture#chapter-14-event-driven-architecture-style]].
 
@@ -79,13 +79,13 @@ Deeper reading: [[fundamentals-of-software-architecture#chapter-15-space-based-a
 
 - [[orchestration-driven-soa]] — the historical 2000s enterprise SOA: four-layer service taxonomy (business / enterprise / application / infrastructure) stitched together by a central ESB; the *reuse-through-orchestration* thesis that didn't deliver; one-star ratings on deployability, testability, performance, simplicity, and cost; single quantum despite being distributed (everything synchronously couples through the ESB). The architecture microservices is a direct backlash against.
 
-Included here because the failure modes echo into modern designs. *Hard Parts*'s reuse warnings (see *moc-microservices* forthcoming) are essentially the lessons learned from this style's collapse.
+Included here because the failure modes echo into modern designs. *Hard Parts*'s reuse warnings (see [[moc-microservices]]) are essentially the lessons learned from this style's collapse.
 
 ### Microservices — the polished distributed default
 
 - [[microservices]] — independently deployable services modelled around a business domain, owning their own data; Richards and Ford's star-rating scorecard; the duplication-over-coupling philosophy as the deliberate inversion of the orchestration-driven-SOA reuse thesis; SOA-negation placement in the catalogue; operational-reuse-via-sidecars as the *Hard Parts* refinement.
 
-Microservices is catalogued in depth in *moc-microservices* (forthcoming). This MOC carries its style-level placement and characteristics scorecard; that MOC will carry the running-the-services material.
+Microservices is catalogued in depth in [[moc-microservices]]. This MOC carries its style-level placement and characteristics scorecard; that MOC will carry the running-the-services material.
 
 Deeper reading: [[fundamentals-of-software-architecture#chapter-17-microservices-architecture]].
 
@@ -114,16 +114,14 @@ For full coupling, cohesion, and modularity treatment, see [[moc-components-and-
 
 ## Sibling MOCs
 
-Once the corresponding MOCs land, the handoffs below become wikilinks. For now they're plain pointers to where the jurisdictional boundary sits.
-
 - [[moc-architecture-fundamentals]] — owns characteristics, the quantum, fitness functions, trade-off discipline. This MOC's catalogue is meaningless without the *fundamentals* frame to score styles against.
 - [[moc-components-and-partitioning]] — owns components, the technical-vs-domain partitioning axis, modularity, granularity drivers. The partitioning axis appears in every style's structural-shape row of the comparison scorecard.
 - [[moc-risk-and-communication]] — owns the architect-soft-skills view. Style choices are typically the most contentious architectural decisions; the negotiation, diagramming, and risk-assessment skills determine whether the chosen style is adopted or quietly worked around.
 - [[moc-decomposition]] — owns the monolith-extraction playbook. *Going from* one of this MOC's styles *to* another is what `moc-decomposition` covers in depth; this MOC covers *which destination is right* for the migration.
-- *moc-microservices* (forthcoming) — owns the running-microservices view (independence, ownership, organisation, scaling, scale-out failure modes). This MOC catalogues microservices as a style; that MOC owns the practice.
-- *moc-events-and-streaming* (forthcoming) — owns brokers, choreography, sagas, outbox, event design. This MOC catalogues event-driven architecture as a style; that MOC owns the patterns inside.
-- *moc-data-models-and-storage* (forthcoming) — owns the storage-shape decisions every style on this page implies (shared DB for service-based, per-service DB for microservices, in-memory grid for SBA). The data side is its own MOC because it cuts across all distributed styles.
-- *moc-reliability-and-operations* (forthcoming) — owns the SLO/SLI/error-budget, observability, and incident-response posture. The operational characteristics in [[architecture-style-comparison]]'s scorecard cash out as concrete practices in that MOC.
+- [[moc-microservices]] — owns the running-microservices view (independence, ownership, organisation, scaling, scale-out failure modes). This MOC catalogues microservices as a style; that MOC owns the practice.
+- [[moc-events-and-streaming]] — owns brokers, choreography, sagas, outbox, event design. This MOC catalogues event-driven architecture as a style; that MOC owns the patterns inside.
+- [[moc-data-models-and-storage]] — owns the storage-shape decisions every style on this page implies (shared DB for service-based, per-service DB for microservices, in-memory grid for SBA). The data side is its own MOC because it cuts across all distributed styles.
+- [[moc-reliability-and-operations]] — owns the SLO/SLI/error-budget, observability, and incident-response posture. The operational characteristics in [[architecture-style-comparison]]'s scorecard cash out as concrete practices in that MOC.
 
 ## Related pages
 

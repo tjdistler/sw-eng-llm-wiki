@@ -19,7 +19,7 @@ Jurisdictional rule for this MOC:
 - **This MOC** owns *model, engine, encoding, and storage-layer replication/partitioning*. It is the "what does the store look like" MOC.
 - [[moc-data-processing]] owns *execution mechanics* — batch and stream engines, CDC as a source-capture mechanism, pipeline topology. It is the "how data moves through and is transformed" MOC.
 - [[moc-data-engineering]] owns the *discipline view* — lifecycle, undercurrents, governance, data architecture patterns, the data-engineer role.
-- *moc-consistency-and-transactions* (forthcoming) owns *correctness across stores* — ACID trade-offs, isolation levels, sagas, outbox, distributed transactions.
+- [[moc-consistency-and-transactions]] owns *correctness across stores* — ACID trade-offs, isolation levels, sagas, outbox, distributed transactions.
 
 Shared concepts that live in more than one MOC (change-data-capture, Kafka, outbox, schema registry) are linked with a framing sentence here that reflects the *storage-layer* lens — not the execution or architectural lens.
 
@@ -108,7 +108,7 @@ You replicate because the single-node alternative is a single point of failure, 
 
 Deeper reading: [[designing-data-intensive-applications#chapter-5-replication]] for the full treatment.
 
-Cross-links to sibling MOCs: *moc-consistency-and-transactions* (forthcoming) owns [[linearizability]] and the consistency-model spectrum that replication choices force; *moc-distributed-systems* (forthcoming) owns [[partial-failures]] and [[unreliable-networks]] as the reason replication exists in the first place.
+Cross-links to sibling MOCs: [[moc-consistency-and-transactions]] owns [[linearizability]] and the consistency-model spectrum that replication choices force; [[moc-distributed-systems]] owns [[partial-failures]] and [[unreliable-networks]] as the reason replication exists in the first place.
 
 ## Partitioning — splits for scale
 
@@ -188,13 +188,11 @@ Cross-link: see [[moc-microservices]]'s *Data ownership* section for the microse
 
 ## Sibling MOCs
 
-Once the corresponding MOCs land, the handoffs below become wikilinks. For now they're plain pointers to where the jurisdictional boundary sits.
-
 - [[moc-data-processing]] — owns batch and stream execution mechanics, pipelines, schedulers, CDC as a source-capture mechanism, Lambda/Kappa/Dataflow. This MOC owns the shape of the store; the processing MOC owns how data moves through and is transformed.
 - [[moc-data-engineering]] — owns the discipline view: the data-engineering lifecycle, the six undercurrents (governance, security, data management, data modelling as a discipline, quality, observability), data architecture patterns (mesh, lakehouse, modern data stack), technology selection. This MOC owns the *what* of the store; the engineering MOC owns the *how we run the practice that builds on top of it*.
-- *moc-consistency-and-transactions* (forthcoming) — owns ACID, isolation levels, serialisation, distributed transactions, sagas and outbox as the correctness-across-stores mechanism. This MOC names [[eventual-consistency]] as a replication outcome and [[transactions]] as what you lose when a database splits; the consistency MOC owns the deeper trade-offs.
-- *moc-distributed-systems* (forthcoming) — owns [[partial-failures]], [[unreliable-networks]], [[unreliable-clocks]], [[consensus]]. This MOC's replication and partitioning sections cite those concepts; the distributed-systems MOC owns them end-to-end.
-- *moc-events-and-streaming* (forthcoming) — owns event-driven architecture, broker topology, event design, schema evolution *for events*. This MOC shares [[avro]] and [[schema-registry]] with that one under a storage-layer lens; the events MOC owns the broker-as-integration-substrate view.
+- [[moc-consistency-and-transactions]] — owns ACID, isolation levels, serialisation, distributed transactions, sagas and outbox as the correctness-across-stores mechanism. This MOC names [[eventual-consistency]] as a replication outcome and [[transactions]] as what you lose when a database splits; the consistency MOC owns the deeper trade-offs.
+- [[moc-distributed-systems]] — owns [[partial-failures]], [[unreliable-networks]], [[unreliable-clocks]], [[consensus]]. This MOC's replication and partitioning sections cite those concepts; the distributed-systems MOC owns them end-to-end.
+- [[moc-events-and-streaming]] — owns event-driven architecture, broker topology, event design, schema evolution *for events*. This MOC shares [[avro]] and [[schema-registry]] with that one under a storage-layer lens; the events MOC owns the broker-as-integration-substrate view.
 - [[moc-decomposition]] — owns the migration playbook for extracting a service from a monolith, including the database split itself. This MOC picks up *after* the split — the new store's steady-state shape.
 - [[moc-microservices]] — owns the running-microservices view in which "own your own data" is a defining discipline. This MOC picks up where the microservices MOC hands off: the specifics of what that owned store should look like.
 - [[moc-domain-driven-design]] — owns bounded contexts and aggregates as the modelling vocabulary. This MOC takes [[data-domain]] and [[bounded-context]] alignment as given; the DDD MOC owns how those boundaries are found.

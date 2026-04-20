@@ -72,7 +72,7 @@ Deeper reading: [[software-architecture-the-hard-parts]] (Chapters 3 and 7) for 
 Newman's four-coupling-type framework (under [[coupling]]) is the operational vocabulary; the *Hard Parts* coupling axes below are the analytical framework. Use them together — Newman tells you what kind of coupling you have, *Hard Parts* tells you what to do about it.
 
 - [[static-coupling]] — *how the quanta are wired together*: dependencies, contracts, topology. Measured via the *bootstrap test* — what does this quantum need to start? The static side of the architectural-quantum analysis.
-- [[dynamic-coupling]] — runtime coupling along three axes: *communication* (sync / async) × *consistency* (atomic / eventual) × *coordination* (orchestrated / choreographed). The triple that produces the eight transactional-saga shapes catalogued in *moc-consistency-and-transactions* (forthcoming) and shows up implicitly in every distributed style on [[moc-architecture-styles]].
+- [[dynamic-coupling]] — runtime coupling along three axes: *communication* (sync / async) × *consistency* (atomic / eventual) × *coordination* (orchestrated / choreographed). The triple that produces the eight transactional-saga shapes catalogued in [[moc-consistency-and-transactions]] and shows up implicitly in every distributed style on [[moc-architecture-styles]].
 - [[semantic-coupling]] — domain-concept coupling inherent in the workflow itself; the *floor* implementation can only worsen, never go below. The argument-stopper for "let me just refactor the boundaries one more time" — sometimes the boundary is doing the best it can given the domain.
 - [[stamp-coupling]] — passing whole structures when only a subset is needed; GraphQL and field-mask APIs as the counter-pattern. The bandwidth-fallacy ([[fallacies-of-distributed-computing]]) version of "your services are a bit too chatty."
 - [[orthogonal-coupling]] — distinct-purposes-that-must-intersect; sidecars and service meshes as the cleanest implementation. The right model for cross-cutting concerns (security, telemetry, rate limiting) layered orthogonally on top of any partitioning scheme.
@@ -95,15 +95,13 @@ For *what to do after* the components are extracted into services — extraction
 
 ## Sibling MOCs
 
-Once the corresponding MOCs land, the handoffs below become wikilinks. For now they're plain pointers to where the jurisdictional boundary sits.
-
 - [[moc-architecture-fundamentals]] — owns characteristics (including modularity as the implicit one), the quantum, fitness functions, ADRs. This MOC's coupling-and-cohesion measurements operationalise the modularity characteristic introduced there.
 - [[moc-architecture-styles]] — owns the catalogue of canonical shapes. The partitioning axis on this MOC is the structural-shape row of every style on that MOC; the granularity material here decides where to land within a chosen style.
 - [[moc-risk-and-communication]] — owns risk surfacing, diagramming, and the architect-soft-skills view. Component-boundary fights are the most common architect-developer disagreements; the negotiation and guidance pages there are the practical complements to this MOC's frameworks.
 - [[moc-decomposition]] — owns the monolith-extraction playbook *after* component decomposition. This MOC takes you to "we have well-defined components and an extraction candidate"; that MOC takes the candidate the rest of the way to a running, owned, observable service.
-- *moc-microservices* (forthcoming) — owns the running-microservices view (independence, ownership, organisation, scaling, scale-out failure modes). [[service-granularity]] sits on the boundary; this MOC carries the granularity decision; that MOC carries what you live with afterwards.
-- *moc-domain-driven-design* (forthcoming) — owns the modelling discipline (bounded contexts, aggregates, ubiquitous language). Domain partitioning on this MOC presupposes DDD; the DDD MOC owns the modelling craft that produces the domain boundaries this MOC measures.
-- *moc-consistency-and-transactions* (forthcoming) — owns saga, outbox, and the correctness-across-stores story. The dynamic-coupling triple on this MOC is the same triple that produces the eight saga shapes there.
+- [[moc-microservices]] — owns the running-microservices view (independence, ownership, organisation, scaling, scale-out failure modes). [[service-granularity]] sits on the boundary; this MOC carries the granularity decision; that MOC carries what you live with afterwards.
+- [[moc-domain-driven-design]] — owns the modelling discipline (bounded contexts, aggregates, ubiquitous language). Domain partitioning on this MOC presupposes DDD; the DDD MOC owns the modelling craft that produces the domain boundaries this MOC measures.
+- [[moc-consistency-and-transactions]] — owns saga, outbox, and the correctness-across-stores story. The dynamic-coupling triple on this MOC is the same triple that produces the eight saga shapes there.
 
 ## Related pages
 

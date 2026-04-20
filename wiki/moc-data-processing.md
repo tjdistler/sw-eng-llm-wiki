@@ -19,7 +19,7 @@ Jurisdictional rule for this MOC:
 - **This MOC** owns *execution mechanics* — batch and stream engines, pipeline topologies, schedulers, CDC as a *source-capture mechanism*, Lambda/Kappa/Dataflow as pipeline-architecture choices, ingestion and serving stages as FoDE frames them. It is the "how data flows and computes" MOC.
 - [[moc-data-models-and-storage]] owns the *shape of the store* — data models, engines (LSM vs B-tree), encoding, replication, partitioning, warehouse/lake/lakehouse shape, per-service data ownership.
 - [[moc-data-engineering]] owns the *discipline view* — lifecycle, undercurrents, governance, quality, data architecture patterns, the role of the data engineer.
-- *moc-events-and-streaming* (forthcoming) owns the *architectural use of events* — brokers as integration substrate, choreography vs orchestration between services, [[saga]], [[outbox-table-pattern]] as the publication pattern, event design.
+- [[moc-events-and-streaming]] owns the *architectural use of events* — brokers as integration substrate, choreography vs orchestration between services, [[saga]], [[outbox-table-pattern]] as the publication pattern, event design.
 
 Shared concepts that live in more than one MOC (CDC, Kafka, outbox, schema registry, log compaction) are linked here with a framing sentence that reflects the *execution-mechanics lens* — not the storage-shape or architectural-events lens.
 
@@ -172,7 +172,7 @@ The architecture is half the story; the operational shape of a running pipeline 
 
 ### Pipeline scheduling
 
-- [[orchestration]] — DAG-aware scheduling; Airflow and successors; strictly batch. Framed here under its pipeline-scheduler lens. *moc-events-and-streaming* (forthcoming) carries the orchestration-vs-choreography framing at the architectural level — these are different things; don't conflate.
+- [[orchestration]] — DAG-aware scheduling; Airflow and successors; strictly batch. Framed here under its pipeline-scheduler lens. [[moc-events-and-streaming]] carries the orchestration-vs-choreography framing at the architectural level — these are different things; don't conflate.
 - [[distributed-cron]] — SRE Ch 24 hub: Google's datacenter-wide cron; Paxos-replicated state; Borg as the backing scheduler. The case study for scheduler reliability.
 - [[cron-idempotency-and-skip-vs-double-launch]] — the fail-closed default: skip rather than double-launch, because skipped launches are usually recoverable while double launches often aren't.
 - [[cron-partial-failure-resolution]] — precomputed job names + scheduled launch time embedded in the name; state lookup as the resolution mechanism.
@@ -259,13 +259,11 @@ Deeper reading: [[site-reliability-engineering#chapter-26-data-integrity-what-yo
 
 ## Sibling MOCs
 
-Once the corresponding MOCs land, the handoffs below become wikilinks. For now they're plain pointers to where the jurisdictional boundary sits.
-
 - [[moc-data-models-and-storage]] — owns the shape of the store itself (models, engines, encoding, replication, partitioning, warehouse/lake shape). This MOC owns how data flows into and out of and between stores; the storage MOC owns what those stores look like.
 - [[moc-data-engineering]] — owns the discipline view (lifecycle, undercurrents, governance, data architecture patterns, technology selection, the data-engineer role). This MOC owns the mechanics the discipline operates; the engineering MOC owns the practice around them.
-- *moc-events-and-streaming* (forthcoming) — owns the architectural use of events (brokers as integration substrate, choreography vs orchestration, [[saga]], [[outbox-table-pattern]] as a publication pattern, event design). This MOC shares [[change-data-capture]], [[log-based-message-brokers]], and [[outbox-table-pattern]] with that one under a *source-capture and execution* lens; the events MOC owns them as *architectural substrate*.
-- *moc-consistency-and-transactions* (forthcoming) — owns transactions, isolation levels, sagas, and the correctness-across-stores story. This MOC cites [[effectively-once-processing]] and [[workflow-correctness-guarantees]] as pipeline-execution correctness mechanisms; the consistency MOC owns cross-store correctness end to end.
-- *moc-reliability-and-operations* (forthcoming) — owns SLO/SLI, observability, on-call, incident response. This MOC cites the SRE Ch 25 and Ch 26 pipeline-operations material; the reliability MOC owns the operations playbook that surrounds it.
+- [[moc-events-and-streaming]] — owns the architectural use of events (brokers as integration substrate, choreography vs orchestration, [[saga]], [[outbox-table-pattern]] as a publication pattern, event design). This MOC shares [[change-data-capture]], [[log-based-message-brokers]], and [[outbox-table-pattern]] with that one under a *source-capture and execution* lens; the events MOC owns them as *architectural substrate*.
+- [[moc-consistency-and-transactions]] — owns transactions, isolation levels, sagas, and the correctness-across-stores story. This MOC cites [[effectively-once-processing]] and [[workflow-correctness-guarantees]] as pipeline-execution correctness mechanisms; the consistency MOC owns cross-store correctness end to end.
+- [[moc-reliability-and-operations]] — owns SLO/SLI, observability, on-call, incident response. This MOC cites the SRE Ch 25 and Ch 26 pipeline-operations material; the reliability MOC owns the operations playbook that surrounds it.
 - [[moc-decomposition]] — owns the monolith-extraction playbook. This MOC owns the pipelines an extraction often needs (CDC bridge to the new service, dual-write synchronisation, migration backfill).
 - [[moc-microservices]] — owns running microservices once they exist. This MOC's stream-processing section is the execution substrate for event-driven microservices; the microservices MOC owns the organisational and architectural frame.
 

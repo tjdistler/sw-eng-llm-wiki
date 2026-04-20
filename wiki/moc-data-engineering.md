@@ -21,8 +21,8 @@ Jurisdictional rule for this MOC:
 - **This MOC** owns the *discipline view* — the lifecycle, the undercurrents, the role of the data engineer, the data-architecture patterns (warehouse / lake / lakehouse / mesh / modern data stack), technology selection, governance, data management, data modelling as a practice.
 - [[moc-data-models-and-storage]] owns the *shape of the store* — concrete models, engines, encoding, replication, partitioning.
 - [[moc-data-processing]] owns the *execution mechanics* — batch and stream engines, pipeline topologies, CDC as source-capture, Lambda/Kappa/Dataflow.
-- *moc-security-and-privacy* (forthcoming) owns the *deep* security-and-privacy discipline; this MOC names security as an undercurrent but routes the deep material there.
-- *moc-reliability-and-operations* (forthcoming) owns the *operations-and-SRE* discipline; this MOC names DataOps but routes SLO/SLI/error-budget material there.
+- [[moc-security-and-privacy]] owns the *deep* security-and-privacy discipline; this MOC names security as an undercurrent but routes the deep material there.
+- [[moc-reliability-and-operations]] owns the *operations-and-SRE* discipline; this MOC names DataOps but routes SLO/SLI/error-budget material there.
 
 ## The discipline itself
 
@@ -74,10 +74,10 @@ Reis and Housley's most important framing innovation. The undercurrents are *not
 
 ### Security (undercurrent 1)
 
-- [[data-security]] — security as undercurrent; people as the biggest vulnerability; multi-tenant blast radius. The framing; the deep material lives in *moc-security-and-privacy* (forthcoming).
+- [[data-security]] — security as undercurrent; people as the biggest vulnerability; multi-tenant blast radius. The framing; the deep material lives in [[moc-security-and-privacy]].
 - [[least-privilege]] — the access-control principle at the heart of the security undercurrent. The default every new pipeline, table, and role should inherit.
 
-Deeper material: FoDE Ch 10 — [[fundamentals-of-data-engineering#chapter-10-security-and-privacy]] (the deep security MOC is *moc-security-and-privacy*, forthcoming).
+Deeper material: FoDE Ch 10 — [[fundamentals-of-data-engineering#chapter-10-security-and-privacy]] (the deep security MOC is [[moc-security-and-privacy]]).
 
 ### Data management (undercurrent 2)
 
@@ -202,13 +202,11 @@ Deeper reading: [[fundamentals-of-data-engineering#chapter-11-the-future-of-data
 
 ## Sibling MOCs
 
-Once the corresponding MOCs land, the handoffs below become wikilinks. For now they're plain pointers to where the jurisdictional boundary sits.
-
 - [[moc-data-models-and-storage]] — owns the shape of the store (models, engines, encoding, replication, partitioning, warehouse/lake/lakehouse shape). This MOC names the architectural pattern (warehouse, lake, lakehouse, mesh) as a discipline-level choice; the storage MOC owns the concrete schemas and engines inside it.
 - [[moc-data-processing]] — owns the execution mechanics (batch and stream engines, pipeline topologies, CDC as source-capture, schedulers, Lambda/Kappa/Dataflow). This MOC names ingestion and transformation as lifecycle stages and orchestration as an undercurrent; the processing MOC owns how the mechanics actually work.
-- *moc-security-and-privacy* (forthcoming) — owns the deep security discipline. This MOC names [[data-security]] and [[least-privilege]] as undercurrents and routes FoDE Ch 10 material there; the security MOC owns threat modelling, encryption, secrets management, network access, and the security-policy discipline.
-- *moc-reliability-and-operations* (forthcoming) — owns the operations-and-SRE discipline. This MOC names DataOps and [[data-observability]] as an undercurrent; the reliability MOC owns SLO/SLI/error-budget, on-call, incident response, and the operations playbook.
-- *moc-events-and-streaming* (forthcoming) — owns the event-driven architectural view. This MOC names data-mesh data-sharing and event-based ingestion; the events MOC owns brokers as integration substrate and event design.
+- [[moc-security-and-privacy]] — owns the deep security discipline. This MOC names [[data-security]] and [[least-privilege]] as undercurrents and routes FoDE Ch 10 material there; the security MOC owns threat modelling, encryption, secrets management, network access, and the security-policy discipline.
+- [[moc-reliability-and-operations]] — owns the operations-and-SRE discipline. This MOC names DataOps and [[data-observability]] as an undercurrent; the reliability MOC owns SLO/SLI/error-budget, on-call, incident response, and the operations playbook.
+- [[moc-events-and-streaming]] — owns the event-driven architectural view. This MOC names data-mesh data-sharing and event-based ingestion; the events MOC owns brokers as integration substrate and event design.
 - [[moc-domain-driven-design]] — owns the modelling discipline. Data mesh explicitly imports DDD vocabulary (bounded contexts as data domains); reading that MOC is the shortest path to internalising mesh principles.
 - [[moc-microservices]] — owns running microservices. Data mesh is partly "microservices for data"; the microservices MOC's ownership, independence, and platform-tax discussions translate directly.
 - [[moc-architecture-fundamentals]] — owns characteristics, trade-off analysis, ADRs, fitness functions. The data-engineering *architect* role sits inside that general discipline; the technology-selection material in this MOC is a specialised application of [[trade-off-analysis]].
